@@ -14,15 +14,13 @@ import { UsersController } from './users/users.controller';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017', {
-      dbName: 'vorpal',
-    }),
+    MongooseModule.forRoot(
+      'mongodb+srv://av371365:rh9hvyBmAS08omBS@custcollections.y6jpyks.mongodb.net/vorpal?retryWrites=true&w=majority',
+    ),
     MongooseModule.forFeature([
       { name: ReferralLink.name, schema: ReferralLinkSchema },
     ]),
-    MongooseModule.forFeature([
-      { name: User.name, schema: UserSchema },
-    ]),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [AppController, ReferralLinksController, UsersController],
   providers: [AppService, ReferralLinksService, UsersService],
