@@ -60,6 +60,27 @@ export class UsersService {
     return user;
   }
 
+  async findOneByProperty(prop): Promise<User> {
+    if (!prop) {
+      throw new NotFoundException(`Not found user property: ${prop}`);
+    }
+    let user = null;
+    try {
+      user = await this.userModel
+        .findOne({ address: prop })
+        .populate('links, referrer')
+        .exec();
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+
+    if (!user) {
+      throw new NotFoundException(`Not found user object: ${user}`);
+    }
+
+    return user;
+  }
+
   async update(id, user: User): Promise<User> {
     if (!id) {
       throw new NotFoundException(`Not found user id: ${id}`);

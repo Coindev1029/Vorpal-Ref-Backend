@@ -7,7 +7,7 @@ export type ReferralLinkDocument = ReferralLink & Document;
 @Schema()
 export class ReferralLink {
   @Prop()
-  creatorId: string;
+  address: string;
 
   @Prop()
   creatorPercent: number;

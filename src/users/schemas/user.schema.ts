@@ -8,7 +8,7 @@ export type UserDocument = User & Document;
 @Schema()
 export class User {
   @Prop()
-  id: string;
+  address: string;
 
   @Prop({
     type: [

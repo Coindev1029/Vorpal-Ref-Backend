@@ -1,6 +1,8 @@
 import { Model } from 'mongoose';
 import {
   BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -9,10 +11,16 @@ import {
   ReferralLink,
   ReferralLinkDocument,
 } from './schemas/referral_link.schema';
+import { User, UserDocument } from '../users/schemas/user.schema';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class ReferralLinksService {
   constructor(
+    @Inject(forwardRef(() => UsersService))
+    private usersService: UsersService,
+    @InjectModel(User.name)
+    private userModel: Model<UserDocument>,
     @InjectModel(ReferralLink.name)
     private referralLinkModel: Model<ReferralLinkDocument>,
   ) {}
@@ -21,6 +29,16 @@ export class ReferralLinksService {
     let newReferralLink = null;
     try {
       newReferralLink = new this.referralLinkModel(referralLink);
+      const user = await this.usersService.findOneByProperty(
+        newReferralLink.address,
+      );
+      if (!user) {
+        throw new NotFoundException(`Not found user : ${user}`);
+      }
+      user.links.push(newReferralLink._id);
+      await this.userModel.findOneAndUpdate({ address: user.address }, user, {
+        new: true,
+      });
     } catch (error) {
       throw new BadRequestException(error.message);
     }
