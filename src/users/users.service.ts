@@ -29,7 +29,7 @@ export class UsersService {
     try {
       users = this.userModel
         .find()
-        .populate([{ path: 'referrers' }])
+        .populate([{ path: 'links, referrer' }])
         .exec();
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -50,7 +50,7 @@ export class UsersService {
     try {
       user = await this.userModel
         .findById(id)
-        .populate([{ path: 'referrers' }])
+        .populate([{ path: 'links, referrer' }])
         .exec();
     } catch (error) {
       throw new BadRequestException(error.message);
