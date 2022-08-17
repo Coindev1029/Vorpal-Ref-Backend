@@ -11,7 +11,9 @@ export class User {
   id: string;
 
   @Prop({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ReferralLink' }],
+    type: [
+      { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ReferralLink' }] },
+    ],
   })
   links: ReferralLink[];
 
