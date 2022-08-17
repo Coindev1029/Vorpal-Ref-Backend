@@ -27,10 +27,7 @@ export class UsersService {
   async findAll(): Promise<User[]> {
     let users = null;
     try {
-      users = this.userModel
-        .find()
-        .populate([{ path: 'links, referrer' }])
-        .exec();
+      users = this.userModel.find().populate('links, referrer').exec();
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -50,7 +47,7 @@ export class UsersService {
     try {
       user = await this.userModel
         .findById(id)
-        .populate([{ path: 'links, referrer' }])
+        .populate('links, referrer')
         .exec();
     } catch (error) {
       throw new BadRequestException(error.message);
