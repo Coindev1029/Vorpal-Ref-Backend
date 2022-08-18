@@ -21,7 +21,7 @@ export class User {
   referrer: ReferralLink;
 
   @Prop({ required: true })
-  balance: number;
+  balance: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
