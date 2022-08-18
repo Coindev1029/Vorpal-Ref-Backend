@@ -27,22 +27,19 @@ export class ReferralLinksService {
 
   async create(referralLink: ReferralLink): Promise<ReferralLink> {
     let newReferralLink = null;
+    let user = null;
     try {
       newReferralLink = new this.referralLinkModel(referralLink);
-      const user = await this.usersService.findOneByProperty(
-        newReferralLink.address,
-      );
-      if (!user) {
-        throw new NotFoundException(`Not found user : ${user}`);
-      }
-      user.links.push(newReferralLink._id);
-      await this.userModel.findOneAndUpdate({ address: user.address }, user, {
-        new: true,
-      });
+      await newReferralLink.save();
+      user = await this.userModel
+        .findOne({ address: newReferralLink.creatorAddress })
+        .exec();
+      user.links = [newReferralLink._id, ...user.links];
+      await user.save();
     } catch (error) {
       throw new BadRequestException(error.message);
     }
-    return await newReferralLink.save();
+    return newReferralLink;
   }
 
   async findAll(): Promise<ReferralLink[]> {
@@ -68,11 +65,18 @@ export class ReferralLinksService {
       throw new NotFoundException(`Not found referral link id: ${id}`);
     }
     let refLink = null;
+    let user = null;
     try {
-      refLink = await this.referralLinkModel
-        .findById(id)
-        .populate([{ path: 'creatorId' }])
+      refLink = await this.referralLinkModel.findById(id).exec();
+      user = await this.userModel
+        .findOne({ address: refLink.creatorAddress })
         .exec();
+      if (!user) {
+        throw new NotFoundException(
+          `Not found creator address object: ${refLink.creatorAddress}`,
+        );
+      }
+      refLink.creatorAddress = user;
     } catch (error) {
       throw new BadRequestException(error.message);
     }

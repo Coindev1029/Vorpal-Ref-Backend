@@ -1,3 +1,4 @@
+import * as mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { User } from '../../users/schemas/user.schema';
@@ -6,13 +7,13 @@ export type ReferralLinkDocument = ReferralLink & Document;
 
 @Schema()
 export class ReferralLink {
-  @Prop()
-  address: string;
+  @Prop({ required: true })
+  creatorAddress: string;
 
-  @Prop()
+  @Prop({ required: true })
   creatorPercent: number;
 
-  @Prop()
+  @Prop({ required: true })
   referralPercent: number;
 }
 
