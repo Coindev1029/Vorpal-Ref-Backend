@@ -45,10 +45,7 @@ export class ReferralLinksService {
   async findAll(): Promise<ReferralLink[]> {
     let refLinks = null;
     try {
-      refLinks = this.referralLinkModel
-        .find()
-        .populate([{ path: 'creatorId' }])
-        .exec();
+      refLinks = this.referralLinkModel.find().exec();
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -65,18 +62,8 @@ export class ReferralLinksService {
       throw new NotFoundException(`Not found referral link id: ${id}`);
     }
     let refLink = null;
-    let user = null;
     try {
       refLink = await this.referralLinkModel.findById(id).exec();
-      user = await this.userModel
-        .findOne({ address: refLink.creatorAddress })
-        .exec();
-      if (!user) {
-        throw new NotFoundException(
-          `Not found creator address object: ${refLink.creatorAddress}`,
-        );
-      }
-      refLink.creatorAddress = user;
     } catch (error) {
       throw new BadRequestException(error.message);
     }
