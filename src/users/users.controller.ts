@@ -52,6 +52,18 @@ export class UsersController {
     }
   }
 
+  @Get('/find-by-address/:address')
+  async findOneByAddress(@Res() res, @Param('address') address) {
+    try {
+      const user = await this.usersService.findOneByAddress(address);
+      return res.status(HttpStatus.OK).json({
+        user,
+      });
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  }
+
   @Patch('/:id')
   async update(@Res() res, @Param('id') id, @Body() user: User) {
     try {
