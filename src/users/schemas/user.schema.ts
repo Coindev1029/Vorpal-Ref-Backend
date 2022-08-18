@@ -7,7 +7,7 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
-  @Prop()
+  @Prop({ required: true, unique: true })
   address: string;
 
   @Prop({
@@ -22,7 +22,7 @@ export class User {
   })
   referrer: ReferralLink;
 
-  @Prop()
+  @Prop({ required: true })
   balance: number;
 }
 

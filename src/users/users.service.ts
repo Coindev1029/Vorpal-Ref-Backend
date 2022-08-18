@@ -27,7 +27,7 @@ export class UsersService {
   async findAll(): Promise<User[]> {
     let users = null;
     try {
-      users = this.userModel.find().populate('links, referrer').exec();
+      users = this.userModel.find().populate('links referrer').exec();
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -47,7 +47,7 @@ export class UsersService {
     try {
       user = await this.userModel
         .findById(id)
-        .populate('links, referrer')
+        .populate('links referrer')
         .exec();
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -55,27 +55,6 @@ export class UsersService {
 
     if (!user) {
       throw new NotFoundException(`Not found user object: ${id}`);
-    }
-
-    return user;
-  }
-
-  async findOneByProperty(prop): Promise<User> {
-    if (!prop) {
-      throw new NotFoundException(`Not found user property: ${prop}`);
-    }
-    let user = null;
-    try {
-      user = await this.userModel
-        .findOne({ address: prop })
-        .populate('links, referrer')
-        .exec();
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
-
-    if (!user) {
-      throw new NotFoundException(`Not found user object: ${user}`);
     }
 
     return user;
