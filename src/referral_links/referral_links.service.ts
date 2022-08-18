@@ -75,6 +75,28 @@ export class ReferralLinksService {
     return refLink;
   }
 
+  async findOneByAddress(address): Promise<ReferralLink> {
+    if (!address) {
+      throw new NotFoundException(
+        `Not found referral link address: ${address}`,
+      );
+    }
+    let refLink = null;
+    try {
+      refLink = await this.referralLinkModel
+        .findOne({ creatorAddress: address })
+        .exec();
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+
+    if (!refLink) {
+      throw new NotFoundException(`Not found referral link object: ${refLink}`);
+    }
+
+    return refLink;
+  }
+
   async update(id, referralLink: ReferralLink): Promise<ReferralLink> {
     if (!id) {
       throw new NotFoundException(`Not found referral link id: ${id}`);

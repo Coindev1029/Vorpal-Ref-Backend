@@ -52,6 +52,18 @@ export class ReferralLinksController {
     }
   }
 
+  @Get('/find-by-address/:address')
+  async findOneByAddress(@Res() res, @Param('address') address) {
+    try {
+      const refLinks = await this.referralLinkService.findOneByAddress(address);
+      return res.status(HttpStatus.OK).json({
+        refLinks,
+      });
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  }
+
   @Patch('/:id')
   async update(@Res() res, @Param('id') id, @Body() refLink: ReferralLink) {
     try {
