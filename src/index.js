@@ -1,4 +1,4 @@
-import * as http from 'http';
+const http = require('http')
 
 const port = process.argv[2] ? process.argv[2] : process.env.default_port
 
