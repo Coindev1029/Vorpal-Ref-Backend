@@ -8,7 +8,8 @@ const server = http.createServer((req, res) => {
     res.end('Connected on port');
  });
 
-console.log("Updated")
+console.log("Env : ")
+console.log(process.env)
 
 server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
