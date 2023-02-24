@@ -8,9 +8,9 @@ const connection = new Client({
     port: process.env.db_port,
   });
 
-export const connectionResult = connection.connect()
+const connectionResult = connection.connect()
 
-export const testQuery = () => {
+const testQuery = () => {
     const sqlQuery = "select * from address_to_referra limit 1"
     connection.query(sqlQuery, (err, res) => {
         if (err) {
@@ -23,3 +23,8 @@ export const testQuery = () => {
       })
 }
 
+
+module.exports = {
+    connectionResult,
+    testQuery
+}
