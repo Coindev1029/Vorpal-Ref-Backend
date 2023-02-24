@@ -1,3 +1,4 @@
+require('dotenv').config();
 const http = require('http')
 const { connectionResult } = require('./database/connect')
 
