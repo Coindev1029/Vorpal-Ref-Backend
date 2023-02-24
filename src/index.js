@@ -1,4 +1,5 @@
 const http = require('http')
+const { connectionResult } = require('./database/connect')
 
 const port = process.argv[2] ? process.argv[2] : process.env.default_port
 
@@ -7,10 +8,11 @@ const server = http.createServer((req, res) => {
     res.end('Connected on port');
  });
 
-console.log(port)
+console.log("Updated")
 
 server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
+    console.log(connectionResult)
   })
 
   
