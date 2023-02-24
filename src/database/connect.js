@@ -1,7 +1,5 @@
 const { Client } = require('pg');
 
-console.log(process.env.db_password)
-
 const connection = new Client({
     user: process.env.db_user,
     host: process.env.db_host,
@@ -10,7 +8,7 @@ const connection = new Client({
     port: process.env.db_port,
   });
 
-const connectionResult = connection.connect()
+const connectionResult = await connection.connect()
 
 const testQuery = () => {
     const sqlQuery = "select * from address_to_referra limit 1"
