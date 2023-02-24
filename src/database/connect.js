@@ -8,7 +8,16 @@ const connection = new Client({
     port: process.env.db_port,
   });
 
-const connectionResult = await connection.connect()
+const connectionResult = connection.connect((res, err) => {
+    if (res) {
+        console.log("Res : ")
+        console.log(res)
+    }
+    if (err) {
+        console.log("Err : ")
+        console.log(err)
+    }
+})
 
 const testQuery = () => {
     const sqlQuery = "select * from address_to_referra limit 1"
