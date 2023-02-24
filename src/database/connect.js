@@ -1,4 +1,4 @@
-import { Client }from 'pg';
+const { Client } = require('pg');
 
 const connection = new Client({
     user: process.env.db_user,
