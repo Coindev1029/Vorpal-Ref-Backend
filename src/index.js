@@ -2,13 +2,18 @@ require('dotenv').config();
 const { Client } = require('pg');
 const http = require('http')
 
-const connection = new Client({
+const connectionData = {
   user: process.env.db_user,
   host: process.env.db_host,
   database: process.env.db_name,
   password: process.env.db_password,
   port: process.env.db_port,
-});
+}
+
+console.log("Connection data : ")
+console.log(connectionData)
+
+const connection = new Client(connectionData);
 
 const connectionResult = connection.connect((err, res) => {
   if (res) {
@@ -20,6 +25,9 @@ const connectionResult = connection.connect((err, res) => {
       console.log(err)
   }
 })
+
+console.log("Connection : ")
+console.log(connectionResult)
 
 async function testQuery () {
   const sqlQuery = "select * from address_to_referral limit 1;"
