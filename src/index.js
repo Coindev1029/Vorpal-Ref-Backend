@@ -10,7 +10,7 @@ const connectionData = {
   user: process.env.db_user,
   host: process.env.db_host,
   database: process.env.db_name,
-  password: String.raw(`7SsvK{\aR*5W$5d-`), //process.env.db_password,
+  password: `7SsvK{${b}aR*5W$5d-`, //process.env.db_password,
   port: process.env.db_port,
 }
 
