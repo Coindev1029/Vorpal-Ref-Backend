@@ -2,18 +2,6 @@ require('dotenv').config();
 const { Client } = require('pg');
 const http = require('http')
 
-const connectionData = {
-  user: process.env.db_user,
-  host: process.env.db_host,
-  database: process.env.db_name,
-  password: process.env.db_password,
-  port: process.env.db_port,
-}
-
-console.log("Connection data : ")
-
-console.log(connectionData)
-
 const connection = new Client({
   user: process.env.db_user,
   host: process.env.db_host,
@@ -22,9 +10,9 @@ const connection = new Client({
   port: process.env.db_port,
 });
 
-const testQuery = () => {
+async function testQuery () {
   const sqlQuery = "select * from address_to_referral limit 1;"
-  connection.query(sqlQuery, (err, res) => {
+  const queryResult = connection.query(sqlQuery, (err, res) => {
       if (err) {
           console.log(err)
           return err;
@@ -33,11 +21,18 @@ const testQuery = () => {
       connection.end();
       return res.rows;
     })
+  console.log(queryResult)
+  return queryResult
 }
 
+console.log("query : ")
+testQuery ().then((res) => {
+  console.log(res)
+})
 
-console.log("Connection : ")
-console.log(connection)
+
+// console.log("Connection : ")
+//console.log(connection)
 
 // const { connectionResult } = require('./database/connect')
 
@@ -50,7 +45,10 @@ const server = http.createServer((req, res) => {
 
 server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
-    console.log(testQuery())
+    console.log("query : ")
+    testQuery().then((res) => {
+      console.log(res)
+    })
   })
 
   
