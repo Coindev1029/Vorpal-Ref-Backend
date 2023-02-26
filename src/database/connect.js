@@ -1,5 +1,17 @@
 const { Client } = require('pg');
 
+const connectionData = {
+    user: process.env.db_user,
+    host: process.env.db_host,
+    database: process.env.db_name,
+    password: process.env.db_password,
+    port: process.env.db_port,
+  }
+
+console.log("Connection : ")
+
+console.log(connectionData)
+
 const connection = new Client({
     user: process.env.db_user,
     host: process.env.db_host,
@@ -8,7 +20,7 @@ const connection = new Client({
     port: process.env.db_port,
   });
 
-const connectionResult = connection.connect((res, err) => {
+const connectionResult = connection.connect((err, res) => {
     if (res) {
         console.log("Res : ")
         console.log(res)
