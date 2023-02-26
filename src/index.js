@@ -23,7 +23,7 @@ const connection = new Client({
 });
 
 const testQuery = () => {
-  const sqlQuery = "select * from address_to_referra limit 1"
+  const sqlQuery = "select * from address_to_referral limit 1;"
   connection.query(sqlQuery, (err, res) => {
       if (err) {
           console.log(err)
