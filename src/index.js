@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { Client } = require('pg');
+const http = require('http')
 
 const connectionData = {
   user: process.env.db_user,
@@ -9,7 +10,7 @@ const connectionData = {
   port: process.env.db_port,
 }
 
-console.log("Connection : ")
+console.log("Connection data : ")
 
 console.log(connectionData)
 
@@ -21,11 +22,10 @@ const connection = new Client({
   port: process.env.db_port,
 });
 
-
+console.log("Connection : ")
 console.log(connection)
 
-const http = require('http')
-const { connectionResult } = require('./database/connect')
+// const { connectionResult } = require('./database/connect')
 
 const port = process.argv[2] ? process.argv[2] : process.env.default_port
 
@@ -36,7 +36,6 @@ const server = http.createServer((req, res) => {
 
 server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
-    console.log(connectionResult)
   })
 
   
