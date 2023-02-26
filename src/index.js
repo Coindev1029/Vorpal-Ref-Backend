@@ -22,6 +22,20 @@ const connection = new Client({
   port: process.env.db_port,
 });
 
+const testQuery = () => {
+  const sqlQuery = "select * from address_to_referra limit 1"
+  connection.query(sqlQuery, (err, res) => {
+      if (err) {
+          console.log(err)
+          return err;
+      };
+      console.log(res.rows);
+      connection.end();
+      return res.rows;
+    })
+}
+
+
 console.log("Connection : ")
 console.log(connection)
 
@@ -36,6 +50,7 @@ const server = http.createServer((req, res) => {
 
 server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
+    console.log(testQuery())
   })
 
   
