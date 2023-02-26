@@ -2,11 +2,15 @@ require('dotenv').config();
 const { Client } = require('pg');
 const http = require('http')
 
+const b = '\\'
+console.log('b : ')
+console.log(b)
+
 const connectionData = {
   user: process.env.db_user,
   host: process.env.db_host,
   database: process.env.db_name,
-  password: process.env.db_password,
+  password: String.raw(`7SsvK{\aR*5W$5d-`), //process.env.db_password,
   port: process.env.db_port,
 }
 
