@@ -6,7 +6,7 @@ const connectionData = {
   user: process.env.db_user,
   host: process.env.db_host,
   database: process.env.db_name,
-  password: new RegExp(`7SsvK{\\aR*5W$5d-`), //process.env.db_password,
+  password: `7SsvK{\\aR*5W$5d-`, //process.env.db_password,
   port: process.env.db_port,
 }
 
