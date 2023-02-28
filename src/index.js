@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { Client } = require('pg');
 const http = require('http')
+const { GenerateLink }= require('./generateLink')
 
 const connectionData = {
   user: process.env.db_user,
@@ -9,9 +10,6 @@ const connectionData = {
   password: process.env.db_password, //process.env.db_password,
   port: process.env.db_port,
 }
-
-console.log("Connection data : ")
-console.log(connectionData)
 
 const connection = new Client(connectionData);
 
@@ -25,9 +23,6 @@ const connectionResult = connection.connect((err, res) => {
       console.log(err)
   }
 })
-
-console.log("Connection : ")
-console.log(connectionResult)
 
 async function testQuery () {
   const sqlQuery = "select * from address_to_referral limit 1;"
@@ -58,16 +53,15 @@ testQuery ().then((res) => {
 const port = process.argv[2] ? process.argv[2] : process.env.default_port
 
 const server = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.writeHead(200, { 'Content-Type': 'text/plain', "Access-Control-Allow-Origin": "*" });
     res.end('Connected on port');
+    console.log("Link example : ")
+    console.log(GenerateLink("0x00"))
  });
 
 server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
-    console.log("query : ")
-    testQuery().then((res) => {
-      console.log(res)
-    })
+
   })
 
   
