@@ -24,13 +24,18 @@ const connectionResult = connection.connect((err, res) => {
   }
 })
 
+//New link generation, returns new link
 async function AddNewLink ( owner, reward1, reward2 ) {
    console.log(owner)
 }
 
-
+//Registering a new referral. Only one referral link to address, 
+//returns true is it was registered, false if not
 async function RegisterReferral ( address, link ) {
-   console.log(address)
+   const CheckQuery = `select count(*) from address_to_referral where address = ${address};`
+   const checkResult = await connection.query(CheckQuery)
+   console.log(checkResult)
+   return checkResult
 }
 
 module.exports = {
