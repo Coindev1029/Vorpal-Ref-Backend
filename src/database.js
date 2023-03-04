@@ -31,10 +31,8 @@ async function AddNewLink ( owner, reward1, reward2 ) {
    const registerRewardQuery = `INSERT INTO referral_reward(link_key, value_primary, value_secondary) VALUES ('${owner}', '${reward1}', '${reward2}');`
 
    const execAdd = await connection.query(linkAddQuery)
-   console.log(execAdd)
    const execReward = await connection.query(registerRewardQuery)
-   console.log(execReward)
-   console.log(newLink)
+
    return newLink
 }
 
@@ -50,7 +48,7 @@ async function RegisterReferral ( address, link ) {
      if (checkResult.rows[0].count === '0') {
 
         const additionResult = await connection.query(addQuery)
-        if (additionResult.roeCount > 0) {
+        if (additionResult.rowCount > 0) {
           return true
         } else {
           return false
@@ -66,7 +64,14 @@ async function RegisterReferral ( address, link ) {
 
 }
 
+async function GetLinksByOwner (owner) {
+   const getterQuery = `SELECT * FROM referral_owner WHERE address = ${owner};`
+   const links = connection.query(getterQuery)
+   return links.rows
+}
+
 module.exports = {
   AddNewLink,
-  RegisterReferral
+  RegisterReferral,
+  GetLinksByOwner
 }
