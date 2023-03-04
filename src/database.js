@@ -36,11 +36,11 @@ async function RegisterReferral ( address, link ) {
    const CheckQuery = `select count(*) from address_to_referral where address = '${address}';`
    const checkResult = await connection.query(CheckQuery)
    console.log(checkResult.rows)
-   if (checkResult.rows) {
-      console.log(checkResult.rows.count)
-      console.log(checkResult.rows.count === 0)
-      console.log(checkResult.rows.count === '0')
-     if (checkResult.rows.count === '0') {
+   if (checkResult.rows[0]) {
+      console.log(checkResult.rows[0].count)
+      console.log(checkResult.rows[0].count === 0)
+      console.log(checkResult.rows[0].count === '0')
+     if (checkResult.rows[0].count === '0') {
         console.log("true here")
         return true
      } else {
