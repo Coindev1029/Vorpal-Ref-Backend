@@ -25,9 +25,10 @@ const connectionResult = connection.connect((err, res) => {
 
 //New link generation, returns new link
 async function AddNewLink ( owner, reward1, reward2 ) {
+
    const newLink = GenerateLink(owner)
-   const linkAddQuery = `INSERT INTO referral_owner(address, link_key) VALUES('${address}', '${newLink}');`
-   const registerRewardQuery = `INSERT INTO referral_reward(link_key, value_primary, value_secondary) VALUES ('${address}', '${reward1}', '${reward2}');`
+   const linkAddQuery = `INSERT INTO referral_owner(address, link_key) VALUES('${owner}', '${newLink}');`
+   const registerRewardQuery = `INSERT INTO referral_reward(link_key, value_primary, value_secondary) VALUES ('${owner}', '${reward1}', '${reward2}');`
 
    const execAdd = await connection.query(linkAddQuery)
    console.log(execAdd)
