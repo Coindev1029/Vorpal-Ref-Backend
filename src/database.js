@@ -23,6 +23,14 @@ const connectionResult = connection.connect((err, res) => {
   }
 })
 
+function IsWrongString ( arg ) {
+  if (!arg) return true
+  if (arg.indexOf(";") > -1) return true
+  if (arg.indexOf(" ") > -1) return true
+
+  return false
+}
+
 async function DBMigration () {
   const TableOneQuery = 'CREATE TABLE IF NOT EXISTS address_to_referral ('+
   'id SERIAL PRIMARY KEY, address varchar(512) NOT NULL,'+
@@ -41,6 +49,8 @@ async function DBMigration () {
 
 //New link generation, returns new link
 async function AddNewLink ( owner, reward1, reward2 ) {
+   if (IsWrongString(owner)) return null
+   if (typeof(reward1) !== 'number' || typeof(reward2) !== 'number'  || ( reward2 + reward1 > 100)) return null
 
    const newLink = GenerateLink(owner)
    const linkAddQuery = `INSERT INTO referral_owner(address, link_key, value_primary, value_secondary) VALUES('${owner}', '${newLink}', '${reward1}', '${reward2}');`
@@ -53,6 +63,9 @@ async function AddNewLink ( owner, reward1, reward2 ) {
 //Registering a new referral. Only one referral link to address, 
 //returns true is it was registered, false if not
 async function RegisterReferral ( address, link ) {
+
+   if( IsWrongString ( address ) || IsWrongString ( link )) return false
+   
    const CheckQuery = `select count(*) from address_to_referral where address = '${address}';`
    const addQuery = `INSERT INTO address_to_referral(address, link_key) VALUES ('${address}', '${link}');`
    const checkResult = await connection.query(CheckQuery)
@@ -79,9 +92,12 @@ async function RegisterReferral ( address, link ) {
 }
 
 async function GetLinksByOwner (owner) {
+
+  if (IsWrongString ( owner )) return []
+  
    const getterQuery = `SELECT address, link_key, value_primary, value_secondary FROM referral_owner WHERE address = '${owner}';`
    const links = await connection.query(getterQuery)
-   console.log(links)
+
    return links.rows
 }
 
