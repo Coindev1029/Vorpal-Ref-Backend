@@ -4,7 +4,7 @@ const http = require('http')
 
 const port = process.argv[2] ? process.argv[2] : process.env.default_port
 
-console.log(AddNewLink('0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f'))
+console.log(AddNewLink('0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f', 10, 20))
 console.log(RegisterReferral('0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f'))
 console.log(RegisterReferral('0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F'))
 
