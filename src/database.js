@@ -37,13 +37,15 @@ async function RegisterReferral ( address, link ) {
    const checkResult = await connection.query(CheckQuery)
    console.log(checkResult.rows)
    if (checkResult.rows) {
-     if (checkResult.rows.count === 0) {
+     if (checkResult.rows.count === '0') {
         console.log("true here")
         return true
      } else {
+       console.log("false here")
        return false
      }
    } else {
+    console.log("rows not found")
      return false;
    }
 
