@@ -24,21 +24,16 @@ const connectionResult = connection.connect((err, res) => {
   }
 })
 
-async function testQuery () {
-  const sqlQuery = "select * from address_to_referral limit 1;"
-  const queryResult = connection.query(sqlQuery, (err, res) => {
-      if (err) {
-          console.log(err)
-          return err;
-      };
-      console.log(res.rows);
-      connection.end();
-      return res.rows;
-    })
-  console.log(queryResult)
-  return queryResult
+async function AddNewLink ( owner, reward1, reward2 ) {
+   console.log(owner)
+}
+
+
+async function RegisterReferral ( address, link ) {
+   console.log(address)
 }
 
 module.exports = {
-  testQuery
+  AddNewLink,
+  RegisterReferral
 }

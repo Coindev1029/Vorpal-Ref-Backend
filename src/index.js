@@ -1,21 +1,15 @@
 require('dotenv').config();
-const { Client } = require('pg');
+const { AddNewLink,  RegisterReferral } = require('./database');
 const http = require('http')
-const { GenerateLink } = require('./generateLink')
-const { testQuery } = require('./database')
-
-console.log("query : ")
-testQuery ().then((res) => {
-  console.log(res)
-})
 
 const port = process.argv[2] ? process.argv[2] : process.env.default_port
+
+console.log(AddNewLink('0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f'))
+console.log(RegisterReferral('0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f'))
 
 const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain', "Access-Control-Allow-Origin": "*" });
     res.end('Connected on port');
-    console.log("Link example : ")
-    console.log(GenerateLink("0x00"))
  });
 
 server.listen(port, () => {
