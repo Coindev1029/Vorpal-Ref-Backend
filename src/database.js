@@ -65,7 +65,7 @@ async function RegisterReferral ( address, link ) {
 }
 
 async function GetLinksByOwner (owner) {
-   const getterQuery = `SELECT * FROM referral_owner WHERE address = ${owner};`
+   const getterQuery = `SELECT * FROM referral_owner WHERE address = '${owner}';`
    const links = connection.query(getterQuery)
    return links.rows
 }
