@@ -43,11 +43,9 @@ async function DBMigration () {
 async function AddNewLink ( owner, reward1, reward2 ) {
 
    const newLink = GenerateLink(owner)
-   const linkAddQuery = `INSERT INTO referral_owner(address, link_key) VALUES('${owner}', '${newLink}');`
-   const registerRewardQuery = `INSERT INTO referral_reward(link_key, value_primary, value_secondary) VALUES ('${owner}', '${reward1}', '${reward2}');`
+   const linkAddQuery = `INSERT INTO referral_owner(address, link_key, value_primary, value_secondary) VALUES('${owner}', '${newLink}', '${reward1}', '${reward2}');`
 
    const execAdd = await connection.query(linkAddQuery)
-   const execReward = await connection.query(registerRewardQuery)
 
    return newLink
 }
