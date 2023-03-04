@@ -23,6 +23,22 @@ const connectionResult = connection.connect((err, res) => {
   }
 })
 
+async function DBMigration () {
+  const TableOneQuery = 'CREATE TABLE IF NOT EXISTS address_to_referral ('+
+  'id SERIAL PRIMARY KEY, address varchar(512) NOT NULL,'+
+  'link_key varchar(512) NOT NULL );'
+  const TableTwoQuery = 'CREATE TABLE IF NOT EXISTS referral_owner (' +
+    'id SERIAL PRIMARY KEY,' +
+    'address varchar(512) NOT NULL,' +
+    'link_key varchar(512) NOT NULL,' +
+    'value_primary int NOT NULL,' +
+    'value_secondary int NOT NULL );'
+  
+  console.log(await connection.query(TableOneQuery))
+  console.log(await connection.query(TableTwoQuery))
+  return true
+}
+
 //New link generation, returns new link
 async function AddNewLink ( owner, reward1, reward2 ) {
 
@@ -71,6 +87,7 @@ async function GetLinksByOwner (owner) {
 }
 
 module.exports = {
+  DBMigration,
   AddNewLink,
   RegisterReferral,
   GetLinksByOwner
