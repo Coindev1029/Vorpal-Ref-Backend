@@ -32,7 +32,7 @@ async function AddNewLink ( owner, reward1, reward2 ) {
 //Registering a new referral. Only one referral link to address, 
 //returns true is it was registered, false if not
 async function RegisterReferral ( address, link ) {
-   const CheckQuery = `select count(*) from address_to_referral where address = ${address};`
+   const CheckQuery = `select count(*) from address_to_referral where address = '${address}';`
    const checkResult = await connection.query(CheckQuery)
    console.log(checkResult)
    return checkResult
