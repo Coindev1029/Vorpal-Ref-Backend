@@ -3,11 +3,11 @@ const { Client } = require('pg');
 const { GenerateLink }= require('./generateLink')
 
 const connectionData = {
-    user: process.env.db_user,
-    host: process.env.db_host,
-    database: process.env.db_name,
-    password: process.env.db_password, //process.env.db_password,
-    port: process.env.db_port,
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD, //process.env.db_password,
+    port: process.env.DB_PORT,
   }
 
 const connection = new Client(connectionData);
@@ -26,7 +26,9 @@ const connectionResult = connection.connect((err, res) => {
 
 //New link generation, returns new link
 async function AddNewLink ( owner, reward1, reward2 ) {
-   console.log(owner)
+   const newLink = GenerateLink(owner)
+   console.log(newLink)
+   return newLink
 }
 
 //Registering a new referral. Only one referral link to address, 
@@ -34,8 +36,18 @@ async function AddNewLink ( owner, reward1, reward2 ) {
 async function RegisterReferral ( address, link ) {
    const CheckQuery = `select count(*) from address_to_referral where address = '${address}';`
    const checkResult = await connection.query(CheckQuery)
-   console.log(checkResult)
-   return checkResult
+
+   if (checkResult.rows) {
+     if (checkResult.rows.count === 0) {
+        console.log("true here")
+        return true
+     } else {
+       return false
+     }
+   } else {
+     return false;
+   }
+
 }
 
 module.exports = {
