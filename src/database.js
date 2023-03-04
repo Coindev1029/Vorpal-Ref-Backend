@@ -15,8 +15,7 @@ const connection = new Client(connectionData);
 
 const connectionResult = connection.connect((err, res) => {
   if (res) {
-      console.log("Res : ")
-      console.log(res)
+      console.log("Database connected")
   }
   if (err) {
       console.log("Err : ")
@@ -36,7 +35,7 @@ async function AddNewLink ( owner, reward1, reward2 ) {
 async function RegisterReferral ( address, link ) {
    const CheckQuery = `select count(*) from address_to_referral where address = '${address}';`
    const checkResult = await connection.query(CheckQuery)
-
+   console.log(checkResult.rows)
    if (checkResult.rows) {
      if (checkResult.rows.count === 0) {
         console.log("true here")
