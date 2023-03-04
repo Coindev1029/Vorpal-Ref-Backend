@@ -34,8 +34,8 @@ async function DBMigration () {
     'value_primary int NOT NULL,' +
     'value_secondary int NOT NULL );'
   
-  console.log(await connection.query(TableOneQuery))
-  console.log(await connection.query(TableTwoQuery))
+  await connection.query(TableOneQuery)
+  await connection.query(TableTwoQuery)
   return true
 }
 
@@ -79,7 +79,7 @@ async function RegisterReferral ( address, link ) {
 }
 
 async function GetLinksByOwner (owner) {
-   const getterQuery = `SELECT * FROM referral_owner WHERE address = '${owner}';`
+   const getterQuery = `SELECT address, link_key, value_primary, value_secondary FROM referral_owner WHERE address = '${owner}';`
    const links = await connection.query(getterQuery)
    console.log(links)
    return links.rows
