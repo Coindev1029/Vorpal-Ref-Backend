@@ -19,6 +19,10 @@ async function tests () {
 
 tests()
 
+app.get('/', (req, res) => {
+  res.status(200).send('API homepage');
+})
+
 app.post('/api', (req, res) => {
 
   const postData = req.body;
