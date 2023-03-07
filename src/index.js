@@ -26,12 +26,13 @@ app.get('/', (req, res) => {
 app.post('/api', (req, res) => {
 
   const postData = req.body;
+  console.log("req : ")
+  console.log(req)
 
-  console.log(postData)
   res.setHeader("Access-Control-Allow-Origin", "*" );
   res.setHeader('Access-Control-Allow-Methods', 'POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
+
   res.status(200).send('Post created');
 })
 
@@ -49,6 +50,8 @@ server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 
   })
+
+Actions: "CreateLink", "RegisterReferral", "GetLinksByOwner"
 */
   
 
