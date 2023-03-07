@@ -64,7 +64,11 @@ app.post('/api', (req, res) => {
         res.end()
         return;
       }
-      AddNewLink(postData.owner, postData.reward1, postData.reward2).then((res) => {
+      res.status(200).send(JSON.stringify({
+        creation: "ok",
+        link: AddNewLink(postData.owner, postData.reward1, postData.reward2)
+      }));
+      /* AddNewLink(postData.owner, postData.reward1, postData.reward2).then((res) => {
           if (!res) {
             res.status(400).send(JSON.stringify({
               error: 'Error with data'
@@ -76,7 +80,7 @@ app.post('/api', (req, res) => {
             creation: "ok",
             link: res
           }));
-      })
+      }) */
       break;
       default:
         res.status(200).send(JSON.stringify({
