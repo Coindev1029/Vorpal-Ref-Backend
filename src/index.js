@@ -10,6 +10,12 @@ const port = process.argv[2] ? process.argv[2] : process.env.default_port
 
 app.use(express.json());
 
+const allowed_actions = [
+  "CreateLink",
+  "RegisterReferral",
+  "GetLinksByOwner"
+]
+
 async function tests () {
   console.log("Tests : ")
   // console.log(await DBMigration())
@@ -31,8 +37,6 @@ app.get('/', (req, res) => {
 app.post('/api', (req, res) => {
 
   const postData = req.body;
-  console.log("req : ")
-  console.log(req)
 
   console.log("req body: ")
   console.log(postData)
@@ -42,9 +46,52 @@ app.post('/api', (req, res) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Content-Type', 'application/json');
 
-  res.status(200).send(JSON.stringify({
+
+  if (!postData || !postData.action) {
+    res.status(400).send(JSON.stringify({
+      error: 'Action is not specified'
+    }));
+    res.end()
+    return;
+  }
+
+  switch(postData.action) {
+     case "CreateLink":
+      if (!postData.owner || !postData.reward1 || !postData.reward2) {
+        res.status(400).send(JSON.stringify({
+          error: 'Some of required params is missing'
+        }));
+        res.end()
+        return;
+      }
+      AddNewLink(postData.owner, postData.reward1, postData.reward2).then((res) => {
+          if (!res) {
+            res.status(400).send(JSON.stringify({
+              error: 'Error with data'
+            }));
+            res.end()
+          }
+
+          res.status(200).send(JSON.stringify({
+            creation: "ok",
+            link: res
+          }));
+      })
+      break;
+      default:
+        res.status(200).send(JSON.stringify({
+          condition: 'Default'
+        }));
+        res.end()
+      break;
+  }
+
+
+
+  /* res.status(200).send(JSON.stringify({
     condition: 'Default'
   }));
+  res.end() */
 })
 
 app.listen(port, () => {
@@ -52,17 +99,37 @@ app.listen(port, () => {
 });
 
 /*
-const server = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain', "Access-Control-Allow-Origin": "*" });
-    res.end('Connected on port');
- });
 
-server.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+{
+  action: "CreateLink",
+  owner:  '0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F',
+  reward1: 10,
+  reward2: 20
+}
 
-  })
+{
+  action: "RegisterReferral",
+  client: '0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F',
+  link: 'ac21766476906b650f7502530a796f19'
+}
+
+{
+  action: "GetLinksByOwner",
+  owner:  '0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F'
+}
 
 Actions: "CreateLink", "RegisterReferral", "GetLinksByOwner"
+
+
+fetch("/api", {
+method: "post", 
+headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+body: JSON.stringify({ok: "ok"})
+}
+).then(res => res.json()).then((res) => console.log(res))
 */
   
 
