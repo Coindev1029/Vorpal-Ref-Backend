@@ -32,8 +32,11 @@ app.post('/api', (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*" );
   res.setHeader('Access-Control-Allow-Methods', 'POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Content-Type', 'application/json');
 
-  res.status(200).send('Post created');
+  res.status(200).send(JSON.stringify({
+    condition: 'Default'
+  }));
 })
 
 app.listen(port, () => {
