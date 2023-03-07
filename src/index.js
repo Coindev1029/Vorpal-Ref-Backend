@@ -19,6 +19,10 @@ async function tests () {
 
 tests()
 
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
 app.get('/', (req, res) => {
   res.status(200).send('API homepage');
 })
@@ -28,6 +32,9 @@ app.post('/api', (req, res) => {
   const postData = req.body;
   console.log("req : ")
   console.log(req)
+
+  console.log("req body: ")
+  console.log(postData)
 
   res.setHeader("Access-Control-Allow-Origin", "*" );
   res.setHeader('Access-Control-Allow-Methods', 'POST');
