@@ -1,8 +1,13 @@
 require('dotenv').config();
 const { DBMigration, AddNewLink,  RegisterReferral, GetLinksByOwner } = require('./database');
 const http = require('http')
+const https = require('https');
+const express = require('express');
+const app = express();
 
 const port = process.argv[2] ? process.argv[2] : process.env.default_port
+
+app.use(express.json());
 
 async function tests () {
   console.log("Tests : ")
@@ -14,6 +19,20 @@ async function tests () {
 
 tests()
 
+app.post('/', (req, res) => {
+
+  const postData = req.body;
+
+  console.log(postData)
+
+  res.status(202).send('Post created');
+})
+
+app.listen(port, () => {
+  console.log(`Listening on port ${port}...`);
+});
+
+/*
 const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain', "Access-Control-Allow-Origin": "*" });
     res.end('Connected on port');
@@ -23,6 +42,6 @@ server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 
   })
-
+*/
   
 
