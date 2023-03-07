@@ -28,7 +28,10 @@ app.post('/api', (req, res) => {
   const postData = req.body;
 
   console.log(postData)
-  res.writeHead(200, { 'Content-Type': 'text/plain', "Access-Control-Allow-Origin": "*" });
+  res.setHeader("Access-Control-Allow-Origin", "*" );
+  res.setHeader('Access-Control-Allow-Methods', 'POST');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  
   res.status(200).send('Post created');
 })
 
