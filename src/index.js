@@ -19,13 +19,13 @@ async function tests () {
 
 tests()
 
-app.post('/', (req, res) => {
+app.post('/api', (req, res) => {
 
   const postData = req.body;
 
   console.log(postData)
-
-  res.status(202).send('Post created');
+  res.writeHead(200, { 'Content-Type': 'text/plain', "Access-Control-Allow-Origin": "*" });
+  res.status(200).send('Post created');
 })
 
 app.listen(port, () => {
