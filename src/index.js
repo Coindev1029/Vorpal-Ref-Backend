@@ -3,6 +3,7 @@ const { DBMigration, AddNewLink,  RegisterReferral, GetLinksByOwner } = require(
 const http = require('http')
 const https = require('https');
 const express = require('express');
+const bodyParser = require('body-parser')
 const app = express();
 
 const port = process.argv[2] ? process.argv[2] : process.env.default_port
