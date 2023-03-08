@@ -64,7 +64,10 @@ async function AddNewLink ( owner, reward1, reward2 ) {
 //returns true is it was registered, false if not
 async function RegisterReferral ( address, link ) {
 
-   if( IsWrongString ( address ) || IsWrongString ( link )) return false
+   if( IsWrongString ( address ) || IsWrongString ( link )) return {
+      result: false,
+      error: "Incorrect entry"
+   }
    
    const CheckQuery = `select count(*) from address_to_referral where address = '${address}';`
    const addQuery = `INSERT INTO address_to_referral(address, link_key) VALUES ('${address}', '${link}');`
@@ -76,17 +79,25 @@ async function RegisterReferral ( address, link ) {
 
         const additionResult = await connection.query(addQuery)
         if (additionResult.rowCount > 0) {
-          return true
+          return {
+            result: true,
+            error: "",
+            message: "Client succseefully registered"
+          }
         } else {
           return false
         }
      } else {
-       console.log("Adress is already registered")
-       return false
+       return  {
+        result: false,
+        error: "Client is already registered"
+       }
      }
    } else {
-    console.log("rows not found")
-     return false;
+     return {
+       result: false,
+       error: "Failed to connect with database"
+      }
    }
 
 }

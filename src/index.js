@@ -21,7 +21,7 @@ async function tests () {
   // console.log(await DBMigration())
   // console.log(await AddNewLink('0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f', 10, 20))
   // console.log(await RegisterReferral('0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F', 'ac21766476906b650f7502530a796f19'))
-  console.log(await GetLinksByOwner('0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f'))
+  console.log(await GetLinksByOwner('0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F'))
 }
 
 tests()
@@ -65,29 +65,41 @@ app.post('/api', async (req, res) => {
         return;
       }
       res.status(200).send(JSON.stringify({
-        creation: "ok",
-        link: await AddNewLink(postData.owner, postData.reward1, postData.reward2)
+        creation: "newLink",
+        result: await AddNewLink(postData.owner, postData.reward1, postData.reward2)
       }));
-      /* AddNewLink(postData.owner, postData.reward1, postData.reward2).then((res) => {
-          if (!res) {
-            res.status(400).send(JSON.stringify({
-              error: 'Error with data'
-            }));
-            res.end()
-          }
-
-          res.status(200).send(JSON.stringify({
-            creation: "ok",
-            link: res
-          }));
-      }) */
-      break;
-      default:
+     break;
+     case "RegisterReferral":
+      if ( !postData.client || !postData.link ) {
+        res.status(400).send(JSON.stringify({
+          error: 'Some of required params is missing'
+        }));
+        res.end()
+        return;
+      }
+      res.status(200).send(JSON.stringify({
+        creation: "register",
+        result: await RegisterReferral ( postData.client, postData.link )
+      }));
+     break;
+     case "GetLinksByOwner":
+      if ( !postData.owner ) {
+        res.status(400).send(JSON.stringify({
+          error: 'Some of required params is missing'
+        }));
+        res.end()
+        return;
+      }
+      res.status(200).send(JSON.stringify({
+        creation: "getLinks",
+        result: await GetLinksByOwner ( postData.owner )
+      }));
+     default:
         res.status(200).send(JSON.stringify({
           condition: 'Default'
         }));
         res.end()
-      break;
+     break;
   }
 
 
