@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
   res.status(200).send('API homepage');
 })
 
-app.post('/api', (req, res) => {
+app.post('/api', async (req, res) => {
 
   const postData = req.body;
 
@@ -54,7 +54,7 @@ app.post('/api', (req, res) => {
     res.end()
     return;
   }
-
+  
   switch(postData.action) {
      case "CreateLink":
       if (!postData.owner || !postData.reward1 || !postData.reward2) {
@@ -66,7 +66,7 @@ app.post('/api', (req, res) => {
       }
       res.status(200).send(JSON.stringify({
         creation: "ok",
-        link: AddNewLink(postData.owner, postData.reward1, postData.reward2)
+        link: await AddNewLink(postData.owner, postData.reward1, postData.reward2)
       }));
       /* AddNewLink(postData.owner, postData.reward1, postData.reward2).then((res) => {
           if (!res) {
