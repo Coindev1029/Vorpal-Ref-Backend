@@ -6,7 +6,7 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const app = express();
 
-const port = process.argv[2] ? process.argv[2] : process.env.default_port
+const port = process.argv[2] ? process.argv[2] : process.env.DEFAULT_PORT
 
 app.use(express.json());
 
