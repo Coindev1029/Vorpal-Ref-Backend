@@ -10,6 +10,9 @@ dEnv.config();
 
 const port = process.argv[2] ? process.argv[2] : process.env.DEFAULT_PORT
 
+var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
+var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
+
 app.use(express.json());
 
 const allowed_actions = [
