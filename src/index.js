@@ -116,6 +116,18 @@ app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
 });
 
+/* 
+const credentials = {
+  key: process.env.HTTPS_PRIVATE_KEY, 
+  cert: process.env.HTTPS_CERT};
+
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(process.argv[2] ? process.argv[2] : process.env.DEFAULT_PORT);
+httpsServer.listen(process.argv[3] ? process.argv[3] : process.env.DEFAULT_PORT_HTTPS);
+
+*/
 /*
 
 {
