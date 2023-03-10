@@ -158,8 +158,10 @@ Actions: "CreateLink", "RegisterReferral", "GetLinksByOwner"
 
 fetch("/api", {
 method: "post", 
+credentials: "include",
 headers: {
         'Accept': 'application/json',
+        'Access-Control-Allow-Origin', '*',
         'Content-Type': 'application/json'
       },
 body: JSON.stringify({
