@@ -1,10 +1,12 @@
-require('dotenv').config();
+const dEnv = require('dotenv');
 const { DBMigration, AddNewLink,  RegisterReferral, GetLinksByOwner } = require('./database');
 const http = require('http')
 const https = require('https');
 const express = require('express');
 const bodyParser = require('body-parser')
 const app = express();
+
+dEnv.config();
 
 const port = process.argv[2] ? process.argv[2] : process.env.DEFAULT_PORT
 
