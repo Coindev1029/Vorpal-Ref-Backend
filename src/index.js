@@ -46,7 +46,7 @@ app.post('/api', async (req, res) => {
   console.log("req body: ")
   console.log(postData)
 
-  res.setHeader("Access-Control-Allow-Origin", "*" );
+  res.setHeader("access-control-allow-origin", "*" );
   res.setHeader('Access-Control-Allow-Methods', 'POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Content-Type', 'application/json');
@@ -162,7 +162,10 @@ headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-body: JSON.stringify({ok: "ok"})
+body: JSON.stringify({
+         action: "GetLinksByOwner",
+         owner:  '0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F'
+      })
 }
 ).then(res => res.json()).then((res) => console.log(res))
 */
