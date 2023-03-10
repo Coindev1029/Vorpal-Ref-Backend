@@ -1,4 +1,4 @@
-const md5 = require('md5')
+import md5 from 'md5'
 
 const GenerateLink = ( address ) => {
     const message = address + "" + (new Date().getTime()) + (Math.random(1000000000))

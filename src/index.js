@@ -139,6 +139,8 @@ httpsServer.listen(process.argv[3] ? process.argv[3] : process.env.DEFAULT_PORT_
   reward1: 10,
   reward2: 20
 }
+var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
+var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
 
 {
   action: "RegisterReferral",
