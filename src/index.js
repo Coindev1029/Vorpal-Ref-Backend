@@ -46,12 +46,12 @@ app.post('/api', async (req, res) => {
   console.log("req body: ")
   console.log(postData)
 
-  res.setHeader("Access-Control-Allow-Origin", "*" );
+  /* res.setHeader("Access-Control-Allow-Origin", "*" );
   res.setHeader('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE");
   res.setHeader('Access-Control-Request-Headers', 'Content-Type, Accept');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Type', 'application/json'); */
 
 
   if (!postData || !postData.action) {
@@ -160,11 +160,21 @@ Actions: "CreateLink", "RegisterReferral", "GetLinksByOwner"
 
 fetch("/api", {
 method: "post", 
-credentials: "include",
 headers: {
         'Accept': 'application/json',
-        'Access-Control-Allow-Origin', '*',
         'Content-Type': 'application/json'
+      },
+body: JSON.stringify({
+         action: "GetLinksByOwner",
+         owner:  '0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F'
+      })
+}
+).then(res => res.json()).then((res) => console.log(res))
+
+fetch("/api", {
+method: "post", 
+header: {
+          'Content-Type': 'application/x-www-form-urlencoded'
       },
 body: JSON.stringify({
          action: "GetLinksByOwner",
