@@ -47,8 +47,10 @@ app.post('/api', async (req, res) => {
   console.log(postData)
 
   res.setHeader("Access-Control-Allow-Origin", "*" );
-  res.setHeader('Access-Control-Allow-Methods', 'POST');
+  res.setHeader('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE");
+  res.setHeader('Access-Control-Request-Headers', 'Content-Type, Accept');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Content-Type', 'application/json');
 
 
