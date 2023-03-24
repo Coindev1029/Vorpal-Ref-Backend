@@ -29,7 +29,7 @@ async function tests () {
   console.log(await GetLinksByOwner('0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F'))
 }
 
-tests()
+// tests()
 
 app.use(bodyParser.urlencoded({
   extended: true
