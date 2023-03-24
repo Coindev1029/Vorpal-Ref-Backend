@@ -52,6 +52,14 @@ async function AddNewLink ( owner, reward1, reward2 ) {
    if (IsWrongString(owner)) return null
    if (typeof(reward1) !== 'number' || typeof(reward2) !== 'number'  || ( reward2 + reward1 > 100)) return null
 
+   const CheckQuery = `select count(*) from referral_owner where address = '${owner}';`;
+
+   const CheckAddrExists = await connection.query(linkAddQuery)
+
+   if (CheckAddrExists.rows[0] && CheckAddrExists.rows[0].count !== '0') {
+      return ""
+   }
+
    const newLink = GenerateLink(owner)
    const linkAddQuery = `INSERT INTO referral_owner(address, link_key, value_primary, value_secondary) VALUES('${owner}', '${newLink}', '${reward1}', '${reward2}');`
 
