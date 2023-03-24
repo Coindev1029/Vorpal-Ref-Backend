@@ -54,7 +54,7 @@ async function AddNewLink ( owner, reward1, reward2 ) {
 
    const CheckQuery = `select count(*) from referral_owner where address = '${owner}';`;
 
-   const CheckAddrExists = await connection.query(linkAddQuery)
+   const CheckAddrExists = await connection.query(CheckQuery)
 
    if (CheckAddrExists.rows[0] && CheckAddrExists.rows[0].count !== '0') {
       return ""
