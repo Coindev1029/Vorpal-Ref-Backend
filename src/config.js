@@ -13,4 +13,5 @@ const connectOptions = {
 const chainName = 'Binance'
 const ethSymbol = 'BNB'
 const rpcUrl = "https://data-seed-prebsc-1-s1.binance.org:8545/"
+const startBlock = 1500000
 
