@@ -92,8 +92,13 @@ async function AddNewLink ( owner, reward1, reward2 ) {
    const linkAddQuery = `INSERT INTO referral_owner(address, link_key, value_primary, value_secondary) VALUES('${owner}', '${newLink}', '${reward1}', '${reward2}');`
 
    await connection.query(linkAddQuery)
-   await SetupBalances (owner)
-   
+
+   try {
+      await SetupBalances (owner)  
+   } catch (e) {
+     console.log(e.message)
+   }
+
    return newLink
 }
 
