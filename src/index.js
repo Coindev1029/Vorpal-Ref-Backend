@@ -39,6 +39,8 @@ app.get('/', (req, res) => {
   res.status(200).send('API homepage');
 })
 
+
+
 app.post('/api', async (req, res) => {
 
   const postData = req.body;

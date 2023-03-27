@@ -10,6 +10,12 @@ const connectionData = {
     port: process.env.DB_PORT,
   }
 
+const defaultBalance = {
+  sheduled: null,
+  available: null,
+  withdrawn: null
+}
+
 const connection = new Client(connectionData);
 
 
@@ -35,16 +41,38 @@ async function DBMigration () {
   const TableOneQuery = 'CREATE TABLE IF NOT EXISTS address_to_referral ('+
   'id SERIAL PRIMARY KEY, address varchar(512) NOT NULL,'+
   'link_key varchar(512) NOT NULL );'
+
   const TableTwoQuery = 'CREATE TABLE IF NOT EXISTS referral_owner (' +
     'id SERIAL PRIMARY KEY,' +
     'address varchar(512) NOT NULL,' +
     'link_key varchar(512) NOT NULL,' +
     'value_primary int NOT NULL,' +
     'value_secondary int NOT NULL );'
-  
+
+  const TableBalanceQuery = 'CREATE TABLE IF NOT EXISTS balances ('+
+      'id SERIAL PRIMARY KEY,'+
+      'address varchar(512) NOT NULL UNIQUE,'+
+      'balance_scheduled float NOT NULL,'+
+      'balance_available float NOT NULL,'+
+      'balance_withdrawn float NOT NULL);'
+
   await connection.query(TableOneQuery)
   await connection.query(TableTwoQuery)
+  await connection.query(TableBalanceQuery)
   return true
+}
+
+// Trying to add an address if it's not exists
+async function SetupBalances (owner) {
+
+  if (IsWrongString(owner)) return null
+  
+  const addOwnerQuery = `INSERT INTO balances (address, balance_scheduled, balance_available, balance_withdrawn)
+   VALUES ( ${owner}, 0, 0, 0) ON CONFLICT (address) DO NOTHING;`;
+
+  await connection.query(addOwnerQuery);
+
+  return true;
 }
 
 //New link generation, returns new link
@@ -55,7 +83,6 @@ async function AddNewLink ( owner, reward1, reward2 ) {
    const CheckQuery = `select count(*) from referral_owner where address = '${owner}';`;
 
    const CheckAddrExists = await connection.query(CheckQuery)
-   console.log(CheckAddrExists.rows)
 
    if (CheckAddrExists.rows[0] && CheckAddrExists.rows[0].count !== '0') {
       return ""
@@ -64,10 +91,9 @@ async function AddNewLink ( owner, reward1, reward2 ) {
    const newLink = GenerateLink(owner)
    const linkAddQuery = `INSERT INTO referral_owner(address, link_key, value_primary, value_secondary) VALUES('${owner}', '${newLink}', '${reward1}', '${reward2}');`
 
-   const execAdd = await connection.query(linkAddQuery)
-
-   console.log(execAdd)
-
+   await connection.query(linkAddQuery)
+   await SetupBalances (owner)
+   
    return newLink
 }
 
