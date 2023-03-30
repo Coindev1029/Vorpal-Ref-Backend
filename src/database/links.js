@@ -16,31 +16,6 @@ function IsWrongString ( arg ) {
   return false
 }
 
-async function DBMigration () {
-  const TableOneQuery = 'CREATE TABLE IF NOT EXISTS address_to_referral ('+
-  'id SERIAL PRIMARY KEY, address varchar(512) NOT NULL,'+
-  'link_key varchar(512) NOT NULL );'
-
-  const TableTwoQuery = 'CREATE TABLE IF NOT EXISTS referral_owner (' +
-    'id SERIAL PRIMARY KEY,' +
-    'address varchar(512) NOT NULL,' +
-    'link_key varchar(512) NOT NULL,' +
-    'value_primary int NOT NULL,' +
-    'value_secondary int NOT NULL );'
-
-  const TableBalanceQuery = 'CREATE TABLE IF NOT EXISTS balances ('+
-      'id SERIAL PRIMARY KEY,'+
-      'address varchar(512) NOT NULL UNIQUE,'+
-      'balance_scheduled float NOT NULL,'+
-      'balance_available float NOT NULL,'+
-      'balance_withdrawn float NOT NULL);'
-
-  await connection.query(TableOneQuery)
-  await connection.query(TableTwoQuery)
-  await connection.query(TableBalanceQuery)
-  return true
-}
-
 // Trying to add an address if it's not exists
 async function SetupBalances (owner) {
 
@@ -134,9 +109,18 @@ async function GetLinksByOwner (owner) {
    return links.rows
 }
 
+async function GetRefCount ( link ) {
+   
+   const countQuery = `SELECT COUNT(*) from address_to_referral WHERE link_key = '${link}';`;
+
+   const countRequest = await connection.query(countQuery)
+
+   return countRequest.rows
+}
+
 module.exports = {
-  DBMigration,
   AddNewLink,
   RegisterReferral,
-  GetLinksByOwner
+  GetLinksByOwner,
+  GetRefCount
 }

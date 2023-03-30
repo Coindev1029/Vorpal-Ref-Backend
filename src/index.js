@@ -1,7 +1,5 @@
 const dEnv = require('dotenv');
-const { DBMigration, AddNewLink,  RegisterReferral, GetLinksByOwner } = require('./database/database');
-const http = require('http')
-const https = require('https');
+const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
 const express = require('express');
 const bodyParser = require('body-parser')
 const app = express();
@@ -14,22 +12,6 @@ const port = process.argv[2] ? process.argv[2] : process.env.DEFAULT_PORT
 // var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
 
 app.use(express.json());
-
-const allowed_actions = [
-  "CreateLink",
-  "RegisterReferral",
-  "GetLinksByOwner"
-]
-
-async function tests () {
-  console.log("Tests : ")
-  // console.log(await DBMigration())
-  // console.log(await AddNewLink('0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f', 10, 20))
-  // console.log(await RegisterReferral('0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F', 'ac21766476906b650f7502530a796f19'))
-  console.log(await GetLinksByOwner('0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F'))
-}
-
-// tests()
 
 app.use(bodyParser.urlencoded({
   extended: true
