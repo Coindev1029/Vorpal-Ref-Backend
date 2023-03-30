@@ -49,15 +49,28 @@ app.get('/api/getlinksbyowner/:id', async (req, res) => {
   }
 
   const userId = req.params.id.toLowerCase()
-
-  console.log(userId)
-
   const links = await GetLinksByOwner ( userId )
-
-   console.log(links)
-
    res.status(200).send(JSON.stringify({
       links : links
+   }));
+})
+
+app.get('/api/getownerdata/:id', async (req, res) => {
+
+  if (!req.params.id) {
+    res.status(400).send(JSON.stringify({
+      error : "User id is wrong or not specified"
+   }));
+   return;
+  }
+
+  const userId = req.params.id.toLowerCase()
+  const links = await GetLinksByOwner ( userId )
+   res.status(200).send(JSON.stringify({
+      links : links,
+      refCount: 0,
+      balanceScheduled: 0,
+      balanceAvailable: 0
    }));
 })
 
