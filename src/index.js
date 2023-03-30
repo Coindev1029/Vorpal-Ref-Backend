@@ -48,6 +48,13 @@ app.get('/api/getownerdata/:id', async (req, res) => {
 
   const userId = req.params.id.toLowerCase()
   const links = await GetLinksByOwner ( userId )
+
+   links.forEach(async (link) => {
+      const refCount = await GetRefCount (link.link_key)
+
+      console.log(refCount)
+   })
+
    res.status(200).send(JSON.stringify({
       links : links,
       refCount: 0,
