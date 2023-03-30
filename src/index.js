@@ -41,12 +41,21 @@ app.get('/', (req, res) => {
 
 app.get('/api/getlinksbyowner/:id', async (req, res) => {
 
-   console.log(req.params.id)
+  if (!req.params.id) {
+    res.status(400).send(JSON.stringify({
+      error : "User id is wrong or not specified"
+   }));
+   return;
+  }
 
-   const links = await GetLinksByOwner ( req.params.id )
+  const userId = req.params.id.toLowerCase()
+
+  console.log(userId)
+
+  const links = await GetLinksByOwner ( userId )
 
    console.log(links)
-   
+
    res.status(200).send(JSON.stringify({
       links : links
    }));

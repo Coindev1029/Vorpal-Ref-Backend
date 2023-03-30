@@ -145,16 +145,13 @@ async function RegisterReferral ( address, link ) {
 }
 
 async function GetLinksByOwner (owner) {
-  console.log("DB params : ")
-  console.log(owner)
-  console.log(IsWrongString ( owner ))
 
   if (IsWrongString ( owner )) return []
   
    const getterQuery = `SELECT address, link_key, value_primary, value_secondary FROM referral_owner WHERE address = '${owner}';`
-   console.log(getterQuery)
+
    const links = await connection.query(getterQuery)
-   console.log(links.rows)
+
    return links.rows
 }
 
