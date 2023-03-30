@@ -145,6 +145,9 @@ async function RegisterReferral ( address, link ) {
 }
 
 async function GetLinksByOwner (owner) {
+  console.log("DB params : ")
+  console.log(owner)
+  console.log(IsWrongString ( owner ))
 
   if (IsWrongString ( owner )) return []
   
