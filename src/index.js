@@ -40,6 +40,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/getlinksbyowner/:id', async (req, res) => {
+   console.log(req.params)
    res.status(200).send('API get testing');
 })
 
