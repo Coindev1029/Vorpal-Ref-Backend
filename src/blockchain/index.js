@@ -1,6 +1,7 @@
 const Web3 = require('web3')
+const config = require('./config')
 
-const web3 = new Web3('https://data-seed-prebsc-1-s1.binance.org:8545/'); // replace YOUR_PROJECT_ID with your Infura project ID or node URL
+const web3 = new Web3(config.rpc); // replace YOUR_PROJECT_ID with your Infura project ID or node URL
 
 
 /* web3.eth.getBlockNumber().then((res, rej) => {
