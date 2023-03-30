@@ -1,33 +1,12 @@
 require('dotenv').config();
-const { Client } = require('pg');
-const { GenerateLink }= require('./generateLink')
-
-const connectionData = {
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD, //process.env.db_password,
-    port: process.env.DB_PORT,
-  }
+const { connection } = require('./connection');
+const { GenerateLink }= require('../generateLink')
 
 const defaultBalance = {
   sheduled: null,
   available: null,
   withdrawn: null
 }
-
-const connection = new Client(connectionData);
-
-
-const connectionResult = connection.connect((err, res) => {
-  if (res) {
-      console.log("Database connected")
-  }
-  if (err) {
-      console.log("Err : ")
-      console.log(err)
-  }
-})
 
 function IsWrongString ( arg ) {
   if (!arg) return true

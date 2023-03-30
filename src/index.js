@@ -1,5 +1,5 @@
 const dEnv = require('dotenv');
-const { DBMigration, AddNewLink,  RegisterReferral, GetLinksByOwner } = require('./database');
+const { DBMigration, AddNewLink,  RegisterReferral, GetLinksByOwner } = require('./database/database');
 const http = require('http')
 const https = require('https');
 const express = require('express');
