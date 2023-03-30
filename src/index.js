@@ -40,8 +40,13 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/getlinksbyowner/:id', async (req, res) => {
-   console.log(req.params)
+
+   console.log(req.params.id)
+
    const links = await GetLinksByOwner ( req.params.id )
+
+   console.log(links)
+   
    res.status(200).send(JSON.stringify({
       links : links
    }));
