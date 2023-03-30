@@ -41,7 +41,10 @@ app.get('/', (req, res) => {
 
 app.get('/api/getlinksbyowner/:id', async (req, res) => {
    console.log(req.params)
-   res.status(200).send('API get testing');
+   const links = await GetLinksByOwner ( req.params.id )
+   res.status(200).send(JSON.stringify({
+      links : links
+   }));
 })
 
 
