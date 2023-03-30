@@ -51,11 +51,10 @@ app.get('/api/getownerdata/:id', async (req, res) => {
 
   let refCount = 0
 
-   links.forEach(async (link) => {
-      const response = await GetRefCount (link.link_key)
-      console.log(response)
-      refCount += Number(response.count)
-   })
+  for (let v = 0; v < links.length; v++) {
+    const response = await GetRefCount (links[v].link_key)
+    refCount += Number(response.count)
+  }
 
    console.log(refCount)
 
