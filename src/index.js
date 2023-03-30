@@ -39,6 +39,10 @@ app.get('/', (req, res) => {
   res.status(200).send('API homepage');
 })
 
+app.get('/api/getlinksbyowner/:id', async (req, res) => {
+   res.status(200).send('API get testing');
+})
+
 
 
 app.post('/api', async (req, res) => {
