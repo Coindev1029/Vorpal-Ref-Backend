@@ -75,8 +75,8 @@ async function RegisterReferral ( address, link ) {
      const addr = checkOwnerResult.rows[0].address
      console.log(addr)
      console.log(address)
-     console.log(addr === address)
-     if (addr === address) {
+     console.log(addr.toLowerCase() === address.toLowerCase())
+     if (addr.toLowerCase() === address.toLowerCase()) {
        return  {
         result: false,
         error: "Link owner cannot add himself"
