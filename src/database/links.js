@@ -73,6 +73,9 @@ async function RegisterReferral ( address, link ) {
 
    if (checkOwnerResult.rows[0]) {
      const addr = checkOwnerResult.rows[0].address
+     console.log(addr)
+     console.log(address)
+     console.log(addr === address)
      if (addr === address) {
        return  {
         result: false,
@@ -80,7 +83,7 @@ async function RegisterReferral ( address, link ) {
        }
      }
    }
-   
+
    if (checkResult.rows[0]) {
 
      if (checkResult.rows[0].count === '0') {
