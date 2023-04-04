@@ -66,9 +66,11 @@ async function RegisterReferral ( address, link ) {
    }
    
    const CheckQuery = `select count(*) from address_to_referral where address = '${address}';`
+   const CheckOwnerQuery = `select address from referral_owner where link_key = '${link}';`
    const addQuery = `INSERT INTO address_to_referral(address, link_key) VALUES ('${address}', '${link}');`
    const checkResult = await connection.query(CheckQuery)
-
+   const checkOwnerResult = await connection.query(CheckOwnerQuery)
+   console.log(checkOwnerResult.rows)
    if (checkResult.rows[0]) {
 
      if (checkResult.rows[0].count === '0') {
