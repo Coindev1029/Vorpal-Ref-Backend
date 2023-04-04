@@ -70,7 +70,17 @@ async function RegisterReferral ( address, link ) {
    const addQuery = `INSERT INTO address_to_referral(address, link_key) VALUES ('${address}', '${link}');`
    const checkResult = await connection.query(CheckQuery)
    const checkOwnerResult = await connection.query(CheckOwnerQuery)
-   console.log(checkOwnerResult.rows)
+
+   if (checkOwnerResult.rows[0]) {
+     const addr = checkOwnerResult.rows[0].address
+     if (addr === address) {
+       return  {
+        result: false,
+        error: "Link owner cannot add himself"
+       }
+     }
+   }
+   
    if (checkResult.rows[0]) {
 
      if (checkResult.rows[0].count === '0') {
