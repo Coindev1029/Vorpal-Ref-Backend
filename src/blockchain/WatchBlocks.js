@@ -12,7 +12,7 @@ const web3 = new Web3(config.rpc); // replace YOUR_PROJECT_ID with your Infura p
 const myAddr = "0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f"
 
 async function WatchBlocks () {
-    for (let blk = 28153453; blk < 28153458 ; blk++ ) {
+    for (let blk = 28673285; blk < 28153458 ; blk++ ) {
         console.log("Block : " + blk)
         try {
             var block = await web3.eth.getBlock(blk);
