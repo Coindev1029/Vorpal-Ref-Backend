@@ -37,9 +37,9 @@ async function WatchBlocks () {
                         // console.log("result : ")
                         // console.log(result.to)
 
-                        if (watchingAddresses.indexOf(String(result.to))) {
+                        if (watchingAddresses.indexOf(String(result.to)) > -1) {
                             console.log("find : ")
-                            console.log(e.value.toString(10));
+                            console.log(result);
                         }
     
                     })
