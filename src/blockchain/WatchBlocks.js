@@ -15,9 +15,10 @@ const myAddr = "0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f"
 async function WatchBlocks () {
     
     const startBlock = await GetValueByKey ('last_passed_block')
+    const endBlock = await web3.eth.getBlockNumber()
     console.log(startBlock)
-    console.log(web3.eth.getBlockNumber())
-    for (let blk = startBlock; blk < web3.eth.getBlockNumber() ; blk++ ) {
+    console.log(endBlock)
+    for (let blk = startBlock; blk < endBlock ; blk++ ) {
         console.log("Block : " + blk)
         try {
             var block = await web3.eth.getBlock(blk);

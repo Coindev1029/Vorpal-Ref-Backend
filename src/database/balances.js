@@ -3,7 +3,6 @@ const { connection } = require('./connection');
 async function GetValueByKey (key) {
     keyQuery = `SELECT value FROM common_data WHERE key = '${key}';`
     result = await connection.query(keyQuery)
-    console.log(result.rows)
     if (!result.rows) return ''
     return result.rows[0].value
 }
