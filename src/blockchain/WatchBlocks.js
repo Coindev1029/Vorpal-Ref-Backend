@@ -1,5 +1,6 @@
 const Web3 = require('web3')
 const { config }= require('./config')
+const { GetValueByKey } = require('../database/balances')
 
 const web3 = new Web3(config.rpc); // replace YOUR_PROJECT_ID with your Infura project ID or node URL
 
@@ -11,8 +12,10 @@ const web3 = new Web3(config.rpc); // replace YOUR_PROJECT_ID with your Infura p
 
 const myAddr = "0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f"
 
+const startBlock = GetValueByKey ('last_passed_block')
+
 async function WatchBlocks () {
-    for (let blk = 28673285; blk < 28153458 ; blk++ ) {
+    for (let blk = startBlock; blk < 28153458 ; blk++ ) {
         console.log("Block : " + blk)
         try {
             var block = await web3.eth.getBlock(blk);
