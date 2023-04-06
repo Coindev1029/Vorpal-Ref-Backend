@@ -15,6 +15,7 @@ const myAddr = "0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f"
 const startBlock = GetValueByKey ('last_passed_block')
 
 async function WatchBlocks () {
+    console.log(startBlock)
     for (let blk = startBlock; blk < 28153458 ; blk++ ) {
         console.log("Block : " + blk)
         try {
