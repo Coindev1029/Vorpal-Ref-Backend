@@ -10,32 +10,8 @@ const web3 = new Web3(config.rpc); // replace YOUR_PROJECT_ID with your Infura p
 }) */
 
 const myAddr = "0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f"
+const watchingAddresses = []
 
-async function WatchBlocks () {
-    for (let blk = 28153453; blk < 28153458 ; blk++ ) {
-        console.log("Block : " + blk)
-        try {
-            var block = await web3.eth.getBlock(blk);
-            // console.log(block)
-            if (block && block.transactions) {
-                block.transactions.forEach(function(e) {
-                    web3.eth.getTransaction(e, (err, result) => {
-                        if (err) return;
-                        console.log("result : ")
-                        console.log(result.to)
-
-                        if (String(myAddr) === String(result.from) || String(myAddr) === String(result.to)) {
-                            console.log("find : ")
-                            console.log(e.value.toString(10));
-                        }
-    
-                    })
-
-                });
-            }
-        } catch (e) { console.error("Error in block " + blk, e); }
-    }
+for (let key in config.config.contracts) {
+    watchingAddresses.push(config.config.contracts[key])
 }
-
-
-WatchBlocks ()
