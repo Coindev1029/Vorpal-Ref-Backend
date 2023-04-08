@@ -33,11 +33,9 @@ for (let j = 0; j < buyings.length; j++) {
     let input_data = '0x' + tx_data.slice(10);
     buyer = tx.from
     console.log(buyer)
-
-    let params = web3.eth.abi.decodeParameters(['bytes32'], input_data);
-    let paramsN = web3.eth.abi.decodeParameters(['uint256'], input_data);
-    console.log(paramsN.Result);
-    console.log(paramsN['0']);
+    let params = web3.eth.abi.decodeParameters(['uint256'], input_data);
+    let valueUSD = Math.round(Number(params['0']) / 1e18)
+    console.log(valueUSD)
 }
 
 // WatchBlocks ()
