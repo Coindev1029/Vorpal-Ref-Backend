@@ -24,12 +24,15 @@ const buyings = [
       }
 ]
 
+const parameterTypes = ['string', 'uint256'];
+
 
 for (let j = 0; j < buyings.length; j++) {
     tx = buyings[j]
-    value = tx.input.replace('0x3610724e', '0x')
-    valueUSD = web3.utils.toBN(value)
-    console.log(valueUSD)
+    const decodedInput = web3.eth.abi.decodeParameters(parameterTypes, tx.input);
+    // value = tx.input.replace('0x3610724e', '0x')
+    // valueUSD = web3.utils.toBN(value)
+    console.log(decodedInput)
     buyer = tx.from
     console.log(buyer)
 }

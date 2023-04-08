@@ -30,6 +30,7 @@ MethodID: 0x3610724e
 
 const myAddr = "0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f"
 const watchingAddresses = []
+const parameterTypes = ['string', 'uint256'];
 
 for (let key in config.contracts) {
     watchingAddresses.push(config.contracts[key])
