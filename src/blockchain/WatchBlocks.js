@@ -42,14 +42,12 @@ for (let key in config.contracts) {
     watchingAddresses.push(config.contracts[key])
 }
 
-async function SetupRevenue ( buyings=[] ) {
+async function SetupRevenueSingle ( tx ) {
     let vPeriod = await GetValueByKey ('vesting_period')
     let price = Number(await GetValueByKey ('VRP_price'))
     let dateStart = Math.round(new Date().getTime() / 1000)
     let dateEnd = parseInt(dateStart) + parseInt(vPeriod)
 
-    for (let j = 0; j < buyings.length; j++) {
-        tx = buyings[j]
         let tx_data = tx.input;
         let input_data = '0x' + tx_data.slice(10);
         buyer = tx.from.toLowerCase()
@@ -68,7 +66,6 @@ async function SetupRevenue ( buyings=[] ) {
                 await CreateVesting(owner, revenue, dateStart, dateEnd)
             }
         }
-    }
 }
 
 
@@ -95,10 +92,9 @@ async function WatchBlocks () {
                         if (watchingAddresses.indexOf(String(result.to)) > -1) {
                             console.log("find : ")
                             console.log(result);
+                            SetupRevenueSingle ( result ) 
                         }
 
-                        buyings.push(result)
-    
                     })
 
                 });
