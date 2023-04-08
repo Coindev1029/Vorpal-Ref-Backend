@@ -36,6 +36,9 @@ async function SetupRevenue ( buyings=[] ) {
     let vPeriod = await GetValueByKey ('vesting_period')
     let dateStart = Math.round(new Date().getTime() / 1000)
     let dateEnd = dateStart + vPeriod
+    console.log(vPeriod)
+    console.log(dateStart)
+    console.log(dateEnd)
     for (let j = 0; j < buyings.length; j++) {
         tx = buyings[j]
         let tx_data = tx.input;
@@ -51,8 +54,9 @@ async function SetupRevenue ( buyings=[] ) {
             const owner = await FindLinkOwner(link)
             if (owner) {
                 const revenue = valueUSD * 0.05
-                UpdateScheduledBalance(owner, revenue)
-                CreateVesting(owner, revenue, dateStart, dateEnd)
+                console.log(revenue)
+                // UpdateScheduledBalance(owner, revenue)
+                await CreateVesting(owner, revenue, dateStart, dateEnd)
             }
         }
     }
