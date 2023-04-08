@@ -9,7 +9,7 @@ async function GetValueByKey (key) {
 
 async function SetValueByKey (key, value) {
     keyQuery = `INSERT INTO common_data (key, value) VALUES ('${key}', '${value}') `+
-    `ON CONFLICT UPDATE common_data SET value = '${value}' WHERE key = '${key}';`
+    `ON CONFLICT (key) DO UPDATE SET value = '${value}';`
     result = await connection.query(keyQuery)
     if (!result.rows) return ''
     return result.rows[0].value
@@ -46,10 +46,9 @@ async function UpdateScheduledBalance (owner, addAmount) {
 async function CreateVesting ( owner, amount, dateStart, dateEnd) {
     let CreateQuery = `INSERT INTO vestings (address, value_total, value_paid, date_start, date_watched, date_end)`+
     ` VALUES ('${owner}', ${amount}, 0, to_timestamp(${dateStart}), to_timestamp(${dateStart}), to_timestamp(${dateEnd}));`
-    console.log(CreateQuery)
-    let result = connection.query(CreateQuery)
-    console.log('create')
-    console.log(result)
+
+    let result = await connection.query(CreateQuery)
+
     return true;
 }
 

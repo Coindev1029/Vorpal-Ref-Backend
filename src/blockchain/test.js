@@ -55,7 +55,7 @@ async function SetupRevenue ( buyings=[] ) {
             if (owner) {
                 const revenue = valueUSD * 0.05
                 console.log(revenue)
-                // UpdateScheduledBalance(owner, revenue)
+                await UpdateScheduledBalance(owner, revenue)
                 await CreateVesting(owner, revenue, dateStart, dateEnd)
             }
         }
