@@ -2,6 +2,7 @@ const { WatchBlocks } = require('./WatchBlocks')
 const { 
     FindLinkByReferral, 
     FindLinkOwner,
+    GetValueByKey,
     UpdateScheduledBalance,
     CreateVesting } = require('../database/balances')
 const Web3 = require('web3')
