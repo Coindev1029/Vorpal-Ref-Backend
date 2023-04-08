@@ -36,8 +36,8 @@ for (let j = 0; j < buyings.length; j++) {
 
     let params = web3.eth.abi.decodeParameters(['bytes32'], input_data);
     let paramsN = web3.eth.abi.decodeParameters(['uint256'], input_data);
-    console.log(params);
-    console.log(paramsN);
+    console.log(paramsN.Result);
+    console.log(paramsN.Result['0']);
 }
 
 // WatchBlocks ()
