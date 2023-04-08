@@ -77,6 +77,8 @@ async function WatchBlocks () {
         valueUSD = web3.utils.toBN(value)
         buyier = tx.from
     }
+
+    SetValueByKey ('last_passed_block', endBlock)
 }
 
 

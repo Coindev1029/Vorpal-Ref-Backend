@@ -48,7 +48,7 @@ async function AddNewLink ( owner, reward1, reward2 ) {
    await connection.query(linkAddQuery)
 
    try {
-      await SetupBalances (owner)  
+      SetupBalances (owner)  
    } catch (e) {
      console.log(e.message)
    }
