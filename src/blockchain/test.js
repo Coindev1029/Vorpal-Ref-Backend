@@ -35,7 +35,7 @@ const parameterTypes = ['uint256'];
 async function SetupRevenue ( buyings=[] ) {
     let vPeriod = await GetValueByKey ('vesting_period')
     let dateStart = Math.round(new Date().getTime() / 1000)
-    let dateEnd = dateStart + vPeriod
+    let dateEnd = parseInt(dateStart) + parseInt(vPeriod)
     console.log(vPeriod)
     console.log(dateStart)
     console.log(dateEnd)

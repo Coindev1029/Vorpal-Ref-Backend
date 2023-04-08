@@ -46,6 +46,7 @@ async function UpdateScheduledBalance (owner, addAmount) {
 async function CreateVesting ( owner, amount, dateStart, dateEnd) {
     let CreateQuery = `INSERT INTO vestings (address, value_total, value_paid, date_start, date_watched, date_end)`+
     +`VALUES ('${owner}', ${amount}, ${dateStart}, ${dateStart}, ${dateEnd});`
+    console.log(CreateQuery)
     let result = connection.query(CreateQuery)
     console.log('create')
     console.log(result)
