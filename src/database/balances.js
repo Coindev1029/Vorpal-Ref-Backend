@@ -7,7 +7,21 @@ async function GetValueByKey (key) {
     return result.rows[0].value
 }
 
-async function UpdateScheduledBalance (owner, addAmount) {
+async function FindLinkByReferral (ref) {
+    let query = `SELECT link_key FROM address_to_referral WHERE address = '${ref}';`
+    let result = await connection.query(query)
+    let dt = result.rows.length = 0 ? '' : result.rows[0].link_key
+    return dt
+}
+
+async function FindLinkOwner (link) {
+    let query = `select address from referral_owner where link_key = '${link}';`
+    let result = await connection.query(query)
+    let dt = result.rows.length = 0 ? '' : result.rows[0].address
+    return dt
+}
+
+async function UpdateScheduledBalance (link, addAmount) {
     console.log('Scheduled')
 }
 
@@ -23,5 +37,7 @@ module.exports = {
     UpdateScheduledBalance,
     CreateVesting,
     UpdateVestings,
+    FindLinkByReferral,
+    FindLinkOwner,
     GetValueByKey
   }

@@ -1,4 +1,5 @@
 const { WatchBlocks } = require('./WatchBlocks')
+const { FindLinkByReferral, FindLinkOwner } = require('../database/balances')
 const Web3 = require('web3')
 const { config }= require('./config')
 
@@ -26,7 +27,7 @@ const buyings = [
 
 const parameterTypes = ['uint256'];
 
-async function LoadTransactions( buyings=[] ) {
+async function SetupRevenue ( buyings=[] ) {
     for (let j = 0; j < buyings.length; j++) {
         tx = buyings[j]
         let tx_data = tx.input;
@@ -36,8 +37,14 @@ async function LoadTransactions( buyings=[] ) {
         let params = web3.eth.abi.decodeParameters(['uint256'], input_data);
         let valueUSD = Math.round(Number(params['0']) / 1e18)
         console.log(valueUSD)
+        const link = await FindLinkByReferral(buyer)
+        console.log(link)
+        if (link) {
+            const owner = await FindLinkOwner(link)
+            console.log(owner)
+        }
     }
 }
 
-LoadTransactions(buyings)
+SetupRevenue (buyings)
 // WatchBlocks ()
