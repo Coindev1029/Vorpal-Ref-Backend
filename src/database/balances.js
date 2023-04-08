@@ -36,7 +36,7 @@ async function FindLinkOwner (link) {
 }
 
 async function UpdateScheduledBalance (owner, addAmount) {
-    let UpdateQuery = `UPDATE balances SET balance_scheduled  = balance_scheduled+${addAmount} WHERE address = ${owner};`
+    let UpdateQuery = `UPDATE balances SET balance_scheduled  = balance_scheduled+${addAmount} WHERE address = '${owner}';`
     let result = await connection.query(UpdateQuery)
     console.log('Scheduled')
     console.log(result)
@@ -45,7 +45,7 @@ async function UpdateScheduledBalance (owner, addAmount) {
 
 async function CreateVesting ( owner, amount, dateStart, dateEnd) {
     let CreateQuery = `INSERT INTO vestings (address, value_total, value_paid, date_start, date_watched, date_end)`+
-    +`VALUES (${owner}, ${amount}, ${dateStart}, ${dateStart}, ${dateEnd});`
+    +`VALUES ('${owner}', ${amount}, ${dateStart}, ${dateStart}, ${dateEnd});`
     let result = connection.query(CreateQuery)
     console.log('create')
     console.log(result)
@@ -62,5 +62,6 @@ module.exports = {
     UpdateVestings,
     FindLinkByReferral,
     FindLinkOwner,
-    GetValueByKey
+    GetValueByKey,
+    SetValueByKey
   }
