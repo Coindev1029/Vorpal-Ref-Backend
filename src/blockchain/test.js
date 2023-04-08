@@ -26,16 +26,18 @@ const buyings = [
 
 const parameterTypes = ['uint256'];
 
-
-for (let j = 0; j < buyings.length; j++) {
-    tx = buyings[j]
-    let tx_data = tx.input;
-    let input_data = '0x' + tx_data.slice(10);
-    buyer = tx.from
-    console.log(buyer)
-    let params = web3.eth.abi.decodeParameters(['uint256'], input_data);
-    let valueUSD = Math.round(Number(params['0']) / 1e18)
-    console.log(valueUSD)
+async function LoadTransactions( buyings=[] ) {
+    for (let j = 0; j < buyings.length; j++) {
+        tx = buyings[j]
+        let tx_data = tx.input;
+        let input_data = '0x' + tx_data.slice(10);
+        buyer = tx.from
+        console.log(buyer)
+        let params = web3.eth.abi.decodeParameters(['uint256'], input_data);
+        let valueUSD = Math.round(Number(params['0']) / 1e18)
+        console.log(valueUSD)
+    }
 }
 
+LoadTransactions(buyings)
 // WatchBlocks ()
