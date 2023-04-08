@@ -27,7 +27,7 @@ const buyings = [
 
 for (let j = 0; j < buyings.length; j++) {
     tx = buyings[j]
-    value = tx.input.replace('0x3610724e', '')
+    value = tx.input.replace('0x3610724e', '0x')
     valueUSD = web3.utils.toBN(value)
     console.log(valueUSD)
     buyer = tx.from
