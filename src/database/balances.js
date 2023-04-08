@@ -9,6 +9,7 @@ async function GetValueByKey (key) {
 
 async function FindLinkByReferral (ref) {
     let query = `SELECT link_key FROM address_to_referral WHERE address = '${ref}';`
+    console.log(query)
     let result = await connection.query(query)
     console.log(result.rows)
     if (result.rows[0]) {
