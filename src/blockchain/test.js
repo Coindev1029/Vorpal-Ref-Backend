@@ -32,7 +32,7 @@ async function SetupRevenue ( buyings=[] ) {
         tx = buyings[j]
         let tx_data = tx.input;
         let input_data = '0x' + tx_data.slice(10);
-        buyer = tx.from
+        buyer = tx.from.toLowerCase()
         console.log(buyer)
         let params = web3.eth.abi.decodeParameters(['uint256'], input_data);
         let valueUSD = Math.round(Number(params['0']) / 1e18)
