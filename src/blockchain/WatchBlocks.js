@@ -1,6 +1,12 @@
 const Web3 = require('web3')
 const { config }= require('./config')
-const { GetValueByKey } = require('../database/balances')
+const { 
+    FindLinkByReferral, 
+    FindLinkOwner,
+    GetValueByKey,
+    SetValueByKey,
+    UpdateScheduledBalance,
+    CreateVesting } = require('../database/balances')
 
 const web3 = new Web3(config.rpc); 
 
@@ -34,6 +40,35 @@ const parameterTypes = ['string', 'uint256'];
 
 for (let key in config.contracts) {
     watchingAddresses.push(config.contracts[key])
+}
+
+async function SetupRevenue ( buyings=[] ) {
+    let vPeriod = await GetValueByKey ('vesting_period')
+    let price = Number(await GetValueByKey ('VRP_price'))
+    let dateStart = Math.round(new Date().getTime() / 1000)
+    let dateEnd = parseInt(dateStart) + parseInt(vPeriod)
+
+    for (let j = 0; j < buyings.length; j++) {
+        tx = buyings[j]
+        let tx_data = tx.input;
+        let input_data = '0x' + tx_data.slice(10);
+        buyer = tx.from.toLowerCase()
+
+        let params = web3.eth.abi.decodeParameters(['uint256'], input_data);
+        let valueUSD = Math.round(Number(params['0']) / 1e18)
+
+        const link = await FindLinkByReferral(buyer)
+
+        if (link) {
+            const owner = await FindLinkOwner(link)
+            if (owner) {
+                const revenue = valueUSD * 0.05 / price
+                console.log(revenue)
+                await UpdateScheduledBalance(owner, revenue)
+                await CreateVesting(owner, revenue, dateStart, dateEnd)
+            }
+        }
+    }
 }
 
 
@@ -71,12 +106,7 @@ async function WatchBlocks () {
         } catch (e) { console.error("Error in block " + blk, e); }
     }
 
-    for (let j = 0; j < buyings.length; j++) {
-        tx = buyings[j]
-        value = tx.input.replace('0x3610724e', '')
-        valueUSD = web3.utils.toBN(value)
-        buyier = tx.from
-    }
+    await SetupRevenue ( buyings )
 
     SetValueByKey ('last_passed_block', endBlock)
 }
