@@ -34,6 +34,7 @@ const parameterTypes = ['uint256'];
 
 async function SetupRevenue ( buyings=[] ) {
     let vPeriod = await GetValueByKey ('vesting_period')
+    let price = Number(await GetValueByKey ('VRP_price'))
     let dateStart = Math.round(new Date().getTime() / 1000)
     let dateEnd = parseInt(dateStart) + parseInt(vPeriod)
     console.log(vPeriod)
@@ -53,7 +54,7 @@ async function SetupRevenue ( buyings=[] ) {
         if (link) {
             const owner = await FindLinkOwner(link)
             if (owner) {
-                const revenue = valueUSD * 0.05
+                const revenue = valueUSD * 0.05 / price
                 console.log(revenue)
                 await UpdateScheduledBalance(owner, revenue)
                 await CreateVesting(owner, revenue, dateStart, dateEnd)

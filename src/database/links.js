@@ -22,7 +22,7 @@ async function SetupBalances (owner) {
   if (IsWrongString(owner)) return null
   
   const addOwnerQuery = `INSERT INTO balances (address, balance_scheduled, balance_available, balance_withdrawn)
-   VALUES ( '${owner}', 0, 0, 0) ON CONFLICT (address) DO NOTHING;`;
+   VALUES ( '${owner.toLowerCase()}', 0, 0, 0) ON CONFLICT (address) DO NOTHING;`;
 
   await connection.query(addOwnerQuery);
 
