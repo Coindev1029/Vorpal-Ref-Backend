@@ -9,9 +9,7 @@ async function GetValueByKey (key) {
 
 async function FindLinkByReferral (ref) {
     let query = `select link_key from address_to_referral where address = '${ref}';`
-    console.log(query)
     let result = await connection.query(query)
-    console.log(result.rows)
     if (result.rows[0]) {
         return result.rows[0].link_key
     } else {
@@ -22,8 +20,11 @@ async function FindLinkByReferral (ref) {
 async function FindLinkOwner (link) {
     let query = `select address from referral_owner where link_key = '${link}';`
     let result = await connection.query(query)
-    let dt = result.rows.length = 0 ? '' : result.rows[0].address
-    return dt
+    if (result.rows[0]) {
+        return result.rows[0].address
+    } else {
+        return ''
+    }
 }
 
 async function UpdateScheduledBalance (link, addAmount) {
