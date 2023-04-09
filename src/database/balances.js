@@ -52,6 +52,27 @@ async function CreateVesting ( owner, amount, dateStart, dateEnd) {
     return true;
 }
 
+async function GetBalances ( owner ) {
+    let balanceQuery =  `SELECT * FROM balances WHERE address = '${owner}';`
+    let result = await connection.query(balanceQuery)
+    if (!result.rows || result.rows.length === 0) {
+        return(
+            {
+                balanceSheduled : 0,
+                balanceAvailable : 0
+            }
+        )
+    } else {
+        return(
+            {
+                balanceSheduled : result.rows[0].balance_scheduled - result.rows[0].balance_available,
+                balanceAvailable : result.rows[0].balance_available - result.rows[0].balance_withdrawn
+            }
+        )
+    }
+    
+}
+
 async function UpdateVestings () {
     console.log('Updating...')
 }
@@ -63,5 +84,6 @@ module.exports = {
     FindLinkByReferral,
     FindLinkOwner,
     GetValueByKey,
+    GetBalances,
     SetValueByKey
   }
