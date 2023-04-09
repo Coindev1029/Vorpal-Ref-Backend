@@ -102,8 +102,6 @@ async function WatchBlocks () {
         } catch (e) { console.error("Error in block " + blk, e); }
     }
 
-    await SetupRevenue ( buyings )
-
     SetValueByKey ('last_passed_block', endBlock)
 }
 
