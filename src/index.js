@@ -1,5 +1,6 @@
 const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
+const { GetBalances } = require('./database/balances')
 const express = require('express');
 const bodyParser = require('body-parser')
 const app = express();
