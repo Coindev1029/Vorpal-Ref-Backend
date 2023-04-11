@@ -52,10 +52,14 @@ async function CreateVesting ( owner, amount, dateStart, dateEnd) {
     return true;
 }
 
-async function PayValue (address, amount, date) {
+async function PayValue (address, amount, date, vestingId) {
     console.log("Pay : ")
-    console.log(amount)
-    console.log(address)
+
+    let PaymentQuery = `UPDATE balances SET balance_available = balance_available+${amount} WHERE address = '${owner}';`
+    let VestingUpdateQuery = `UPDATE vestings SET date_watched = to_timestamp(${date}), value_paid = value_paid+${amount} WHERE id=${vestingId};`
+    console.log(PaymentQuery)
+    console.log(VestingUpdateQuery)
+
 }
 
 async function UpdateVestings () {
@@ -77,14 +81,13 @@ async function UpdateVestings () {
             const valueTotal = vesting.value_total
             let paymentValue = 0
             if (date > dateEnd) {
-                paymentValue = valueTotal - vesting.value_paid
+                paymentValue = (valueTotal - vesting.value_paid) > 0 ? (valueTotal - vesting.value_paid) : 0
             } else {
                 const paymentPart = ((date - dateStart)/ (dateEnd - dateStart))
                 paymentValue = Math.floor(valueTotal * paymentPart)
             }
-            console.log("part : ")
-            console.log((date - dateStart)/ (dateEnd - dateStart))
-            PayValue(vesting.address, paymentValue, date)
+
+            PayValue(vesting.address, paymentValue, date, vesting.id), 
             console.log(dateStart)
             console.log(dateWatched)
         })
