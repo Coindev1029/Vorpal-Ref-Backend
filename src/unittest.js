@@ -9,7 +9,7 @@ const {
 const Web3 = require('web3')
 const { config }= require('./blockchain/config')
 
-const web3 = new Web3(config.rpc); 
+// const web3 = new Web3(config.rpc); 
 
 const buyings = [
     {
@@ -32,4 +32,5 @@ const buyings = [
 ]
 
 // WatchBlocks ()
+console.log("Test vestings : ")
 UpdateVestings()
