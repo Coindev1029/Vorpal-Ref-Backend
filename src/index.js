@@ -2,7 +2,8 @@ const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
 const { GetBalances } = require('./database/balances')
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const { WatchBlocks } = require('./blockchain/WatchBlocks');
 const app = express();
 
 dEnv.config();
@@ -11,6 +12,10 @@ const port = process.argv[2] ? process.argv[2] : process.env.DEFAULT_PORT
 
 // var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
 // var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
+
+const chainMonitoring = setInterval(() => {
+  WatchBlocks()
+}, 86400000)
 
 app.use(express.json());
 

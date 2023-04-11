@@ -52,6 +52,21 @@ async function CreateVesting ( owner, amount, dateStart, dateEnd) {
     return true;
 }
 
+async function UpdateVestings () {
+    const queryUnpaidVestings = `SELECT * FROM vestings WHERE value_paid < value_total;`;
+    const unpaidVestings = await connection.query(queryUnpaidVestings).rows
+    const date = new Date().getTime()
+    console.log(unpaidVestings)
+    if (unpaidVestings.length > 0) {
+        unpaidVestings.forEach((vesting) => {
+            console.log(vesting)
+        })
+        return true
+    } else {
+        return false
+    }
+}
+
 async function GetBalances ( owner ) {
     let balanceQuery =  `SELECT * FROM balances WHERE address = '${owner}';`
     let result = await connection.query(balanceQuery)

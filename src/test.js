@@ -1,12 +1,13 @@
-const { WatchBlocks, WatchContracts } = require('./WatchBlocks')
+const { WatchBlocks, WatchContracts } = require('./blockchain/WatchBlocks')
 const { 
     FindLinkByReferral, 
     FindLinkOwner,
     GetValueByKey,
     UpdateScheduledBalance,
-    CreateVesting } = require('../database/balances')
+    CreateVesting, 
+    UpdateVestings} = require('./database/balances')
 const Web3 = require('web3')
-const { config }= require('./config')
+const { config }= require('./blockchain/config')
 
 const web3 = new Web3(config.rpc); 
 
@@ -30,4 +31,5 @@ const buyings = [
       }
 ]
 
-WatchContracts ()
+// WatchBlocks ()
+UpdateVestings()
