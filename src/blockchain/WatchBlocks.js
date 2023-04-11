@@ -110,11 +110,7 @@ async function WatchBlocks () {
 
 async function WatchContracts () {
 
-    const eth = new Eth(
-        Eth.givenProvider
-      );
-
-      const contract = new eth.Contract(Erc20ABI, "0x55d398326f99059ff775485246999027b3197955");
+      const contract = new web3.eth.Contract(Erc20ABI, "0x55d398326f99059ff775485246999027b3197955");
       const transferEvents = await contract.getPastEvents("Transfer", {
         fromBlock : 0,
         filter: {
