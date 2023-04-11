@@ -1,4 +1,4 @@
-const { WatchBlocks } = require('./WatchBlocks')
+const { WatchBlocks, WatchContracts } = require('./WatchBlocks')
 const { 
     FindLinkByReferral, 
     FindLinkOwner,
@@ -30,4 +30,4 @@ const buyings = [
       }
 ]
 
-WatchBlocks ()
+WatchContracts ()

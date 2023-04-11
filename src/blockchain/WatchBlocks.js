@@ -106,6 +106,21 @@ async function WatchBlocks () {
 }
 
 
+async function WatchContracts () {
+    for (let index = 0; index < watchingAddresses.length; index++) {
+         
+            web3.eth.getPastTransactions({ fromBlock: 0, toBlock: 'latest', address: watchingAddresses[index] })
+                .then((transactions) => {
+                    console.log(transactions);
+                })
+                .catch((error) => {
+                     console.log(error);
+                });
+    }
+}
+
+
 module.exports = {
-    WatchBlocks
+    WatchBlocks,
+    WatchContracts
   }
