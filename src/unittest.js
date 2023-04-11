@@ -50,10 +50,8 @@ async function UpdateVestingsL () {
 } */
 // WatchBlocks ()
 console.log("Test vestings : ")
-UpdateVestings().then((res, rej) => {
-    console.log(res),
-    console.log(rej)
-})
+UpdateVestings()
+
 
 console.log(UpdateVestings)
 console.log("Test vestings finished ")

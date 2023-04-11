@@ -52,7 +52,7 @@ async function CreateVesting ( owner, amount, dateStart, dateEnd) {
     return true;
 }
 
-async function UpdateVestings () {
+function UpdateVestings () {
     console.log("Vestings : ")
     const queryUnpaidVestings = `SELECT * FROM vestings WHERE value_paid < value_total;`;
     console.log(queryUnpaidVestings )
