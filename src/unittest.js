@@ -33,5 +33,9 @@ const buyings = [
 
 // WatchBlocks ()
 console.log("Test vestings : ")
-console.log(UpdateVestings())
+UpdateVestings().then((res, rej) => {
+    console.log(res),
+    console.log(rej)
+})
 console.log(UpdateVestings)
+console.log("Test vestings finished ")
