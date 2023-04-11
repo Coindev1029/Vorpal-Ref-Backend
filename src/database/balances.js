@@ -65,6 +65,10 @@ async function UpdateVestings () {
     if (unpaidVestings.length > 0) {
         unpaidVestings.forEach((vesting) => {
             console.log(vesting)
+            const dateStart = Date.parse(vesting.date_start) / 1000
+            const dateWatched = Date.parse(vesting.date_watched) / 1000
+            console.log(dateStart)
+            console.log(dateWatched)
         })
         return true
     } else {
