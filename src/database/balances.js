@@ -64,7 +64,7 @@ async function UpdateVestings () {
     console.log(queryUnpaidVestings )
     const unpaidVestingsRequest = await connection.query(queryUnpaidVestings)
     const unpaidVestings = unpaidVestingsRequest.rows
-    const date = new Date().getTime()
+    const date = Math.floor(new Date().getTime() / 1000)
 
     console.log(unpaidVestings)
     console.log(date)
