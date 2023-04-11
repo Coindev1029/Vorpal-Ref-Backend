@@ -53,28 +53,25 @@ async function CreateVesting ( owner, amount, dateStart, dateEnd) {
 }
 
 async function PayValue (address, amount, date, vestingId) {
-    console.log("Pay : ")
 
     let PaymentQuery = `UPDATE balances SET balance_available = balance_available+${amount} WHERE address = '${address}';`
     let VestingUpdateQuery = `UPDATE vestings SET date_watched = to_timestamp(${date}), value_paid = value_paid+${amount} WHERE id=${vestingId};`
-    console.log(PaymentQuery)
-    console.log(VestingUpdateQuery)
+    await connection.query(PaymentQuery)
+    await connection.query(VestingUpdateQuery)
 
 }
 
 async function UpdateVestings () {
-    console.log("Vestings : ")
+
     const queryUnpaidVestings = `SELECT * FROM vestings WHERE value_paid < value_total;`;
-    console.log(queryUnpaidVestings )
+
     const unpaidVestingsRequest = await connection.query(queryUnpaidVestings)
     const unpaidVestings = unpaidVestingsRequest.rows
     const date = Math.floor(new Date().getTime() / 1000)
 
-    console.log(unpaidVestings)
-    console.log(date)
     if (unpaidVestings.length > 0) {
         unpaidVestings.forEach((vesting) => {
-            console.log(vesting)
+
             const dateStart = Date.parse(vesting.date_start) / 1000
             const dateWatched = Date.parse(vesting.date_watched) / 1000
             const dateEnd = Date.parse(vesting.date_end) / 1000
