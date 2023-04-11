@@ -52,7 +52,7 @@ async function CreateVesting ( owner, amount, dateStart, dateEnd) {
     return true;
 }
 
-function UpdateVestings () {
+async function UpdateVestings () {
     console.log("Vestings : ")
     const queryUnpaidVestings = `SELECT * FROM vestings WHERE value_paid < value_total;`;
     console.log(queryUnpaidVestings )
@@ -79,10 +79,6 @@ async function GetBalances ( owner ) {
         )
     }
     
-}
-
-async function UpdateVestings () {
-    console.log('Updating...')
 }
 
 module.exports = {

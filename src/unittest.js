@@ -49,6 +49,7 @@ async function UpdateVestingsL () {
     }
 } */
 // WatchBlocks ()
+
 console.log("Test vestings : ")
 UpdateVestings()
 
