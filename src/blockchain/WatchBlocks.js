@@ -1,5 +1,7 @@
 const Web3 = require('web3')
-const { config }= require('./config')
+const { config, Erc20ABI }= require('./config')
+const { Eth } = require('web3-eth')
+const { Utils } = require('web3-utils')
 const { 
     FindLinkByReferral, 
     FindLinkOwner,
@@ -107,16 +109,31 @@ async function WatchBlocks () {
 
 
 async function WatchContracts () {
-    for (let index = 0; index < watchingAddresses.length; index++) {
-         
-            web3.eth.getPastTransactions({ fromBlock: 0, toBlock: 'latest', address: watchingAddresses[index] })
-                .then((transactions) => {
-                    console.log(transactions);
-                })
-                .catch((error) => {
-                     console.log(error);
-                });
-    }
+
+    const eth = new Eth(
+        Eth.givenProvider
+      );
+
+      const contract = new eth.Contract(Erc20ABI, "0x55d398326f99059ff775485246999027b3197955");
+      const transferEvents = await contract.getPastEvents("Transfer", {
+        fromBlock : 0,
+        filter: {
+          isError: 0,
+          txreceipt_status: 1
+        },
+        /* topics: [
+          Utils.sha3("Transfer(address,address,uint256)"),
+          null,
+          Utils.padLeft(address, 64)
+        ] */
+      });
+
+      console.log(transferEvents)
+    
+
+    /* for (let index = 0; index < watchingAddresses.length; index++) {
+       
+    } */
 }
 
 
