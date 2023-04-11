@@ -5,7 +5,7 @@ const {
     GetValueByKey,
     UpdateScheduledBalance,
     CreateVesting, 
-    UpdateVestings} = require('./database/balances')
+    UpdateVestings } = require('./database/balances')
 const Web3 = require('web3')
 const { config }= require('./blockchain/config')
 
@@ -33,4 +33,4 @@ const buyings = [
 
 // WatchBlocks ()
 console.log("Test vestings : ")
-UpdateVestings()
+console.log(UpdateVestings())
