@@ -87,7 +87,7 @@ async function UpdateVestings () {
                 paymentValue = Math.floor(valueTotal * paymentPart)
             }
 
-            PayValue(vesting.address, paymentValue, date, vesting.id), 
+            PayValue(vesting.address, paymentValue, date, vesting.id)
             console.log(dateStart)
             console.log(dateWatched)
         })
