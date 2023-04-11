@@ -6,6 +6,7 @@ const {
     UpdateScheduledBalance,
     CreateVesting, 
     UpdateVestings } = require('./database/balances')
+const { connection } = require('./database/connection');
 const Web3 = require('web3')
 const { config }= require('./blockchain/config')
 
@@ -31,11 +32,33 @@ const buyings = [
       }
 ]
 
+
+async function UpdateVestingsL () {
+    console.log("Vestings : ")
+    const queryUnpaidVestings = `SELECT * FROM vestings WHERE value_paid < value_total;`;
+    console.log(queryUnpaidVestings )
+    const unpaidVestings = await connection.query(queryUnpaidVestings).rows
+    const date = new Date().getTime()
+    console.log(unpaidVestings)
+    if (unpaidVestings.length > 0) {
+        unpaidVestings.forEach((vesting) => {
+            console.log(vesting)
+        })
+        return true
+    } else {
+        return false
+    }
+}
 // WatchBlocks ()
 console.log("Test vestings : ")
 UpdateVestings().then((res, rej) => {
     console.log(res),
     console.log(rej)
 })
+UpdateVestingsL().then((res, rej) => {
+    console.log(res),
+    console.log(rej)
+})
+
 console.log(UpdateVestings)
 console.log("Test vestings finished ")
