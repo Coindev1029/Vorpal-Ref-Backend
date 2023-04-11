@@ -56,8 +56,17 @@ async function UpdateVestings () {
     console.log("Vestings : ")
     const queryUnpaidVestings = `SELECT * FROM vestings WHERE value_paid < value_total;`;
     console.log(queryUnpaidVestings )
-    
-    return false
+    const unpaidVestings = await connection.query(queryUnpaidVestings).rows
+    const date = new Date().getTime()
+    console.log(unpaidVestings)
+    if (unpaidVestings.length > 0) {
+        unpaidVestings.forEach((vesting) => {
+            console.log(vesting)
+        })
+        return true
+    } else {
+        return false
+    }
 }
 
 async function GetBalances ( owner ) {
