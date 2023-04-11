@@ -48,10 +48,10 @@ async function UpdateVestingsL () {
         return false
     }
 } */
-// WatchBlocks ()
+WatchBlocks ()
 
 console.log("Test vestings : ")
-UpdateVestings()
+// UpdateVestings()
 
 
 console.log(UpdateVestings)
