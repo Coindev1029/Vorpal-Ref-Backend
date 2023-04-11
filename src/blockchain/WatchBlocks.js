@@ -110,11 +110,11 @@ async function WatchBlocks () {
 
 async function WatchContracts () {
 
-      const contract = new web3.eth.Contract(Erc20ABI, "0x55d398326f99059ff775485246999027b3197955");
+      const contract = new web3.eth.Contract(Erc20ABI, "0xe9e7cea3dedca5984780bafc599bd69add087d56");
       const currentBlockNumber = await web3.eth.getBlockNumber();
       fBlock = currentBlockNumber - 4000;
       const transferEvents = await contract.getPastEvents("Transfer", {
-        fromBlock : fBlock,
+        fBlock,
         filter: {
           isError: 0,
           txreceipt_status: 1
