@@ -54,5 +54,5 @@ console.log("Test vestings : ")
 // UpdateVestings()
 
 
-console.log(UpdateVestings)
+// console.log(UpdateVestings)
 console.log("Test vestings finished ")
