@@ -55,7 +55,7 @@ async function CreateVesting ( owner, amount, dateStart, dateEnd) {
 async function PayValue (address, amount, date, vestingId) {
     console.log("Pay : ")
 
-    let PaymentQuery = `UPDATE balances SET balance_available = balance_available+${amount} WHERE address = '${owner}';`
+    let PaymentQuery = `UPDATE balances SET balance_available = balance_available+${amount} WHERE address = '${address}';`
     let VestingUpdateQuery = `UPDATE vestings SET date_watched = to_timestamp(${date}), value_paid = value_paid+${amount} WHERE id=${vestingId};`
     console.log(PaymentQuery)
     console.log(VestingUpdateQuery)
