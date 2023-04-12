@@ -1,6 +1,6 @@
 const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
-const { GetBalances } = require('./database/balances')
+const { GetBalances, UpdateVestings } = require('./database/balances')
 const express = require('express');
 const bodyParser = require('body-parser');
 const { WatchBlocks } = require('./blockchain/WatchBlocks');
@@ -13,9 +13,10 @@ const port = process.argv[2] ? process.argv[2] : process.env.DEFAULT_PORT
 // var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
 // var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
 
-const chainMonitoring = setInterval(() => {
+/* const chainMonitoring = setInterval(() => {
   WatchBlocks()
-}, 86400000)
+  UpdateVestings()
+}, 86400000) */
 
 app.use(express.json());
 
@@ -70,6 +71,23 @@ app.get('/api/getownerdata/:id', async (req, res) => {
       balanceScheduled: balances.balanceSheduled || 0,
       balanceAvailable: balances.balanceAvailable || 0
    }));
+})
+
+
+app.post('/api/withdraw', async (req, res) => {
+    const postData = req.body;
+    console.log(postData)
+    if (!postData || !postData.address || !postData.signature) {
+      res.status(400).send(JSON.stringify({
+        success: false,
+        message: 'Post data wrong or not readable'
+      }));
+      return false
+    }
+
+    const withdrawmsg = await WithdrawRevenue(postData.address, postData.signature)
+
+    res.status(withdrawmsg.success ? 200 : 400).send(JSON.stringify(withdrawmsg));
 })
 
 
