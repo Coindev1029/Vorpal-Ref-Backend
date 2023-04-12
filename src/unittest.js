@@ -3,6 +3,7 @@ const {
     FindLinkByReferral, 
     FindLinkOwner,
     GetValueByKey,
+    SetValueByKey,
     UpdateScheduledBalance,
     CreateVesting, 
     UpdateVestings } = require('./database/balances')
@@ -52,7 +53,8 @@ async function UpdateVestingsL () {
 
 console.log("Test vestings : ")
 // UpdateVestings()
-GetValueByKey ('test', 'ok')
+SetValueByKey ('test', 'ok')
+GetValueByKey ('test')
 
 // console.log(UpdateVestings)
 console.log("Test vestings finished ")
