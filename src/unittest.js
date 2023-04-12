@@ -48,11 +48,11 @@ async function UpdateVestingsL () {
         return false
     }
 } */
-WatchBlocks ()
+// WatchBlocks ()
 
 console.log("Test vestings : ")
 // UpdateVestings()
-
+GetValueByKey ('test', 'ok')
 
 // console.log(UpdateVestings)
 console.log("Test vestings finished ")

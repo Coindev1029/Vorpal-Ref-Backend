@@ -11,7 +11,10 @@ async function SetValueByKey (key, value) {
     keyQuery = `INSERT INTO common_data (key, value) VALUES ('${key}', '${value}') `+
     `ON CONFLICT (key) DO UPDATE SET value = '${value}';`
     result = await connection.query(keyQuery)
-    if (!result.rows) return ''
+    console.log(result)
+    if (!result.rows) {
+        return ''
+    }
     return result.rows[0].value
 }
 
