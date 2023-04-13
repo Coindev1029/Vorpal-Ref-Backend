@@ -5,6 +5,7 @@ const Web3 = require('web3');
 
 async function WithdrawRevenue ( addressTo, signedTX ) {
       
+    const account = addressTo.toLowerCase()
     let time = Math.round(new Date().getTime() / 1000)
       time -= time % 3600
 
@@ -12,18 +13,18 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
     const web3 = new Web3(config.rpcUrl)
 
     const recover = await web3.eth.accounts.recover(msg, signedTX)
-    console.log(addressTo)
+    console.log(account)
     console.log(recover)
-    console.log(String(recover) === String(addressTo))
+    console.log(String(recover) === String(account))
 
-    if (recover !== addressTo) {
+    if (recover !== account) {
         return ({
             success: false,
             message: "Signature is invalid"
         })
     }
 
-    const balances = await GetBalances(addressTo)
+    const balances = await GetBalances(account)
 
     const toWithdraw = balances.balanceAvailable 
 
