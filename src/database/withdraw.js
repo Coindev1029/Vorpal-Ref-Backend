@@ -9,7 +9,11 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
 
     let msg = "withdraw_" + time
 
+    console.log(rpcUrl)
+
     const web3 = new Web3(rpcUrl)
+
+    console.log(web3)
 
     const recover = await web3.eth.personal.ecRecover(msg, signedTX)
 
