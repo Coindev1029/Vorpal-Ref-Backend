@@ -13,10 +13,11 @@ const port = process.argv[2] ? process.argv[2] : process.env.DEFAULT_PORT
 // var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
 // var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
 
-/* const chainMonitoring = setInterval(() => {
-  WatchBlocks()
-  UpdateVestings()
-}, 86400000) */
+const chainMonitoring = setInterval(() => {
+  WatchBlocks().then(
+      UpdateVestings()
+  )
+}, 86400000) 
 
 app.use(express.json());
 
