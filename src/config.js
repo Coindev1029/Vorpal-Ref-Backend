@@ -1,5 +1,6 @@
-const networkId = 97
-const connectOptions = {
+const config = {
+   networkId: 97,
+   connectOptions: {
     keepAlive: true,
     withCredentials: false,
     timeout: 20000, // ms
@@ -9,9 +10,14 @@ const connectOptions = {
             value: '*'
         }
     ]
-  }
-const chainName = 'Binance'
-const ethSymbol = 'BNB'
-const rpcUrl = "https://data-seed-prebsc-1-s1.binance.org:8545/"
-const startBlock = 1500000
+  },
+  chainName: 'Binance',
+  ethSymbol: 'BNB',
+  rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+  startBlock: 1500000
+}
+
+module.exports = {
+    config
+}
 

@@ -1,5 +1,5 @@
 const { connection } = require('./connection');
-const { rpcUrl } = require('../config')
+const { config } = require('../config')
 const Web3 = require('web3');
 
 async function WithdrawRevenue ( addressTo, signedTX ) {
@@ -9,9 +9,9 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
 
     let msg = "withdraw_" + time
 
-    console.log(rpcUrl)
+    console.log(config.rpcUrl)
 
-    const web3 = new Web3(rpcUrl)
+    const web3 = new Web3(config.rpcUrl)
 
     console.log(web3)
 
