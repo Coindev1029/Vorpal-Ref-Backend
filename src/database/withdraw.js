@@ -1,5 +1,5 @@
 const { connection } = require('./connection');
-const { GetBalances } = require('./balances')
+const { GetBalances, GetValueByKey } = require('./balances')
 const { config } = require('../config')
 const Web3 = require('web3');
 
