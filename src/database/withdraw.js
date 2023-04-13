@@ -48,7 +48,7 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
 
     try {
         const txData = contract.methods.transfer(account, amount).encodeABI()
-        const gasCheck = await web3.eth.estimateGas({
+        gasLimit = await web3.eth.estimateGas({
             from: refAccount,
             to: config.payToken,
             value: '0x00',
@@ -60,7 +60,7 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
             to: config.payToken,
             nonce: web3.utils.toHex(nonce),
             gasPrice: web3.utils.toHex(gasPrice),
-            gasLimit: 300000,
+            gasLimit: gasLimit,
             value: '0x00',
             data: txData
           };
