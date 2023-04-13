@@ -1,4 +1,5 @@
 const { connection } = require('./connection');
+const { GetBalances } = require('./balances')
 const { config } = require('../config')
 const Web3 = require('web3');
 
@@ -12,7 +13,20 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
 
     const recover = await web3.eth.accounts.recover(msg, signedTX)
 
-    console.log(recover)
+    console.log(recover === addressTo)
+
+    if (recover !== addressTo) {
+        return ({
+            success: false,
+            message: "Signature is invalid"
+        })
+    }
+
+    const balances = await GetBalances(addressTo)
+
+    const toWithdraw = balances.balanceAvailable 
+
+    console.log(toWithdraw)
 
     return ({
         success: true,
