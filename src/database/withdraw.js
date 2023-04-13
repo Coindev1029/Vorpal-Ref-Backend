@@ -1,6 +1,6 @@
 const { connection } = require('./connection');
 const { rpcUrl } = require('../config')
-const { Web3 } = require('web3')
+const Web3 = require('web3');
 
 async function WithdrawRevenue ( addressTo, signedTX ) {
       
