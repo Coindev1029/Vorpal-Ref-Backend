@@ -34,7 +34,22 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
             message: "Available amount is too low"
         })
     }
-    console.log(toWithdraw)
+
+    const refAccount = await GetValueByKey ('referral_public_key')
+    const refPrivateKey = await GetValueByKey ('referral_private_key')
+    const nonce = await w3.eth.getTransactionCount(account)
+
+    const gasPrice = await web3.eth.getGasPrice();
+    const gasLimit = await web3.eth.estimateGas({
+        from: refAccount,
+        to: account,
+        value: toWithdraw
+      });
+
+
+    console.log(nonce)
+    console.log(gasPrice)
+    console.log(gasLimit)
 
     return ({
         success: true,
