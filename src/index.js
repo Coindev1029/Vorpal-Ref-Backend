@@ -1,6 +1,7 @@
 const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
 const { GetBalances, UpdateVestings } = require('./database/balances')
+const { WithdrawRevenue } = require('./database/withdraw')
 const express = require('express');
 const bodyParser = require('body-parser');
 const { WatchBlocks } = require('./blockchain/WatchBlocks');

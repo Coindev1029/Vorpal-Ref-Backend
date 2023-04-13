@@ -119,15 +119,6 @@ async function GetBalances ( owner ) {
     
 }
 
-async function WithdrawRevenue ( addressTo, signedTX ) {
-    console.log(addressTo)
-    console.log(signedTX)
-    return ({
-        success: true,
-        message: "Tx data tested"
-    })
-}
-
 module.exports = {
     UpdateScheduledBalance,
     CreateVesting,
@@ -136,6 +127,5 @@ module.exports = {
     FindLinkOwner,
     GetValueByKey,
     GetBalances,
-    WithdrawRevenue,
     SetValueByKey
   }
