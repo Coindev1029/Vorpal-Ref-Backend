@@ -58,7 +58,7 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
                 value: amount
               }),
             value: '0x00',
-            data: tokenContract.methods.transfer(recipient, amount).encodeABI()
+            data: contract.methods.transfer(recipient, amount).encodeABI()
           };
         
     
