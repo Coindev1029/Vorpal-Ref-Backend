@@ -77,6 +77,14 @@ app.get('/api/getownerdata/:id', async (req, res) => {
 
 
 app.post('/api/withdraw', async (req, res) => {
+
+  res.setHeader("Access-Control-Allow-Origin", "*" );
+  res.setHeader('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE");
+  res.setHeader('Access-Control-Request-Headers', 'Content-Type, Accept');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Content-Type', 'application/json');
+  
     const postData = req.body;
     console.log(postData)
     if (!postData || !postData.address || !postData.signature) {
