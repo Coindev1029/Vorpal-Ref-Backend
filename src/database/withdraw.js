@@ -27,7 +27,13 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
     const balances = await GetBalances(account)
 
     const toWithdraw = balances.balanceAvailable 
-
+    
+    if ( toWithdraw < 400 ) {
+        return ({
+            success: false,
+            message: "Available amount is too low"
+        })
+    }
     console.log(toWithdraw)
 
     return ({
