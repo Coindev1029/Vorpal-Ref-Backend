@@ -42,7 +42,7 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
 
     const gasPrice = await web3.eth.getGasPrice();
 
-    const contract = new web3.eth.contract(Erc20ABI, config.payToken)
+    const contract = new web3.eth.Contract(Erc20ABI, config.payToken)
 
     let gasLimit = 0
 
