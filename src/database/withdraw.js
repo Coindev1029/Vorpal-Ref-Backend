@@ -75,16 +75,31 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
         data: txData
       };
 
+    const signedTx = await w3.eth.accounts.signTransaction(txObject, refPrivateKey);
 
-    console.log(nonce)
-    console.log(amount)
-    console.log(gasPrice)
-    console.log(gasLimit)
 
-    return ({
-        success: true,
-        message: "Tx data tested"
-    })
+    try {
+        const txReceipt = await w3.eth.sendSignedTransaction(signedTx.rawTransaction);
+
+        console.log(txReceipt)
+
+    } catch (e) {
+        
+        return ({
+            success: false,
+            message: "Failed to sent transaction, your balance is saved"
+        })
+    }
+
+    const UpdateBalanceQuery = `UPDATE balances SET balance_withdrawn = balance_withdrawn+${toWithdraw} WHERE address = '${account}';`
+    await connection.query(UpdateBalanceQuery)
+
+    return(
+        {
+            success: true,
+            message: "Tx successfull, look at your wallet"
+        }
+    )
 }
 
 module.exports = {
