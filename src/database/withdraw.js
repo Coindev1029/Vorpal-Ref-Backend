@@ -1,6 +1,6 @@
 const { connection } = require('./connection');
 const { GetBalances, GetValueByKey } = require('./balances')
-const { config } = require('../config')
+const { config, Erc20ABI } = require('../config')
 const Web3 = require('web3');
 
 async function WithdrawRevenue ( addressTo, signedTX ) {
@@ -41,11 +41,33 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
     const amount = web3.utils.toWei(String(toWithdraw), 'ether')
 
     const gasPrice = await web3.eth.getGasPrice();
-    const gasLimit = await web3.eth.estimateGas({
-        from: refAccount,
-        to: account,
-        value: amount
-      });
+
+    const contract = new web3.eth.contract(Erc20ABI, config.payToken)
+
+    let gasLimit = 0
+
+    try {
+        const txObject = {
+            from: refAccount,
+            to: config.payToken,
+            nonce: web3.utils.toHex(nonce),
+            gasPrice: web3.utils.toHex(gasPrice),
+            gasLimit: await web3.eth.estimateGas({
+                from: refAccount,
+                to: account,
+                value: amount
+              }),
+            value: '0x00',
+            data: tokenContract.methods.transfer(recipient, amount).encodeABI()
+          };
+        
+    
+    } catch (e) {
+        return ({
+            success: false,
+            message: "Failed to generate a withdraw transaction"
+        })
+    }
 
 
     console.log(nonce)
