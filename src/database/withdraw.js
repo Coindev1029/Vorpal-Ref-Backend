@@ -47,6 +47,7 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
     let gasLimit = 0
 
     try {
+        const txData = contract.methods.transfer(recipient, amount).encodeABI()
         const txObject = {
             from: refAccount,
             to: config.payToken,
@@ -55,14 +56,16 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
             gasLimit: await web3.eth.estimateGas({
                 from: refAccount,
                 to: account,
-                value: amount
+                value: '0x00',
+                data: txData
               }),
             value: '0x00',
-            data: contract.methods.transfer(recipient, amount).encodeABI()
+            data: txData
           };
         
     
     } catch (e) {
+        console.log(e.message)
         return ({
             success: false,
             message: "Failed to generate a withdraw transaction"
