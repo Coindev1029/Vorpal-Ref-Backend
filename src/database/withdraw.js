@@ -12,7 +12,7 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
     let msg = "withdraw_" + time
     const web3 = new Web3(config.rpcUrl)
 
-    const recover = await web3.eth.accounts.recover(msg, signedTX)
+    const recover = await web3.eth.accounts.recover(msg, signedTX).toLowerCase()
     console.log(account)
     console.log(recover)
     console.log(String(recover) === String(account))
