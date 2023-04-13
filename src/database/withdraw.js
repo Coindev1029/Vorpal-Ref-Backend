@@ -43,27 +43,18 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
     const gasPrice = await web3.eth.getGasPrice();
 
     const contract = new web3.eth.Contract(Erc20ABI, config.payToken)
+    const txData = contract.methods.transfer(account, amount).encodeABI()
 
     let gasLimit = 0
 
     try {
-        const txData = contract.methods.transfer(account, amount).encodeABI()
+
         gasLimit = await web3.eth.estimateGas({
             from: refAccount,
             to: config.payToken,
             value: '0x00',
             data: txData
           })
-
-        const txObject = {
-            from: refAccount,
-            to: config.payToken,
-            nonce: web3.utils.toHex(nonce),
-            gasPrice: web3.utils.toHex(gasPrice),
-            gasLimit: gasLimit,
-            value: '0x00',
-            data: txData
-          };
         
     
     } catch (e) {
@@ -73,6 +64,16 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
             message: "Failed to generate a withdraw transaction"
         })
     }
+
+    const txObject = {
+        from: refAccount,
+        to: config.payToken,
+        nonce: web3.utils.toHex(nonce),
+        gasPrice: web3.utils.toHex(gasPrice),
+        gasLimit: gasLimit,
+        value: '0x00',
+        data: txData
+      };
 
 
     console.log(nonce)
