@@ -85,7 +85,9 @@ async function UpdateVestings () {
                 paymentValue = (valueTotal - vesting.value_paid) > 0 ? (valueTotal - vesting.value_paid) : 0
             } else {
                 const paymentPart = ((date - dateStart)/ (dateEnd - dateStart))
-                paymentValue = Math.floor(valueTotal * paymentPart)
+                const elapsedPart = valueTotal - vesting.value_paid
+                const calculatedPayment = valueTotal * paymentPart
+                paymentValue = Math.floor(calculatedPayment < elapsedPart ? calculatedPayment : elapsedPart)
             }
 
             PayValue(vesting.address, paymentValue, date, vesting.id)
