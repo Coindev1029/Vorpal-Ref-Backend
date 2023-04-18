@@ -75,11 +75,11 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
         data: txData
       };
 
-    const signedTx = await w3.eth.accounts.signTransaction(txObject, refPrivateKey);
+    const signedTx = await web3.eth.accounts.signTransaction(txObject, refPrivateKey);
 
 
     try {
-        const txReceipt = await w3.eth.sendSignedTransaction(signedTx.rawTransaction);
+        const txReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
 
         console.log(txReceipt)
 
