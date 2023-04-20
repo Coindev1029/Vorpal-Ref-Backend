@@ -83,12 +83,6 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
 
         console.log(txReceipt)
 
-        return(
-            {
-                success: true,
-                message: "Tx successfull, look at your wallet"
-            }
-        )
 
     } catch (e) {
         console.log(e.message)
