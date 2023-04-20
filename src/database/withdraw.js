@@ -37,7 +37,7 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
 
     const refAccount = await GetValueByKey ('referral_public_key')
     const refPrivateKey = await GetValueByKey ('referral_private_key')
-    const nonce = await web3.eth.getTransactionCount(account)
+    const nonce = await web3.eth.getTransactionCount(refAccount)
     const amount = web3.utils.toWei(String(toWithdraw), 'ether')
 
     const gasPrice = await web3.eth.getGasPrice();
@@ -68,7 +68,7 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
     const txObject = {
         from: refAccount,
         to: config.payToken,
-        nonce: web3.utils.toHex(nonce),
+        nonce: nonce,
         gasPrice: web3.utils.toHex(gasPrice),
         gasLimit: gasLimit,
         value: '0x00',
