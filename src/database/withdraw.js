@@ -84,6 +84,7 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
         console.log(txReceipt)
 
     } catch (e) {
+        console.log(e.message)
         
         return ({
             success: false,
