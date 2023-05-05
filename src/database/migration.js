@@ -52,7 +52,6 @@ async function DBCreateTables () {
   }
 
 async function DBMigration () {
-  await connection.connect()
   await migrate(connection, process.env.DB_MIGRATION_DIR)
 }
 
