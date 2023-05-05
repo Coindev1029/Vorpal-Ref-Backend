@@ -1,6 +1,6 @@
 require('dotenv').config();
 const { connection, connectionResult } = require('./connection')
-const { migrate} = require("postgres-migrations")
+const { migrate } = require("postgres-migrations")
 
 async function DBCreateTables () {
     const TableOneQuery = 'CREATE TABLE IF NOT EXISTS address_to_referral ('+
@@ -52,7 +52,7 @@ async function DBCreateTables () {
   }
 
 async function DBMigration () {
-  await migrate(connection, process.env.DB_MIGRATION_DIR)
+  await migrate({ connection }, process.env.DB_MIGRATION_DIR)
 }
 
 switch(process.argv[2]) {
