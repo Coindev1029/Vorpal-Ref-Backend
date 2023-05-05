@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { connection } = require('./connection')
+const { connection, connectionResult } = require('./connection')
 const { migrate} = require("postgres-migrations")
 
 async function DBCreateTables () {
@@ -52,17 +52,30 @@ async function DBCreateTables () {
   }
 
 async function DBMigration () {
+  await connection.connect()
   await migrate(connection, process.env.DB_MIGRATION_DIR)
 }
 
 switch(process.argv[2]) {
    case "--create" :
-      DBCreateTables ()
+      try {
+         DBCreateTables ()
+      } catch (e) {
+        console.log(e.message)
+      }
       break;
    case "--migrate" :
-      DBMigration ()
+      try {
+         DBMigration ()
+      } catch (e) {
+         console.log(e.message)
+      }
       break;
    default :
-      DBMigration ()
+      try {
+         DBMigration ()
+      } catch (e) {
+         console.log(e.message)
+      }
       break;
 }  
