@@ -52,7 +52,12 @@ async function DBCreateTables () {
   }
 
 async function DBMigration () {
-  await migrate({ connection }, process.env.DB_MIGRATION_DIR)
+  try {
+    await migrate({ connection }, process.env.DB_MIGRATION_DIR)
+  } catch (e) {
+    console.log("Thrown exception : ")
+    console.log(e.message)
+  }
 }
 
 switch(process.argv[2]) {
