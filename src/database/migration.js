@@ -1,6 +1,12 @@
 require('dotenv').config();
-const { connection, connectionResult } = require('./connection')
+const { connection } = require('./connection')
 const { migrate } = require("postgres-migrations")
+const Web3 = require('web3')
+const config = require('../blockchain/config')
+const { 
+  GetValueByKey,
+  SetValueByKey
+ } = require('./balances')
 
 async function DBCreateTables () {
     const TableOneQuery = 'CREATE TABLE IF NOT EXISTS address_to_referral ('+
@@ -48,10 +54,19 @@ async function DBCreateTables () {
     await connection.query(TableUsersQuery)
     await connection.query(TableVestingsQuery)
     await connection.query(TableCDQuery)
+    
+    const web3 = new Web3(config.rpc); 
+    const endBlock = await web3.eth.getBlockNumber()
+
+    SetValueByKey('referral_public_key', '0x00')
+    SetValueByKey('referral_private_key', '0x00')
+    SetValueByKey('last_passed_block', `${endBlock}`)
+
     return true
   }
 
 async function DBMigration () {
+
   try {
     await migrate({ connection }, process.env.DB_MIGRATION_DIR)
   } catch (e) {
