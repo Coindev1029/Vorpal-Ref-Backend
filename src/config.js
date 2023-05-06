@@ -18,6 +18,12 @@ const config = {
   startBlock: 1500000
 }
 
+const nessesary_keys = {
+	publickey: 'referral_public_key',
+	privatekey: 'referral_private_key',
+	lastblock: 'last_passed_block'
+}
+
 Erc20ABI = [
 	{
 		"anonymous": false,
@@ -218,6 +224,7 @@ Erc20ABI = [
 
 module.exports = {
     config,
-    Erc20ABI
+    Erc20ABI,
+	nessesary_keys
 }
 

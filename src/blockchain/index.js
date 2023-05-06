@@ -9,7 +9,6 @@ const web3 = new Web3(config.rpc); // replace YOUR_PROJECT_ID with your Infura p
     console.log(rej)
 }) */
 
-const myAddr = "0xDD099d768d18E9a6b0bd9DFa02A5FD3A840a273f"
 const watchingAddresses = []
 
 for (let key in config.config.contracts) {
