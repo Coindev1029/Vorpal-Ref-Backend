@@ -3,6 +3,7 @@ const { connection } = require('./connection')
 const { migrate } = require("postgres-migrations")
 const Web3 = require('web3')
 const config = require('../blockchain/config')
+const { nessesary_keys } = require('../config')
 const { 
   GetValueByKey,
   SetValueByKey
@@ -58,9 +59,9 @@ async function DBCreateTables () {
     const web3 = new Web3(config.rpc); 
     const endBlock = await web3.eth.getBlockNumber()
 
-    SetValueByKey('referral_public_key', '0x00')
-    SetValueByKey('referral_private_key', '0x00')
-    SetValueByKey('last_passed_block', `${endBlock}`)
+    if (!GetValueByKey(nessesary_keys.publickey)) await SetValueByKey(nessesary_keys.publickey, '0x00')
+    if (!GetValueByKey(nessesary_keys.privatekey)) await SetValueByKey(nessesary_keys.privatekey, '0x00')
+    if (!GetValueByKey(nessesary_keys.lastblock)) await SetValueByKey(nessesary_keys.lastblock, `${endBlock}`)
 
     return true
   }
