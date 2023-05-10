@@ -28,6 +28,8 @@ Deploy:
 
    npm start
 
+Supposed the cross-origin headers made on server and now not applied in this source code.
+
 Requests: 
 
 API_URL = https://staging-api.vorpal.finance/

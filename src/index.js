@@ -199,7 +199,7 @@ httpsServer.listen(process.argv[3] ? process.argv[3] : process.env.DEFAULT_PORT_
 
 {
   action: "CreateLink",
-  owner:  '0x047d3295Bb5b14fF3F85Ecb29f08A1B47278Ff78',
+  owner:  '',
   reward1: 90,
   reward2: 10
 }
@@ -208,13 +208,13 @@ var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
 
 {
   action: "RegisterReferral",
-  client: '0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F',
-  link: 'ac21766476906b650f7502530a796f19'
+  client: '',
+  link: ''
 }
 
 {
   action: "GetLinksByOwner",
-  owner:  '0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F'
+  owner:  ''
 }
 
 Actions: "CreateLink", "RegisterReferral", "GetLinksByOwner"
