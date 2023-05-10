@@ -28,6 +28,10 @@ Deploy:
 
    npm start
 
+   Default port is 3055, you can specify another port in command: 
+   
+   npm start 3034
+
 Supposed the cross-origin headers made on server and now not applied in this source code.
 
 Requests: 
