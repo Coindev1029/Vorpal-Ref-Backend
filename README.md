@@ -44,9 +44,26 @@ Get:
 
  {API_URL}api/getlinksbyowner/{id}, id - ERC20 address
 
+ Responce body :
+
+ [{
+   address : string, // '0x....'
+   link_key : string // link id,
+   value_primary : number,
+   value_secondary : number,
+ }]
+
 2. User data:
 
  {API_URL}api/getownerdata/{id}, id - ERC20 address
+
+ Responce body :
+ {
+      links : array (usually one element),
+      refCount: number,
+      balanceScheduled: number,
+      balanceAvailable: number
+ }
 
 Post:
 

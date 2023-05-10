@@ -161,7 +161,8 @@ app.post('/api', async (req, res) => {
       }
       res.status(200).send(JSON.stringify({
         creation: "getLinks",
-        result: await GetLinksByOwner ( postData.owner )
+        result: await GetLinksByOwner ( postData.owner ),
+        warn: "Deprecated. Please request from /api/getlinksbyowner/0x1e... as a get param"
       }));
      default:
         res.status(200).send(JSON.stringify({
