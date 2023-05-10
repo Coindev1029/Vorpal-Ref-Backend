@@ -30,7 +30,7 @@ async function SetupBalances (owner) {
 }
 
 //New link generation, returns new link
-async function AddNewLink ( owner, reward1, reward2 ) {
+async function AddNewLink ( owner, reward1 = 90, reward2 = 10 ) {
    if (IsWrongString(owner)) return null
    if (typeof(reward1) !== 'number' || typeof(reward2) !== 'number'  || ( reward2 + reward1 > 100)) return null
 

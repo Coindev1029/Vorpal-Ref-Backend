@@ -88,8 +88,7 @@ app.post('/api/withdraw', async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
 
     const postData = req.body;
-    console.log("Withdraw data : ")
-    console.log(postData)
+
     if (!postData || !postData.address || !postData.signature) {
       res.status(400).send(JSON.stringify({
         success: false,
@@ -99,8 +98,7 @@ app.post('/api/withdraw', async (req, res) => {
     }
     console.log("Wait for processing")
     const withdrawmsg = await WithdrawRevenue(postData.address, postData.signature)
-    console.log("Withdraw result : ")
-    console.log(withdrawmsg)
+
     res.status(withdrawmsg.success ? 200 : 400).send(JSON.stringify(withdrawmsg));
 })
 
@@ -109,9 +107,6 @@ app.post('/api/withdraw', async (req, res) => {
 app.post('/api', async (req, res) => {
 
   const postData = req.body;
-
-  console.log("req body: ")
-  console.log(postData)
 
   /* res.setHeader("Access-Control-Allow-Origin", "*" );
   res.setHeader('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE");
