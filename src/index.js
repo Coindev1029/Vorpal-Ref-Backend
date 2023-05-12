@@ -1,6 +1,7 @@
 const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
 const { GetBalances, UpdateVestings } = require('./database/balances')
+const { RequestAdminData } = require('./admin')
 const { WithdrawRevenue } = require('./database/withdraw')
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -76,8 +77,12 @@ app.get('/api/getownerdata/:id', async (req, res) => {
 })
 
 app.post('/api/admin/', async (req, res) => {
+
+   console.log(req.body)
+
+   const authResult = await RequestAdminData(req.body)
    res.status(200).send(JSON.stringify({
-      data : 1
+      data : authResult
    }))
 })
 
