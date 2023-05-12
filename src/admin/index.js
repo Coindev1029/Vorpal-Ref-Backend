@@ -1,4 +1,5 @@
 const { connection } = require('../database/connection')
+const Web3 = require('web3');
 const { sha256 } = require('sha256')
 
 /* In progress */
@@ -23,7 +24,14 @@ async function RequestAdminData ( request ) {
         })
     }
 
-    // const admins_query = "SELECT * FROM users WHERE"
+    const web3 = new Web3(config.rpcUrl)
+    const request_address = web3.eth.accounts.recover(msg, signature).toLowerCase()
+
+    const admins_query = `SELECT address FROM users WHERE rights = 'admin' AND address = '${request_address}';`;
+
+    const user_query = await connection.query(admins_query);
+
+    console.log(user_query.rows)
 
     return true
 }

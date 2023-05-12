@@ -75,6 +75,11 @@ app.get('/api/getownerdata/:id', async (req, res) => {
    }));
 })
 
+app.post('/api/admin/', async (req, res) => {
+   res.status(200).send(JSON.stringify({
+      data : 1
+   }))
+})
 
 app.post('/api/withdraw', async (req, res) => {
   /*
@@ -172,12 +177,6 @@ app.post('/api', async (req, res) => {
      break;
   }
 
-
-
-  /* res.status(200).send(JSON.stringify({
-    condition: 'Default'
-  }));
-  res.end() */
 })
 
 app.listen(port, () => {
