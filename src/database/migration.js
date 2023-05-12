@@ -31,7 +31,7 @@ async function DBCreateTables () {
     const TableUsersQuery = 'CREATE TABLE IF NOT EXISTS users ('+
       'id SERIAL PRIMARY KEY,'+
       'login varchar(256) NOT NULL UNIQUE,'+
-      'rights varchar(256) NOT NULL UNIQUE,'+
+      'rights varchar(256) NOT NULL,'+
       'address varchar(512) NOT NULL UNIQUE );'
 
     const TableVestingsQuery = 'CREATE TABLE IF NOT EXISTS vestings ('+

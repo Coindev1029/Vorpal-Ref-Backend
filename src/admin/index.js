@@ -31,6 +31,7 @@ async function RequestAdminData ( request ) {
 
     const user_query = await connection.query(admins_query);
 
+    console.log("Users : ")
     console.log(user_query.rows)
 
     return true
@@ -50,3 +51,10 @@ async function RequestPublicData ( project ) {
     })
 }
 
+
+
+module.exports = {
+    GenerateAuthMessage,
+    RequestAdminData,
+    RequestPublicData
+  }
