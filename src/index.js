@@ -76,7 +76,7 @@ app.get('/api/getownerdata/:id', async (req, res) => {
    }));
 })
 
-app.post('/api/admin/', async (req, res) => {
+app.post('/api/admin/requestdata', async (req, res) => {
 
    console.log(req.body)
 
