@@ -14,8 +14,8 @@ function WriteLog ( address, message ) {
     const TimeMark =`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
     const log = `${TimeMark} ${address} ${message}`
-
-    fs.appendFile(filePath, log, (err) => {
+    console.log(log)
+    FS.appendFile(filePath, log, (err) => {
        if (err) throw err;
        console.log('The new line was added to the file!');
     });

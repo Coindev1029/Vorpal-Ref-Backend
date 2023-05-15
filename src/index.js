@@ -84,8 +84,10 @@ app.post('/api/admin/requestdata', async (req, res) => {
    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
    res.setHeader('Access-Control-Allow-Credentials', 'true');
    */
-  
+   console.log("Requested")
+   console.log(req.body)
    const authResult = await RequestAdminData(req.body)
+   console.log(authResult)
    res.status(200).send(JSON.stringify({
       data : authResult
    }))
