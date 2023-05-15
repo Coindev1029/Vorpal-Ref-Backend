@@ -1,6 +1,6 @@
 const FS = require('fs')
 
-const filePath = '../../admin.log';
+const filePath = '../../../admin.log';
 
 function WriteLog ( address, message ) {
     const time = new Date()
