@@ -78,14 +78,14 @@ app.get('/api/getownerdata/:id', async (req, res) => {
 
 app.post('/api/admin/requestdata', async (req, res) => {
 
-   // console.log(req.body)
    /*
    res.setHeader("Access-Control-Allow-Origin", "*" );
    res.setHeader('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE");
    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
    res.setHeader('Access-Control-Allow-Credentials', 'true');
    */
-   const authResult = 1 // const authResult = await RequestAdminData(req.body)
+  
+   const authResult = await RequestAdminData(req.body)
    res.status(200).send(JSON.stringify({
       data : authResult
    }))
