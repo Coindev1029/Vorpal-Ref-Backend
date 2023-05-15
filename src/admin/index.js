@@ -37,9 +37,8 @@ async function CheckRights ( signature, msgtext = 'getcontent_' ) {
 }
 
 async function RequestAdminData ( request ) {
-    const msg = GenerateAuthMessage ()
-    const signature = request.signature
-    if ( !signature ) {
+    const user = await CheckRights ( request.signature )
+    if ( !user ) {
         return( {
             ok: false,
             error: 'Signature not found',
@@ -47,17 +46,11 @@ async function RequestAdminData ( request ) {
         })
     }
 
-    const web3 = new Web3(config.rpcUrl)
-    const request_address = web3.eth.accounts.recover(msg, signature).toLowerCase()
-
-    const admins_query = `SELECT address FROM users WHERE rights = 'admin' AND address = '${request_address}';`;
-
-    const user_query = await connection.query(admins_query);
-
-    console.log("Users : ")
-    console.log(user_query.rows)
-
-    return true
+    return ( {
+        ok: true,
+        error: '',
+        content: null
+    })
 }
 
 

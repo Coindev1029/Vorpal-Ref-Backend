@@ -1,5 +1,6 @@
 const FS = require('fs')
 
+const filePath = '../../admin.log';
 
 function WriteLog ( address, message ) {
     const time = new Date()
@@ -13,6 +14,12 @@ function WriteLog ( address, message ) {
     const TimeMark =`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
     const log = `${TimeMark} ${address} ${message}`
+
+    fs.appendFile(filePath, log, (err) => {
+       if (err) throw err;
+       console.log('The new line was added to the file!');
+    });
+
     return log
 }
 
