@@ -48,6 +48,16 @@ async function DBCreateTables () {
       'id SERIAL PRIMARY KEY,'+
       'key varchar(512) NOT NULL UNIQUE,'+
       'value varchar(512) );'
+
+    const TableNEKeysQuery = 'CREATE TABLE IF NOT EXISTS common_data ('+
+    'id SERIAL PRIMARY KEY,'+
+    'key varchar(512) NOT NULL UNIQUE);'
+
+    const TableLogsQuery = 'CREATE TABLE IF NOT EXISTS logs ('+
+      'id SERIAL PRIMARY KEY,'+
+      'date timestamp NOT NULL,'+
+      'address varchar(512) NOT NULL,'+
+      'message varchar(512) );'
   
     await connection.query(TableOneQuery)
     await connection.query(TableTwoQuery)
@@ -55,6 +65,8 @@ async function DBCreateTables () {
     await connection.query(TableUsersQuery)
     await connection.query(TableVestingsQuery)
     await connection.query(TableCDQuery)
+    await connection.query(TableNEKeysQuery)
+    await connection.query(TableLogsQuery)
     
     const web3 = new Web3(config.rpc); 
     const endBlock = await web3.eth.getBlockNumber()
