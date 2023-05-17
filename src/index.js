@@ -1,7 +1,7 @@
 const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
 const { GetBalances, UpdateVestings } = require('./database/balances')
-const { RequestAdminData } = require('./admin')
+const { RequestAdminData, SaveNewData } = require('./admin')
 const { WithdrawRevenue } = require('./database/withdraw')
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -76,6 +76,12 @@ app.get('/api/getownerdata/:id', async (req, res) => {
    }));
 })
 
+app.get('/api/content/:project', async (req, res) => {
+ res.status(200).send(JSON.stringify({
+    content: "heading"
+ }))
+})
+
 app.post('/api/admin/requestdata', async (req, res) => {
 
    /*
@@ -84,13 +90,35 @@ app.post('/api/admin/requestdata', async (req, res) => {
    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
    res.setHeader('Access-Control-Allow-Credentials', 'true');
    */
-   console.log("Requested")
-   console.log(req.body)
+   console.log ("Requested")
+   console.log (req.body)
    const authResult = await RequestAdminData(req.body)
-   console.log(authResult)
+   console.log (authResult)
    res.status(200).send(JSON.stringify({
       data : authResult
    }))
+})
+
+app.post('/api/admin/savedata', async (req, res) => {
+  console.log ("Saving...")
+  console.log (req.body)
+  const saveResult = await SaveNewData (req.body)
+  console.log (saveResult)
+  res.status(200).send(JSON.stringify({
+    data : saveResult
+ }))
+})
+
+app.post('/api/admin/getusers', async (req, res) => {
+  res.status(200).send(JSON.stringify({
+    data : "Users"
+ }))
+})
+
+app.post('/api/admin/updateusers', async (req, res) => {
+  res.status(200).send(JSON.stringify({
+    data : "Users update"
+ }))
 })
 
 app.post('/api/withdraw', async (req, res) => {
