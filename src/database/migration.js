@@ -49,7 +49,7 @@ async function DBCreateTables () {
       'key varchar(512) NOT NULL UNIQUE,'+
       'value varchar(512) );'
 
-    const TableNEKeysQuery = 'CREATE TABLE IF NOT EXISTS common_data ('+
+    const TableNEKeysQuery = 'CREATE TABLE IF NOT EXISTS keys_not_editable ('+
     'id SERIAL PRIMARY KEY,'+
     'key varchar(512) NOT NULL UNIQUE);'
 

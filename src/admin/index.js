@@ -47,10 +47,13 @@ async function RequestAdminData ( request ) {
         })
     }
 
+    const GetDataQuery = `SELECT * FROM common_data WHERE key NOT IN (SELECT key FROM keys_not_editable);`
+    const KeyData = await connection.query(GetDataQuery)
+
     return ( {
         ok: true,
         error: '',
-        content: null
+        content: KeyData.rows
     })
 }
 
