@@ -1,6 +1,7 @@
 const FS = require('fs')
+const { connection } = require('../database/connection')
 
-const filePath = '../../../admin.log';
+// const filePath = '../../../admin.log';
 
 function WriteLog ( address, message ) {
     const time = new Date()
@@ -15,10 +16,12 @@ function WriteLog ( address, message ) {
 
     const log = `${TimeMark} ${address} ${message}`
     console.log(log)
-    FS.appendFile(filePath, log, (err) => {
+    /* FS.appendFile(filePath, log, (err) => {
        if (err) throw err;
        console.log('The new line was added to the file!');
-    });
+    }); */
+    const log_query = `INSERT INTO logs (date, address, message) VALUES (to_timestamp(${Math.round(time.getTime() / 1000)}), '${address}', '${message}');`
+    connection.query(log_query)
 
     return log
 }
