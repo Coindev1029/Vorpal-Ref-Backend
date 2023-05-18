@@ -42,7 +42,7 @@ async function RequestAdminData ( request ) {
     const user = await CheckRights ( request.signature )
     if ( !user ) {
         return( {
-            ok: false,
+            success: false,
             error: 'Signature not found',
             content: null
         })
@@ -52,7 +52,7 @@ async function RequestAdminData ( request ) {
     const KeyData = await connection.query(GetDataQuery)
 
     return ( {
-        ok: true,
+        success: true,
         error: '',
         content: KeyData.rows
     })
@@ -62,7 +62,7 @@ async function SaveNewData ( request ) {
     if (!request.data) {
         return(
             {
-                ok: false,
+                success: false,
                 error: 'Saving data not found'
             }
         )
@@ -73,7 +73,7 @@ async function SaveNewData ( request ) {
     } catch (e) {
         return(
             {
-                ok: false,
+                success: false,
                 error: 'Saving data is invalid'
             }
         )
@@ -81,7 +81,7 @@ async function SaveNewData ( request ) {
     const user = await CheckRights ( request.signature, signedData )
     if ( !user ) {
         return( {
-            ok: false,
+            success: false,
             error: 'Signature not found or invalid',
             content: null
         })
@@ -91,7 +91,7 @@ async function SaveNewData ( request ) {
         await SetValueByKey(key, response.data[key])
     }
     return( {
-        ok: true,
+        success: true,
         error: '',
         content: response.data
     })
