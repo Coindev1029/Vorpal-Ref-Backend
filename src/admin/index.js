@@ -10,7 +10,7 @@ const { SetValueByKey } = require('../database/balances');
 function GenerateAuthMessage ( msgtext = 'getcontent_' ) {
     const dt = new Date().getTime()
     const timeMark = dt - (dt % 600000)
-    const msgstring = msgtext + String(timeMark)
+    const msgstring = `${msgtext}${String(timeMark)}`
    // console.log(msgstring) 
     const hash = sha256(msgstring)
     return hash;
