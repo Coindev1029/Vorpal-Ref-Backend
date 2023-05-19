@@ -13,6 +13,7 @@ function GenerateAuthMessage ( msgtext = 'getcontent_' ) {
     const msgstring = `${msgtext}${String(timeMark)}`
    // console.log(msgstring) 
     const hash = sha256(msgstring)
+    console.log(hash)
     return hash;
 }
 
@@ -24,6 +25,7 @@ async function CheckRights ( signature, msgtext = 'getcontent_' ) {
 
     const web3 = new Web3(config.rpcUrl)
     const msg = GenerateAuthMessage ( msgtext )
+    console.log(msg)
     const request_address = web3.eth.accounts.recover(msg, signature).toLowerCase()
     
     const admins_query = `SELECT address FROM users WHERE rights = 'admin' AND address = '${request_address}';`;
