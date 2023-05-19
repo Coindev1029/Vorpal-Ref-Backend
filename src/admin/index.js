@@ -14,7 +14,7 @@ function GenerateAuthMessage ( msgtext = 'getcontent_' ) {
    // console.log(msgstring) 
     const hash = sha256(msgstring)
     console.log(hash)
-    return hash;
+    return String(hash);
 }
 
 async function CheckRights ( signature, msgtext = 'getcontent_' ) {
