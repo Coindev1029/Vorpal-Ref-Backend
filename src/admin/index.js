@@ -26,10 +26,21 @@ async function CheckRights ( signature, msgtext = 'getcontent_' ) {
     const web3 = new Web3(config.rpcUrl)
     const msg = GenerateAuthMessage ( msgtext )
     console.log(msg)
-    const request_address = web3.eth.accounts.recover(msg, signature).toLowerCase()
+    let request_address = ''
+
+    try {
+        request_address = web3.eth.accounts.recover(msg, signature).toLowerCase()
+    } catch (e) {
+        console.log(e)
+        return null
+    }
+
+    console.log(request_address)
     
     const admins_query = `SELECT address FROM users WHERE rights = 'admin' AND address = '${request_address}';`;
 
+    console.log(admins_query)
+    
     const user_query = await connection.query(admins_query);
 
     if (user_query.rows.length === 0) {
