@@ -25,7 +25,6 @@ async function CheckRights ( signature, msgtext = 'getcontent_' ) {
 
     const web3 = new Web3(config.rpcUrl)
     const msg = GenerateAuthMessage ( msgtext )
-    console.log(msg)
     let request_address = ''
 
     try {
@@ -34,12 +33,8 @@ async function CheckRights ( signature, msgtext = 'getcontent_' ) {
         console.log(e)
         return null
     }
-
-    console.log(request_address)
     
     const admins_query = `SELECT address FROM users WHERE rights = 'admin' AND address = '${request_address}';`;
-
-    console.log(admins_query)
     
     const user_query = await connection.query(admins_query);
 
@@ -90,9 +85,12 @@ async function SaveNewData ( request ) {
         })
     }
 
-    for (let key in request.data) {
+    console.log("data : ")
+    console.log(request.data)
+
+    for (let j = 0; j < request.data.length; j++) {
         console.log(key)
-        console.log(request.data)
+        console.log(request.data[j])
        // await SetValueByKey(key, request.data[key])
     }
     return( {
