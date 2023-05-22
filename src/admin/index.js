@@ -100,13 +100,13 @@ async function SaveNewData ( request ) {
         })
     }
 
-    for (let key in response.data) {
-        await SetValueByKey(key, response.data[key])
+    for (let key in request.data) {
+        await SetValueByKey(key, request.data[key])
     }
     return( {
         success: true,
         error: '',
-        content: response.data
+        content: request.data
     })
 }
 
