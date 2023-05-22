@@ -3,15 +3,14 @@ const Web3 = require('web3');
 const sha256 = require('sha256')
 const { WriteLog } = require('./log')
 const { config } = require('../config');
-const { SetValueByKey } = require('../database/balances');
+const { SetValueByKey, DeleteKey } = require('../database/balances');
 
 /* In progress */
 
 function GenerateAuthMessage ( msgtext = 'getcontent_' ) {
     const dt = new Date().getTime()
     const timeMark = dt - (dt % 600000)
-    const msgstring = `${msgtext}${String(timeMark)}`
-    console.log(msgstring) 
+    const msgstring = `${msgtext}${String(timeMark)}` 
     const hash = sha256(msgstring)
     console.log(hash)
     return String(hash);
@@ -85,14 +84,22 @@ async function SaveNewData ( request ) {
         })
     }
 
-    console.log("data : ")
-    console.log(request.data)
-
     for (let j = 0; j < request.data.length; j++) {
        console.log("Element : ")
        console.log(request.data[j])
        await SetValueByKey(request.data[j]._key, request.data[j].value)
     }
+
+    console.log("dels : ")
+    console.log(request.deletions)
+
+    
+    if (request.deletions && request.deletions.length > 0) {
+        for (let k = 0; k < request.deletions.length; k++) {
+            await DeleteKey (request.deletions[k])
+        }
+    }
+
     return( {
         success: true,
         error: '',

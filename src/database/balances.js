@@ -19,6 +19,17 @@ async function SetValueByKey (key, value) {
     return result.rows[0].value
 }
 
+async function DeleteKey ( key ) {
+    const del_query = `DELETE FROM common_data WHERE key = '${key}';`
+    try {
+        await connection.query(del_query)
+        return true
+    } catch (e) {
+        console.log(e)
+        return false
+    }
+}
+
 async function FindLinkByReferral (ref) {
     let query = `select link_key from address_to_referral where address = '${ref}';`
     let result = await connection.query(query)
@@ -129,5 +140,6 @@ module.exports = {
     FindLinkOwner,
     GetValueByKey,
     GetBalances,
+    DeleteKey,
     SetValueByKey
   }
