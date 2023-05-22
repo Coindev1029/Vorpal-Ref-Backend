@@ -89,9 +89,9 @@ async function SaveNewData ( request ) {
     console.log(request.data)
 
     for (let j = 0; j < request.data.length; j++) {
-
-        console.log(request.data[j])
-       // await SetValueByKey(key, request.data[key])
+       console.log("Element : ")
+       console.log(request.data[j])
+       await SetValueByKey(request.data[j]._key, request.data[key]._value)
     }
     return( {
         success: true,
