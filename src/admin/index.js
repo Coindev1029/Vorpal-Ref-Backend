@@ -80,7 +80,7 @@ async function SaveNewData ( request ) {
             }
         )
     }
-    let signedData =''
+    /* let signedData =''
     try {
         signedData = JSON.stringify(request.data)
     } catch (e) {
@@ -90,8 +90,8 @@ async function SaveNewData ( request ) {
                 error: 'Saving data is invalid'
             }
         )
-    }
-    const user = await CheckRights ( request.signature, signedData )
+    } */
+    const user = await CheckRights ( request.signature, request.message )
     if ( !user ) {
         return( {
             success: false,
