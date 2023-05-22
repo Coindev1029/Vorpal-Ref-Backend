@@ -11,7 +11,7 @@ function GenerateAuthMessage ( msgtext = 'getcontent_' ) {
     const dt = new Date().getTime()
     const timeMark = dt - (dt % 600000)
     const msgstring = `${msgtext}${String(timeMark)}`
-   // console.log(msgstring) 
+    console.log(msgstring) 
     const hash = sha256(msgstring)
     console.log(hash)
     return String(hash);
@@ -80,17 +80,7 @@ async function SaveNewData ( request ) {
             }
         )
     }
-    /* let signedData =''
-    try {
-        signedData = JSON.stringify(request.data)
-    } catch (e) {
-        return(
-            {
-                success: false,
-                error: 'Saving data is invalid'
-            }
-        )
-    } */
+
     const user = await CheckRights ( request.signature, request.message )
     if ( !user ) {
         return( {
@@ -101,7 +91,9 @@ async function SaveNewData ( request ) {
     }
 
     for (let key in request.data) {
-        await SetValueByKey(key, request.data[key])
+        console.log(key)
+        console.log(request.data)
+       // await SetValueByKey(key, request.data[key])
     }
     return( {
         success: true,
