@@ -85,14 +85,9 @@ async function SaveNewData ( request ) {
     }
 
     for (let j = 0; j < request.data.length; j++) {
-       console.log("Element : ")
-       console.log(request.data[j])
+
        await SetValueByKey(request.data[j]._key, request.data[j].value)
     }
-
-    console.log("dels : ")
-    console.log(request.deletions)
-
     
     if (request.deletions && request.deletions.length > 0) {
         for (let k = 0; k < request.deletions.length; k++) {
@@ -107,6 +102,26 @@ async function SaveNewData ( request ) {
     })
 }
 
+async function RequestUserData ( request ) {
+
+    const user = await CheckRights ( request.signature )
+    if ( !user ) {
+        return( {
+            success: false,
+            error: 'Signature not found',
+            content: null
+        })
+    }
+
+    const userQuery = `SELECT * FROM users`
+    const userData = await connection.query(userQuery)
+
+    return ( {
+        success: true,
+        error: '',
+        content: userData.rows
+    })
+}
 
 /* 
    body: {
@@ -126,6 +141,7 @@ async function RequestPublicData ( project ) {
 module.exports = {
     GenerateAuthMessage,
     RequestAdminData,
+    RequestUserData,
     SaveNewData,
     RequestPublicData
   }

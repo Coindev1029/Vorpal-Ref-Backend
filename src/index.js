@@ -110,8 +110,11 @@ app.post('/api/admin/savedata', async (req, res) => {
 })
 
 app.post('/api/admin/getusers', async (req, res) => {
+
+  const Users = await RequestUserData ( req.body )
+
   res.status(200).send(JSON.stringify({
-    data : "Users"
+    data : Users
  }))
 })
 
