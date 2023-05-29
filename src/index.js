@@ -1,7 +1,7 @@
 const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
 const { GetBalances, UpdateVestings } = require('./database/balances')
-const { RequestAdminData, SaveNewData } = require('./admin')
+const { RequestAdminData, SaveNewData, RequestUserData } = require('./admin')
 const { WithdrawRevenue } = require('./database/withdraw')
 const express = require('express');
 const bodyParser = require('body-parser');
