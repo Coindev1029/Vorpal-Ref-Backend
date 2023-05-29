@@ -113,7 +113,7 @@ async function RequestUserData ( request ) {
         })
     }
 
-    const userQuery = `SELECT * FROM users`
+    const userQuery = `SELECT address, login, rights FROM users;`
     const userData = await connection.query(userQuery)
 
     return ( {
