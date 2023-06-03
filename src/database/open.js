@@ -5,6 +5,7 @@ async function RequestPublicData ( project  = "all" ) {
      const pd = await connection.query(publicQuery)
      const res = new Map()
      pd.rows.forEach((rw) => {
+        console.log(rw)
         res.set(rw.key, rw.value)
      })
      return Object.fromEntries(res)
