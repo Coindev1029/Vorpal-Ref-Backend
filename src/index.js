@@ -79,10 +79,17 @@ app.get('/api/getownerdata/:id', async (req, res) => {
 })
 
 app.get('/api/public/:project', async (req, res) => {
+
   console.log(RequestPublicData(req.params.project))
-  res.status(200).send(JSON.stringify({
+
+  const resp = JSON.stringify({
     content: RequestPublicData(req.params.project)
-  }))
+  })
+
+  console.log( resp )
+
+  res.status(200).send(resp)
+  
 })
 
 app.post('/api/admin/requestdata', async (req, res) => {
