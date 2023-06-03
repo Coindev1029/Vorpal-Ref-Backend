@@ -42,6 +42,8 @@ async function RequestUserData ( request ) {
 }
 
 async function UpdateUserDataAction ( request ) {
+    console.log("request : ")
+    console.log(request)
     if (!request.data) {
         return(
             {
