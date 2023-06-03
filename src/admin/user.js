@@ -86,7 +86,7 @@ async function UpdateUserDataAction ( request ) {
         actionResultsCreate.push(CreateUser (item))
     })
 
-    data.deletions.forEach((address) => {
+    request.data.deletions.forEach((address) => {
         actionResultsDelete.push(DeleteUser (address))
     })
     
