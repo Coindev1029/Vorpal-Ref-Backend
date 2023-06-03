@@ -6,7 +6,8 @@ const { WithdrawRevenue } = require('./database/withdraw')
 const express = require('express');
 const bodyParser = require('body-parser');
 const { WatchBlocks } = require('./blockchain/WatchBlocks');
-const { UpdateUserDataAction } = require('./admin/user')
+const { UpdateUserDataAction } = require('./admin/user');
+const { RequestPublicData } = require('./database/open');
 const app = express();
 
 dEnv.config();
@@ -77,9 +78,9 @@ app.get('/api/getownerdata/:id', async (req, res) => {
    }));
 })
 
-app.get('/api/content/:project', async (req, res) => {
+app.get('/api/public/:project', async (req, res) => {
  res.status(200).send(JSON.stringify({
-    content: "heading"
+    content: RequestPublicData(req.params.project)
  }))
 })
 
@@ -126,7 +127,7 @@ app.post('/api/admin/updateusers', async (req, res) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   */
- 
+
   const updateReport = await UpdateUserDataAction (req.body)
 
   res.status(200).send(JSON.stringify({
