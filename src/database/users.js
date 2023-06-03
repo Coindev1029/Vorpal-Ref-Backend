@@ -81,13 +81,11 @@ async function DeleteUser (address = defaultUserData.address) {
 
     const addr = address.toLowerCase()
 
-    const checkCountQuery = `SELECT count(*) FROM users;`
-    const checkingCount = await connection.query(checkCountQuery);
-
-    if (Number(checkingCount.rows[0].count) < 2) {
+    const checkCount = await RequestUsers ();
+    if (checkCount.content.length < 2) {
         return ({
             success: false,
-            err: 'Forbidden to remove the last user'
+            err: 'Cannot remove the last user'
         });
     }
 
