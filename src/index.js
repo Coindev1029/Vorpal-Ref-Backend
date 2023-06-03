@@ -6,6 +6,7 @@ const { WithdrawRevenue } = require('./database/withdraw')
 const express = require('express');
 const bodyParser = require('body-parser');
 const { WatchBlocks } = require('./blockchain/WatchBlocks');
+const { UpdateUserDataAction } = require('./admin/user')
 const app = express();
 
 dEnv.config();
@@ -119,8 +120,11 @@ app.post('/api/admin/getusers', async (req, res) => {
 })
 
 app.post('/api/admin/updateusers', async (req, res) => {
+
+  const updateReport = await UpdateUserDataAction (req.body)
+
   res.status(200).send(JSON.stringify({
-    data : "Users update"
+    data : updateReport
  }))
 })
 
