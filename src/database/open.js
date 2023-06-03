@@ -6,8 +6,12 @@ async function RequestPublicData ( project  = "all" ) {
      const res = new Map()
      pd.rows.forEach((rw) => {
         console.log(rw)
+        console.log(rw.key)
+        console.log(rw.value)
         res.set(rw.key, rw.value)
      })
+     console.log(res)
+     console.log(Object.fromEntries(res))
      return Object.fromEntries(res)
 }
 
