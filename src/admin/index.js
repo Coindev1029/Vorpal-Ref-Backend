@@ -5,6 +5,7 @@ const { WriteLog } = require('./log')
 const { config } = require('../config');
 const { SetValueByKey, DeleteKey } = require('../database/balances');
 const { GenerateAuthMessage, CheckRights } = require('./functions')
+const { RequestUserData } = require('./user')
 
 async function RequestAdminData ( request ) {
     const user = await CheckRights ( request.signature )
@@ -60,27 +61,6 @@ async function SaveNewData ( request ) {
         success: true,
         error: '',
         content: request.data
-    })
-}
-
-async function RequestUserData ( request ) {
-
-    const user = await CheckRights ( request.signature )
-    if ( !user ) {
-        return( {
-            success: false,
-            error: 'Signature not found',
-            content: null
-        })
-    }
-
-    const userQuery = `SELECT address, login, rights FROM users;`
-    const userData = await connection.query(userQuery)
-
-    return ( {
-        success: true,
-        error: '',
-        content: userData.rows
     })
 }
 

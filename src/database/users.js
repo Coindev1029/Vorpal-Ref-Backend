@@ -6,6 +6,17 @@ const defaultUserData = {
     address: "0x0000000000000000000000000"
 }
 
+async function RequestUsers () {
+    const userQuery = `SELECT address, login, rights FROM users;`
+    const userData = await connection.query(userQuery)
+  
+    return ( {
+        success: true,
+        error: '',
+        content: userData.rows
+    })
+}
+
 async function UpdateUser (data = defaultUserData) {
     if (data === defaultUserData || !data.address || data.login === undefined || data.rights === undefined) {
         return ({
@@ -102,5 +113,6 @@ async function DeleteUser (address = defaultUserData.address) {
 module.exports = {
     UpdateUser,
     CreateUser,
-    DeleteUser
+    DeleteUser,
+    RequestUsers
   }

@@ -1,6 +1,6 @@
 const { WriteLog } = require('./log')
 const { CheckRights } = require('./functions')
-const { UpdateUser, CreateUser, DeleteUser} = require('../database/users')
+const { UpdateUser, CreateUser, DeleteUser, RequestUsers } = require('../database/users')
 
 
 /* 
@@ -8,16 +8,7 @@ const { UpdateUser, CreateUser, DeleteUser} = require('../database/users')
        signature: "",
        message: "",
        data: {
-         updates: [ {
-           address: "",
-           login: "",
-           rights: ""
-         }, {
-           address: "",
-           login: "",
-           rights: ""
-         }],
-         creations: [ {
+         users: [ {
            address: "",
            login: "",
            rights: ""
@@ -34,6 +25,21 @@ const { UpdateUser, CreateUser, DeleteUser} = require('../database/users')
    }
 
 */
+
+
+async function RequestUserData ( request ) {
+
+  const user = await CheckRights ( request.signature )
+  if ( !user ) {
+      return( {
+          success: false,
+          error: 'Signature not found',
+          content: null
+      })
+  }
+
+  return await RequestUsers ()
+}
 
 async function UpdateUserDataAction ( request ) {
     if (!request.data) {
@@ -53,15 +59,28 @@ async function UpdateUserDataAction ( request ) {
         })
     }
 
+    const updates = []
+    const creations = []
+
     const actionResultsUpdate = []
     const actionResultsCreate = []
     const actionResultsDelete = []
 
-    data.updates.forEach((item) => {
+    const currentUsers = JSON.stringify(await RequestUsers())
+
+    request.data.users.forEach((user) => {
+         if (currentUsers.indexOf(user.address) < 0) {
+            creations.push(user)
+         } else {
+            updates.push(user)
+         }
+    })
+
+    updates.forEach((item) => {
         actionResultsUpdate.push(UpdateUser (item))
     })
 
-    data.creations.forEach((item) => {
+    creations.forEach((item) => {
         actionResultsCreate.push(CreateUser (item))
     })
 
@@ -77,5 +96,6 @@ async function UpdateUserDataAction ( request ) {
 }
 
 module.exports = {
-    UpdateUserDataAction
+    UpdateUserDataAction,
+    RequestUserData
   }
