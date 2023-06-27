@@ -8,7 +8,7 @@ const defaultBalance = {
   withdrawn: null
 }
 
-export function IsWrongString ( arg ) {
+function IsWrongString ( arg ) {
   if (!arg) return true
   if (arg.indexOf(";") > -1) return true
   if (arg.indexOf(" ") > -1) return true
@@ -17,7 +17,7 @@ export function IsWrongString ( arg ) {
 }
 
 // Trying to add an address if it's not exists
-export async function SetupBalances (owner) {
+async function SetupBalances (owner) {
 
   if (IsWrongString(owner)) return null
   
@@ -30,7 +30,7 @@ export async function SetupBalances (owner) {
 }
 
 //New link generation, returns new link
-export async function AddNewLink ( owner, reward1 = 90, reward2 = 10 ) {
+async function AddNewLink ( owner, reward1 = 90, reward2 = 10 ) {
    if (IsWrongString(owner)) return null
    if (typeof(reward1) !== 'number' || typeof(reward2) !== 'number'  || ( reward2 + reward1 > 100)) return null
 
@@ -58,7 +58,7 @@ export async function AddNewLink ( owner, reward1 = 90, reward2 = 10 ) {
 
 //Registering a new referral. Only one referral link to address, 
 //returns true is it was registered, false if not
-export async function RegisterReferral ( address, link ) {
+async function RegisterReferral ( address, link ) {
 
    if( IsWrongString ( address ) || IsWrongString ( link )) return {
       result: false,
@@ -110,7 +110,7 @@ export async function RegisterReferral ( address, link ) {
 
 }
 
-export async function GetLinksByOwner (owner) {
+async function GetLinksByOwner (owner) {
 
   if (IsWrongString ( owner )) return []
   
@@ -121,11 +121,20 @@ export async function GetLinksByOwner (owner) {
    return links.rows
 }
 
-export async function GetRefCount ( link ) {
+async function GetRefCount ( link: any ) {
    
    const countQuery = `SELECT COUNT(*) from address_to_referral WHERE link_key = '${link}';`;
 
    const countRequest = await connection.query(countQuery)
 
    return countRequest.rows
+}
+
+export {
+     IsWrongString,
+     SetupBalances,
+     AddNewLink,
+     RegisterReferral,
+     GetLinksByOwner,
+     GetRefCount
 }
