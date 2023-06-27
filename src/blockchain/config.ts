@@ -1,4 +1,4 @@
-const chainData = {
+export const chainData = {
     chainId: 97,
     rpc: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
     startBlock: 28489906,
@@ -19,7 +19,7 @@ const chainData = {
 }
 
 
-const Erc20ABI = [
+export const Erc20ABI = [
 	{
 		"anonymous": false,
 		"inputs": [
@@ -216,8 +216,3 @@ const Erc20ABI = [
 		"type": "function"
 	}
 ]
-
-export {
-    chainData,
-    Erc20ABI
-  }

@@ -6,7 +6,7 @@ const defaultUserData = {
     address: "0x0000000000000000000000000"
 }
 
-async function RequestUsers () {
+export async function RequestUsers () {
     const userQuery = `SELECT address, login, rights FROM users;`
     const userData = await connection.query(userQuery)
   
@@ -17,7 +17,7 @@ async function RequestUsers () {
     })
 }
 
-async function UpdateUser (data = defaultUserData) {
+export async function UpdateUser (data = defaultUserData) {
     if (data === defaultUserData || !data.address || data.login === undefined || data.rights === undefined) {
         return ({
             success: false,
@@ -46,7 +46,7 @@ async function UpdateUser (data = defaultUserData) {
 }
 
 
-async function CreateUser (data = defaultUserData) {
+export async function CreateUser (data = defaultUserData) {
     if (data === defaultUserData || !data.address || !data.login || !data.rights) {
         return ({
             success: false,
@@ -74,7 +74,7 @@ async function CreateUser (data = defaultUserData) {
     })
 }
 
-async function DeleteUser (address = defaultUserData.address) {
+export async function DeleteUser (address = defaultUserData.address) {
     if (address === defaultUserData.address || !address) {
         return false;
     }
@@ -107,10 +107,3 @@ async function DeleteUser (address = defaultUserData.address) {
         err: ""
     })
 }
-
-module.exports = {
-    UpdateUser,
-    CreateUser,
-    DeleteUser,
-    RequestUsers
-  }

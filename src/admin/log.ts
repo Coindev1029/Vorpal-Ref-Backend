@@ -3,7 +3,7 @@ const { connection } = require('../database/connection')
 
 // const filePath = '../../../admin.log';
 
-function WriteLog ( address, message ) {
+export function WriteLog ( address, message ) {
     const time = new Date()
     const year = time.getFullYear();
     const month = ('0' + (time.getMonth() + 1)).slice(-2);
@@ -24,8 +24,4 @@ function WriteLog ( address, message ) {
     connection.query(log_query)
 
     return log
-}
-
-export {
-    WriteLog
 }

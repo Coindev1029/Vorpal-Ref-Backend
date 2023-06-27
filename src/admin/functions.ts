@@ -4,7 +4,7 @@ const sha256 = require('sha256')
 const { WriteLog } = require('./log')
 const { config } = require('../config');
 
-function GenerateAuthMessage ( msgtext = 'getcontent_' ) {
+export function GenerateAuthMessage ( msgtext = 'getcontent_' ) {
     const dt = new Date().getTime()
     const timeMark = dt - (dt % 600000)
     const msgstring = `${msgtext}${String(timeMark)}` 
@@ -13,7 +13,7 @@ function GenerateAuthMessage ( msgtext = 'getcontent_' ) {
     return String(hash);
 }
 
-async function CheckRights ( signature, msgtext = 'getcontent_' ) {
+export async function CheckRights ( signature, msgtext = 'getcontent_' ) {
 
     if ( !signature ) {
         return null;
@@ -41,8 +41,3 @@ async function CheckRights ( signature, msgtext = 'getcontent_' ) {
     WriteLog(user_query.rows[0].address, "Auth success, msg : " + msgtext)
     return user_query.rows[0].address
 }
-
-export {
-    GenerateAuthMessage,
-    CheckRights
-  }

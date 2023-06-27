@@ -1,6 +1,6 @@
 const { connection } = require('./connection');
 
-async function RequestPublicData ( project  = "all" ) {
+export async function RequestPublicData ( project  = "all" ) {
      const publicQuery = `SELECT * FROM common_data WHERE key IN (SELECT key FROM public_keys WHERE project = 'all' OR project = '${project}');`
      const pd = await connection.query(publicQuery)
      const res = new Map()
@@ -10,8 +10,4 @@ async function RequestPublicData ( project  = "all" ) {
      })
 
      return Object.fromEntries(res)
-}
-
-export {
-    RequestPublicData
 }

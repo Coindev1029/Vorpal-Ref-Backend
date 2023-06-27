@@ -7,7 +7,7 @@ const { SetValueByKey, DeleteKey } = require('../database/balances');
 const { GenerateAuthMessage, CheckRights } = require('./functions')
 const { RequestUserData } = require('./user')
 
-async function RequestAdminData ( request ) {
+export async function RequestAdminData ( request ) {
     const user = await CheckRights ( request.signature )
     if ( !user ) {
         return( {
@@ -27,7 +27,7 @@ async function RequestAdminData ( request ) {
     })
 }
 
-async function SaveNewData ( request ) {
+export async function SaveNewData ( request ) {
     if (!request.data) {
         return(
             {
@@ -71,18 +71,8 @@ async function SaveNewData ( request ) {
    }
 */
 
-async function RequestPublicData ( project ) {
+export async function RequestPublicData ( project ) {
     return JSON.stringify({
         project: project
     })
 }
-
-
-
-export {
-    GenerateAuthMessage,
-    RequestAdminData,
-    RequestUserData,
-    SaveNewData,
-    RequestPublicData
-  }

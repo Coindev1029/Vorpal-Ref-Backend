@@ -27,7 +27,7 @@ const { UpdateUser, CreateUser, DeleteUser, RequestUsers } = require('../databas
 */
 
 
-async function RequestUserData ( request ) {
+export async function RequestUserData ( request ) {
 
   const user = await CheckRights ( request.signature )
   if ( !user ) {
@@ -41,7 +41,7 @@ async function RequestUserData ( request ) {
   return await RequestUsers ()
 }
 
-async function UpdateUserDataAction ( request ) {
+export async function UpdateUserDataAction ( request ) {
 
     if (!request.data) {
         return(
@@ -95,8 +95,3 @@ async function UpdateUserDataAction ( request ) {
         deletions: actionResultsDelete
     })
 }
-
-export {
-    UpdateUserDataAction,
-    RequestUserData
-  }

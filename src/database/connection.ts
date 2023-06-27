@@ -16,7 +16,7 @@ export const connectionResult = connection.connect((err : Error) => {
 
   if (err) {
       console.log("Err : ")
-      console.log(err)
+      console.log(err.message)
       return;
   }
 

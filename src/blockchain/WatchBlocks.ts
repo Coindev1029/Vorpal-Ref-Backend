@@ -48,7 +48,7 @@ async function SetupRevenueSingle ( tx ) {
 }
 
 
-async function WatchBlocks () {
+export async function WatchBlocks () {
     
     const startBlock = await GetValueByKey ('last_passed_block')
     const endBlock = await web3.eth.getBlockNumber()
@@ -85,7 +85,7 @@ async function WatchBlocks () {
 }
 
 
-async function WatchContracts () {
+export async function WatchContracts () {
 
       const contract = new web3.eth.Contract(Erc20ABI, "0xCDf4F354596e68671dB43AcB64f2da14862e8403");
       const currentBlockNumber = await web3.eth.getBlockNumber();
@@ -110,9 +110,3 @@ async function WatchContracts () {
        
     } */
 }
-
-
-export {
-    WatchBlocks,
-    WatchContracts
-  }

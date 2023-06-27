@@ -8,7 +8,7 @@ const defaultBalance = {
   withdrawn: null
 }
 
-function IsWrongString ( arg ) {
+export function IsWrongString ( arg ) {
   if (!arg) return true
   if (arg.indexOf(";") > -1) return true
   if (arg.indexOf(" ") > -1) return true
@@ -17,7 +17,7 @@ function IsWrongString ( arg ) {
 }
 
 // Trying to add an address if it's not exists
-async function SetupBalances (owner) {
+export async function SetupBalances (owner) {
 
   if (IsWrongString(owner)) return null
   
@@ -30,7 +30,7 @@ async function SetupBalances (owner) {
 }
 
 //New link generation, returns new link
-async function AddNewLink ( owner, reward1 = 90, reward2 = 10 ) {
+export async function AddNewLink ( owner, reward1 = 90, reward2 = 10 ) {
    if (IsWrongString(owner)) return null
    if (typeof(reward1) !== 'number' || typeof(reward2) !== 'number'  || ( reward2 + reward1 > 100)) return null
 
@@ -58,7 +58,7 @@ async function AddNewLink ( owner, reward1 = 90, reward2 = 10 ) {
 
 //Registering a new referral. Only one referral link to address, 
 //returns true is it was registered, false if not
-async function RegisterReferral ( address, link ) {
+export async function RegisterReferral ( address, link ) {
 
    if( IsWrongString ( address ) || IsWrongString ( link )) return {
       result: false,
@@ -110,7 +110,7 @@ async function RegisterReferral ( address, link ) {
 
 }
 
-async function GetLinksByOwner (owner) {
+export async function GetLinksByOwner (owner) {
 
   if (IsWrongString ( owner )) return []
   
@@ -121,18 +121,11 @@ async function GetLinksByOwner (owner) {
    return links.rows
 }
 
-async function GetRefCount ( link ) {
+export async function GetRefCount ( link ) {
    
    const countQuery = `SELECT COUNT(*) from address_to_referral WHERE link_key = '${link}';`;
 
    const countRequest = await connection.query(countQuery)
 
    return countRequest.rows
-}
-
-export {
-  AddNewLink,
-  RegisterReferral,
-  GetLinksByOwner,
-  GetRefCount
 }
