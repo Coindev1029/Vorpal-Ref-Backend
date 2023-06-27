@@ -101,6 +101,6 @@ async function WithdrawRevenue ( addressTo, signedTX ) {
     )
 }
 
-module.exports = {
+export {
     WithdrawRevenue
   }

@@ -12,6 +12,6 @@ async function RequestPublicData ( project  = "all" ) {
      return Object.fromEntries(res)
 }
 
-module.exports = {
+export {
     RequestPublicData
 }

@@ -130,7 +130,7 @@ async function GetRefCount ( link ) {
    return countRequest.rows
 }
 
-module.exports = {
+export {
   AddNewLink,
   RegisterReferral,
   GetLinksByOwner,

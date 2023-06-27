@@ -1,4 +1,4 @@
-const { connection } = require('../database/connection')
+import { connection } from '../database/connection'
 const Web3 = require('web3');
 const sha256 = require('sha256')
 const { WriteLog } = require('./log')
@@ -42,7 +42,7 @@ async function CheckRights ( signature, msgtext = 'getcontent_' ) {
     return user_query.rows[0].address
 }
 
-module.exports = {
+export {
     GenerateAuthMessage,
     CheckRights
   }

@@ -1,17 +1,17 @@
 const { connection } = require('./connection');
 
 async function GetValueByKey (key) {
-    keyQuery = `SELECT value FROM common_data WHERE key = '${key}';`
-    result = await connection.query(keyQuery)
+    const keyQuery = `SELECT value FROM common_data WHERE key = '${key}';`
+    const result = await connection.query(keyQuery)
 
     if (!result.rows || result.rows.length === 0) return ''
     return result.rows[0].value
 }
 
 async function SetValueByKey (key, value) {
-    keyQuery = `INSERT INTO common_data (key, value) VALUES ('${key}', '${value}') `+
+    const keyQuery = `INSERT INTO common_data (key, value) VALUES ('${key}', '${value}') `+
     `ON CONFLICT (key) DO UPDATE SET value = '${value}';`
-    result = await connection.query(keyQuery)
+    const result = await connection.query(keyQuery)
 
     if (!result.rows || result.rows.length === 0) {
         return ''
@@ -132,7 +132,7 @@ async function GetBalances ( owner ) {
     
 }
 
-module.exports = {
+export {
     UpdateScheduledBalance,
     CreateVesting,
     UpdateVestings,

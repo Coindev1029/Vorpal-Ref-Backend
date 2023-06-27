@@ -26,6 +26,6 @@ function WriteLog ( address, message ) {
     return log
 }
 
-module.exports = {
+export {
     WriteLog
 }

@@ -79,7 +79,7 @@ async function RequestPublicData ( project ) {
 
 
 
-module.exports = {
+export {
     GenerateAuthMessage,
     RequestAdminData,
     RequestUserData,

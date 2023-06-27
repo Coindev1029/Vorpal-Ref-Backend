@@ -60,12 +60,12 @@ async function UpdateUserDataAction ( request ) {
         })
     }
 
-    const updates = []
-    const creations = []
+    const updates : any[] = []
+    const creations : any[] = []
 
-    const actionResultsUpdate = []
-    const actionResultsCreate = []
-    const actionResultsDelete = []
+    const actionResultsUpdate : any[]  = []
+    const actionResultsCreate : any[] = []
+    const actionResultsDelete : any[]  = []
 
     const currentUsers = JSON.stringify(await RequestUsers())
 
@@ -96,7 +96,7 @@ async function UpdateUserDataAction ( request ) {
     })
 }
 
-module.exports = {
+export {
     UpdateUserDataAction,
     RequestUserData
   }

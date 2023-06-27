@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { connection } = require('./connection')
+import { connection } from './connection'
 const { migrate } = require("postgres-migrations")
 const Web3 = require('web3')
 const config = require('../blockchain/config')

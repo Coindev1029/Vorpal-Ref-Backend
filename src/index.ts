@@ -1,5 +1,5 @@
 const dEnv = require('dotenv');
-const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
+const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount }= require('./database/links');
 const { GetBalances, UpdateVestings } = require('./database/balances')
 const { RequestAdminData, SaveNewData, RequestUserData } = require('./admin')
 const { WithdrawRevenue } = require('./database/withdraw')
@@ -227,6 +227,7 @@ app.post('/api', async (req, res) => {
         result: await GetLinksByOwner ( postData.owner ),
         warn: "Deprecated. Please request from /api/getlinksbyowner/0x1e... as a get param"
       }));
+    break;
      default:
         res.status(200).send(JSON.stringify({
           condition: 'Default'

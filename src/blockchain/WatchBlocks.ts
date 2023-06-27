@@ -1,5 +1,5 @@
 const Web3 = require('web3')
-const { config, Erc20ABI }= require('./config')
+const { chainData, Erc20ABI }= require('./config')
 const { Eth } = require('web3-eth')
 const { Utils } = require('web3-utils')
 
@@ -11,24 +11,25 @@ const {
     UpdateScheduledBalance,
     CreateVesting } = require('../database/balances')
 
-const web3 = new Web3(config.rpc); 
+const web3 = new Web3(chainData.rpc); 
 
-const watchingAddresses = []
+const watchingAddresses : string[] = []
 const parameterTypes = ['string', 'uint256'];
+const wo = chainData.contracts
 
-for (let key in config.contracts) {
-    watchingAddresses.push(config.contracts[key])
+for (let key in wo) {
+    watchingAddresses.push(wo[key])
 }
 
 async function SetupRevenueSingle ( tx ) {
     let vPeriod = await GetValueByKey ('vesting_period')
     let price = Number(await GetValueByKey ('VRP_price'))
     let dateStart = Math.round(new Date().getTime() / 1000)
-    let dateEnd = parseInt(dateStart) + parseInt(vPeriod)
+    let dateEnd = dateStart + parseInt(vPeriod)
 
         let tx_data = tx.input;
         let input_data = '0x' + tx_data.slice(10);
-        buyer = tx.from.toLowerCase()
+        let buyer = tx.from.toLowerCase()
 
         let params = web3.eth.abi.decodeParameters(['uint256'], input_data);
         let valueUSD = Math.round(Number(params['0']) / 1e18)
@@ -88,7 +89,7 @@ async function WatchContracts () {
 
       const contract = new web3.eth.Contract(Erc20ABI, "0xCDf4F354596e68671dB43AcB64f2da14862e8403");
       const currentBlockNumber = await web3.eth.getBlockNumber();
-      fBlock = currentBlockNumber - 4000;
+      const fBlock = currentBlockNumber - 4000;
       const transferEvents = await contract.getPastEvents("Transfer", {
         fBlock,
         filter: {
@@ -111,7 +112,7 @@ async function WatchContracts () {
 }
 
 
-module.exports = {
+export {
     WatchBlocks,
     WatchContracts
   }
