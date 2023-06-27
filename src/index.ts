@@ -1,3 +1,4 @@
+import { InitSocketServer } from "./socket";
 const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
 const { GetBalances, UpdateVestings } = require('./database/balances')
@@ -241,6 +242,8 @@ app.post('/api', async (req, res) => {
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
 });
+
+InitSocketServer ()
 
 /* 
 const credentials = {
