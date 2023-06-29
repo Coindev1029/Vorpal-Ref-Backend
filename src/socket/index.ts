@@ -1,25 +1,56 @@
 import WebSocket from 'ws';
-
-const sockets = new Map()
+import Web3 from 'web3';
+import { CreatePlayer } from './state';
 
 export async function InitSocketServer () {
     
     const ws_port = Number(process.env.WS_PORT ? process.env.WS_PORT : 3078)
     const wss = new WebSocket.Server({ port: ws_port });
+    const web3 = new Web3(Web3.givenProvider)
 
     wss.on('connection', (ws: WebSocket) => {
         
         const sId = String(Math.round(Math.random() * 1000000000)) 
-        sockets.set(sId, ws)
-        ws.send(sId)
 
-        sockets.forEach((value, key) => {
-          value.send("New connection : " + sId)
+        ws.send(JSON.stringify({ action: "auth", state: "requesting" }))
+
+        const authTimeout = setTimeout(() => {
+           ws.send(JSON.stringify({ 
+            action: "unauth", 
+            message: "Auth time has expired" 
+          }))
+          ws.close()
         })
 
         ws.on('message', (message: string) => {
-          console.log('Received message:', message);
-          ws.send(`Echo: ${message}`);
+          try {
+             const msg : any = JSON.parse(message)
+             if (msg.signature && msg.action === "auth") {
+                const recoverMsg = "auth_" + String(new Date().getTime())
+                const publicKey  = web3.eth.accounts.recover(recoverMsg, msg.signature).toLowerCase()
+                const playerId = CreatePlayer(ws, publicKey)
+                if (!playerId) {
+                  ws.send(JSON.stringify({ 
+                    action: "unauth", 
+                    message: "Auth failed, player with this key is already online"
+                  }))
+                  ws.close()
+                } else {
+                   ws.send(JSON.stringify({ 
+                      action: "auth", 
+                      state: "success",
+                      playerId: playerId
+                   }))
+                   clearTimeout(authTimeout)
+                }
+             }
+          } catch (e) {
+            ws.send(JSON.stringify({ 
+              action: "unauth", 
+              message: e.message 
+            }))
+            ws.close()
+          }
         });
 
       
