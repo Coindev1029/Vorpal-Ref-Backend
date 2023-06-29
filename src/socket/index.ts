@@ -1,6 +1,7 @@
 import WebSocket from 'ws';
 import Web3 from 'web3';
 import { CreatePlayer } from './state';
+import { signTimeout } from './config';
 
 export async function InitSocketServer () {
     
@@ -20,7 +21,7 @@ export async function InitSocketServer () {
             message: "Auth time expired" 
           }))
           ws.close()
-        })
+        }, signTimeout)
 
         ws.on('message', (message: string) => {
           try {
