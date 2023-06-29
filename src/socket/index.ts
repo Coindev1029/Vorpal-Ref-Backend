@@ -27,7 +27,8 @@ export async function InitSocketServer () {
           try {
              const msg : any = JSON.parse(message)
              if (msg.signature && msg.action === "auth") {
-                const recoverMsg = "auth_" + String(new Date().getTime())
+                const dt = new Date().getTime()
+                const recoverMsg = "auth_" + String(dt - (dt % 600000))
                 const publicKey  = web3.eth.accounts.recover(recoverMsg, msg.signature).toLowerCase()
                 const playerId = CreatePlayer(ws, publicKey)
                 if (!playerId) {
