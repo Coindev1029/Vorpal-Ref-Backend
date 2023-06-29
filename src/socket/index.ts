@@ -12,7 +12,11 @@ export async function InitSocketServer () {
         const sId = String(Math.round(Math.random() * 1000000000)) 
         sockets.set(sId, ws)
         ws.send(sId)
-        
+
+        sockets.forEach((value, key) => {
+          value.send("New connection : " + sId)
+        })
+
         ws.on('message', (message: string) => {
           console.log('Received message:', message);
           ws.send(`Echo: ${message}`);
