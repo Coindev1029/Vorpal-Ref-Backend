@@ -17,7 +17,7 @@ export async function InitSocketServer () {
         const authTimeout = setTimeout(() => {
            ws.send(JSON.stringify({ 
             action: "unauth", 
-            message: "Auth time has expired" 
+            message: "Auth time expired" 
           }))
           ws.close()
         })
@@ -34,7 +34,6 @@ export async function InitSocketServer () {
                     action: "unauth", 
                     message: "Auth failed, player with this key is already online"
                   }))
-                  ws.close()
                 } else {
                    ws.send(JSON.stringify({ 
                       action: "auth", 
@@ -49,7 +48,6 @@ export async function InitSocketServer () {
               action: "unauth", 
               message: e.message 
             }))
-            ws.close()
           }
         });
 
