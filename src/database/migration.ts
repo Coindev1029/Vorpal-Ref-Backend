@@ -1,5 +1,6 @@
 require('dotenv').config();
 import { connection } from './connection'
+import { CreateGameTables } from './gameplay/tables';
 const { migrate } = require("postgres-migrations")
 const Web3 = require('web3')
 const config = require('../blockchain/config')
@@ -73,6 +74,8 @@ async function DBCreateTables () {
     await connection.query(TableNEKeysQuery)
     await connection.query(TableLogsQuery)
     await connection.query(TablePDQuery)
+
+    await CreateGameTables()
     
     const web3 = new Web3(config.rpc); 
     const endBlock = await web3.eth.getBlockNumber()
