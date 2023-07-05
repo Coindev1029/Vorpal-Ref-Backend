@@ -1,4 +1,4 @@
-import { WatchBlocks, WatchContracts } from './blockchain/WatchBlocks'
+import { WatchBlocks, WatchContracts } from '../blockchain/WatchBlocks'
 const { 
     FindLinkByReferral, 
     FindLinkOwner,

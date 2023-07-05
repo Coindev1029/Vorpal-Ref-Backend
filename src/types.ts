@@ -8,3 +8,9 @@ export type GameResult = {
     planet_id_one: number,
     planet_id_two: number
 }
+
+export type PlayerStats = {
+    address: string,
+    games: number,
+    wins: number
+}
