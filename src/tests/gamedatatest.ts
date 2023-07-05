@@ -1,8 +1,8 @@
-import { GetGameById, GetPlayerStats } from "database/gameplay/read"
-import { GameResult } from "types"
+const { GetGameById, GetPlayerStats } = require("database/gameplay/read")
+const { GameResult } = require("types")
 const { SaveGameResult } = require('../database/gameplay/save')
 
-const TestResult : GameResult = {
+const TestResult = {
     playerOne: '0x000000000000000000000',
     playerTwo: '0x000000000000000000001',
     date: 1600000001,
