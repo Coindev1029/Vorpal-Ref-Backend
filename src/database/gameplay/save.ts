@@ -19,8 +19,8 @@ async function CreatePlayerStatsRow ( player: string) : Promise<boolean> {
     console.log(check.rows)
     const count = check.rows[0].count
     console.log("Count : " + count)
-    console.log(count === 0)
-    if (count === 0) {
+    console.log(Number(count) === 0)
+    if (Number(count) === 0) {
         console.log("Creating ... ")
         console.log(await connection.query(OpenStatsQuery))
         return true
