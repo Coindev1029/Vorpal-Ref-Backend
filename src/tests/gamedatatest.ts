@@ -12,6 +12,8 @@ const TestResult = {
     planet_id_two: 1
 }
 
-console.log(SaveGameResult(TestResult))
-console.log(GetGameById(1))
-console.log(GetPlayerStats('0x000000000000000000000'))
+console.log(SaveGameResult(TestResult).then((res) => {
+    console.log(res)
+}))
+// console.log(GetGameById(1))
+// console.log(GetPlayerStats('0x000000000000000000000'))

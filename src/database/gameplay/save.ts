@@ -5,6 +5,7 @@ import { connection } from '../connection'
 async function CreatePlayerStatsRow ( player: string) : Promise<boolean> {
      
     const CheckPlayerQuery = `SELECT COUNT(*) FROM player_stats WHERE address = '${player}';`
+    console.log(CheckPlayerQuery)
     const OpenStatsQuery = `
     INSERT INTO player_stats ( 
         address, 
