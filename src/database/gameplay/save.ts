@@ -52,19 +52,21 @@ export async function SaveGameResult (result: GameResult) : Promise<boolean> {
       wins=wins+1 WHERE address = '${address1}';` : `
       UPDATE player_stats SET 
       games = games+1 WHERE address = '${address1}';`
-
+    console.log(UpdPlayerOne)
     const UpdPlayerTwo= (result.winner === 2) ? `
       UPDATE player_stats SET 
       games = games+1, 
       wins=wins+1 WHERE address = '${address1}';` : `
       UPDATE player_stats SET 
       games = games+1 WHERE address = '${address1}';`
+    console.log(UpdPlayerTwo)
 
     await CreatePlayerStatsRow ( address1 )
     await CreatePlayerStatsRow ( address2 )
     await connection.query(GameQuery)
-    await connection.query(UpdPlayerOne)
-    await connection.query(UpdPlayerTwo)
+    console.log("Updates : ")
+    console.log(await connection.query(UpdPlayerOne))
+    console.log(await connection.query(UpdPlayerTwo))
 
     return true
 }
