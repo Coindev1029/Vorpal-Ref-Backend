@@ -23,10 +23,11 @@ export async function GetGameById (id : number) : Promise<GameResult> {
 export async function GetPlayerStats (player : string) : Promise<PlayerStats | null> {
     const query = `SELECT * FROM player_stats WHERE address = '${player}';`
     const result = await connection.query(query)
-    console.log(result.rows)
+
     if (result.rows.length < 1) {
         return null
     }
+    
     const row = result.rows[0]
     const stats: PlayerStats = {
         address: player,
