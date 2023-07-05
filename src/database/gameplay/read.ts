@@ -4,7 +4,6 @@ import { connection } from '../connection'
 
 export async function GetGameById (id : number) : Promise<GameResult> {
     const GameQuery = `SELECT * FROM game_stats WHERE id = ${id};`
-    console.log(GameQuery)
     const result = await connection.query(GameQuery)
     const row = result.rows[0]
     const game : GameResult = {
@@ -23,7 +22,6 @@ export async function GetGameById (id : number) : Promise<GameResult> {
 
 export async function GetPlayerStats (player : string) : Promise<PlayerStats> {
     const query = `SELECT * FROM player_stats WHERE address = '${player}';`
-    console.log(query)
     const result = await connection.query(query)
     const row = result.rows[0]
     const stats: PlayerStats = {
