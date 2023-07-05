@@ -16,10 +16,7 @@ async function CreatePlayerStatsRow ( player: string) : Promise<boolean> {
             0
             );`
     const check = await connection.query(CheckPlayerQuery)
-    console.log(check.rows)
     const count = check.rows[0].count
-    console.log("Count : " + count)
-    console.log(Number(count) === 0)
     if (Number(count) === 0) {
         console.log("Creating ... ")
         console.log(await connection.query(OpenStatsQuery))
@@ -66,8 +63,8 @@ export async function SaveGameResult (result: GameResult) : Promise<boolean> {
     await CreatePlayerStatsRow ( address1 )
     await CreatePlayerStatsRow ( address2 )
     await connection.query(GameQuery)
-    console.log(await connection.query(UpdPlayerOne))
-    console.log(await connection.query(UpdPlayerTwo))
+    await connection.query(UpdPlayerOne)
+    await connection.query(UpdPlayerTwo)
 
     return true
 }

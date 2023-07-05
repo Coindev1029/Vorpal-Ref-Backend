@@ -15,12 +15,9 @@ const TestResult = {
 
 console.log(SaveGameResult(TestResult).then((res) => {
     console.log(res)
+    console.log("Player : ")
+    console.log(GetPlayerStats('0x000000000000000000001').then((res) => {
+        console.log(res)
+    }))
 }))
 
-console.log(GetGameById(1).then((res) => {
-    console.log(res)
-}))
-
-console.log(GetPlayerStats('0x000000000000000000001').then((res) => {
-    console.log(res)
-}))
