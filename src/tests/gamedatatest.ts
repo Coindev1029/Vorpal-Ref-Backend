@@ -1,5 +1,4 @@
-const { GetGameById, GetPlayerStats } = require("database/gameplay/read")
-const { GameResult } = require("types")
+const { GetGameById, GetPlayerStats } = require("../database/gameplay/read")
 const { SaveGameResult } = require('../database/gameplay/save')
 
 const TestResult = {
