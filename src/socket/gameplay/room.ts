@@ -1,6 +1,10 @@
+import WebSocket from "ws";
+
 export class GameRoom {
-    PlanetCoords: []
-    Ships: []
-    Missiles: []
-    ActionReader: Function
+    private players : WebSocket[] = []
+
+    constructor( playerOne : WebSocket, playerTwo: WebSocket) {
+          this.players.push(playerOne),
+          this.players.push(playerOne)
+    }
 }
