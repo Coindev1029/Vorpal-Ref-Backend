@@ -2,12 +2,15 @@ import WebSocket from 'ws';
 import Web3 from 'web3';
 import { CreatePlayer, UpdatePlayerStateSingle } from './state';
 import { signTimeout } from './config';
+import { GameServer } from './gameplay/server';
 
 export async function InitSocketServer () {
     
     const ws_port = Number(process.env.WS_PORT ? process.env.WS_PORT : 3078)
     const wss = new WebSocket.Server({ port: ws_port });
     const web3 = new Web3(Web3.givenProvider)
+    const server = new GameServer()
+    server.InitServer()
 
     wss.on('connection', (ws: WebSocket) => {
         

@@ -36,11 +36,12 @@ export class GameServer {
             const p1 = players.get(newKeys[0])
             const p2 = players.get(newKeys[1])
             if (p1 && p2) {
-                const room = new GameRoom(p1, p2)
+                const room = new GameRoom(p1, p2, newKeys[0], newKeys[1])
                 UpdatePlayerStateSingle(newKeys[0], "inLookingFor", false)
                 UpdatePlayerStateSingle(newKeys[1], "inLookingFor", false)
                 UpdatePlayerStateSingle(newKeys[0], "inGame", true)
                 UpdatePlayerStateSingle(newKeys[1], "inGame", true)
+                room.Start()
             }
         }
 
