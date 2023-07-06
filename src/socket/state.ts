@@ -9,6 +9,8 @@ const playerDefaultState : PlayerState = {
     connected: false,
     inLookingFor: false,
     inGame: false,
+    starId: -1,
+    planetId: -1,
     roomId: -1
 }
 
@@ -53,7 +55,9 @@ export function UpdatePlayerStateSingle (playerId : string, action : playerState
         connected: action == 'connected' ? Boolean(value) : actualState.connected,
         inLookingFor: action == 'inLookingFor' ? Boolean(value) : actualState.inLookingFor,
         inGame: action == 'inGame' ? Boolean(value) : actualState.inGame,
-        roomId: action == 'connected' ? Number(value) : actualState.roomId
+        planetId: action == 'planetId' ? Number(value) : actualState.starId,
+        starId: action == 'starId' ? Number(value) : actualState.planetId,
+        roomId: action == 'roomId' ? Number(value) : actualState.roomId
     }
     playerStates.set(playerId, newState)
     return true
