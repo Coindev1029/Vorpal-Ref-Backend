@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
 import Web3 from 'web3';
-import { CreatePlayer } from './state';
+import { CreatePlayer, UpdatePlayerStateSingle } from './state';
 import { signTimeout } from './config';
 
 export async function InitSocketServer () {
@@ -43,6 +43,26 @@ export async function InitSocketServer () {
                       playerId: playerId
                    }))
                    clearTimeout(authTimeout)
+                   ws.on('message', (message: string) => {
+                        try{
+                          const msg : any = JSON.parse(message)
+                          if (msg.action === "entergame" && 
+                              Number(msg.starId) > -1 &&
+                              Number(msg.planetId) > -1) {
+                             UpdatePlayerStateSingle(playerId, 'inLookingFor', true)
+                             UpdatePlayerStateSingle(playerId, 'starId', Number(msg.starId))
+                             UpdatePlayerStateSingle(playerId, 'planetId', Number(msg.planetId))
+                             ws.send(JSON.stringify({
+                                 action: "entergame",
+                                 state: "success",
+                                 event: "waiting"
+                             }))
+                          }
+                        } catch (e) {
+                          console.log(e.message)
+                        }
+
+                   })
                 }
              }
           } catch (e) {

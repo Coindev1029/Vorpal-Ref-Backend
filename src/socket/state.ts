@@ -34,6 +34,14 @@ export function RemovePlayer (playerId : string) : string {
     return playerId
 }
 
+export function GetPlayerList () {
+    return players
+}
+
+export function GetPlayerStateList () {
+    return playerStates
+}
+
 export function GetPlayerConnectionById (playerId : string) : WebSocket | undefined {
     return players.get(playerId)
 }
