@@ -4,6 +4,7 @@ import { GameRoom } from "./room";
 
 export class GameServer {
     private timer: any;
+    private rooms: GameRoom[];
 
     public SelectIndexes(max: number): number[] {
         const indexes : number[] = []
@@ -17,6 +18,10 @@ export class GameServer {
             }
         }
         return indexes
+    }
+
+    public GetRoomId (room: GameRoom) : number {
+        return this.rooms.indexOf(room)
     }
   
     public InitServer(): void {
@@ -37,6 +42,7 @@ export class GameServer {
             const p2 = players.get(newKeys[1])
             if (p1 && p2) {
                 const room = new GameRoom(p1, p2, newKeys[0], newKeys[1])
+                this.rooms.push(room)
                 UpdatePlayerStateSingle(newKeys[0], "inLookingFor", false)
                 UpdatePlayerStateSingle(newKeys[1], "inLookingFor", false)
                 UpdatePlayerStateSingle(newKeys[0], "inGame", true)
