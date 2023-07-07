@@ -1,5 +1,5 @@
 import { gameTimerValue } from "socket/config"
-import { GetPlayerList, GetPlayerStateList, UpdatePlayerStateSingle } from "socket/state";
+import { GetPlayerList, GetPlayerStateList, UpdatePlayerStateFull, UpdatePlayerStateSingle } from "socket/state";
 import { GameRoom } from "./room";
 
 export class GameServer {
@@ -43,10 +43,22 @@ export class GameServer {
             if (p1 && p2) {
                 const room = new GameRoom(p1, p2, newKeys[0], newKeys[1])
                 this.rooms.push(room)
-                UpdatePlayerStateSingle(newKeys[0], "inLookingFor", false)
-                UpdatePlayerStateSingle(newKeys[1], "inLookingFor", false)
-                UpdatePlayerStateSingle(newKeys[0], "inGame", true)
-                UpdatePlayerStateSingle(newKeys[1], "inGame", true)
+                UpdatePlayerStateFull(newKeys[0], {
+                    connected: true,
+                    inGame: true,
+                    inLookingFor: false,
+                    planetId: playerStates[newKeys[0]].planetId,
+                    starId: playerStates[newKeys[0]].starId,
+                    roomId: this.rooms.length
+                })
+                UpdatePlayerStateFull(newKeys[1], {
+                    connected: true,
+                    inGame: true,
+                    inLookingFor: false,
+                    planetId: playerStates[newKeys[1]].planetId,
+                    starId: playerStates[newKeys[1]].starId,
+                    roomId: this.rooms.length
+                })
                 room.Start()
             }
         }
