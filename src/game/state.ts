@@ -3,7 +3,7 @@ import { PlayerState, playerStateKeys } from './types';
 
 const players = new Map<string, WebSocket>()
 const playerStates = new Map<string, PlayerState>()
-const playerKeys = new Map<string, string>()
+export const playerKeys = new Map<string, string>()
 
 const playerDefaultState : PlayerState = {
     connected: false,

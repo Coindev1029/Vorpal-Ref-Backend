@@ -22,9 +22,14 @@ export type basic = {
   data: any
 };
 
-export type auth = {
+export type state = {
   action: action,
   state: string
+};
+
+export type data = {
+  action: action;
+  data: any;
 };
 
 export type authEntry = {
@@ -38,5 +43,41 @@ export type authReply = {
   playerId: string;
 };
 
+export type authReject = {
+  action: action;
+  message: string;
+};
 
+export type roomUpd = {
+  action: action;
+};
+
+export type mouseMsg = {
+  action: action;
+  coords: number[]; 
+  objectId: string; 
+};
+
+export type keyboardMsg = {
+  action: action;
+  key: string;
+};
+
+export type gameStart = {
+  action: action;
+  opponent: string;
+};
+
+export type gameFinish = {
+  action: action;
+  win: boolean; 
+  data: any;
+};
+
+export type objectLifecycle = {
+  action: action;
+  id: string;
+  coords: number[];
+  data: any;
+};
 

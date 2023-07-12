@@ -1,4 +1,5 @@
 export * as msg from './msg';
+export { GameObject } from './interfaces'
 
 export type playerStateKeys =
   | 'connected'
