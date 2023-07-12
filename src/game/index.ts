@@ -4,7 +4,7 @@ import { CreatePlayer, UpdatePlayerStateSingle } from './state';
 import { signTimeout } from './config';
 import { GameServer } from './gameplay/server';
 
-export async function InitSocketServer () {
+export async function InitGameServer () {
     
     const ws_port = Number(process.env.WS_PORT ? process.env.WS_PORT : 3078)
     const wss = new WebSocket.Server({ port: ws_port });
