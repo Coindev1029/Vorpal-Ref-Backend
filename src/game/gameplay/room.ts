@@ -1,4 +1,4 @@
-import { SaveGameResult } from 'database/gameplay/save';
+import { SaveGameResult } from '../../database/gameplay/save';
 import WebSocket from 'ws';
 import { msg } from 'game/types';
 import { roomTestTimeout } from 'game/config';
