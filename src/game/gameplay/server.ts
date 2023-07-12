@@ -30,8 +30,8 @@ export class GameServer {
     return this.rooms.indexOf(room);
   }
 
-    public InitServer(): void {
-    WriteLog('0x00', 'Game server created'); 
+  public InitServer(): void {
+    WriteLog('0x00', 'Game server created');
     this.timer = setInterval(() => {
       const players = GetPlayerList();
       const playerStates = GetPlayerStateList();
