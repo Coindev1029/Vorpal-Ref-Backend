@@ -1,8 +1,8 @@
-import { SaveGameResult } from '../../database/gameplay/save';
 import WebSocket from 'ws';
-import { msg } from 'game/types';
-import { roomTestTimeout } from 'game/config';
-import { WriteLog } from 'admin/log';
+import { SaveGameResult } from '../../database/gameplay/save';
+import { msg } from '../../game/types';
+import { roomTestTimeout } from '../../game/config';
+import { WriteLog } from '../../admin/log';
 import { GetPlayerStateList, playerKeys } from '../state';
 
 export class GameRoom {
@@ -39,12 +39,8 @@ export class GameRoom {
     }
   }
 
-    public Start(): void {
-      
-        WriteLog(
-          `${this.addresses[0]} VS ${this.addresses[1]}`,
-          `Game started`,
-        );
+  public Start(): void {
+    WriteLog(`${this.addresses[0]} VS ${this.addresses[1]}`, `Game started`);
 
     this.isActive = true;
     this.players.forEach((player, index) => {
@@ -62,12 +58,9 @@ export class GameRoom {
   }
 
   public Finish(): void {
-      this.winner = Math.ceil(Math.random() * 2) === 0 ? 0 : 1; // REPLACE!!!
-      
-              WriteLog(
-                `${this.addresses[0]} VS ${this.addresses[1]}`,
-                `Game finished`,
-              );
+    this.winner = Math.ceil(Math.random() * 2) === 0 ? 0 : 1; // REPLACE!!!
+
+    WriteLog(`${this.addresses[0]} VS ${this.addresses[1]}`, `Game finished`);
 
     this.isActive = false;
     const playerStates = GetPlayerStateList();
