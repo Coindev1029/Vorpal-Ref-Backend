@@ -1,5 +1,5 @@
 const FS = require('fs')
-const { connection } = require('../database/connection')
+const { connection } = require('../connection')
 
 // const filePath = '../../../admin.log';
 
