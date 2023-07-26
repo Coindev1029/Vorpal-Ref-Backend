@@ -41,6 +41,7 @@ export class GameServer {
           activeIds.push(key);
         }
       });
+      WriteLog('0x01', 'Players count :' + activeIds);
 
       if (activeIds.length > 1) {
         const indexPair = this.SelectIndexes(activeIds.length);
