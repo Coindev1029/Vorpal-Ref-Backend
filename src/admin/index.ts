@@ -1,7 +1,6 @@
 const { connection } = require('../database/connection')
 const Web3 = require('web3');
 const sha256 = require('sha256')
-const { WriteLog } = require('./log')
 const { config } = require('../config');
 const { SetValueByKey, DeleteKey } = require('../database/balances');
 const { GenerateAuthMessage, CheckRights } = require('./functions')

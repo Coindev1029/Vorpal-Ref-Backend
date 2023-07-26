@@ -1,7 +1,7 @@
 import { connection } from '../database/connection'
+import { WriteLog }  from '../database/log';
 const Web3 = require('web3');
 const sha256 = require('sha256')
-const { WriteLog } = require('./log')
 const { config } = require('../config');
 
 export function GenerateAuthMessage ( msgtext = 'getcontent_' ) {

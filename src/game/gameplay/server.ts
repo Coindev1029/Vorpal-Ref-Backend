@@ -1,4 +1,4 @@
-import { WriteLog } from '../../admin/log';
+import { WriteLog } from '../../database/log';
 import { gameTimerValue } from '../config';
 import {
   GetPlayerList,

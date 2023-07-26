@@ -1,7 +1,11 @@
-const { WriteLog } = require('./log')
-const { CheckRights } = require('./functions')
-const { UpdateUser, CreateUser, DeleteUser, RequestUsers } = require('../database/users')
-
+import { WriteLog } from '../database/log';
+const { CheckRights } = require('./functions');
+const {
+  UpdateUser,
+  CreateUser,
+  DeleteUser,
+  RequestUsers,
+} = require('../database/users');
 
 /* 
    body: {
@@ -26,72 +30,67 @@ const { UpdateUser, CreateUser, DeleteUser, RequestUsers } = require('../databas
 
 */
 
-
-export async function RequestUserData ( request ) {
-
-  const user = await CheckRights ( request.signature )
-  if ( !user ) {
-      return( {
-          success: false,
-          error: 'Signature not found',
-          content: null
-      })
+export async function RequestUserData(request) {
+  const user = await CheckRights(request.signature);
+  if (!user) {
+    return {
+      success: false,
+      error: 'Signature not found',
+      content: null,
+    };
   }
 
-  return await RequestUsers ()
+  return await RequestUsers();
 }
 
-export async function UpdateUserDataAction ( request ) {
+export async function UpdateUserDataAction(request) {
+  if (!request.data) {
+    return {
+      success: false,
+      error: 'User data not found',
+    };
+  }
 
-    if (!request.data) {
-        return(
-            {
-                success: false,
-                error: 'User data not found'
-            }
-        )
+  const user = await CheckRights(request.signature, request.message);
+  if (!user) {
+    return {
+      success: false,
+      error: 'Signature not found or invalid',
+    };
+  }
+
+  const updates: any[] = [];
+  const creations: any[] = [];
+
+  const actionResultsUpdate: any[] = [];
+  const actionResultsCreate: any[] = [];
+  const actionResultsDelete: any[] = [];
+
+  const currentUsers = JSON.stringify(await RequestUsers());
+
+  request.data.users.forEach((user) => {
+    if (currentUsers.indexOf(user.address) < 0) {
+      creations.push(user);
+    } else {
+      updates.push(user);
     }
-    
-    const user = await CheckRights ( request.signature, request.message )
-    if ( !user ) {
-        return( {
-            success: false,
-            error: 'Signature not found or invalid'
-        })
-    }
+  });
 
-    const updates : any[] = []
-    const creations : any[] = []
+  updates.forEach((item) => {
+    actionResultsUpdate.push(UpdateUser(item));
+  });
 
-    const actionResultsUpdate : any[]  = []
-    const actionResultsCreate : any[] = []
-    const actionResultsDelete : any[]  = []
+  creations.forEach((item) => {
+    actionResultsCreate.push(CreateUser(item));
+  });
 
-    const currentUsers = JSON.stringify(await RequestUsers())
+  request.data.deletions.forEach((address) => {
+    actionResultsDelete.push(DeleteUser(address));
+  });
 
-    request.data.users.forEach((user) => {
-         if (currentUsers.indexOf(user.address) < 0) {
-            creations.push(user)
-         } else {
-            updates.push(user)
-         }
-    })
-
-    updates.forEach((item) => {
-        actionResultsUpdate.push(UpdateUser (item))
-    })
-
-    creations.forEach((item) => {
-        actionResultsCreate.push(CreateUser (item))
-    })
-
-    request.data.deletions.forEach((address) => {
-        actionResultsDelete.push(DeleteUser (address))
-    })
-    
-    return ({
-        updates: actionResultsUpdate,
-        creations: actionResultsCreate,
-        deletions: actionResultsDelete
-    })
+  return {
+    updates: actionResultsUpdate,
+    creations: actionResultsCreate,
+    deletions: actionResultsDelete,
+  };
 }

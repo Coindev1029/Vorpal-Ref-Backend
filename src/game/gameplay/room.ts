@@ -2,7 +2,7 @@ import WebSocket from 'ws';
 import { SaveGameResult } from '../../database/gameplay/save';
 import { msg } from '../../game/types';
 import { roomTestTimeout } from '../../game/config';
-import { WriteLog } from '../../admin/log';
+import { WriteLog } from '../../database/log';
 import { GetPlayerStateList, playerKeys } from '../state';
 
 export class GameRoom {
