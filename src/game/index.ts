@@ -3,6 +3,7 @@ import Web3 from 'web3';
 import { CreatePlayer, UpdatePlayerStateSingle } from './state';
 import { signTimeout } from './config';
 import { GameServer } from './gameplay/server';
+import { WriteLog } from 'database/log';
 
 export async function InitGameServer () {
     
@@ -26,7 +27,8 @@ export async function InitGameServer () {
           ws.close()
         }, signTimeout)
 
-        ws.on('message', (message: string) => {
+      ws.on('message', (message: string) => {
+          WriteLog('0x02', 'Received : ' + message);
           try {
              const msg : any = JSON.parse(message)
              if (msg.signature && msg.action === "auth") {
@@ -46,7 +48,8 @@ export async function InitGameServer () {
                       playerId: playerId
                    }))
                    clearTimeout(authTimeout)
-                   ws.on('message', (message: string) => {
+                  ws.on('message', (message: string) => {
+                        WriteLog('0x02', 'Received : ' + message)
                         try{
                           const msg : any = JSON.parse(message)
                           if (msg.action === "entergame" && 

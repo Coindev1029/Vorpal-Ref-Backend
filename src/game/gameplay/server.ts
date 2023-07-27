@@ -41,7 +41,7 @@ export class GameServer {
           activeIds.push(key);
         }
       });
-      WriteLog('0x01', 'Players count : ' + activeIds.length);
+      // WriteLog('0x01', 'Players count : ' + activeIds.length);
 
       if (activeIds.length > 1) {
         const indexPair = this.SelectIndexes(activeIds.length);
