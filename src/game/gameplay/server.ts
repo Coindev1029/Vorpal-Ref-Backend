@@ -90,18 +90,20 @@ export class GameServer {
       });
       // WriteLog('0x08', 'Room creation, players : ' + activeIds.length);
       if (activeIds.length > 1) {
-        WriteLog('0x08', 'Room creation, players : ' + activeIds.length);
         const indexPair = this.SelectIndexes(activeIds.length);
+        WriteLog('0x08', 'Room creation, players : ' + String(indexPair));
         const newKeys: string[] = [
           activeIds[indexPair[0]],
           activeIds[indexPair[1]],
         ];
+        WriteLog('0x08', 'Room creation, players : ' + String(newKeys));
         const p1 = this.players.get(newKeys[0]);
         const p2 = this.players.get(newKeys[1]);
+        WriteLog('0x08', 'Room creation, ws1 : ' + String(p1?.url));
         if (p1 && p2) {
-          WriteLog('0x08', 'Game room created, id : ' + this.rooms.length);
           const room = new GameRoom(p1, p2, newKeys[0], newKeys[1]);
           this.rooms.push(room);
+          WriteLog('0x08', 'Game room created, id : ' + this.rooms.length);
           this.UpdatePlayerStateFull(newKeys[0], {
             auth: true,
             inGame: true,
