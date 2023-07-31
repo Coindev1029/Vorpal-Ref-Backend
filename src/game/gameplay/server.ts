@@ -1,4 +1,4 @@
-import WebSocket from 'ws';
+import WebSocket, { Server } from 'ws';
 import { WriteLog } from '../../database/log';
 import { gameTimerValue, signTimeout } from '../config';
 import {
@@ -9,12 +9,13 @@ import {
 } from '../state';
 import { GameRoom } from './room';
 import { PlayerState } from 'game/types';
+import { IncomingMessage } from 'http';
 
 export class GameServer {
   private timer: any;
   private rooms: GameRoom[];
   private ws_port = Number(process.env.WS_PORT ? process.env.WS_PORT : 3078);
-  private wss = new WebSocket.Server({ port: this.ws_port });
+  private wss: Server<typeof WebSocket, typeof IncomingMessage> | null = null;
   private players = new Map<string, WebSocket>();
   private playerStates = new Map<string, PlayerState>();
   private playerKeys = new Map<string, string>();
@@ -122,7 +123,8 @@ export class GameServer {
   }
 
   public InitServer(): void {
-    WriteLog('0x00', 'Game server created');
+    this.wss = new WebSocket.Server({ port: this.ws_port });
+    WriteLog('0x00', 'Game server created : ' + JSON.stringify(this.wss));
     this.timer = this.RoomGenerator();
     this.wss.on('connection', (ws: WebSocket) => {
       WriteLog('0x00', 'New connection');
@@ -136,11 +138,15 @@ export class GameServer {
         );
         ws.close();
       }, signTimeout);
+      
+      ws.on('message', (message: string) => {
+        WriteLog('0x00', 'Received : ' + message);
+      });
 
       ws.on('close', () => {
         const pId = this.GetPlayerId(ws);
         if (pId) {
-           this.RemovePlayer(pId)
+          this.RemovePlayer(pId);
         }
       });
     });
