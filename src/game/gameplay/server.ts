@@ -88,7 +88,7 @@ export class GameServer {
           activeIds.push(key);
         }
       });
-
+      WriteLog('0x08', 'Room creation, players : ' + activeIds.length);
       if (activeIds.length > 1) {
         const indexPair = this.SelectIndexes(activeIds.length);
         const newKeys: string[] = [
@@ -197,7 +197,7 @@ export class GameServer {
               if (!playerId) {
                 ws.send(
                   JSON.stringify({
-                    action: 'unauth',
+                    action: actionList.unauth,
                     message:
                       'Auth failed, player with this key is already online',
                   }),
@@ -205,7 +205,7 @@ export class GameServer {
               } else {
                 ws.send(
                   JSON.stringify({
-                    action: 'auth',
+                    action: actionList.auth,
                     state: 'success',
                     playerId: playerId,
                   }),
@@ -213,7 +213,33 @@ export class GameServer {
                 clearTimeout(authTimeout);
               }
             }
-
+            break;
+          case actionList.entergame:
+            const playerId = this.GetPlayerId(ws);
+            if (playerId) {
+              const pState = this.playerStates.get(playerId);
+              if (pState && (pState.inGame || pState.inLookingFor)) {
+                ws.send(
+                  JSON.stringify({
+                    action: actionList.entergame,
+                    state: 'error',
+                    message: 'Player is already entered',
+                    playerId: playerId,
+                  }),
+                );
+                return;
+              }
+              ws.send(
+                JSON.stringify({
+                  action: actionList.entergame,
+                  state: 'success',
+                  message: 'Player now in queue',
+                  playerId: playerId,
+                }),
+              );
+              this.UpdatePlayerStateSingle(playerId, 'inLookingFor', true);
+              WriteLog('0x09', `Player ${playerId} now in game queue`);
+            }
             break;
           default:
             return;
