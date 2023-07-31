@@ -88,8 +88,9 @@ export class GameServer {
           activeIds.push(key);
         }
       });
-      WriteLog('0x08', 'Room creation, players : ' + activeIds.length);
+      // WriteLog('0x08', 'Room creation, players : ' + activeIds.length);
       if (activeIds.length > 1) {
+        WriteLog('0x08', 'Room creation, players : ' + activeIds.length);
         const indexPair = this.SelectIndexes(activeIds.length);
         const newKeys: string[] = [
           activeIds[indexPair[0]],
@@ -98,6 +99,7 @@ export class GameServer {
         const p1 = this.players.get(newKeys[0]);
         const p2 = this.players.get(newKeys[1]);
         if (p1 && p2) {
+          WriteLog('0x08', 'Game room created, id : ' + this.rooms.length);
           const room = new GameRoom(p1, p2, newKeys[0], newKeys[1]);
           this.rooms.push(room);
           this.UpdatePlayerStateFull(newKeys[0], {
