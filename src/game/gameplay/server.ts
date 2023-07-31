@@ -172,9 +172,9 @@ export class GameServer {
 
       ws.on('message', (message: string) => {
         WriteLog('0x00', 'Received : ' + message);
-        let msg : any;
+        let msg: any;
         try {
-           msg = JSON.parse(message)
+          msg = JSON.parse(message);
         } catch (e) {
           return;
         }
@@ -189,24 +189,28 @@ export class GameServer {
               return;
             } else {
               const dt = new Date().getTime();
-              const recoverMsg =
-                'auth_' + String(dt - (dt % 600000));
+              const recoverMsg = 'auth_' + String(dt - (dt % 600000));
               const publicKey = web3.eth.accounts
                 .recover(recoverMsg, msg.signature)
                 .toLowerCase();
               const playerId = this.CreatePlayer(ws, publicKey);
               if (!playerId) {
-                ws.send(JSON.stringify({
-                  action: "unauth",
-                  message: "Auth failed, player with this key is already online"
-                }))
+                ws.send(
+                  JSON.stringify({
+                    action: 'unauth',
+                    message:
+                      'Auth failed, player with this key is already online',
+                  }),
+                );
               } else {
-                ws.send(JSON.stringify({
-                  action: "auth",
-                  state: "success",
-                  playerId: playerId
-                }))
-                clearTimeout(authTimeout)
+                ws.send(
+                  JSON.stringify({
+                    action: 'auth',
+                    state: 'success',
+                    playerId: playerId,
+                  }),
+                );
+                clearTimeout(authTimeout);
               }
             }
 
@@ -214,8 +218,6 @@ export class GameServer {
           default:
             return;
         }
-
-
       });
 
       ws.on('close', () => {
