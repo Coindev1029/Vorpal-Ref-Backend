@@ -3,7 +3,6 @@ import { SaveGameResult } from '../../database/gameplay/save';
 import { msg } from '../../game/types';
 import { roomTestTimeout } from '../../game/config';
 import { WriteLog } from '../../database/log';
-import { GetPlayerStateList, playerKeys } from '../state';
 
 export class GameRoom {
   private players: WebSocket[] = [];
@@ -18,8 +17,8 @@ export class GameRoom {
     keyOne: string,
     keyTwo: string,
   ) {
-    const publicKeyOne = playerKeys.get(keyOne) || '';
-    const publicKeyTwo = playerKeys.get(keyTwo) || '';
+    const publicKeyOne = '';
+    const publicKeyTwo = '';
     this.players.push(playerOne);
     this.players.push(playerTwo);
     this.keys.push(keyOne);
@@ -63,9 +62,9 @@ export class GameRoom {
     WriteLog(`${this.addresses[0]} VS ${this.addresses[1]}`, `Game finished`);
 
     this.isActive = false;
-    const playerStates = GetPlayerStateList();
-    const playerOneState = playerStates.get(this.keys[0]);
-    const playerTwoState = playerStates.get(this.keys[1]);
+    // const playerStates = GetPlayerStateList();
+    // const playerOneState = playerStates.get(this.keys[0]);
+    // const playerTwoState = playerStates.get(this.keys[1]);
 
     const winMsg: msg.gameFinish = {
       action: 'gamefinish',
@@ -83,7 +82,7 @@ export class GameRoom {
     this.players[this.winner === 0 ? 1 : 0].send(JSON.stringify(loseMsg));
 
     const dt = new Date();
-    if (playerOneState && playerTwoState)
+    /* if (playerOneState && playerTwoState)
       SaveGameResult({
         playerOne: this.keys[0],
         playerTwo: this.keys[1],
@@ -93,6 +92,6 @@ export class GameRoom {
         star_id_one: playerOneState.starId,
         star_id_two: playerTwoState.starId,
         date: dt.getTime(),
-      });
+      }); */
   }
 }

@@ -1,3 +1,20 @@
+export const actionList = {
+  auth: 'auth',
+  unauth: 'unauth',
+  entergame: 'entergame',
+  withdrawgame: 'withdrawgame',
+  exitgame: 'exitgame',
+  leftclick: 'leftclick',
+  rightclick: 'rightclick',
+  keypress: 'keypress',
+  gamestart: 'gamestart',
+  gamefinish: 'gamefinish',
+  globaldataupdate: 'globaldataupdate',
+  objectcreate: 'objectcreate',
+  objectupdate: 'objectupdate',
+  objectdestroy: 'objectdestroy',
+}
+
 export type action =
   | 'auth'
   | 'unauth'
@@ -12,19 +29,19 @@ export type action =
   | 'globaldataupdate'
   | 'objectcreate'
   | 'objectupdate'
-  | 'objectdestroy'
+  | 'objectdestroy';
 
 export type basic = {
-  action: action,
-  state: string,
-  owner: string,
-  objectId: string,
-  data: any
+  action: action;
+  state: string;
+  owner: string;
+  objectId: string;
+  data: any;
 };
 
 export type state = {
-  action: action,
-  state: string
+  action: action;
+  state: string;
 };
 
 export type data = {
@@ -54,8 +71,8 @@ export type roomUpd = {
 
 export type mouseMsg = {
   action: action;
-  coords: number[]; 
-  objectId: string; 
+  coords: number[];
+  objectId: string;
 };
 
 export type keyboardMsg = {
@@ -70,7 +87,7 @@ export type gameStart = {
 
 export type gameFinish = {
   action: action;
-  win: boolean; 
+  win: boolean;
   data: any;
 };
 
@@ -80,4 +97,3 @@ export type objectLifecycle = {
   coords: number[];
   data: any;
 };
-
