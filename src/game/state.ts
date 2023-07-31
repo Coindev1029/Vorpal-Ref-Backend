@@ -6,7 +6,7 @@ const playerStates = new Map<string, PlayerState>();
 export const playerKeys = new Map<string, string>();
 
 const playerDefaultState: PlayerState = {
-  connected: false,
+  auth: false,
   inLookingFor: false,
   inGame: false,
   starId: -1,
@@ -69,7 +69,7 @@ export function UpdatePlayerStateSingle(
     return false;
   }
   const newState: PlayerState = {
-    connected: action == 'connected' ? Boolean(value) : actualState.connected,
+    auth: action == 'connected' ? Boolean(value) : actualState.auth,
     inLookingFor:
       action == 'inLookingFor' ? Boolean(value) : actualState.inLookingFor,
     inGame: action == 'inGame' ? Boolean(value) : actualState.inGame,

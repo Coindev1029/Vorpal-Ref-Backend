@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
 import { WriteLog } from '../../database/log';
-import { gameTimerValue } from '../config';
+import { gameTimerValue, signTimeout } from '../config';
 import {
   GetPlayerList,
   GetPlayerStateList,
@@ -19,7 +19,7 @@ export class GameServer {
   private playerStates = new Map<string, PlayerState>();
   private playerKeys = new Map<string, string>();
   private playerDefaultState: PlayerState = {
-    connected: false,
+    auth: false,
     inLookingFor: false,
     inGame: false,
     starId: -1,
@@ -69,7 +69,7 @@ export class GameServer {
           const room = new GameRoom(p1, p2, newKeys[0], newKeys[1]);
           this.rooms.push(room);
           UpdatePlayerStateFull(newKeys[0], {
-            connected: true,
+            auth: true,
             inGame: true,
             inLookingFor: false,
             planetId: playerStates[newKeys[0]].planetId,
@@ -77,7 +77,7 @@ export class GameServer {
             roomId: this.rooms.length,
           });
           UpdatePlayerStateFull(newKeys[1], {
-            connected: true,
+            auth: true,
             inGame: true,
             inLookingFor: false,
             planetId: playerStates[newKeys[1]].planetId,
@@ -113,9 +113,36 @@ export class GameServer {
     return playerId;
   }
 
+  private GetPlayerId(ws: WebSocket): string | undefined {
+    for (const [key, val] of this.players.entries()) {
+      if (val === ws) {
+        return key;
+      }
+    }
+  }
+
   public InitServer(): void {
     WriteLog('0x00', 'Game server created');
     this.timer = this.RoomGenerator();
+    this.wss.on('connection', (ws: WebSocket) => {
+      ws.send(JSON.stringify({ action: 'auth', state: 'requesting' }));
+      const authTimeout = setTimeout(() => {
+        ws.send(
+          JSON.stringify({
+            action: 'unauth',
+            message: 'Auth time expired',
+          }),
+        );
+        ws.close();
+      }, signTimeout);
+      
+      ws.on('close', () => {
+        const pId = this.GetPlayerId(ws);
+        if (pId) {
+           this.RemovePlayer(pId)
+        }
+      });
+    });
   }
 
   public CloseServer(): void {

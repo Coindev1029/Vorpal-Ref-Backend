@@ -10,7 +10,7 @@ export type playerStateKeys =
   | 'planetId';
 
 export type PlayerState = {
-  connected: boolean;
+  auth: boolean;
   inLookingFor: boolean;
   inGame: boolean;
   starId: number;

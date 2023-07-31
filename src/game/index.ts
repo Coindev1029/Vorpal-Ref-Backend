@@ -8,12 +8,12 @@ import { WriteLog } from '../database/log';
 export async function InitGameServer () {
     
     const ws_port = Number(process.env.WS_PORT ? process.env.WS_PORT : 3078)
-    const wss = new WebSocket.Server({ port: ws_port });
-    const web3 = new Web3(Web3.givenProvider)
+    // const wss = new WebSocket.Server({ port: ws_port });
+    // const web3 = new Web3(Web3.givenProvider)
     const server = new GameServer()
     server.InitServer()
 
-    wss.on('connection', (ws: WebSocket) => {
+    /* wss.on('connection', (ws: WebSocket) => {
         
         const sId = String(Math.round(Math.random() * 1000000000)) 
 
@@ -83,7 +83,7 @@ export async function InitGameServer () {
         ws.on('close', () => {
           console.log('Client disconnected');
         });
-      });
+      }); */
       
       console.log(`WebSocket server is running on port ${ws_port}`);
 }
