@@ -1,3 +1,4 @@
+import WebSocket from 'ws';
 import { WriteLog } from '../../database/log';
 import { gameTimerValue } from '../config';
 import {
@@ -7,10 +8,24 @@ import {
   UpdatePlayerStateSingle,
 } from '../state';
 import { GameRoom } from './room';
+import { PlayerState } from 'game/types';
 
 export class GameServer {
   private timer: any;
   private rooms: GameRoom[];
+  private ws_port = Number(process.env.WS_PORT ? process.env.WS_PORT : 3078);
+  private wss = new WebSocket.Server({ port: this.ws_port });
+  private players = new Map<string, WebSocket>();
+  private playerStates = new Map<string, PlayerState>();
+  private playerKeys = new Map<string, string>();
+  private playerDefaultState: PlayerState = {
+    connected: false,
+    inLookingFor: false,
+    inGame: false,
+    starId: -1,
+    planetId: -1,
+    roomId: -1,
+  };
 
   public SelectIndexes(max: number): number[] {
     const indexes: number[] = [];
@@ -30,9 +45,9 @@ export class GameServer {
     return this.rooms.indexOf(room);
   }
 
-  public InitServer(): void {
-    WriteLog('0x00', 'Game server created');
-    this.timer = setInterval(() => {
+  private RoomGenerator() {
+    WriteLog('0x01', 'Room generation started ...');
+    return setInterval(() => {
       const players = GetPlayerList();
       const playerStates = GetPlayerStateList();
       const activeIds: string[] = [];
@@ -41,7 +56,6 @@ export class GameServer {
           activeIds.push(key);
         }
       });
-      // WriteLog('0x01', 'Players count : ' + activeIds.length);
 
       if (activeIds.length > 1) {
         const indexPair = this.SelectIndexes(activeIds.length);
@@ -76,6 +90,32 @@ export class GameServer {
 
       // Perform server initialization logic here
     }, gameTimerValue);
+  }
+
+  private CreatePlayer(ws: WebSocket, publicKey: string): string {
+    for (const [key, val] of this.playerKeys.entries()) {
+      if (val === publicKey) {
+        return '';
+      }
+    }
+    const sId = String(Math.round(Math.random() * 1000000000));
+
+    this.players.set(sId, ws);
+    this.playerStates.set(sId, this.playerDefaultState);
+    this.playerKeys.set(sId, publicKey);
+    return sId;
+  }
+
+  private RemovePlayer(playerId: string): string {
+    this.players.delete(playerId);
+    this.playerStates.delete(playerId);
+    this.playerKeys.delete(playerId);
+    return playerId;
+  }
+
+  public InitServer(): void {
+    WriteLog('0x00', 'Game server created');
+    this.timer = this.RoomGenerator();
   }
 
   public CloseServer(): void {
