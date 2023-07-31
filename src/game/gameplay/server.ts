@@ -167,13 +167,14 @@ export class GameServer {
       const authTimeout = setTimeout(() => {
         const playerId = this.GetPlayerId(ws);
         if (!playerId || !this.playerStates.get(playerId)?.auth) {
+          WriteLog('0x07', 'Not authorized, closing...')
           ws.send(
             JSON.stringify({
               action: 'unauth',
               message: 'Auth time expired',
             }),
           );
-          ws.close();
+          // ws.close();
         }
       }, signTimeout);
 
