@@ -3,9 +3,9 @@ import Web3 from 'web3';
 import { WriteLog } from '../../database/log';
 import { gameTimerValue, signTimeout } from '../config';
 import { GameRoom } from './room';
-import { PlayerState, playerStateKeys } from 'game/types';
+import { PlayerState, playerStateKeys } from '../types';
 import { IncomingMessage } from 'http';
-import { actionList } from 'game/types/msg';
+import { actionList } from '../types/msg';
 
 const web3 = new Web3(Web3.givenProvider);
 
