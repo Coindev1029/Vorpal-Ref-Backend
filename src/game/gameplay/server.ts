@@ -18,7 +18,7 @@ export class GameServer {
   private playerStates = new Map<string, PlayerState>();
   private playerKeys = new Map<string, string>();
   private playerDefaultState: PlayerState = {
-    auth: false,
+    auth: true,
     inLookingFor: false,
     inGame: false,
     starId: -1,
@@ -163,13 +163,16 @@ export class GameServer {
       WriteLog('0x00', 'New connection');
       ws.send(JSON.stringify({ action: 'auth', state: 'requesting' }));
       const authTimeout = setTimeout(() => {
-        ws.send(
-          JSON.stringify({
-            action: 'unauth',
-            message: 'Auth time expired',
-          }),
-        );
-        ws.close();
+        const playerId = this.GetPlayerId(ws);
+        if (!playerId || !this.playerStates.get(playerId)?.auth) {
+          ws.send(
+            JSON.stringify({
+              action: 'unauth',
+              message: 'Auth time expired',
+            }),
+          );
+          ws.close();
+        }
       }, signTimeout);
 
       ws.on('message', (message: string) => {
