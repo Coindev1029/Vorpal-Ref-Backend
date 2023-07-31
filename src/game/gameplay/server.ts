@@ -125,6 +125,7 @@ export class GameServer {
     WriteLog('0x00', 'Game server created');
     this.timer = this.RoomGenerator();
     this.wss.on('connection', (ws: WebSocket) => {
+      WriteLog('0x00', 'New connection');
       ws.send(JSON.stringify({ action: 'auth', state: 'requesting' }));
       const authTimeout = setTimeout(() => {
         ws.send(
@@ -135,7 +136,7 @@ export class GameServer {
         );
         ws.close();
       }, signTimeout);
-      
+
       ws.on('close', () => {
         const pId = this.GetPlayerId(ws);
         if (pId) {
