@@ -137,7 +137,7 @@ export class GameServer {
     const sId = String(Math.round(Math.random() * 1000000000));
 
     this.players.set(sId, ws);
-    WriteLog('0x012', this.players.get(sId)?.isPaused)
+    WriteLog('0x012', this.players.get(sId)?.isPaused);
     this.playerStates.set(sId, this.playerDefaultState);
     this.playerKeys.set(sId, publicKey);
     return sId;
@@ -168,7 +168,7 @@ export class GameServer {
       const authTimeout = setTimeout(() => {
         const playerId = this.GetPlayerId(ws);
         if (!playerId || !this.playerStates.get(playerId)?.auth) {
-          WriteLog('0x07', 'Not authorized, closing...')
+          WriteLog('0x07', 'Not authorized, closing...');
           ws.send(
             JSON.stringify({
               action: 'unauth',
@@ -180,6 +180,9 @@ export class GameServer {
       }, signTimeout);
 
       ws.on('message', (message: string) => {
+        if (message === 'ping') {
+          ws.send('pong');
+        }
         WriteLog('0x00', 'Received : ' + message);
         let msg: any;
         try {
