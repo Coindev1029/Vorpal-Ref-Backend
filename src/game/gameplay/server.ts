@@ -97,18 +97,7 @@ export class GameServer {
           activeIds[indexPair[1]],
         ];
         WriteLog('0x08', 'Room creation, players : ' + String(newKeys[0]));
-        this.players.forEach((player) => {
-          if (!player) {
-             WriteLog(
-               '0x016',
-               'Room creation, player undefined',
-             );
-          }
-          WriteLog(
-            '0x016',
-            'Room creation, players : ' + JSON.stringify(player),
-          );
-        })
+        WriteLog('0x08', 'Room creation, player list : ' + JSON.stringify(Object.fromEntries(this.players)));
         const p1 = this.players.get(newKeys[0]);
         const p2 = this.players.get(newKeys[1]);
         WriteLog('0x08', 'Room creation, ws1 : ' + String(p1?.url));
@@ -150,6 +139,11 @@ export class GameServer {
 
     this.players.set(sId, ws);
     WriteLog('0x012', this.players.get(sId)?.isPaused);
+    WriteLog(
+      '0x08',
+      'Room creation, player list : ' +
+        JSON.stringify(Object.fromEntries(this.players)),
+    );
     this.playerStates.set(sId, this.playerDefaultState);
     this.playerKeys.set(sId, publicKey);
     return sId;
@@ -192,9 +186,6 @@ export class GameServer {
       }, signTimeout);
 
       ws.on('message', (message: string) => {
-        setInterval(() => {
-          ws.send('pong');
-        }, pingPongDelay);
         if (message === 'ping') {
           ws.send('pong');
         }
