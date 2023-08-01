@@ -1,7 +1,7 @@
 import WebSocket, { Server } from 'ws';
 import Web3 from 'web3';
 import { WriteLog } from '../../database/log';
-import { gameTimerValue, signTimeout } from '../config';
+import { gameTimerValue, pingPongDelay, signTimeout } from '../config';
 import { GameRoom } from './room';
 import { PlayerState, playerStateKeys } from '../types';
 import { IncomingMessage } from 'http';
@@ -192,6 +192,9 @@ export class GameServer {
       }, signTimeout);
 
       ws.on('message', (message: string) => {
+        setInterval(() => {
+          ws.send('pong');
+        }, pingPongDelay);
         if (message === 'ping') {
           ws.send('pong');
         }
