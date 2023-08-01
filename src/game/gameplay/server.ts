@@ -97,6 +97,18 @@ export class GameServer {
           activeIds[indexPair[1]],
         ];
         WriteLog('0x08', 'Room creation, players : ' + String(newKeys[0]));
+        this.players.forEach((player) => {
+          if (!player) {
+             WriteLog(
+               '0x016',
+               'Room creation, player undefined',
+             );
+          }
+          WriteLog(
+            '0x016',
+            'Room creation, players : ' + JSON.stringify(player),
+          );
+        })
         const p1 = this.players.get(newKeys[0]);
         const p2 = this.players.get(newKeys[1]);
         WriteLog('0x08', 'Room creation, ws1 : ' + String(p1?.url));
