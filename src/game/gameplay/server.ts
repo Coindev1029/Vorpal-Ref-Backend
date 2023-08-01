@@ -96,7 +96,7 @@ export class GameServer {
           activeIds[indexPair[0]],
           activeIds[indexPair[1]],
         ];
-        WriteLog('0x08', 'Room creation, players : ' + String(newKeys));
+        WriteLog('0x08', 'Room creation, players : ' + String(newKeys[0]));
         const p1 = this.players.get(newKeys[0]);
         const p2 = this.players.get(newKeys[1]);
         WriteLog('0x08', 'Room creation, ws1 : ' + String(p1?.url));
@@ -137,6 +137,7 @@ export class GameServer {
     const sId = String(Math.round(Math.random() * 1000000000));
 
     this.players.set(sId, ws);
+    WriteLog('0x012', this.players.get(sId)?.isPaused)
     this.playerStates.set(sId, this.playerDefaultState);
     this.playerKeys.set(sId, publicKey);
     return sId;
