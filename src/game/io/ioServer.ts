@@ -94,15 +94,16 @@ export class GameIoServer {
 
   public InsertPlayer(player: Player): boolean {
     WriteLog('0x00', 'New player insertion called');
-    try {
-      WriteLog('0x00', 'New player : ' + JSON.stringify(player));
+      try {
+      WriteLog('0x00', 'New player creation : ');  
+      WriteLog('0x00', 'New player : ' + String(player));
       this.players.push({
         id: player.id,
         ws: player.ws,
         publicKey: player.publicKey,
         state: this.playerDefaultState,
       });
-      WriteLog('0x00', 'Players : ' + JSON.stringify(this.players));
+      WriteLog('0x00', 'Players count : ' + this.players.length);
       return true;
     } catch (e: any) {
       WriteLog('0x998', 'Error : ' + e.message);
