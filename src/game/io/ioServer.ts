@@ -56,16 +56,20 @@ export class GameIoServer {
     return indexes;
   }
 
-  private GetPlayerByParam (param: WebSocket | string, value: string): PlayerRow | null {
+  private GetPlayerByParam(param: WebSocket | string): PlayerRow | null {
     this.players.forEach((player) => {
-      if (player.id === param || player.ws === param || player.publicKey === param) {
+      if (
+        player.id === param ||
+        player.ws === param ||
+        player.publicKey === param
+      ) {
         return player;
       }
     });
     return null;
   }
 
-  private UpdatePlayerState(id: string, state: PlayerState) {
+  public UpdatePlayerState(id: string, state: PlayerState) {
     const newPlayerList: PlayerRow[] = [];
     this.players.forEach((player) => {
       if (player.id !== id) {
@@ -107,7 +111,15 @@ export class GameIoServer {
     wss.on('connection', (ws: WebSocket) => {
       const cId = this.GenerateId();
       const authTimer = setTimeout(() => {
-        ws.close();
+        if (!this.GetPlayerByParam(ws)) {
+          ws.send(
+            JSON.stringify({
+              action: 'unauth',
+              message: 'Auth time expired',
+            }),
+          );
+          ws.close();
+        }
       }, signTimeout);
       WriteLog('0x0032', 'New connection, id : ' + cId);
       ws.send(JSON.stringify(this.AuthRequestMsg));
@@ -125,7 +137,7 @@ export class GameIoServer {
         }
         switch (msg.action) {
           case actionList.auth:
-            if (msg.signature) return;
+            if (!msg.signature) return;
             const recoverMsg = this.AuthMsg();
             const publicKey = web3.eth.accounts
               .recover(recoverMsg, msg.signature)
@@ -148,6 +160,38 @@ export class GameIoServer {
               ws: ws,
               publicKey: publicKey,
             });
+            break;
+          case actionList.entergame:
+            const player = this.GetPlayerByParam(ws);
+            if (player) {
+              if (player.state.inLookingFor || player.state.inGame) {
+                ws.send(
+                  JSON.stringify({
+                    action: 'entergame',
+                    status: 'failed',
+                  }),
+                );
+                return;
+              }
+              const playerNewState: PlayerState = {
+                auth: true,
+                inLookingFor: true,
+                inGame: false,
+                starId: player.state.starId,
+                planetId: player.state.planetId,
+                roomId: -1,
+              };
+              this.UpdatePlayerState(player.id, playerNewState);
+              WriteLog(player.publicKey, 'Now in game : ' + player.id);
+              ws.send(
+                JSON.stringify({
+                  action: actionList.entergame,
+                  state: 'success',
+                  message: 'Player now in queue',
+                  playerId: player.publicKey,
+                }),
+              );
+            }
             break;
           default:
             return;
