@@ -137,36 +137,40 @@ export class GameIoServer {
         }
         switch (msg.action) {
           case actionList.auth:
-            if (!msg.signature) return;
-            const recoverMsg = this.AuthMsg();
-            const publicKey = web3.eth.accounts
-              .recover(recoverMsg, msg.signature)
-              .toLowerCase();
-            this.players.forEach((player) => {
-              if (player.publicKey === publicKey) {
-                ws.send(
-                  JSON.stringify({
-                    action: actionList.unauth,
-                    message:
-                      'Auth failed, player with this key is already online',
-                  }),
-                );
-                return;
-              }
-            });
-            clearInterval(authTimer);
-            this.InsertPlayer({
-              id: cId,
-              ws: ws,
-              publicKey: publicKey,
-            });
-                ws.send(
-                  JSON.stringify({
-                    action: actionList.auth,
-                    state: 'success',
-                    playerId: publicKey,
-                  }),
-                );
+            // if (!msg.signature) return;
+            try {
+              const recoverMsg = this.AuthMsg();
+              const publicKey = web3.eth.accounts
+                .recover(recoverMsg, msg.signature)
+                .toLowerCase();
+              this.players.forEach((player) => {
+                if (player.publicKey === publicKey) {
+                  ws.send(
+                    JSON.stringify({
+                      action: actionList.unauth,
+                      message:
+                        'Auth failed, player with this key is already online',
+                    }),
+                  );
+                  return;
+                }
+              });
+              clearInterval(authTimer);
+              this.InsertPlayer({
+                id: cId,
+                ws: ws,
+                publicKey: publicKey,
+              });
+              ws.send(
+                JSON.stringify({
+                  action: actionList.auth,
+                  state: 'success',
+                  playerId: publicKey,
+                }),
+              );
+            } catch (e: any) {
+              WriteLog('0x0089', e.message);
+            }
             break;
           case actionList.entergame:
             const player = this.GetPlayerByParam(ws);
