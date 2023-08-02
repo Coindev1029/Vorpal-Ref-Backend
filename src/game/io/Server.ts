@@ -127,14 +127,14 @@ export class GameIoServer {
           WriteLog('0x0169', 'Room generation started : ' + String(indexPair));
 
           const playerOne: PlayerRow = availablePlayers[indexPair[0]];
-          const playerTwo: PlayerRow = availablePlayers[indexPair[0]];
-          const GameStartNotify = JSON.stringify({ action: 'gamestart' });
-          playerOne.ws.send(GameStartNotify);
-          playerTwo.ws.send(GameStartNotify);
-          const room = new GameRoom(this, [playerOne, playerTwo]);
+          const playerTwo: PlayerRow = availablePlayers[indexPair[1]];
+          const players = [playerOne, playerTwo]
+
+          const room = new GameRoom(this, players);
           this.Rooms.push(room);
           room.SetId(this.Rooms.length);
           WriteLog('Room creation : ', 'Room created, id : ' + room.GetId());
+          room.Start()
         }
       }
     }, gameTimerValue);
