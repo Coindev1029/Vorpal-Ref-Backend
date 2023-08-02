@@ -63,19 +63,21 @@ export class GameIoServer {
   }
 
     private GetPlayerByParam(param: WebSocket | string): PlayerRow | null {
+
+        let result: PlayerRow | null = null
       
         this.players.forEach((player) => {
-        WriteLog('GetPlayerByParam', 'Id: ' + (player.id));
         WriteLog('GetPlayerByParam', 'Condition: ' + (player.ws === param));
       if (
         player.id === param ||
         player.ws === param ||
         player.publicKey === param
       ) {
-        return player;
+        WriteLog('GetPlayerByParam', 'Condition passed'); 
+        result = player;
       }
     });
-    return null;
+    return result;
   }
 
   public UpdatePlayerState(id: string, state: PlayerState) {
