@@ -93,6 +93,7 @@ export class GameIoServer {
   }
 
   public InsertPlayer(player: Player): boolean {
+    WriteLog('0x00', 'New player insertion called');
     try {
       WriteLog('0x00', 'New player : ' + JSON.stringify(player));
       this.players.push({
@@ -145,7 +146,7 @@ export class GameIoServer {
           ws.close();
         }
       }, signTimeout);
-      WriteLog('0x0032', 'New connection, id : ' + cId);
+      // WriteLog('0x0032', 'New connection, id : ' + cId);
       ws.send(JSON.stringify(this.AuthRequestMsg));
       ws.on('message', (message: string) => {
         if (String(message) === 'ping') {
@@ -180,6 +181,7 @@ export class GameIoServer {
                 }
               });
               clearInterval(authTimer);
+              WriteLog('0x00', 'New player insertion caling : ');
               const inserted = this.InsertPlayer({
                 id: cId,
                 ws: ws,
