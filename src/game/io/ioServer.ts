@@ -129,7 +129,7 @@ export class GameIoServer {
         WriteLog('0x0129', 'Player address : ' + availablePlayers[0].publicKey);
       } */
         if (availablePlayers.length > 1) {
-            const indexPair = this.SelectIndexes(availablePlayers.length);
+            const indexPair = this.SelectIndexes(availablePlayers.length - 1);
             if (indexPair.length > 1) {
                 WriteLog(
                   '0x0169',
