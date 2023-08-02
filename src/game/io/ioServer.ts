@@ -63,7 +63,8 @@ export class GameIoServer {
       });
       WriteLog('0x0032', 'New connection, id : ' + cId);
       ws.send('Connection confirmed');
-      ws.on('message', (message: string) => {
+        ws.on('message', (message: string) => {
+        WriteLog('0x0033', 'Received : ' + message)
         if (message === 'ping') {
           ws.send('pong');
         }
@@ -72,11 +73,11 @@ export class GameIoServer {
         this.DeletePlayer(cId);
       });
     });
-    this.timer = setInterval(() => {
+    /* this.timer = setInterval(() => {
       this.players.forEach((player) => {
         player.ws.send('pong');
       });
-    }, pingPongDelay);
+    }, pingPongDelay); */
     return true;
   }
 
