@@ -189,7 +189,8 @@ export class GameIoServer {
               WriteLog('0x0089', e.message);
             }
             break;
-          case actionList.entergame:
+            case actionList.entergame:
+            WriteLog('0x005', 'Game entering...')
             const player = this.GetPlayerByParam(ws);
             if (player) {
               if (player.state.inLookingFor || player.state.inGame) {
