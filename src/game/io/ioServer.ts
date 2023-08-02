@@ -138,11 +138,13 @@ export class GameIoServer {
         switch (msg.action) {
           case actionList.auth:
             // if (!msg.signature) return;
+                WriteLog('0x084', 'Auth message received')
             try {
               const recoverMsg = this.AuthMsg();
               const publicKey = web3.eth.accounts
                 .recover(recoverMsg, msg.signature)
-                .toLowerCase();
+                    .toLowerCase();
+            WriteLog('0x084', 'Auth message recover : ' + publicKey);
               this.players.forEach((player) => {
                 if (player.publicKey === publicKey) {
                   ws.send(
