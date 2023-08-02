@@ -67,13 +67,11 @@ export class GameIoServer {
         let result: PlayerRow | null = null
       
         this.players.forEach((player) => {
-        WriteLog('GetPlayerByParam', 'Condition: ' + (player.ws === param));
       if (
         player.id === param ||
         player.ws === param ||
         player.publicKey === param
       ) {
-        WriteLog('GetPlayerByParam', 'Condition passed'); 
         result = player;
       }
     });
@@ -98,17 +96,13 @@ export class GameIoServer {
   }
 
   public InsertPlayer(player: Player): boolean {
-    WriteLog('0x00', 'New player insertion called');
       try {
-      WriteLog('0x00', 'New player creation : ');  
-      WriteLog('0x00', 'New player : ' + String(player));
       this.players.push({
         id: player.id,
         ws: player.ws,
         publicKey: player.publicKey,
         state: this.playerDefaultState,
       });
-      WriteLog('0x00', 'Players count : ' + this.players.length);
       return true;
     } catch (e: any) {
       WriteLog('0x998', 'Error : ' + e.message);
@@ -131,9 +125,25 @@ export class GameIoServer {
       const availablePlayers = this.players.filter((player) => {
         return player.state.inLookingFor;
       });
-      if (availablePlayers.length > 0) {
+      /* if (availablePlayers.length > 0) {
         WriteLog('0x0129', 'Player address : ' + availablePlayers[0].publicKey);
-      }
+      } */
+        if (availablePlayers.length > 1) {
+            const indexPair = this.SelectIndexes(availablePlayers.length);
+            if (indexPair.length > 1) {
+                WriteLog(
+                  '0x0169',
+                  'Room generation started : ' + String(indexPair),
+                );
+
+                const playerOne: PlayerRow = availablePlayers[indexPair[0]];
+                const playerTwo: PlayerRow = availablePlayers[indexPair[0]];
+                const GameStartNotify = JSON.stringify({ action: "gamestart"})
+                playerOne.ws.send(GameStartNotify);
+                playerTwo.ws.send(GameStartNotify);
+
+            }
+        }
     }, gameTimerValue);
   }
 
