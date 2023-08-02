@@ -62,8 +62,11 @@ export class GameIoServer {
     return indexes;
   }
 
-  private GetPlayerByParam(param: WebSocket | string): PlayerRow | null {
-    this.players.forEach((player) => {
+    private GetPlayerByParam(param: WebSocket | string): PlayerRow | null {
+      
+        this.players.forEach((player) => {
+        WriteLog('GetPlayerByParam', 'Id: ' + (player.id));
+        WriteLog('GetPlayerByParam', 'Condition: ' + (player.ws === param));
       if (
         player.id === param ||
         player.ws === param ||
