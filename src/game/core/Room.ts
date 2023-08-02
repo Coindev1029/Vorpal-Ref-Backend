@@ -68,7 +68,7 @@ export class GameRoom {
 
   private Finish(winner: number | null = null) {
     this.isActive = false;
-    if (winner === null) winner = Math.ceil(Math.random() * 2) === 0 ? 0 : 1; // REPLACE!!!
+    if (winner === null) winner = Math.ceil(Math.random() * 2) - 1; // REPLACE!!!
     WriteLog(
       `${this.players[0].publicKey} VS ${this.players[1].publicKey}`,
       `Game finished`,
