@@ -9,20 +9,14 @@ import {
 import { WriteLog } from '../../database/log';
 import { PlayerState } from '../types';
 import { actionList } from '../types/msg';
-
-interface Player {
-  id: string;
-  ws: WebSocket;
-  publicKey: string;
-}
-interface PlayerRow extends Player {
-  state: PlayerState;
-}
+import { Player, PlayerRow } from '../types/interfaces';
+import { GameRoom } from './Room';
 
 const web3 = new Web3(Web3.givenProvider);
 
 export class GameIoServer {
   private players: PlayerRow[] = [];
+  private Rooms: GameRoom[] = [];
   private ws_port = Number(
     process.env.WS_PORT ? process.env.WS_PORT : default_ws_port,
   );
@@ -62,11 +56,10 @@ export class GameIoServer {
     return indexes;
   }
 
-    private GetPlayerByParam(param: WebSocket | string): PlayerRow | null {
+  private GetPlayerByParam(param: WebSocket | string): PlayerRow | null {
+    let result: PlayerRow | null = null;
 
-        let result: PlayerRow | null = null
-      
-        this.players.forEach((player) => {
+    this.players.forEach((player) => {
       if (
         player.id === param ||
         player.ws === param ||
@@ -96,7 +89,7 @@ export class GameIoServer {
   }
 
   public InsertPlayer(player: Player): boolean {
-      try {
+    try {
       this.players.push({
         id: player.id,
         ws: player.ws,
@@ -128,22 +121,22 @@ export class GameIoServer {
       /* if (availablePlayers.length > 0) {
         WriteLog('0x0129', 'Player address : ' + availablePlayers[0].publicKey);
       } */
-        if (availablePlayers.length > 1) {
-            const indexPair = this.SelectIndexes(availablePlayers.length - 1);
-            if (indexPair.length > 1) {
-                WriteLog(
-                  '0x0169',
-                  'Room generation started : ' + String(indexPair),
-                );
+      if (availablePlayers.length > 1) {
+        const indexPair = this.SelectIndexes(availablePlayers.length - 1);
+        if (indexPair.length > 1) {
+          WriteLog('0x0169', 'Room generation started : ' + String(indexPair));
 
-                const playerOne: PlayerRow = availablePlayers[indexPair[0]];
-                const playerTwo: PlayerRow = availablePlayers[indexPair[0]];
-                const GameStartNotify = JSON.stringify({ action: "gamestart"})
-                playerOne.ws.send(GameStartNotify);
-                playerTwo.ws.send(GameStartNotify);
-
-            }
+          const playerOne: PlayerRow = availablePlayers[indexPair[0]];
+          const playerTwo: PlayerRow = availablePlayers[indexPair[0]];
+          const GameStartNotify = JSON.stringify({ action: 'gamestart' });
+          playerOne.ws.send(GameStartNotify);
+          playerTwo.ws.send(GameStartNotify);
+          const room = new GameRoom(this, [playerOne, playerTwo]);
+          this.Rooms.push(room);
+          room.SetId(this.Rooms.length);
+          WriteLog('Room creation : ', 'Room created, id : ' + room.GetId());
         }
+      }
     }, gameTimerValue);
   }
 

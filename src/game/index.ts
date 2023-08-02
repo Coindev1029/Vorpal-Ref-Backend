@@ -3,7 +3,7 @@ import Web3 from 'web3';
 import { signTimeout } from './config';
 import { GameServer } from './gameplay/server';
 import { WriteLog } from '../database/log';
-import { GameIoServer } from './io/ioServer';
+import { GameIoServer } from './io/Server';
 
 export async function InitGameServer () {
 
@@ -13,7 +13,7 @@ export async function InitGameServer () {
 }
 
 export async function InitGameIoServer() {
-    
+
     const server = new GameIoServer()
     server.Start()
 
