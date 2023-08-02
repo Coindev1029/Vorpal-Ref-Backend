@@ -118,9 +118,7 @@ export class GameIoServer {
       const availablePlayers = this.players.filter((player) => {
         return player.state.inLookingFor;
       });
-      /* if (availablePlayers.length > 0) {
-        WriteLog('0x0129', 'Player address : ' + availablePlayers[0].publicKey);
-      } */
+
       if (availablePlayers.length > 1) {
         const indexPair = this.SelectIndexes(availablePlayers.length - 1);
         if (indexPair.length > 1) {
@@ -131,8 +129,8 @@ export class GameIoServer {
           const players = [playerOne, playerTwo]
 
           const room = new GameRoom(this, players);
-          this.Rooms.push(room);
           room.SetId(this.Rooms.length);
+          this.Rooms.push(room);
           WriteLog('Room creation : ', 'Room created, id : ' + room.GetId());
           room.Start()
         }
@@ -190,13 +188,11 @@ export class GameIoServer {
                 }
               });
               clearInterval(authTimer);
-              WriteLog('0x00', 'New player insertion caling : ');
               const inserted = this.InsertPlayer({
                 id: cId,
                 ws: ws,
                 publicKey: publicKey,
               });
-              WriteLog('0x999', 'Inserted : ' + inserted);
               ws.send(
                 JSON.stringify({
                   action: actionList.auth,

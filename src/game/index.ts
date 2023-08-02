@@ -3,7 +3,7 @@ import Web3 from 'web3';
 import { signTimeout } from './config';
 import { GameServer } from './gameplay/server';
 import { WriteLog } from '../database/log';
-import { GameIoServer } from './io/Server';
+import { GameIoServer } from './core/Server';
 
 export async function InitGameServer () {
 
