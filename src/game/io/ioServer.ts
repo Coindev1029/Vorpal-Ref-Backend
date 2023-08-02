@@ -1,7 +1,7 @@
 import WebSocket, { Server } from 'ws';
 import { createServer } from 'http';
-import { default_ws_port, pingPongDelay } from 'game/config';
-import { WriteLog } from 'database/log';
+import { default_ws_port, pingPongDelay } from '../config';
+import { WriteLog } from '../../database/log';
 
 interface WSRow {
         id: string,
