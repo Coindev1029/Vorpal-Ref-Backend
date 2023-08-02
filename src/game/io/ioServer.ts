@@ -65,7 +65,8 @@ export class GameIoServer {
       ws.send('Connection confirmed');
         ws.on('message', (message: string) => {
         WriteLog('0x0033', 'Received : ' + message)
-        if (message === 'ping') {
+        if (String(message) === 'ping') {
+            WriteLog('0x0033', 'PingPong');
           ws.send('pong');
         }
       });
