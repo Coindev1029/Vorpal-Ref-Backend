@@ -131,7 +131,7 @@ export class GameIoServer {
         WriteLog('0x0033', 'Received : ' + message);
         let msg: any;
         try {
-          msg = JSON.stringify(message);
+          msg = JSON.parse(message);
         } catch (e) {
           return;
         }
