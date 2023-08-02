@@ -92,19 +92,24 @@ export class GameIoServer {
     this.players = newPlayerList;
   }
 
-    private InsertPlayer(player: Player): boolean {
-    WriteLog('0x00', 'New player : ' + JSON.stringify(player));
-    this.players.push({
-      id: player.id,
-      ws: player.ws,
-      publicKey: player.publicKey,
-      state: this.playerDefaultState,
-    });
-    WriteLog('0x00', 'Players : ' + JSON.stringify(this.players));
-    return true;
+  public InsertPlayer(player: Player): boolean {
+    try {
+      WriteLog('0x00', 'New player : ' + JSON.stringify(player));
+      this.players.push({
+        id: player.id,
+        ws: player.ws,
+        publicKey: player.publicKey,
+        state: this.playerDefaultState,
+      });
+      WriteLog('0x00', 'Players : ' + JSON.stringify(this.players));
+      return true;
+    } catch (e: any) {
+      WriteLog('0x998', 'Error : ' + e.message);
+      return false;
+    }
   }
 
-  private DeletePlayer(id: string) {
+  public DeletePlayer(id: string) {
     const newPlayerList: PlayerRow[] = [];
     this.players.forEach((player) => {
       if (player.id !== id) {
@@ -175,11 +180,12 @@ export class GameIoServer {
                 }
               });
               clearInterval(authTimer);
-              this.InsertPlayer({
+              const inserted = this.InsertPlayer({
                 id: cId,
                 ws: ws,
                 publicKey: publicKey,
               });
+              WriteLog('0x999', 'Inserted : ' + inserted);
               ws.send(
                 JSON.stringify({
                   action: actionList.auth,
