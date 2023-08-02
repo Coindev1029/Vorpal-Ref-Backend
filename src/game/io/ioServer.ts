@@ -93,6 +93,7 @@ export class GameIoServer {
   }
 
     private InsertPlayer(player: Player): boolean {
+    WriteLog('0x00', 'New player : ' + JSON.stringify(player));
     this.players.push({
       id: player.id,
       ws: player.ws,
