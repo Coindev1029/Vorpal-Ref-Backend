@@ -1,4 +1,4 @@
-import { PlayerRow } from '../types/interfaces';
+import { PlayerRow, UserEvent } from '../types/interfaces';
 import { GameIoServer } from './Server';
 import { PlayerState } from '../types';
 import { WriteLog } from '../../database/log';
@@ -7,9 +7,9 @@ import { roomTestTimeout } from '../config';
 export class GameRoom {
   private players: PlayerRow[] = [];
   private server: GameIoServer;
-    private roomItselfId: number = -1;
-    private isActive: boolean = false;
-    private GameStartNotify = JSON.stringify({ action: 'gamestart' });
+  private roomItselfId: number = -1;
+  private isActive: boolean = false;
+  private GameStartNotify = JSON.stringify({ action: 'gamestart' });
 
   constructor(_server: GameIoServer, _players: PlayerRow[]) {
     this.server = _server;
@@ -32,6 +32,21 @@ export class GameRoom {
     return this.isActive;
   }
 
+  public EmitUserEvent(event: UserEvent) {
+    this.players.forEach((player, index) => {
+      if (player.publicKey === event.userPublicKey) {
+        switch (event.type) {
+          case 'close':
+            this.Finish(index === 0 ? 1 : 0);
+            break;
+          default:
+            return;
+        }
+      }
+    });
+    return;
+  }
+
   public Start() {
     this.players.forEach((player) => {
       const state: PlayerState = {
@@ -45,15 +60,15 @@ export class GameRoom {
       this.server.UpdatePlayerState(player.id, state);
       player.ws.send(this.GameStartNotify);
     });
-    this.isActive = true
+    this.isActive = true;
     setTimeout(() => {
       this.Finish();
     }, roomTestTimeout);
   }
 
-  public Finish() {
-    this.isActive = false
-    const winner = Math.ceil(Math.random() * 2) === 0 ? 0 : 1; // REPLACE!!!
+  private Finish(winner: number | null = null) {
+    this.isActive = false;
+    if (winner === null) winner = Math.ceil(Math.random() * 2) === 0 ? 0 : 1; // REPLACE!!!
     WriteLog(
       `${this.players[0].publicKey} VS ${this.players[1].publicKey}`,
       `Game finished`,
@@ -68,7 +83,23 @@ export class GameRoom {
         roomId: -1,
       };
       this.server.UpdatePlayerState(player.id, state);
-      player.ws.send(JSON.stringify({ action : "gameend", win: winner === index ? true : false }));
+      player.ws.send(
+        JSON.stringify({
+          action: 'gameend',
+          win: winner === index ? true : false,
+        }),
+      );
+    });
+    const dt = new Date()
+    SaveGameResult({
+      playerOne: this.players[0].publicKey,
+      playerTwo: this.players[1].publicKey,
+      winner: winner === 0 ? 1 : 2,
+      planet_id_one: this.players[0].state.planetId,
+      planet_id_two: this.players[1].state.planetId,
+      star_id_one: this.players[0].state.starId,
+      star_id_two: this.players[1].state.starId,
+      date: dt.getTime(),
     });
   }
 }

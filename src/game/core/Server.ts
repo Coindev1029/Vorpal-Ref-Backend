@@ -9,7 +9,7 @@ import {
 import { WriteLog } from '../../database/log';
 import { PlayerState } from '../types';
 import { actionList } from '../types/msg';
-import { Player, PlayerRow } from '../types/interfaces';
+import { Player, PlayerRow, RoomEvent } from '../types/interfaces';
 import { GameRoom } from './Room';
 
 const web3 = new Web3(Web3.givenProvider);
@@ -126,16 +126,20 @@ export class GameIoServer {
 
           const playerOne: PlayerRow = availablePlayers[indexPair[0]];
           const playerTwo: PlayerRow = availablePlayers[indexPair[1]];
-          const players = [playerOne, playerTwo]
+          const players = [playerOne, playerTwo];
 
           const room = new GameRoom(this, players);
           room.SetId(this.Rooms.length);
           this.Rooms.push(room);
           WriteLog('Room creation : ', 'Room created, id : ' + room.GetId());
-          room.Start()
+          room.Start();
         }
       }
     }, gameTimerValue);
+  }
+
+  public EmitRoomEvent(event: RoomEvent) {
+    return;
   }
 
   public Start() {
@@ -237,11 +241,33 @@ export class GameIoServer {
               );
             }
             break;
+          case actionList.withdrawgame:
+            const playerW = this.GetPlayerByParam(ws);
+            if (playerW) {
+              const playerNewState: PlayerState = {
+                auth: true,
+                inLookingFor: false,
+                inGame: playerW.state.inGame,
+                starId: playerW.state.starId,
+                planetId: playerW.state.planetId,
+                roomId: playerW.state.roomId,
+              };
+              this.UpdatePlayerState(playerW.id, playerNewState);
+            }
+            break;
           default:
             return;
         }
       });
       ws.on('close', () => {
+        const player = this.GetPlayerByParam(ws);
+        if (player && player.state.roomId > -1) {
+          this.Rooms[player.state.roomId].EmitUserEvent({
+            userPublicKey: player.publicKey,
+            type: 'close',
+            data: [],
+          });
+        }
         this.DeletePlayer(cId);
       });
     });
