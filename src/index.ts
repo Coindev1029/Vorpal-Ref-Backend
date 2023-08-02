@@ -1,4 +1,4 @@
-import { InitGameServer } from "./game";
+import { InitGameIoServer, InitGameServer } from "./game";
 const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
 const { GetBalances, UpdateVestings } = require('./database/balances')
@@ -243,7 +243,8 @@ app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
 });
 
-InitGameServer ()
+// InitGameServer()
+InitGameIoServer()
 
 /* 
 const credentials = {
