@@ -92,13 +92,14 @@ export class GameIoServer {
     this.players = newPlayerList;
   }
 
-  private InsertPlayer(player: Player): boolean {
+    private InsertPlayer(player: Player): boolean {
     this.players.push({
       id: player.id,
       ws: player.ws,
       publicKey: player.publicKey,
       state: this.playerDefaultState,
     });
+    WriteLog('0x00', 'Players : ' + JSON.stringify(this.players));
     return true;
   }
 
@@ -189,9 +190,9 @@ export class GameIoServer {
               WriteLog('0x0089', e.message);
             }
             break;
-            case actionList.entergame:
-            WriteLog('0x005', 'Game entering...')
+          case actionList.entergame:
             const player = this.GetPlayerByParam(ws);
+            WriteLog('0x005', 'Player : ' + JSON.stringify(player));
             if (player) {
               if (player.state.inLookingFor || player.state.inGame) {
                 ws.send(
