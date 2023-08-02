@@ -1,7 +1,9 @@
 import WebSocket, { Server } from 'ws';
-import { default_ws_port, pingPongDelay } from '../config';
+import Web3 from 'web3';
+import { default_ws_port, pingPongDelay, signTimeout } from '../config';
 import { WriteLog } from '../../database/log';
 import { PlayerState } from '../types';
+import { actionList } from '../types/msg';
 
 interface Player {
   id: string;
@@ -11,6 +13,8 @@ interface Player {
 interface PlayerRow extends Player {
   state: PlayerState;
 }
+
+const web3 = new Web3(Web3.givenProvider);
 
 export class GameIoServer {
   private players: PlayerRow[] = [];
@@ -27,9 +31,15 @@ export class GameIoServer {
     planetId: -1,
     roomId: -1,
   };
+  private AuthRequestMsg = { action: 'auth', state: 'requesting' };
 
   private GenerateId(): string {
     return String(Math.round(Math.random() * 1000000000));
+  }
+
+  private AuthMsg(): string {
+    const dt = new Date().getTime();
+    return 'auth_' + String(dt - (dt % 600000));
   }
 
   private InsertPlayer(player: Player): boolean {
@@ -56,19 +66,52 @@ export class GameIoServer {
     const wss = new WebSocket.Server({ port: this.ws_port });
     wss.on('connection', (ws: WebSocket) => {
       const cId = this.GenerateId();
-      this.InsertPlayer({
-        id: cId,
-        ws: ws,
-        publicKey: '',
-      });
+      const authTimer = setTimeout(() => {
+        ws.close();
+      }, signTimeout);
       WriteLog('0x0032', 'New connection, id : ' + cId);
-      ws.send('Connection confirmed');
-        ws.on('message', (message: string) => {
-        WriteLog('0x0033', 'Received : ' + message)
+      ws.send(JSON.stringify(this.AuthRequestMsg));
+      ws.on('message', (message: string) => {
+        WriteLog('0x0033', 'Received : ' + message);
         if (String(message) === 'ping') {
-            WriteLog('0x0033', 'PingPong');
           ws.send('pong');
+          return;
         }
+        let msg: any;
+        try {
+          msg = JSON.stringify(message);
+        } catch (e) {
+          return;
+          }
+          switch (msg.action) {
+              case actionList.auth:
+                  if (msg.signature) return;
+                  const recoverMsg = this.AuthMsg();
+                  const publicKey = web3.eth.accounts
+                    .recover(recoverMsg, msg.signature)
+                      .toLowerCase();
+                  this.players.forEach((player) => {
+                      if (player.publicKey === publicKey) {
+                          ws.send(
+                            JSON.stringify({
+                              action: actionList.unauth,
+                              message:
+                                'Auth failed, player with this key is already online',
+                            }),
+                          );
+                          return;
+                      }
+                  })
+                  clearInterval(authTimer)
+                        this.InsertPlayer({
+                          id: cId,
+                          ws: ws,
+                          publicKey: publicKey,
+                        });
+                  break;
+              default:
+                  return;
+          }
       });
       ws.on('close', () => {
         this.DeletePlayer(cId);
