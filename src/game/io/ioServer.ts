@@ -160,6 +160,13 @@ export class GameIoServer {
               ws: ws,
               publicKey: publicKey,
             });
+                ws.send(
+                  JSON.stringify({
+                    action: actionList.auth,
+                    state: 'success',
+                    playerId: publicKey,
+                  }),
+                );
             break;
           case actionList.entergame:
             const player = this.GetPlayerByParam(ws);
