@@ -167,7 +167,7 @@ export class GameIoServer {
               if (player.state.inLookingFor || player.state.inGame) {
                 ws.send(
                   JSON.stringify({
-                    action: 'entergame',
+                    action: actionList.entergame,
                     status: 'failed',
                   }),
                 );
