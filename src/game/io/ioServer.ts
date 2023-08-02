@@ -1,6 +1,11 @@
 import WebSocket, { Server } from 'ws';
 import Web3 from 'web3';
-import { default_ws_port, pingPongDelay, signTimeout } from '../config';
+import {
+  default_ws_port,
+  gameTimerValue,
+  pingPongDelay,
+  signTimeout,
+} from '../config';
 import { WriteLog } from '../../database/log';
 import { PlayerState } from '../types';
 import { actionList } from '../types/msg';
@@ -23,6 +28,7 @@ export class GameIoServer {
   );
   // private wss = new WebSocket.Server({ port: this.ws_port });
   private timer: any;
+  private generator: any;
   private playerDefaultState: PlayerState = {
     auth: true,
     inLookingFor: false,
@@ -106,6 +112,17 @@ export class GameIoServer {
     this.players = newPlayerList;
   }
 
+  private RoomGenerator() {
+    return setInterval(() => {
+      const availablePlayers = this.players.filter((player) => {
+        return player.state.inLookingFor;
+      });
+      if (availablePlayers.length > 0) {
+        WriteLog('0x0129', 'Player address : ' + availablePlayers[0].publicKey);
+      }
+    }, gameTimerValue);
+  }
+
   public Start() {
     const wss = new WebSocket.Server({ port: this.ws_port });
     wss.on('connection', (ws: WebSocket) => {
@@ -137,14 +154,12 @@ export class GameIoServer {
         }
         switch (msg.action) {
           case actionList.auth:
-            // if (!msg.signature) return;
-                WriteLog('0x084', 'Auth message received')
+            if (!msg.signature) return;
             try {
               const recoverMsg = this.AuthMsg();
               const publicKey = web3.eth.accounts
                 .recover(recoverMsg, msg.signature)
-                    .toLowerCase();
-            WriteLog('0x084', 'Auth message recover : ' + publicKey);
+                .toLowerCase();
               this.players.forEach((player) => {
                 if (player.publicKey === publicKey) {
                   ws.send(
@@ -214,17 +229,15 @@ export class GameIoServer {
         this.DeletePlayer(cId);
       });
     });
-    /* this.timer = setInterval(() => {
-      this.players.forEach((player) => {
-        player.ws.send('pong');
-      });
-    }, pingPongDelay); */
-    return true;
+    this.generator = this.RoomGenerator();
   }
 
   public Finish() {
     if (this.timer) {
       clearInterval(this.timer);
+    }
+    if (this.generator) {
+      clearInterval(this.generator);
     }
     return true;
   }
