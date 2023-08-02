@@ -27,7 +27,8 @@ export class GameIoServer {
               id: cId,
               ws: ws
           });
-      WriteLog('0x0032', 'New connection, id : ' + cId + ' ws : ' + JSON.stringify(ws));
+          WriteLog('0x0032', 'New connection, id : ' + cId + ' ws : ' + JSON.stringify(ws));
+      ws.send('Connection confirmed')
       ws.on('message', (message: string) => {
         if (message === 'ping') {
           ws.send('pong');
