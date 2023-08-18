@@ -11,7 +11,7 @@ export class GameRoom {
   private isActive: boolean = false;
   private GameStartNotify = JSON.stringify({ action: 'gamestart' });
 
-  constructor(_server: GameIoServer, _players: PlayerRow[]) {
+  constructor(_server: GameIoServer, _players: PlayerRow[]) {   
     this.server = _server;
     this.players = _players;
   }

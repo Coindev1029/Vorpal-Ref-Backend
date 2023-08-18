@@ -1,4 +1,5 @@
 export * as msg from './msg';
+export * as play from './gameplay';
 export { GameObject } from './interfaces'
 
 export type playerStateKeys =
