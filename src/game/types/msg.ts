@@ -1,3 +1,5 @@
+import { objectMapInfo } from "./gameplay";
+
 export const actionList = {
   auth: 'auth',
   unauth: 'unauth',
@@ -12,6 +14,7 @@ export const actionList = {
   globaldataupdate: 'globaldataupdate',
   objectcreate: 'objectcreate',
   objectupdate: 'objectupdate',
+  objectList: 'objectlist',
   objectdestroy: 'objectdestroy',
 }
 
@@ -29,7 +32,8 @@ export type action =
   | 'globaldataupdate'
   | 'objectcreate'
   | 'objectupdate'
-  | 'objectdestroy';
+  | 'objectdestroy'
+  | 'objectlist';
 
 export type basic = {
   action: action;
@@ -97,3 +101,8 @@ export type objectLifecycle = {
   coords: number[];
   data: any;
 };
+
+export type objectInfo = {
+  action: string,
+  list: objectMapInfo[]
+}

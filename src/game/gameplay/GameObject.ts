@@ -1,21 +1,23 @@
-import { coords } from "game/types/gameplay";
+import { coords } from "../types/gameplay";
 import { play } from "../types";
 
 export default abstract class GameObject {
   protected SendAction: void;
+  protected OnCreate: void;
+  protected OnDestroy: void;
 
   public rect: play.rect;
-  public OnCreate: void;
-  public OnDestroy: void;
   public RoomAction: void;
   public owner: string;
+  public class: string;
 
-  constructor (_owner : string, _coords: play.coords, _sprite: play.sprite) {
+  constructor (_owner : string, _coords: play.coords, _sprite: play.sprite, _class: string) {
      this.owner = _owner;
      this.rect = {
       ..._coords,
       ..._sprite
      }
+     this.class = _class
 
   }
 
