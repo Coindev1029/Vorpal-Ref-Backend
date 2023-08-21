@@ -11,7 +11,12 @@ export default class Star extends GameObject {
     this.onCreate();
   }
 
-  public onCreate() {
+  protected onCreate() {
     WriteLog(this.owner, 'Star placed');
   }
+
+  public destroy = () => {
+    WriteLog(this.owner, 'Star destroyed');
+  }
+
 }

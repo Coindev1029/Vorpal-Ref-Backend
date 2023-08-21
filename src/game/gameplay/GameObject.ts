@@ -7,7 +7,8 @@ export default abstract class GameObject {
   protected OnDestroy: void;
 
   public rect: play.rect;
-  public RoomAction: void;
+  public RoomAction: any;
+  public destroy: any;
   public owner: string;
   public class: string;
 
@@ -27,4 +28,5 @@ export default abstract class GameObject {
       y: this.rect.y + (this.rect.height / 2)
     }
   }
+  
 }

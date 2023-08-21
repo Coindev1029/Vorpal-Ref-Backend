@@ -142,6 +142,13 @@ export class GameRoom {
       );
     });
     const dt = new Date();
+    const objects = this.manager.getAllObjects()
+    objects.forEach((obj) => {
+      try {
+        obj.destroy()
+      }  catch (e) {}
+    })
+    
     SaveGameResult({
       playerOne: this.players[0].publicKey,
       playerTwo: this.players[1].publicKey,

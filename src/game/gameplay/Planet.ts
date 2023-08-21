@@ -50,7 +50,7 @@ export default class Planet extends GameObject {
     return this.rotation;
   }
 
-  public destroy() {
+  public destroy = () => {
     this.onDestroy()
   }
 
