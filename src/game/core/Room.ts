@@ -5,11 +5,10 @@ import { WriteLog } from '../../database/log';
 import * as config from '../config';
 import Star from '../gameplay/Star';
 import ObjectListManager from './ListManager';
-import Planet from 'game/gameplay/Planet';
-import { dir } from 'console';
-import { objectMapInfo } from 'game/types/gameplay';
-import GameObject from 'game/gameplay/GameObject';
-import { actionList, objectInfo } from 'game/types/msg';
+import Planet from '../gameplay/Planet';
+import { objectMapInfo } from '../types/gameplay';
+import GameObject from '../gameplay/GameObject';
+import { actionList, objectInfo } from '../types/msg';
 
 export class GameRoom {
   private players: PlayerRow[] = [];
