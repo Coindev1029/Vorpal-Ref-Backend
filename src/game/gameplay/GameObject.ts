@@ -1,7 +1,8 @@
+import { coords } from "game/types/gameplay";
 import { play } from "../types";
 
 export default abstract class GameObject {
-  private SendAction: void;
+  protected SendAction: void;
 
   public rect: play.rect;
   public OnCreate: void;
@@ -16,5 +17,12 @@ export default abstract class GameObject {
       ..._sprite
      }
 
+  }
+
+  public center () : coords {
+    return {
+      x: this.rect.x + (this.rect.width / 2),
+      y: this.rect.y + (this.rect.height / 2)
+    }
   }
 }
