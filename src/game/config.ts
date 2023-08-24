@@ -3,7 +3,7 @@ export const roomTestTimeout = 10000
 export const gameTimerValue = 15000
 export const pingPongDelay = 3000
 export const default_ws_port = 3078
-export const gameField = [800, 1200]
+export const gameField = [800, 1400]
 export const FrameInterval = 200
 export const defCoords = {
     orbRadius: 150,
@@ -17,18 +17,18 @@ export const defCoords = {
     }},
     star1: {
         x: 350,
-        y: 100
+        y: 150
     },
     star2: {
         x: 350,
-        y: 600
+        y: 750
     },
     planet1: {
         x: 380,
-        y: 55
+        y: 30
     },
     planet2: {
         x: 380,
-        y: 555
+        y: 930
     }
 }
