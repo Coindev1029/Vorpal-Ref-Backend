@@ -25,10 +25,10 @@ export const defCoords = {
     },
     planet1: {
         x: 380,
-        y: 45
+        y: 55
     },
     planet2: {
         x: 380,
-        y: 605
+        y: 555
     }
 }
