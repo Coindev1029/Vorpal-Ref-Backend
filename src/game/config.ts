@@ -17,11 +17,11 @@ export const defCoords = {
     }},
     star1: {
         x: 350,
-        y: 150
+        y: 100
     },
     star2: {
         x: 350,
-        y: 550
+        y: 600
     },
     planet1: {
         x: 330,
