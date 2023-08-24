@@ -24,11 +24,11 @@ export const defCoords = {
         y: 600
     },
     planet1: {
-        x: 330,
+        x: 380,
         y: 45
     },
     planet2: {
-        x: 330,
+        x: 380,
         y: 605
     }
 }
