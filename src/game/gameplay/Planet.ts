@@ -35,7 +35,7 @@ export default class Planet extends GameObject {
     }, FrameInterval);
 
     this.angle += 0.005;
-    this.rotation +=0.01 
+    this.rotation += 0.01 
 
     if (this.angle >= Math.PI * 2) {
       this.angle -= Math.PI * 2;

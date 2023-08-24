@@ -102,6 +102,7 @@ export class GameRoom {
     const objects = this.manager.getAllObjects()
     objects.forEach((ob : GameObject) => {
       list.push({
+        id: ob.getId(),
         owner: ob.owner,
         class: ob.class,
         center: ob.center(),

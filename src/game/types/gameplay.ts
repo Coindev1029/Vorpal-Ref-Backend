@@ -16,6 +16,7 @@ export interface rect extends coords {
 }
 
 export interface objectMapInfo {
+  id: string;
   owner: string;
   center: coords;
   class: string;
