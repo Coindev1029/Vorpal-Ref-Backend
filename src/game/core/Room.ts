@@ -10,7 +10,7 @@ import { objectMapInfo } from '../types/gameplay';
 import GameObject from '../gameplay/GameObject';
 import { actionList, objectInfo } from '../types/msg';
 import { defCoords, gameField, shipCreationStartTime } from '../config';
-import { Ship } from 'game/gameplay/Ship';
+import { Ship } from '../gameplay/Ship';
 
 export class GameRoom {
   private players: PlayerRow[] = [];
