@@ -1,12 +1,12 @@
 export const signTimeout = 120000;
 export const roomTestTimeout = 10000;
-export const gameTimerValue = 15000;
+export const gameTimerValue = 30000;
 export const pingPongDelay = 3000;
 export const default_ws_port = 3078;
 export const gameField = [800, 1400];
 export const FrameInterval = 200;
 export const shipMovingTime = 5000;
-export const shipCreationStartTime = 15000
+export const shipCreationStartTime = 10000
 export const defCoords = {
   battleLine: 500,
   orbRadius: 150,
