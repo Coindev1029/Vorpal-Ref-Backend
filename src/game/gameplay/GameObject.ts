@@ -1,9 +1,11 @@
 import { coords } from '../types/gameplay';
 import { play } from '../types';
+import { GameRoom } from '../core/Room';
 
 export default abstract class GameObject {
   protected id: string = '';
   protected isIdassigned: boolean;
+  protected room : GameRoom;
 
   public rect: play.rect;
   public RoomAction: any;
@@ -11,11 +13,13 @@ export default abstract class GameObject {
   public class: string;
 
   constructor(
+    _room: GameRoom,
     _owner: string,
     _coords: play.coords,
     _sprite: play.sprite,
     _class: string,
   ) {
+    this.room = _room;
     this.owner = _owner;
     this.rect = {
       ..._coords,

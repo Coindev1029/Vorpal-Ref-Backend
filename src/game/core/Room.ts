@@ -72,22 +72,26 @@ export class GameRoom {
       this.Finish();
     }, config.roomTestTimeout);
     const star1 = new Star(
+      this,
       this.players[0].publicKey,
       config.defCoords.star1,
       config.defCoords.sprites.star,
     );
     const star2 = new Star(
+      this,
       this.players[1].publicKey,
       config.defCoords.star2,
       config.defCoords.sprites.star,
     );
     const planet1 = new Planet(
+      this,
       this.players[0].publicKey,
       config.defCoords.planet1,
       config.defCoords.sprites.planet,
       false
     )
     const planet2 = new Planet(
+      this,
       this.players[1].publicKey,
       config.defCoords.planet2,
       config.defCoords.sprites.planet,

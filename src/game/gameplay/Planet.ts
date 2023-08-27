@@ -2,6 +2,7 @@ import { WriteLog } from '../../database/log';
 import GameObject from './GameObject';
 import { play } from '../types';
 import { FrameInterval, defCoords, gameField } from '../config';
+import { GameRoom } from '../core/Room';
 
 export default class Planet extends GameObject {
   private timer: NodeJS.Timer;
@@ -11,12 +12,13 @@ export default class Planet extends GameObject {
   private rotation = 0;
 
   constructor(
+    _room: GameRoom,
     _owner: string,
     _coords: play.coords,
     _sprite: play.sprite,
     dir: boolean,
   ) {
-    super(_owner, _coords, _sprite, 'planet');
+    super(_room, _owner, _coords, _sprite, 'planet');
     this.dir = dir;
     this.defY = _coords.y + _sprite.height / 2 + defCoords.orbRadius / 2;
     this.onCreate();
