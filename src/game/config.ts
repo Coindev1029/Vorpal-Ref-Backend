@@ -6,6 +6,7 @@ export const default_ws_port = 3078;
 export const gameField = [800, 1400];
 export const FrameInterval = 200;
 export const shipMovingTime = 5000;
+export const shipCreationStartTime = 15000
 export const defCoords = {
   battleLine: 500,
   orbRadius: 150,
@@ -19,8 +20,8 @@ export const defCoords = {
       height: 40,
     },
     ship: {
-      width: 60,
-      height: 60,
+      width: 40,
+      height: 40,
     },
   },
   star1: {

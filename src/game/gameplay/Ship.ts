@@ -14,7 +14,7 @@ export class Ship extends GameObject {
     _sprite: play.sprite,
     dir: boolean,
   ) {
-    super(_room, _owner, _coords, _sprite, 'planet');
+    super(_room, _owner, _coords, _sprite, 'ship');
     this.dir = dir;
     this.onCreate();
   }

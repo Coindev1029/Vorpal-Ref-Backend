@@ -9,6 +9,8 @@ import Planet from '../gameplay/Planet';
 import { objectMapInfo } from '../types/gameplay';
 import GameObject from '../gameplay/GameObject';
 import { actionList, objectInfo } from '../types/msg';
+import { defCoords, gameField, shipCreationStartTime } from '../config';
+import { Ship } from 'game/gameplay/Ship';
 
 export class GameRoom {
   private players: PlayerRow[] = [];
@@ -88,38 +90,76 @@ export class GameRoom {
       this.players[0].publicKey,
       config.defCoords.planet1,
       config.defCoords.sprites.planet,
-      false
-    )
+      false,
+    );
     const planet2 = new Planet(
       this,
       this.players[1].publicKey,
       config.defCoords.planet2,
       config.defCoords.sprites.planet,
-      true
-    )
+      true,
+    );
     this.manager = new ObjectListManager();
     this.manager.addObject(star1), this.manager.addObject(star2);
-    this.manager.addObject(planet1)
-    this.manager.addObject(planet2)
+    this.manager.addObject(planet1);
+    this.manager.addObject(planet2);
 
     const list: objectMapInfo[] = [];
-    const objects = this.manager.getAllObjects()
-    objects.forEach((ob : GameObject) => {
+    const objects = this.manager.getAllObjects();
+    objects.forEach((ob: GameObject) => {
       list.push({
         id: ob.getId(),
         owner: ob.owner,
         class: ob.class,
         center: ob.center(),
-        mirror: ob.owner === this.players[0].publicKey ? true : false
-      })
-    })
-    const listMsg : objectInfo = {
+        mirror: ob.owner === this.players[0].publicKey ? true : false,
+      });
+    });
+    const listMsg: objectInfo = {
       action: actionList.objectList,
-      list: list
-    }
+      list: list,
+    };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
-    })
+    });
+
+    setTimeout(() => {
+      this.CreateShips()
+    }, shipCreationStartTime)
+  }
+
+  private CreateShips() {
+    const list: objectMapInfo[] = [];
+    this.players.forEach((player, index) => {
+      const mirror = index === 0 ? true : false;
+      const center = gameField[0] / 2;
+      const xPositions = [center - 100, center - 20, center + 80];
+      const yPosition = mirror ? 0 : 1000;
+      xPositions.forEach((pos, j) => {
+        const ship = new Ship(
+          this,
+          player.publicKey,
+          { x: pos, y: yPosition },
+          defCoords.sprites.ship,
+          mirror,
+        );
+        this.manager.addObject(ship)
+        list.push({
+          id: ship.getId(),
+          owner: ship.owner,
+          class: ship.class,
+          center: ship.center(),
+          mirror: mirror
+        });
+      });
+    });
+    const listMsg: objectInfo = {
+      action: actionList.objectcreate,
+      list: list,
+    };
+    this.players.forEach((player) => {
+      player.ws.send(JSON.stringify(listMsg));
+    });
   }
 
   private Finish(winner: number | null = null) {
@@ -147,13 +187,13 @@ export class GameRoom {
       );
     });
     const dt = new Date();
-    const objects = this.manager.getAllObjects()
+    const objects = this.manager.getAllObjects();
     objects.forEach((obj) => {
       try {
-        obj.destroy()
-      }  catch (e) {}
-    })
-    
+        obj.destroy();
+      } catch (e) {}
+    });
+
     SaveGameResult({
       playerOne: this.players[0].publicKey,
       playerTwo: this.players[1].publicKey,
