@@ -25,7 +25,7 @@ export default class Planet extends GameObject {
   }
 
   public onCreate() {
-    WriteLog(this.owner, 'Planet placed');
+    // WriteLog(this.owner, 'Planet placed');
 
     this.timer = setTimeout(() => {
       this.rect.x =
