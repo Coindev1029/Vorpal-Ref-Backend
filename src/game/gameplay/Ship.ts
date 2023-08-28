@@ -1,10 +1,11 @@
 import GameObject from './GameObject';
 import { play } from '../types';
-import { defCoords, shipMovingTime } from '../config';
+import { defCoords, defShipHealth, shipMovingTime } from '../config';
 import { GameRoom } from '../core/Room';
 
 export class Ship extends GameObject {
   private timer: NodeJS.Timer;
+  private hp: number;
   private dir: boolean = true; // true - up, false - down
 
   constructor(
@@ -23,6 +24,7 @@ export class Ship extends GameObject {
      setTimeout(() => {
         this.rect.y = defCoords.battleLine + (50 * (this.dir ? -1 : 1));
      }, shipMovingTime)
+     this.hp = defShipHealth;
   }
 
   protected onDestroy() {

@@ -40,8 +40,26 @@ export default class ObjectListManager<T extends GameObject> {
     return this.getAllObjects();
   }
 
-  getObject(id: string): T | undefined {
+  getObjectById(id: string): T | undefined {
     return this.objectList.get(id);
+  }
+
+  getObjectsByClassName(className: string): T[] {
+    return Array.from(this.objectList.values()).filter((value) => {
+      return value.class === className;
+    });
+  }
+
+  getObjectsByOwner(owner: string): T[] {
+    return Array.from(this.objectList.values()).filter((value) => {
+      return value.owner === owner;
+    });
+  }
+
+  getObjectsByParam(param: string, val: string): T[] {
+    return Array.from(this.objectList.values()).filter((value) => {
+      return value[param] === val;
+    });
   }
 
   getAllObjects(): T[] {

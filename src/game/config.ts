@@ -7,6 +7,8 @@ export const gameField = [800, 1400];
 export const FrameInterval = 200;
 export const shipMovingTime = 5000;
 export const shipCreationStartTime = 10000
+export const defShipHealth = 100
+export const defShipDamage = 20
 export const defCoords = {
   battleLine: 500,
   orbRadius: 150,
