@@ -2,7 +2,7 @@ import { WriteLog } from '../../database/log';
 import GameObject from './GameObject';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
-import { defShipHealth } from 'game/config';
+import { defShipHealth } from '../config';
 
 export default class Star extends GameObject {
   public energy : number;
