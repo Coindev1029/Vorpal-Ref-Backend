@@ -141,6 +141,7 @@ export class GameRoom {
           player.publicKey,
           { x: pos, y: yPosition },
           defCoords.sprites.ship,
+          this.manager,
           mirror,
         );
         this.manager.addObject(ship)
