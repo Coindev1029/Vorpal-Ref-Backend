@@ -82,6 +82,7 @@ export class Ship extends GameObject {
            data: {
               id: trg.id,
               damage: this.hp,
+              wasHP: trg.energy,
               hit: true
            }
         }
@@ -107,6 +108,7 @@ export class Ship extends GameObject {
       data: {
         from: this.id,
         to: target.id,
+        wasHP: target.getHp(),
         damage: defShipDamage,
         hit: isHit,
       },
