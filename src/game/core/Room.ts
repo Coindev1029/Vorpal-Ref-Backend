@@ -176,10 +176,10 @@ export class GameRoom {
   public StarDestroy(owner: string) {
     let winner = 0;
      this.players.forEach((player, index) => {
-      player.ws.send(JSON.stringify({
+      /* player.ws.send(JSON.stringify({
         wallet: owner,
         msg: 'Star destroyed'
-      }))
+      })) */
          if(player.publicKey === owner) {
            winner = index === 0 ? 1 : 0;
          }
