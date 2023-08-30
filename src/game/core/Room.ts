@@ -176,6 +176,10 @@ export class GameRoom {
   public StarDestroy(owner: string) {
     let winner = 0;
      this.players.forEach((player, index) => {
+      player.ws.send(JSON.stringify({
+        wallet: owner,
+        msg: 'Star destroyed'
+      }))
          if(player.publicKey === owner) {
            winner = index === 0 ? 1 : 0;
          }
@@ -211,6 +215,9 @@ export class GameRoom {
     const dt = new Date();
     const objects = this.manager.getAllObjects();
     objects.forEach((obj) => {
+      try {
+        obj.destroy();
+      } catch (e) {}
       try {
         this.manager.removeObject(obj.id);
       } catch (e) {}
