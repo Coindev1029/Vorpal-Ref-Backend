@@ -44,7 +44,7 @@ export class Ship extends GameObject {
       const distanceB =
         (coords.x - itemCoordsB.x) ** 2 + (coords.y - itemCoordsB.y) ** 2;
       if (distanceA === distanceB) return 0;
-      return distanceA > distanceB ? -1 : 1;
+      return distanceA < distanceB ? -1 : 1;
     });
     // Test :
     const sortedTgs = targets;
