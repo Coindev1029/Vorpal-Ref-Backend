@@ -30,14 +30,13 @@ export default class ObjectListManager<T extends GameObject> {
     return newId;
   }
 
-  removeObject(id: string): T[] {
+  removeObject(id: string) {
     if (!this.objectList.has(id)) {
       return this.getAllObjects();
     }
     const newObjects = new Map(this.objectList);
     newObjects.delete(id);
     this.objectList = newObjects;
-    return this.getAllObjects();
   }
 
   getObjectById(id: string): T | undefined {

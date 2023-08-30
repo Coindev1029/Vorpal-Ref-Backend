@@ -3,17 +3,21 @@ import { play } from '../types';
 import {
   defCoords,
   defShipDamage,
+  defShipFireDelay,
   defShipHealth,
+  defShipHitChance,
   shipMovingTime,
 } from '../config';
 import { GameRoom } from '../core/Room';
 import ObjectListManager from '../core/ListManager';
 import { WriteLog } from '../../database/log';
+import { actionList } from '../types/msg';
 
 export class Ship extends GameObject {
   private timer: NodeJS.Timer;
   private hp: number;
   private dir: boolean = true; // true - up, false - down
+  private hitChance: number = defShipHitChance;
   private manager: ObjectListManager<any>;
 
   constructor(
@@ -47,7 +51,7 @@ export class Ship extends GameObject {
       return distanceA < distanceB ? -1 : 1;
     });
     // Test :
-    const sortedTgs = targets;
+    /* const sortedTgs = targets;
     const dists: number[] = [];
     sortedTgs.forEach((tg) => {
       const itemCoords = tg.center();
@@ -58,7 +62,7 @@ export class Ship extends GameObject {
     WriteLog(
       'Calculated : ',
       `this : ${JSON.stringify(coords)}, enemies: ${JSON.stringify(dists)}`,
-    );
+    ); */
     // End test
     if (targets.length > 0) {
       return targets[0];
@@ -67,23 +71,69 @@ export class Ship extends GameObject {
     }
   }
 
+  private AttackStar() {
+     const targets = this.manager.getObjectsByClassName('star').filter((star) => {
+        return star.owner !== this.owner;
+     })
+     if (targets.length > 0) {
+        const trg = targets[0]
+        const msg = {
+           action: actionList.objectupdate,
+           data: {
+              id: trg.id,
+              damage: this.hp,
+              hit: true
+           }
+        }
+        this.room.ReSendMessage(JSON.stringify(msg))
+        trg.TakeDamage(this.hp);
+        this.hp = 0;
+        this.destroy();
+     }
+  }
+
   private AttackShip() {
     const target = this.SearchTarget();
-    if (target) {
+    const aiming = Math.random();
+    const isHit = aiming < this.hitChance;
+    if (target === null) {
+      return this.AttackStar();
+    }
+    if (isHit) {
       target.TakeDamage(defShipDamage);
     }
+    const msg = {
+      action: actionList.objectupdate,
+      data: {
+        from: this.id,
+        to: target.id,
+        damage: defShipDamage,
+        hit: isHit,
+      },
+    };
+    this.room.ReSendMessage(JSON.stringify(msg));
   }
 
   protected onCreate() {
     setTimeout(() => {
       this.rect.y = defCoords.battleLine + 50 * (this.dir ? -1 : 1);
-      this.AttackShip();
+      this.timer = setInterval(() => {
+        this.AttackShip();
+      }, defShipFireDelay);
     }, shipMovingTime);
     this.hp = defShipHealth;
   }
 
   protected onDestroy() {
     clearInterval(this.timer);
+    const msg = {
+      action: actionList.objectdestroy,
+      data: {
+        id: this.id,
+      },
+    };
+    this.room.ReSendMessage(JSON.stringify(msg));
+    this.manager.removeObject(this.id);
   }
 
   public TakeDamage(damage: number) {

@@ -18,6 +18,7 @@ export class GameRoom {
   private roomItselfId: number = -1;
   private isActive: boolean = false;
   private manager: ObjectListManager<any>;
+  private shipCreationTimer: NodeJS.Timer;
   private GameStartNotify = JSON.stringify({ action: 'gamestart' });
 
   constructor(_server: GameIoServer, _players: PlayerRow[]) {
@@ -70,9 +71,9 @@ export class GameRoom {
       player.ws.send(this.GameStartNotify);
     });
     this.isActive = true;
-    setTimeout(() => {
+    /* setTimeout(() => {
       this.Finish();
-    }, config.roomTestTimeout);
+    }, config.roomTestTimeout); */
     const star1 = new Star(
       this,
       this.players[0].publicKey,
@@ -123,9 +124,18 @@ export class GameRoom {
       player.ws.send(JSON.stringify(listMsg));
     });
 
-    setTimeout(() => {
-      this.CreateShips()
-    }, shipCreationStartTime)
+    this.shipCreationTimer = setInterval(() => {
+      const shipList = this.manager.getObjectsByClassName('ship');
+      if (shipList.length === 0) {
+        this.CreateShips();
+      }
+    }, shipCreationStartTime);
+  }
+
+  public ReSendMessage(message: string) {
+    this.players.forEach((player) => {
+      player.ws.send(JSON.stringify(message));
+    });
   }
 
   private CreateShips() {
@@ -144,13 +154,13 @@ export class GameRoom {
           this.manager,
           mirror,
         );
-        this.manager.addObject(ship)
+        this.manager.addObject(ship);
         list.push({
           id: ship.getId(),
           owner: ship.owner,
           class: ship.class,
           center: ship.center(),
-          mirror: mirror
+          mirror: mirror,
         });
       });
     });
@@ -163,8 +173,19 @@ export class GameRoom {
     });
   }
 
+  public StarDestroy(owner: string) {
+    let winner = 0;
+     this.players.forEach((player, index) => {
+         if(player.publicKey === owner) {
+           winner = index === 0 ? 1 : 0;
+         }
+     })
+     this.Finish(winner);
+  }
+
   private Finish(winner: number | null = null) {
     this.isActive = false;
+    clearInterval(this.shipCreationTimer);
     if (winner === null) winner = Math.ceil(Math.random() * 2) - 1; // REPLACE!!!
     WriteLog(
       `${this.players[0].publicKey} VS ${this.players[1].publicKey}`,
@@ -191,7 +212,7 @@ export class GameRoom {
     const objects = this.manager.getAllObjects();
     objects.forEach((obj) => {
       try {
-        obj.destroy();
+        this.manager.removeObject(obj.id);
       } catch (e) {}
     });
 

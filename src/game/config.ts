@@ -9,6 +9,8 @@ export const shipMovingTime = 5000;
 export const shipCreationStartTime = 10000
 export const defShipHealth = 100
 export const defShipDamage = 20
+export const defShipHitChance = 0.6
+export const defShipFireDelay = 3000
 export const defCoords = {
   battleLine: 500,
   orbRadius: 150,

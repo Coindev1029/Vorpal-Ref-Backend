@@ -5,9 +5,14 @@ import { GameRoom } from '../core/Room';
 import { defShipHealth } from '../config';
 
 export default class Star extends GameObject {
-  public energy : number;
+  public energy: number;
 
-  constructor(_room: GameRoom, _owner: string, _coords: play.coords, _sprite: play.sprite) {
+  constructor(
+    _room: GameRoom,
+    _owner: string,
+    _coords: play.coords,
+    _sprite: play.sprite,
+  ) {
     super(_room, _owner, _coords, _sprite, 'star');
     this.onCreate();
   }
@@ -17,8 +22,18 @@ export default class Star extends GameObject {
     this.energy = defShipHealth;
   }
 
-  public destroy = () => {
-    // WriteLog(this.owner, 'Star destroyed');
+  protected onDestroy() {
+    this.room.StarDestroy(this.owner);
   }
 
+  public TakeDamage(damage: number) {
+    this.energy -= damage;
+    if (damage <= 0) {
+      this.destroy();
+    }
+  }
+
+  public destroy = () => {
+    this.onDestroy();
+  };
 }
