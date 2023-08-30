@@ -27,8 +27,12 @@ export default class Star extends GameObject {
   }
 
   public TakeDamage(damage: number) {
+    this.room.ReSendMessage(JSON.stringify({
+      msg: 'Star taken damage',
+      dmg: damage
+    }))
     this.energy -= damage;
-    if (damage <= 0) {
+    if (this.energy <= 0) {
       this.destroy();
     }
   }
