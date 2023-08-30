@@ -23,7 +23,7 @@ export default class Star extends GameObject {
   }
 
   protected onDestroy() {
-    this.room.StarDestroy(this.owner);
+    this.room.StarDestroy(this.owner, this.id);
   }
 
   public TakeDamage(damage: number) {

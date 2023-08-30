@@ -173,7 +173,7 @@ export class GameRoom {
     });
   }
 
-  public StarDestroy(owner: string) {
+  public StarDestroy(owner: string, id: string) {
     let winner = 0;
      this.players.forEach((player, index) => {
       /* player.ws.send(JSON.stringify({
@@ -183,7 +183,8 @@ export class GameRoom {
          if(player.publicKey === owner) {
            winner = index === 0 ? 1 : 0;
          }
-     })
+     });
+     this.manager.removeObject(id);
      this.Finish(winner);
   }
 
