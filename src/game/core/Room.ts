@@ -174,18 +174,20 @@ export class GameRoom {
   }
 
   public StarDestroy(owner: string, id: string) {
-    let winner = 0;
-     this.players.forEach((player, index) => {
-      /* player.ws.send(JSON.stringify({
-        wallet: owner,
-        msg: 'Star destroyed'
-      })) */
-         if(player.publicKey === owner) {
-           winner = index === 0 ? 1 : 0;
-         }
-     });
-     this.manager.removeObject(id);
-     this.Finish(winner);
+    if (this.isActive) {
+      let winner = 0;
+      this.players.forEach((player, index) => {
+       /* player.ws.send(JSON.stringify({
+         wallet: owner,
+         msg: 'Star destroyed'
+       })) */
+          if(player.publicKey === owner) {
+            winner = index === 0 ? 1 : 0;
+          }
+      });
+      this.manager.removeObject(id);
+      this.Finish(winner);
+    }
   }
 
   private Finish(winner: number | null = null) {
