@@ -1,11 +1,12 @@
 import { WriteLog } from '../../database/log';
 import GameObject from './GameObject';
 import { play } from '../types';
-import { FrameInterval, defCoords, gameField } from '../config';
+import { FrameInterval, SyncInterval, defCoords, gameField } from '../config';
 import { GameRoom } from '../core/Room';
 
 export default class Planet extends GameObject {
   private timer: NodeJS.Timer;
+  private syncTimer: NodeJS.Timer;
   private dir: boolean;
   private angle = 0;
   private defY = 0;
@@ -34,18 +35,28 @@ export default class Planet extends GameObject {
       this.rect.y =
         this.defY +
         defCoords.orbRadius * (this.dir ? -1 : 1) * Math.sin(this.angle);
+
+      this.angle += 0.005;
+      this.rotation += 0.01;
+
+      if (this.angle >= Math.PI * 2) {
+        this.angle -= Math.PI * 2;
+      }
     }, FrameInterval);
 
-    this.angle += 0.005;
-    this.rotation += 0.01 
-
-    if (this.angle >= Math.PI * 2) {
-      this.angle -= Math.PI * 2;
-    }
+    this.syncTimer = setInterval(() => {
+       this.room.ReSendMessage(JSON.stringify({
+          planet: this.id,
+          owner: this.owner,
+          angle: this.angle,
+          rotation: this.rotation
+       }))
+    }, SyncInterval)
   }
 
   protected onDestroy() {
-    clearInterval(this.timer)
+    clearInterval(this.timer);
+    clearInterval(this.syncTimer);
   }
 
   public Rotation() {
@@ -53,7 +64,6 @@ export default class Planet extends GameObject {
   }
 
   public destroy = () => {
-    this.onDestroy()
-  }
-
+    this.onDestroy();
+  };
 }

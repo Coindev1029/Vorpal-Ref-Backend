@@ -5,6 +5,7 @@ export const pingPongDelay = 3000;
 export const default_ws_port = 3078;
 export const gameField = [800, 1400];
 export const FrameInterval = 200;
+export const SyncInterval = 1000;
 export const shipMovingTime = 5000;
 export const shipCreationStartTime = 6280
 export const defShipHealth = 100
