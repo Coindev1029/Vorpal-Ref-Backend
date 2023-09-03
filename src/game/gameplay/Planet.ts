@@ -27,7 +27,7 @@ export default class Planet extends GameObject {
   public onCreate() {
     // WriteLog(this.owner, 'Planet placed');
 
-    this.timer = setTimeout(() => {
+    this.timer = setInterval(() => {
       this.rect.x =
         gameField[0] / 2 +
         defCoords.orbRadius * (this.dir ? -1 : 1) * Math.cos(this.angle);
