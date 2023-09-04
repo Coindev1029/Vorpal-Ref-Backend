@@ -36,7 +36,7 @@ export default class Planet extends GameObject {
         this.defY +
         defCoords.orbRadius * (this.dir ? -1 : 1) * Math.sin(this.angle);
 
-      this.angle += 0.005;
+      this.angle += 0.00837;
       this.rotation += 0.01;
 
       if (this.angle >= Math.PI * 2) {
