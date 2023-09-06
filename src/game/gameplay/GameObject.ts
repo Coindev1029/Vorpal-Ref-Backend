@@ -1,11 +1,13 @@
 import { coords } from '../types/gameplay';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
+import { FrameInterval } from 'game/config';
 
 export default abstract class GameObject {
   protected id: string = '';
+  protected movingTimer: NodeJS.Timer;
   protected isIdassigned: boolean;
-  protected room : GameRoom;
+  protected room: GameRoom;
 
   public rect: play.rect;
   public RoomAction: any;
@@ -26,6 +28,22 @@ export default abstract class GameObject {
       ..._sprite,
     };
     this.class = _class;
+  }
+
+  public StartMoving(angle: number = 0, speed: number = 0, finish: coords) {
+    this.movingTimer = setInterval(() => {
+      this.rect.x += speed * Math.cos(angle);
+      this.rect.y += speed * Math.sin(angle);
+      if (finish) {
+        if (this.rect.x >= finish.x || this.rect.y >= finish.y) {
+          this.StopMoving();
+        }
+      }
+    }, FrameInterval);
+  }
+
+  public StopMoving() {
+    return clearInterval(this.movingTimer);
   }
 
   public assignId(_id: string): boolean {
