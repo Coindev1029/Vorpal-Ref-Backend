@@ -1,7 +1,7 @@
 import { coords } from '../types/gameplay';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
-import { FrameInterval } from 'game/config';
+import { FrameInterval } from '../config';
 
 export default abstract class GameObject {
   protected id: string = '';
