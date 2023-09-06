@@ -30,7 +30,7 @@ export default abstract class GameObject {
     this.class = _class;
   }
 
-  public StartMoving(angle: number = 0, speed: number = 0, finish: coords) {
+  public StartMoving(angle: number = 0, speed: number = 0, finish: coords | null = null) {
     this.movingTimer = setInterval(() => {
       this.rect.x += speed * Math.cos(angle);
       this.rect.y += speed * Math.sin(angle);
