@@ -7,12 +7,12 @@ export const gameField = [800, 1400];
 export const FrameInterval = 100;
 export const SyncInterval = 1000;
 export const shipMovingTime = 5000;
-export const shipCreationStartTime = 147580;
+export const shipCreationStartTime = 60000; // 147580;
 export const planetRotationSpeed = 0.064;
 export const defShipHealth = 100
 export const defShipDamage = 20
 export const defShipHitChance = 0.6
-export const defShipFireDelay = 300
+export const defShipFireDelay = 1200 // 300
 export const defCoords = {
   battleLine: 500,
   orbRadius: 150,
