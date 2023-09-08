@@ -126,6 +126,8 @@ export class GameRoom {
       player.ws.send(JSON.stringify(listMsg));
     });
 
+    this.CreateShips();
+
     this.shipCreationTimer = setInterval(() => {
       const shipList = this.manager.getObjectsByClassName('ship');
       const shipList1 = shipList.filter((sh) => {
