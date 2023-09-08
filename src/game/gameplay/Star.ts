@@ -2,7 +2,7 @@ import { WriteLog } from '../../database/log';
 import GameObject from './GameObject';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
-import { defShipHealth } from '../config';
+import { defShipHealth, defStarHealth } from '../config';
 
 export default class Star extends GameObject {
   public energy: number;
@@ -19,7 +19,7 @@ export default class Star extends GameObject {
 
   protected onCreate() {
     // WriteLog(this.owner, 'Star placed');
-    this.energy = defShipHealth;
+    this.energy = defStarHealth;
   }
 
   protected onDestroy() {

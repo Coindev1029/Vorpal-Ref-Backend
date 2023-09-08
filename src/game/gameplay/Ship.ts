@@ -101,7 +101,8 @@ export class Ship extends GameObject {
       return this.AttackStar();
     }
     if (isHit) {
-      target.TakeDamage(defShipDamage);
+      const damage = defShipDamage[0] + Math.round((defShipDamage[1] - defShipDamage[0]) * Math.random())
+      target.TakeDamage(damage);
     }
     const msg = {
       action: actionList.objectupdate,

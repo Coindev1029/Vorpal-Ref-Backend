@@ -3,10 +3,12 @@ import ObjectListManager from '../core/ListManager';
 import { GameRoom } from '../core/Room';
 import { actionList } from '../types/msg';
 import GameObject from './GameObject';
+import { defBattleShipHealth } from '../config';
 
 export class BattlesShip extends GameObject {
     private timer: NodeJS.Timer;
     private dir;
+    private hp: number;
     private manager: ObjectListManager<any>;
 
     constructor(
@@ -24,7 +26,7 @@ export class BattlesShip extends GameObject {
     }
 
     private onCreate() {
-        
+        this.hp = defBattleShipHealth
     }
 
   private onDestroy() {
@@ -36,6 +38,14 @@ export class BattlesShip extends GameObject {
       };
       this.room.ReSendMessage(JSON.stringify(msg));
       this.manager.removeObject(this.id);
+  }
+
+  
+  public TakeDamage(damage: number) {
+    this.hp -= damage;
+    if (this.hp <= 0) {
+      this.destroy();
+    }
   }
 
   public destroy = () => {
