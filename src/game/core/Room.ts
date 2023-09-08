@@ -11,6 +11,7 @@ import GameObject from '../gameplay/GameObject';
 import { actionList, objectInfo } from '../types/msg';
 import { defCoords, gameField, shipCreationStartTime } from '../config';
 import { Ship } from '../gameplay/Ship';
+import { BattlesShip } from '../gameplay/BattleShip';
 
 export class GameRoom {
   private players: PlayerRow[] = [];
@@ -19,6 +20,7 @@ export class GameRoom {
   private isActive: boolean = false;
   private manager: ObjectListManager<any>;
   private shipCreationTimer: NodeJS.Timer;
+  private battleShipCreationTimer: NodeJS.Timer;
   private GameStartNotify = JSON.stringify({ action: 'gamestart' });
 
   constructor(_server: GameIoServer, _players: PlayerRow[]) {
@@ -126,10 +128,33 @@ export class GameRoom {
 
     this.shipCreationTimer = setInterval(() => {
       const shipList = this.manager.getObjectsByClassName('ship');
-      if (shipList.length === 0) {
+      const shipList1 = shipList.filter((sh) => {
+        return sh.owner === this.players[0].publicKey
+      })
+      const shipList2 = shipList.filter((sh) => {
+        return sh.owner === this.players[1].publicKey
+      })
+      if (shipList1.length === 0 || shipList2.length === 0) {
         this.CreateShips();
       }
     }, shipCreationStartTime);
+    this.battleShipCreationTimer = setInterval(() => {
+      const shipList = this.manager.getObjectsByClassName('battleship');
+      const shipList1 = shipList.filter((sh) => {
+        return sh.owner === this.players[0].publicKey
+      })
+      const shipList2 = shipList.filter((sh) => {
+        return sh.owner === this.players[1].publicKey
+      })
+      if (shipList1.length === 0) {
+        this.CreateBattleShip (this.players[0].publicKey)
+      }
+
+      if (shipList2.length === 0) {
+         this.CreateBattleShip (this.players[1].publicKey)
+      }
+    }, shipCreationStartTime * 3)
+
   }
 
   public ReSendMessage(message: string) {
@@ -173,6 +198,37 @@ export class GameRoom {
     });
   }
 
+  private CreateBattleShip (owner: string) {
+    const list: objectMapInfo[] = [];
+
+      const mirror = owner === this.players[0].publicKey ? true : false;
+      const center = gameField[0] / 2;
+      const xPosition = (gameField[0] / 4 ) * (mirror ? 3 : 1);
+      const yPosition = mirror ? 200 : 800;
+      const bShip = new BattlesShip(
+        this,
+        owner,
+        { x: xPosition, y: yPosition },
+        defCoords.sprites.ship,
+        this.manager
+      );
+      list.push({
+        id: bShip.getId(),
+        owner: bShip.owner,
+        class: bShip.class,
+        center: bShip.center(),
+        mirror: mirror,
+      });
+
+    const listMsg: objectInfo = {
+      action: actionList.objectcreate,
+      list: list,
+    };
+    this.players.forEach((player) => {
+      player.ws.send(JSON.stringify(listMsg));
+    });
+  }
+
   public StarDestroy(owner: string, id: string) {
     if (this.isActive) {
       let winner = 0;
@@ -193,6 +249,7 @@ export class GameRoom {
   private Finish(winner: number | null = null) {
     this.isActive = false;
     clearInterval(this.shipCreationTimer);
+    clearInterval(this.battleShipCreationTimer);
     if (winner === null) winner = Math.ceil(Math.random() * 2) - 1; // REPLACE!!!
     WriteLog(
       `${this.players[0].publicKey} VS ${this.players[1].publicKey}`,

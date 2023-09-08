@@ -12,6 +12,7 @@ import { GameRoom } from '../core/Room';
 import ObjectListManager from '../core/ListManager';
 import { WriteLog } from '../../database/log';
 import { actionList } from '../types/msg';
+import { coords } from 'game/types/gameplay';
 
 export class Ship extends GameObject {
   private timer: NodeJS.Timer;
@@ -72,25 +73,60 @@ export class Ship extends GameObject {
   }
 
   private AttackStar() {
-     const targets = this.manager.getObjectsByClassName('star').filter((star) => {
+    const targets = this.manager
+      .getObjectsByClassName('star')
+      .filter((star) => {
         return star.owner !== this.owner;
-     })
-     if (targets.length > 0) {
-        const trg = targets[0]
-        const msg = {
-           action: actionList.objectupdate,
-           data: {
-              id: trg.id,
-              damage: this.hp,
-              wasHP: trg.energy,
-              hit: true
-           }
-        }
-        this.room.ReSendMessage(JSON.stringify(msg))
-        trg.TakeDamage(this.hp);
-        this.hp = 0;
-        this.destroy();
-     }
+      });
+    if (targets.length > 0) {
+      const trg = targets[0];
+
+      this.rect.x += trg.rect.x;
+      this.rect.y += trg.rect.y + 120 * (this.dir ? -1 : 1);
+
+      const msg = {
+        action: actionList.objectupdate,
+        data: {
+          id: trg.id,
+          damage: this.hp,
+          wasHP: trg.energy,
+          hit: true,
+        },
+      };
+      this.room.ReSendMessage(JSON.stringify(msg));
+      trg.TakeDamage(this.hp);
+      this.hp = 0;
+      this.destroy();
+    }
+  }
+
+  private AttackBattleShip() {
+    const targets = this.manager
+      .getObjectsByClassName('battleship')
+      .filter((star) => {
+        return star.owner !== this.owner;
+      });
+    if (targets.length > 0) {
+      const trg = targets[0];
+
+      this.rect.x += trg.rect.x;
+      this.rect.y += trg.rect.y + 60 * (this.dir ? -1 : 1);
+      const aiming = Math.random();
+      const isHit = aiming < this.hitChance;
+
+      if (isHit) {
+        const damage =
+          defShipDamage[0] +
+          Math.round((defShipDamage[1] - defShipDamage[0]) * Math.random());
+        trg.TakeDamage(damage);
+      }
+
+      setTimeout(() => {
+        this.AttackBattleShip();
+      }, defShipFireDelay);
+    } else {
+      this.AttackStar();
+    }
   }
 
   private AttackShip() {
@@ -98,10 +134,12 @@ export class Ship extends GameObject {
     const aiming = Math.random();
     const isHit = aiming < this.hitChance;
     if (target === null) {
-      return this.AttackStar();
+      return this.AttackBattleShip();
     }
     if (isHit) {
-      const damage = defShipDamage[0] + Math.round((defShipDamage[1] - defShipDamage[0]) * Math.random())
+      const damage =
+        defShipDamage[0] +
+        Math.round((defShipDamage[1] - defShipDamage[0]) * Math.random());
       target.TakeDamage(damage);
     }
     const msg = {
