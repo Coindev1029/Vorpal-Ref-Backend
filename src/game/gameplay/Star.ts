@@ -6,6 +6,7 @@ import { defShipHealth, defStarHealth } from '../config';
 
 export default class Star extends GameObject {
   public energy: number;
+  private lifeTimer: NodeJS.Timer;
 
   constructor(
     _room: GameRoom,
@@ -20,6 +21,9 @@ export default class Star extends GameObject {
   protected onCreate() {
     // WriteLog(this.owner, 'Star placed');
     this.energy = defStarHealth;
+    this.lifeTimer = setInterval(() => {
+      this.TakeDamage(1)
+    }, 1000)
   }
 
   protected onDestroy() {
