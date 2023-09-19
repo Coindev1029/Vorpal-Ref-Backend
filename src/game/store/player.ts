@@ -79,6 +79,15 @@ export default class Player {
 
     }
 
+    public getItemCount (name: string): number {
+        const current = this.inventory.get(name);
+        if (!current) {
+            return 0;
+        }
+
+        return current;
+    }
+
     public address(): string {
         return this.addr;
     }

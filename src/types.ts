@@ -14,3 +14,8 @@ export type PlayerStats = {
     games: number,
     wins: number
 }
+
+export type ResponseObject = {
+    success: boolean,
+    message: string
+}
