@@ -13,6 +13,7 @@ export default class Player {
     private gld: number;
     private lvl: number;
     private exp: number;
+    private inventory: Map<string, number>;
 
     constructor(_address: string, _race: race) {
        this.addr = _address;
@@ -20,6 +21,7 @@ export default class Player {
        this.gld = playerStartGold
        this.lvl = 0;
        this.exp = 0;
+       this.inventory = new Map<string, number>();
     }
 
     public UpdateGold (amount: number) {
@@ -47,6 +49,34 @@ export default class Player {
             this.LevelUp()
         }
         return true
+    }
+
+    public AddItem (name: string, amount: number): boolean {
+        if (amount <= 0) {
+            return false;
+        }
+
+        const current = this.inventory.get(name)
+
+        if (current) {
+            this.inventory.set(name, current + amount)
+            return true;
+        } else {
+            this.inventory.set(name, amount)
+            return true;
+        }
+    }
+
+    public UseItem (name: string): boolean  {
+        const current = this.inventory.get(name)
+
+        if (!current) {
+            return false;
+        }
+
+        this.inventory.set(name, current - 1)
+        return true;
+
     }
 
     public address(): string {
