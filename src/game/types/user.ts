@@ -14,6 +14,12 @@ export const races : raceList = {
     waters: "Waters"
 }
 
+export const raceArr : race[] = [
+    "Humans",
+    "Lizards",
+    "Insects",
+    "Waters"
+]
 export const userActionList = {
   slowDown: "slowDown",
   ultimate: "ultimate",

@@ -12,6 +12,8 @@ import { actionList, objectInfo } from '../types/msg';
 import { defCoords, gameField, shipCreationStartTime } from '../config';
 import { Ship } from '../gameplay/Ship';
 import { BattlesShip } from '../gameplay/BattleShip';
+import Store from '../store/store';
+import { race, raceArr } from '../types/user';
 
 export class GameRoom {
   private players: PlayerRow[] = [];
@@ -22,10 +24,14 @@ export class GameRoom {
   private shipCreationTimer: NodeJS.Timer;
   private battleShipCreationTimer: NodeJS.Timer;
   private GameStartNotify = JSON.stringify({ action: 'gamestart' });
+  private store: Store;
 
   constructor(_server: GameIoServer, _players: PlayerRow[]) {
     this.server = _server;
     this.players = _players;
+    const race1: race = raceArr[Math.floor(Math.random() * raceArr.length)]
+    const race2: race = raceArr[Math.floor(Math.random() * raceArr.length)]
+    this.store = new Store(_players[0].publicKey, _players[1].publicKey, race1, race2)
   }
 
   public SetId(_id: number): boolean {
