@@ -16,6 +16,7 @@ export const actionList = {
   objectupdate: 'objectupdate',
   objectList: 'objectlist',
   objectdestroy: 'objectdestroy',
+  buyitem: 'buyitem'
 }
 
 export type action =

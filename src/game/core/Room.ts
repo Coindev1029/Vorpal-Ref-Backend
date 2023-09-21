@@ -46,7 +46,19 @@ export class GameRoom {
         } catch (e) {
 
         }
-        WriteLog(player.publicKey, `Received in game : ${String(message)}`)
+        // WriteLog(player.publicKey, `Received in game : ${String(message)}`)
+
+        switch(msg.action) {
+          case actionList.buyitem :
+            if (msg.data) {
+              const result = this.store.BuyItem(player.publicKey, msg.data.name)
+              const responce = {
+                action: 'buyreport',
+                result: result
+              }
+              player.ws.send(JSON.stringify(responce))
+            }
+        }
 
        })
     })
