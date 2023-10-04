@@ -1,6 +1,8 @@
 import { objectMapInfo } from "./gameplay";
 
 export const actionList = {
+  ping: 'ping',
+  pong: 'pong',
   auth: 'auth',
   unauth: 'unauth',
   entergame: 'entergame',

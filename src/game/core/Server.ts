@@ -172,6 +172,13 @@ export class GameIoServer {
           return;
         }
         switch (msg.action) {
+          case actionList.ping:
+            ws.send(
+              JSON.stringify({
+                action: actionList.pong,
+              }),
+            );
+            break;
           case actionList.auth:
             if (!msg.signature) return;
             try {
