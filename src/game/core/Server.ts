@@ -260,6 +260,14 @@ export class GameIoServer {
                 roomId: playerW.state.roomId,
               };
               this.UpdatePlayerState(playerW.id, playerNewState);
+              ws.send(
+                JSON.stringify({
+                  action: actionList.withdrawgame,
+                  state: 'success',
+                  message: 'Player now removed from queue',
+                  playerId: playerW.publicKey,
+                }),
+              );
             }
             break;
           default:
