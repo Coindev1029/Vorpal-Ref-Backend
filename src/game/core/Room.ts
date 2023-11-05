@@ -33,7 +33,7 @@ export class GameRoom {
     const race2: race = raceArr[Math.floor(Math.random() * raceArr.length)]
     this.store = new Store(_players[0].publicKey, _players[1].publicKey, race1, race2)
 
-    this.players.forEach((player) => {
+    this.players.forEach((player, index) => {
        player.ws.on('message', (message) => {
         let msg: any;
         try {
@@ -58,6 +58,10 @@ export class GameRoom {
               }
               player.ws.send(JSON.stringify(responce))
             }
+            break;
+          case actionList.exitgame :
+            this.Finish(index === 0 ? 1 : 0);
+            break;
         }
 
        })
