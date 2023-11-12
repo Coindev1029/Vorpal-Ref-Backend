@@ -18,6 +18,7 @@ export const actionList = {
   objectupdate: 'objectupdate',
   objectList: 'objectlist',
   objectdestroy: 'objectdestroy',
+  playerPosition: 'playerPosition',
   buyitem: 'buyitem'
 }
 

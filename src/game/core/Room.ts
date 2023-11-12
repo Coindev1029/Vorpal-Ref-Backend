@@ -169,6 +169,10 @@ export class GameRoom {
     };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
+      player.ws.send(JSON.stringify({
+        action: actionList.playerPosition,
+        position: player.publicKey === this.players[0].publicKey ? 'top': 'bottom'
+      }))
     });
 
     this.CreateShips();
