@@ -161,6 +161,11 @@ export class GameRoom {
     const listMsg: objectInfo = {
       action: actionList.objectList,
       list: list,
+      data: {
+        orbitRadius: config.defCoords.orbRadius,
+        border: config.defCoords.battleLine,
+        starDiameter: config.defCoords.sprites.star.width
+      }
     };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
@@ -234,6 +239,7 @@ export class GameRoom {
     const listMsg: objectInfo = {
       action: actionList.objectcreate,
       list: list,
+      data: {}
     };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
@@ -265,6 +271,7 @@ export class GameRoom {
     const listMsg: objectInfo = {
       action: actionList.objectcreate,
       list: list,
+      data: {}
     };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
