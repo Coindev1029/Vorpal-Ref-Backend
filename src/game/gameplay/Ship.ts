@@ -12,7 +12,7 @@ import { GameRoom } from '../core/Room';
 import ObjectListManager from '../core/ListManager';
 import { WriteLog } from '../../database/log';
 import { actionList } from '../types/msg';
-import { coords } from 'game/types/gameplay';
+import { coords } from '../types/gameplay';
 
 export class Ship extends GameObject {
   private timer: NodeJS.Timer;

@@ -3,7 +3,7 @@ import GameObject from './GameObject';
 import { play } from '../types';
 import { FrameInterval, SyncInterval, defCoords, gameField, planetRotationSpeed } from '../config';
 import { GameRoom } from '../core/Room';
-import { actionList } from 'game/types/msg';
+import { actionList } from '../types/msg';
 
 export default class Planet extends GameObject {
   private timer: NodeJS.Timer;
