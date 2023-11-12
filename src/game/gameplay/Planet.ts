@@ -3,6 +3,7 @@ import GameObject from './GameObject';
 import { play } from '../types';
 import { FrameInterval, SyncInterval, defCoords, gameField, planetRotationSpeed } from '../config';
 import { GameRoom } from '../core/Room';
+import { actionList } from 'game/types/msg';
 
 export default class Planet extends GameObject {
   private timer: NodeJS.Timer;
@@ -46,10 +47,14 @@ export default class Planet extends GameObject {
 
     this.syncTimer = setInterval(() => {
        this.room.ReSendMessage(JSON.stringify({
-          planet: this.id,
-          owner: this.owner,
-          angle: this.angle,
-          rotation: this.rotation
+          action: actionList.objectupdate,
+          id: this.id,
+          coords: this.center(),
+          data: {
+            owner: this.owner,
+            angle: this.angle,
+            rotation: this.rotation
+          }
        }))
     }, SyncInterval)
   }
