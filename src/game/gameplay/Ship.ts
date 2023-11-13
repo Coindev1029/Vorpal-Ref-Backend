@@ -186,26 +186,21 @@ export class Ship extends GameObject {
   }
 
   protected onCreate() {
-    this.MoveTo({x: this.rect.x, y: defCoords.battleLine + 50 * (this.dir ? -1 : 1)}, shipMovingTime);
     setTimeout(() => {
-      this.rect.y = defCoords.battleLine + 50 * (this.dir ? -1 : 1);
-      this.timer = setInterval(() => {
-        this.AttackShip();
-      }, defShipFireDelay);
-    }, shipMovingTime);
-    this.hp = defShipHealth;
-    /* this.room.ReSendMessage(JSON.stringify({
-      action: actionList.objectcreate,
-      id: this.id,
-      owner: this.owner,
-      radius: this.radius,
-      position: this.center(),
-      class: this.class,
-      hp: this.hp,
-      damageRange: defShipDamage
-   })); */
+      this.MoveTo({x: this.rect.x, y: defCoords.battleLine + 50 * (this.dir ? -1 : 1)}, shipMovingTime);
+      setTimeout(() => {
+        this.rect.y = defCoords.battleLine + 50 * (this.dir ? -1 : 1);
+        this.timer = setInterval(() => {
+          this.AttackShip();
+        }, defShipFireDelay);
+      }, shipMovingTime);
+      this.hp = defShipHealth;
+    }, 3)
   }
-
+  
+  public StartMove() {
+    
+  }
   protected onDestroy() {
     clearInterval(this.timer);
     const msg = {
