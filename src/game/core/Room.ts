@@ -221,7 +221,7 @@ export class GameRoom {
       const mirror = index === 0 ? true : false;
       const center = gameField[0] / 2;
       const xPositions = [center - 100, center - 20, center + 80];
-      const yPosition = mirror ? 0 : 1000;
+      const yPosition = mirror ? 250 : 750;
       xPositions.forEach((pos, j) => {
         const ship = new Ship(
           this,
@@ -241,13 +241,13 @@ export class GameRoom {
         });
       });
     });
-    const listMsg: objectInfo = {
+    /* const listMsg: objectInfo = {
       action: actionList.objectcreate,
       list: list
     };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
-    });
+    }); */
   }
 
   private CreateBattleShip (owner: string) {
@@ -272,13 +272,13 @@ export class GameRoom {
         mirror: mirror,
       });
 
-    const listMsg: objectInfo = {
+    /* const listMsg: objectInfo = {
       action: actionList.objectcreate,
       list: list
     };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
-    });
+    }); */
   }
 
   public StarDestroy(owner: string, id: string) {

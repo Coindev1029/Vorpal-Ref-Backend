@@ -6,13 +6,14 @@ import {
   defShipFireDelay,
   defShipHealth,
   defShipHitChance,
+  moveFrame,
   shipMovingTime,
 } from '../config';
 import { GameRoom } from '../core/Room';
 import ObjectListManager from '../core/ListManager';
 import { WriteLog } from '../../database/log';
 import { actionList } from '../types/msg';
-import { coords } from '../types/gameplay';
+import { coords, rect } from '../types/gameplay';
 
 export class Ship extends GameObject {
   private timer: NodeJS.Timer;
@@ -155,13 +156,49 @@ export class Ship extends GameObject {
     this.room.ReSendMessage(JSON.stringify(msg));
   }
 
+  public async MoveTo(target: coords, time: number ) : Promise<rect> {
+    return await new Promise ((resolve) => {
+      const frames = Math.ceil(time / moveFrame)
+      const point : coords = {x: target.x - this.radius, y: target.y - this.radius}
+      const step : coords = {x: (point.x - this.rect.x) / frames, y: (point.y - this.rect.y) / frames}
+      this.room.ReSendMessage(JSON.stringify({
+        action: actionList.objectupdate,
+        id: this.id,
+        data: {
+           event: 'startmoving',
+           target: target,
+           timeTo: time
+        }
+      }))
+      let timePast = 0
+      const moveTimer = setInterval(() => {
+        timePast += moveFrame;
+        this.rect.y += step.y;
+        this.rect.x += step.x;
+        if (timePast >= time) {
+          clearInterval(moveTimer);
+          this.room.ReSendMessage(JSON.stringify({
+            action: actionList.objectupdate,
+            id: this.id,
+            data: {
+               event: 'stopmoving',
+               position: this.center(),
+            }
+          }))
+          resolve(this.rect)
+        }
+      }, moveFrame)
+    })
+  }
+
   protected onCreate() {
-    setTimeout(() => {
+    this.MoveTo({x: this.rect.x, y: defCoords.battleLine + 50 * (this.dir ? -1 : 1)}, shipMovingTime);
+    /*setTimeout(() => {
       this.rect.y = defCoords.battleLine + 50 * (this.dir ? -1 : 1);
       this.timer = setInterval(() => {
         this.AttackShip();
       }, defShipFireDelay);
-    }, shipMovingTime);
+    }, shipMovingTime); */
     this.hp = defShipHealth;
   }
 

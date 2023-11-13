@@ -61,8 +61,9 @@ export default abstract class GameObject {
         id: this.id,
         owner: this.owner,
         radius: this.radius,
-        center: this.center(),
-        data: this.addData
+        position: this.center(),
+        class: this.class,
+        ...this.addData
      }));
       return true;
     } else {

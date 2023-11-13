@@ -19,6 +19,7 @@ export const defShipFireDelay = 1200 // 300
 export const playerStartGold = 100
 export const playerExpPerLevel = 200
 export const playerMaxLevel = 16
+export const moveFrame = 20 // step in ms
 export const defCoords = {
   battleLine: 500,
   orbDiam: 150,
