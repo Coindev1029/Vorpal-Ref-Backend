@@ -4,6 +4,7 @@ export const actionList = {
   ping: 'ping',
   pong: 'pong',
   auth: 'auth',
+  event: 'event',
   unauth: 'unauth',
   entergame: 'entergame',
   withdrawgame: 'withdrawgame',

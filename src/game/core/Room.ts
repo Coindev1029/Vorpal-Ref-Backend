@@ -172,7 +172,7 @@ export class GameRoom {
       player.ws.send(JSON.stringify(listMsg));
       player.ws.send(JSON.stringify({
         action: actionList.playerPosition,
-        position: player.publicKey === this.players[0].publicKey ? 'top': 'bottom'
+        playerPosition: player.publicKey === this.players[0].publicKey ? 'top': 'bottom'
       }))
     });
 
