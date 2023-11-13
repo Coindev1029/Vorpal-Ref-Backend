@@ -61,7 +61,7 @@ export default abstract class GameObject {
         id: this.id,
         data: {
            event: 'startmoving',
-           target: target,
+           target: point,
            timeTo: time
         }
       }))
