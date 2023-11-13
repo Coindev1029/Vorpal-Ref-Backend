@@ -133,20 +133,14 @@ export class GameRoom {
       this.players[0].publicKey,
       config.defCoords.planet1,
       config.defCoords.sprites.planet,
-      false,
-      {
-        orbitRadius: config.defCoords.orbDiam / 2
-      }
+      false
     );
     const planet2 = new Planet(
       this,
       this.players[1].publicKey,
       config.defCoords.planet2,
       config.defCoords.sprites.planet,
-      true,
-      {
-        orbitRadius: config.defCoords.orbDiam / 2
-      }
+      true
     );
     this.manager = new ObjectListManager();
     this.manager.addObject(star1), this.manager.addObject(star2);
@@ -160,20 +154,22 @@ export class GameRoom {
         id: ob.getId(),
         owner: ob.owner,
         class: ob.class,
-        center: ob.center(),
+        position: ob.center(),
+        radius: ob.rect.width / 2,
         mirror: ob.owner === this.players[0].publicKey ? true : false,
       });
     });
     const listMsg: objectInfo = {
-      action: actionList.objectList,
+      action: actionList.objectcreate,
       list: list
     };
     this.players.forEach((player) => {
-      player.ws.send(JSON.stringify(listMsg));
+      const playerPosition = player.publicKey === this.players[0].publicKey ? 'top': 'bottom'
       player.ws.send(JSON.stringify({
-        action: actionList.playerPosition,
-        playerPosition: player.publicKey === this.players[0].publicKey ? 'top': 'bottom'
-      }))
+        ...listMsg,
+        playerPosition: playerPosition,
+        orbitRadius: defCoords.orbDiam / 2
+      }));
     });
 
     this.CreateShips();
@@ -236,7 +232,8 @@ export class GameRoom {
           id: ship.getId(),
           owner: ship.owner,
           class: ship.class,
-          center: ship.center(),
+          position: ship.center(),
+          radius: ship.rect.width / 2,
           mirror: mirror,
         });
       });
@@ -268,7 +265,8 @@ export class GameRoom {
         id: bShip.getId(),
         owner: bShip.owner,
         class: bShip.class,
-        center: bShip.center(),
+        position: bShip.center(),
+        radius: bShip.rect.width / 2,
         mirror: mirror,
       });
 

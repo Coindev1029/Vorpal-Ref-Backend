@@ -15,7 +15,6 @@ export default abstract class GameObject {
   public RoomAction: any;
   public owner: string;
   public class: string;
-  public addData: any;
 
   constructor(
     _room: GameRoom,
@@ -23,7 +22,6 @@ export default abstract class GameObject {
     _coords: play.coords,
     _sprite: play.sprite,
     _class: string,
-    _addData: any = {}
   ) {
     this.room = _room;
     this.owner = _owner;
@@ -33,7 +31,6 @@ export default abstract class GameObject {
       ..._sprite,
     };
     this.class = _class;
-    this.addData = _addData;
   }
 
   public StartMoving(angle: number = 0, speed: number = 0, finish: coords | null = null) {
@@ -56,15 +53,6 @@ export default abstract class GameObject {
     if (!this.isIdassigned) {
       this.id = _id;
       this.isIdassigned = true;
-      this.room.ReSendMessage(JSON.stringify({
-        action: actionList.objectcreate,
-        id: this.id,
-        owner: this.owner,
-        radius: this.radius,
-        position: this.center(),
-        class: this.class,
-        ...this.addData
-     }));
       return true;
     } else {
       return false;

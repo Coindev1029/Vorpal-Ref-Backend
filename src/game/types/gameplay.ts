@@ -18,7 +18,8 @@ export interface rect extends coords {
 export interface objectMapInfo {
   id: string;
   owner: string;
-  center: coords;
+  position: coords;
+  radius: number;
   class: string;
   mirror: boolean;
 }

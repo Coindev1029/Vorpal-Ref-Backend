@@ -19,9 +19,8 @@ export default class Planet extends GameObject {
     _coords: play.coords,
     _sprite: play.sprite,
     dir: boolean,
-    _addData: any = {}
   ) {
-    super(_room, _owner, _coords, _sprite, 'planet', _addData);
+    super(_room, _owner, _coords, _sprite, 'planet');
     this.dir = dir;
     this.defY = _coords.y + _sprite.height / 2 + defCoords.orbDiam / 2;
     this.onCreate();

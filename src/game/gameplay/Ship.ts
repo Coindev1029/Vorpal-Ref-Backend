@@ -235,6 +235,16 @@ export class Ship extends GameObject {
       }, defShipFireDelay);
     }, shipMovingTime);
     this.hp = defShipHealth;
+    /* this.room.ReSendMessage(JSON.stringify({
+      action: actionList.objectcreate,
+      id: this.id,
+      owner: this.owner,
+      radius: this.radius,
+      position: this.center(),
+      class: this.class,
+      hp: this.hp,
+      damageRange: defShipDamage
+   })); */
   }
 
   protected onDestroy() {
