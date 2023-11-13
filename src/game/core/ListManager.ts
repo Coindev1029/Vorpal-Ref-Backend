@@ -1,7 +1,7 @@
 import GameObject from '../gameplay/GameObject';
 
 export default class ObjectListManager<T extends GameObject> {
-  private idLength = 64;
+
   public objectList: Map<string, T>;
 
   constructor() {
@@ -23,8 +23,7 @@ export default class ObjectListManager<T extends GameObject> {
 
   addObject(object: T): string {
     const newObjects = new Map(this.objectList);
-    const newId = this.GenerateId(this.idLength);
-    object.assignId(newId);
+    const newId = object.getId();
     newObjects.set(newId, object);
     this.objectList = newObjects;
     return newId;

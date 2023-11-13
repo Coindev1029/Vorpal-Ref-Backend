@@ -1,14 +1,13 @@
-import { coords } from '../types/gameplay';
+import { coords, rect } from '../types/gameplay';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
-import { FrameInterval } from '../config';
+import { FrameInterval, idLength, moveFrame } from '../config';
 import { actionList } from '../types/msg';
 
 export default abstract class GameObject {
   protected id: string = '';
-  protected movingTimer: NodeJS.Timer;
-  protected isIdassigned: boolean;
   protected room: GameRoom;
+  protected inMoving =  false;
 
   public rect: play.rect;
   public radius: number;
@@ -23,9 +22,11 @@ export default abstract class GameObject {
     _sprite: play.sprite,
     _class: string,
   ) {
+    const _id = this.GenerateId(idLength);
     this.room = _room;
     this.owner = _owner;
     this.radius = _sprite.width / 2;
+    this.id = _id;
     this.rect = {
       ..._coords,
       ..._sprite,
@@ -33,30 +34,57 @@ export default abstract class GameObject {
     this.class = _class;
   }
 
-  public StartMoving(angle: number = 0, speed: number = 0, finish: coords | null = null) {
-    this.movingTimer = setInterval(() => {
-      this.rect.x += speed * Math.cos(angle);
-      this.rect.y += speed * Math.sin(angle);
-      if (finish) {
-        if (this.rect.x >= finish.x || this.rect.y >= finish.y) {
-          this.StopMoving();
-        }
-      }
-    }, FrameInterval);
-  }
+  public GenerateId(length: number): string {
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
 
-  public StopMoving() {
-    return clearInterval(this.movingTimer);
-  }
-
-  public assignId(_id: string): boolean {
-    if (!this.isIdassigned) {
-      this.id = _id;
-      this.isIdassigned = true;
-      return true;
-    } else {
-      return false;
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
     }
+
+    return result;
+  }
+
+  public async MoveTo(target: coords, time: number ) : Promise<rect> {
+    return await new Promise ((resolve, reject) => {
+      if (this.inMoving) {
+         reject(1)
+      }
+      this.inMoving = true;
+      const frames = Math.ceil(time / moveFrame)
+      const point : coords = {x: target.x - this.radius, y: target.y - this.radius}
+      const step : coords = {x: (point.x - this.rect.x) / frames, y: (point.y - this.rect.y) / frames}
+      this.room.ReSendMessage(JSON.stringify({
+        action: actionList.objectupdate,
+        id: this.id,
+        data: {
+           event: 'startmoving',
+           target: target,
+           timeTo: time
+        }
+      }))
+      let timePast = 0
+      const moveTimer = setInterval(() => {
+        timePast += moveFrame;
+        this.rect.y += step.y;
+        this.rect.x += step.x;
+        if (timePast >= time) {
+          clearInterval(moveTimer);
+          this.room.ReSendMessage(JSON.stringify({
+            action: actionList.objectupdate,
+            id: this.id,
+            data: {
+               event: 'stopmoving',
+               position: this.center(),
+            }
+          }))
+          this.inMoving = false;
+          resolve(this.rect)
+        }
+      }, moveFrame)
+    })
   }
 
   public getId(): string {

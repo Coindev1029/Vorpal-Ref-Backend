@@ -21,7 +21,6 @@ export class Ship extends GameObject {
   private dir: boolean = true; // true - up, false - down
   private hitChance: number = defShipHitChance;
   private manager: ObjectListManager<any>;
-  private inMoving =  false;
 
   constructor(
     _room: GameRoom,
@@ -184,46 +183,6 @@ export class Ship extends GameObject {
       },
     };
     this.room.ReSendMessage(JSON.stringify(msg));
-  }
-
-  public async MoveTo(target: coords, time: number ) : Promise<rect> {
-    return await new Promise ((resolve, reject) => {
-      if (this.inMoving) {
-         reject(1)
-      }
-      this.inMoving = true;
-      const frames = Math.ceil(time / moveFrame)
-      const point : coords = {x: target.x - this.radius, y: target.y - this.radius}
-      const step : coords = {x: (point.x - this.rect.x) / frames, y: (point.y - this.rect.y) / frames}
-      this.room.ReSendMessage(JSON.stringify({
-        action: actionList.objectupdate,
-        id: this.id,
-        data: {
-           event: 'startmoving',
-           target: target,
-           timeTo: time
-        }
-      }))
-      let timePast = 0
-      const moveTimer = setInterval(() => {
-        timePast += moveFrame;
-        this.rect.y += step.y;
-        this.rect.x += step.x;
-        if (timePast >= time) {
-          clearInterval(moveTimer);
-          this.room.ReSendMessage(JSON.stringify({
-            action: actionList.objectupdate,
-            id: this.id,
-            data: {
-               event: 'stopmoving',
-               position: this.center(),
-            }
-          }))
-          this.inMoving = false;
-          resolve(this.rect)
-        }
-      }, moveFrame)
-    })
   }
 
   protected onCreate() {

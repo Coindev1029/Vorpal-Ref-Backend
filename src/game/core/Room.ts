@@ -238,13 +238,13 @@ export class GameRoom {
         });
       });
     });
-    /* const listMsg: objectInfo = {
+    const listMsg: objectInfo = {
       action: actionList.objectcreate,
       list: list
     };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
-    }); */
+    });
   }
 
   private CreateBattleShip (owner: string) {
@@ -270,13 +270,13 @@ export class GameRoom {
         mirror: mirror,
       });
 
-    /* const listMsg: objectInfo = {
+    const listMsg: objectInfo = {
       action: actionList.objectcreate,
       list: list
     };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
-    }); */
+    });
   }
 
   public StarDestroy(owner: string, id: string) {
