@@ -211,7 +211,7 @@ export class GameRoom {
 
   public ReSendMessage(message: string) {
     this.players.forEach((player) => {
-      player.ws.send(JSON.stringify(message));
+      player.ws.send(message);
     });
   }
 
