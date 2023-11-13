@@ -23,7 +23,6 @@ export class GameRoom {
   private manager: ObjectListManager<any>;
   private shipCreationTimer: NodeJS.Timer;
   private battleShipCreationTimer: NodeJS.Timer;
-  private GameStartNotify = JSON.stringify({ action: 'gamestart' });
   private store: Store;
 
   constructor(_server: GameIoServer, _players: PlayerRow[]) {
@@ -110,7 +109,12 @@ export class GameRoom {
         roomId: this.GetId(),
       };
       this.server.UpdatePlayerState(player.id, state);
-      player.ws.send(this.GameStartNotify);
+      const playerPosition = player.publicKey === this.players[0].publicKey ? 'top': 'bottom'
+      player.ws.send(JSON.stringify({
+        action: actionList.gamestart,
+        playerPosition: playerPosition,
+        orbitRadius: defCoords.orbDiam / 2
+      }));
     });
     this.isActive = true;
     /* setTimeout(() => {
@@ -164,12 +168,7 @@ export class GameRoom {
       list: list
     };
     this.players.forEach((player) => {
-      const playerPosition = player.publicKey === this.players[0].publicKey ? 'top': 'bottom'
-      player.ws.send(JSON.stringify({
-        ...listMsg,
-        playerPosition: playerPosition,
-        orbitRadius: defCoords.orbDiam / 2
-      }));
+      player.ws.send(JSON.stringify(listMsg));
     });
 
     this.CreateShips();
