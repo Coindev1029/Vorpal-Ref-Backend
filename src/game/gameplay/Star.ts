@@ -22,10 +22,7 @@ export default class Star extends GameObject {
   protected onCreate() {
     // WriteLog(this.owner, 'Star placed');
     this.energy = defStarHealth;
-    this.room.ReSendMessage(JSON.stringify({
-      action: actionList.objectcreate,
 
-    }))
     this.lifeTimer = setInterval(() => {
       this.TakeDamage(1)
     }, 1000)
