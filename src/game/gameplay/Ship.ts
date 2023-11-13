@@ -199,12 +199,12 @@ export class Ship extends GameObject {
 
   protected onCreate() {
     this.MoveTo({x: this.rect.x, y: defCoords.battleLine + 50 * (this.dir ? -1 : 1)}, shipMovingTime);
-    /*setTimeout(() => {
+    setTimeout(() => {
       this.rect.y = defCoords.battleLine + 50 * (this.dir ? -1 : 1);
       this.timer = setInterval(() => {
         this.AttackShip();
       }, defShipFireDelay);
-    }, shipMovingTime); */
+    }, shipMovingTime);
     this.hp = defShipHealth;
   }
 
