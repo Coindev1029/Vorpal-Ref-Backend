@@ -84,6 +84,12 @@ export class BattlesShip extends GameObject {
     this.hp -= damage;
     if (this.hp <= 0) {
       this.destroy();
+    } else {
+      this.room.ReSendMessage(JSON.stringify({
+        action: actionList.objectupdate,
+        id: this.id,
+        hp: this.hp
+      }))
     }
   }
 

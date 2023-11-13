@@ -159,6 +159,22 @@ export class Ship extends GameObject {
         defShipDamage[0] +
         Math.round((defShipDamage[1] - defShipDamage[0]) * Math.random());
       target.TakeDamage(damage);
+      this.room.ReSendMessage(JSON.stringify({
+        action: actionList.event,
+        type: 'attack',
+        result: 'hit',
+        damage: damage
+      }))
+    } else {
+      const damage =
+        defShipDamage[0] +
+        Math.round((defShipDamage[1] - defShipDamage[0]) * Math.random());
+        this.room.ReSendMessage(JSON.stringify({
+          action: actionList.event,
+          type: 'attack',
+          result: 'miss',
+          damage: damage
+        }))
     }
     const msg = {
       action: actionList.objectupdate,

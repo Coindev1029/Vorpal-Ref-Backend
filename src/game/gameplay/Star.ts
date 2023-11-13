@@ -39,6 +39,12 @@ export default class Star extends GameObject {
     this.energy -= damage;
     if (this.energy <= 0) {
       this.destroy();
+    } else {
+      this.room.ReSendMessage(JSON.stringify({
+        action: actionList.objectupdate,
+        id: this.id,
+        enegry: this.energy
+      }))
     }
   }
 
