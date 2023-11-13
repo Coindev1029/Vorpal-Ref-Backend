@@ -21,7 +21,7 @@ export const playerExpPerLevel = 200
 export const playerMaxLevel = 16
 export const defCoords = {
   battleLine: 500,
-  orbRadius: 150,
+  orbDiam: 150,
   sprites: {
     star: {
       width: 100,

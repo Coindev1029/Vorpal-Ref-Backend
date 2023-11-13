@@ -2,6 +2,7 @@ import { coords } from '../types/gameplay';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
 import { FrameInterval } from '../config';
+import { actionList } from '../types/msg';
 
 export default abstract class GameObject {
   protected id: string = '';
@@ -10,9 +11,11 @@ export default abstract class GameObject {
   protected room: GameRoom;
 
   public rect: play.rect;
+  public radius: number;
   public RoomAction: any;
   public owner: string;
   public class: string;
+  public addData: any;
 
   constructor(
     _room: GameRoom,
@@ -20,14 +23,17 @@ export default abstract class GameObject {
     _coords: play.coords,
     _sprite: play.sprite,
     _class: string,
+    _addData: any = {}
   ) {
     this.room = _room;
     this.owner = _owner;
+    this.radius = _sprite.width / 2;
     this.rect = {
       ..._coords,
       ..._sprite,
     };
     this.class = _class;
+    this.addData = _addData;
   }
 
   public StartMoving(angle: number = 0, speed: number = 0, finish: coords | null = null) {
@@ -50,6 +56,14 @@ export default abstract class GameObject {
     if (!this.isIdassigned) {
       this.id = _id;
       this.isIdassigned = true;
+      this.room.ReSendMessage(JSON.stringify({
+        action: actionList.objectcreate,
+        id: this.id,
+        owner: this.owner,
+        radius: this.radius,
+        center: this.center(),
+        data: this.addData
+     }));
       return true;
     } else {
       return false;

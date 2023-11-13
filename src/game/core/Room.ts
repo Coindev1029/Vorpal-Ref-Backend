@@ -134,6 +134,9 @@ export class GameRoom {
       config.defCoords.planet1,
       config.defCoords.sprites.planet,
       false,
+      {
+        orbitRadius: config.defCoords.orbDiam / 2
+      }
     );
     const planet2 = new Planet(
       this,
@@ -141,6 +144,9 @@ export class GameRoom {
       config.defCoords.planet2,
       config.defCoords.sprites.planet,
       true,
+      {
+        orbitRadius: config.defCoords.orbDiam / 2
+      }
     );
     this.manager = new ObjectListManager();
     this.manager.addObject(star1), this.manager.addObject(star2);
@@ -160,12 +166,7 @@ export class GameRoom {
     });
     const listMsg: objectInfo = {
       action: actionList.objectList,
-      list: list,
-      data: {
-        orbitRadius: config.defCoords.orbRadius,
-        border: config.defCoords.battleLine,
-        starDiameter: config.defCoords.sprites.star.width
-      }
+      list: list
     };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
@@ -242,8 +243,7 @@ export class GameRoom {
     });
     const listMsg: objectInfo = {
       action: actionList.objectcreate,
-      list: list,
-      data: {}
+      list: list
     };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
@@ -274,8 +274,7 @@ export class GameRoom {
 
     const listMsg: objectInfo = {
       action: actionList.objectcreate,
-      list: list,
-      data: {}
+      list: list
     };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));

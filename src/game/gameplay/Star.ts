@@ -3,6 +3,7 @@ import GameObject from './GameObject';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
 import { defShipHealth, defStarHealth } from '../config';
+import { actionList } from '../types/msg';
 
 export default class Star extends GameObject {
   public energy: number;
@@ -21,6 +22,10 @@ export default class Star extends GameObject {
   protected onCreate() {
     // WriteLog(this.owner, 'Star placed');
     this.energy = defStarHealth;
+    this.room.ReSendMessage(JSON.stringify({
+      action: actionList.objectcreate,
+
+    }))
     this.lifeTimer = setInterval(() => {
       this.TakeDamage(1)
     }, 1000)

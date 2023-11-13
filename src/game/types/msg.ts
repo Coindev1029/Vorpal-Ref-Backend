@@ -108,6 +108,5 @@ export type objectLifecycle = {
 
 export type objectInfo = {
   action: string,
-  list: objectMapInfo[],
-  data: any
+  list: objectMapInfo[]
 }

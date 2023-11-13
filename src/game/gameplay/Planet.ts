@@ -19,10 +19,11 @@ export default class Planet extends GameObject {
     _coords: play.coords,
     _sprite: play.sprite,
     dir: boolean,
+    _addData: any = {}
   ) {
-    super(_room, _owner, _coords, _sprite, 'planet');
+    super(_room, _owner, _coords, _sprite, 'planet', _addData);
     this.dir = dir;
-    this.defY = _coords.y + _sprite.height / 2 + defCoords.orbRadius / 2;
+    this.defY = _coords.y + _sprite.height / 2 + defCoords.orbDiam / 2;
     this.onCreate();
   }
 
@@ -32,10 +33,10 @@ export default class Planet extends GameObject {
     this.timer = setInterval(() => {
       this.rect.x =
         gameField[0] / 2 +
-        defCoords.orbRadius * (this.dir ? -1 : 1) * Math.cos(this.angle);
+        defCoords.orbDiam * (this.dir ? -1 : 1) * Math.cos(this.angle);
       this.rect.y =
         this.defY +
-        defCoords.orbRadius * (this.dir ? -1 : 1) * Math.sin(this.angle);
+        defCoords.orbDiam * (this.dir ? -1 : 1) * Math.sin(this.angle);
 
       this.angle += 0.004185;
       this.rotation += planetRotationSpeed;
