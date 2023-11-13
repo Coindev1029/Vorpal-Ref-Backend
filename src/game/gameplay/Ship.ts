@@ -154,10 +154,10 @@ export class Ship extends GameObject {
     if (target === null) {
       return this.AttackBattleShip();
     }
+    const damage =
+    defShipDamage[0] +
+    Math.round((defShipDamage[1] - defShipDamage[0]) * Math.random());
     if (isHit) {
-      const damage =
-        defShipDamage[0] +
-        Math.round((defShipDamage[1] - defShipDamage[0]) * Math.random());
       target.TakeDamage(damage);
       this.room.ReSendMessage(JSON.stringify({
         action: actionList.event,
@@ -166,9 +166,6 @@ export class Ship extends GameObject {
         damage: damage
       }))
     } else {
-      const damage =
-        defShipDamage[0] +
-        Math.round((defShipDamage[1] - defShipDamage[0]) * Math.random());
         this.room.ReSendMessage(JSON.stringify({
           action: actionList.event,
           type: 'attack',
@@ -182,7 +179,7 @@ export class Ship extends GameObject {
         from: this.id,
         to: target.id,
         wasHP: target.getHp(),
-        damage: defShipDamage,
+        damage: damage,
         hit: isHit,
       },
     };
