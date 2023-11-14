@@ -6,7 +6,7 @@ import * as config from '../config';
 import Star from '../gameplay/Star';
 import ObjectListManager from './ListManager';
 import Planet from '../gameplay/Planet';
-import { objectMapInfo } from '../types/gameplay';
+import { objectDisplayInfo, objectMapInfo } from '../types/gameplay';
 import GameObject from '../gameplay/GameObject';
 import { actionList, objectInfo } from '../types/msg';
 import { defCoords, gameField, shipCreationStartTime } from '../config';
@@ -117,21 +117,38 @@ export class GameRoom {
       }));
     });
     this.isActive = true;
-    /* setTimeout(() => {
-      this.Finish();
-    }, config.roomTestTimeout); */
+    const list: objectDisplayInfo[] = [];
+
     const star1 = new Star(
       this,
       this.players[0].publicKey,
       config.defCoords.star1,
       config.defCoords.sprites.star,
     );
+
+    list.push({
+      id: star1.getId(),
+      owner: star1.owner,
+      class: star1.class,
+      position: star1.center(),
+      radius: star1.rect.width / 2,
+    });
+
     const star2 = new Star(
       this,
       this.players[1].publicKey,
       config.defCoords.star2,
       config.defCoords.sprites.star,
     );
+
+    list.push({
+      id: star2.getId(),
+      owner: star2.owner,
+      class: star2.class,
+      position: star2.center(),
+      radius: star2.rect.width / 2,
+    });
+
     const planet1 = new Planet(
       this,
       this.players[0].publicKey,
@@ -139,6 +156,18 @@ export class GameRoom {
       config.defCoords.sprites.planet,
       false
     );
+
+    list.push({
+      id: planet1.getId(),
+      owner: planet1.owner,
+      class: planet1.class,
+      position: planet1.center(),
+      radius: planet1.rect.width / 2,
+      orbitRadius: defCoords.orbDiam / 2,
+      year: shipCreationStartTime,
+      rotationSpeed: config.planetRotationSpeed
+    });
+
     const planet2 = new Planet(
       this,
       this.players[1].publicKey,
@@ -146,24 +175,25 @@ export class GameRoom {
       config.defCoords.sprites.planet,
       true
     );
+
+    list.push({
+      id: planet2.getId(),
+      owner: planet2.owner,
+      class: planet2.class,
+      position: planet2.center(),
+      radius: planet2.rect.width / 2,
+      orbitRadius: defCoords.orbDiam / 2,
+      year: shipCreationStartTime,
+      rotationSpeed: config.planetRotationSpeed
+    });
+
     this.manager = new ObjectListManager();
-    this.manager.addObject(star1), this.manager.addObject(star2);
+    this.manager.addObject(star1); 
+    this.manager.addObject(star2);
     this.manager.addObject(planet1);
     this.manager.addObject(planet2);
 
-    const list: objectMapInfo[] = [];
-    const objects = this.manager.getAllObjects();
-    objects.forEach((ob: GameObject) => {
-      list.push({
-        id: ob.getId(),
-        owner: ob.owner,
-        class: ob.class,
-        position: ob.center(),
-        radius: ob.rect.width / 2,
-        mirror: ob.owner === this.players[0].publicKey ? true : false,
-      });
-    });
-    const listMsg: objectInfo = {
+    const listMsg = {
       action: actionList.objectcreate,
       list: list
     };
