@@ -247,7 +247,7 @@ export class GameRoom {
     this.players.forEach((player, index) => {
       const mirror = index === 0 ? true : false;
       const center = gameField[0] / 2;
-      const xPositions = [center - 100, center - 20, center + 80];
+      const xPositions = [center - 80, center, center + 80];
       const yPosition = mirror ? 250 : 750;
       xPositions.forEach((pos, j) => {
         const ship = new Ship(

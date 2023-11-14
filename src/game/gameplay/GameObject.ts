@@ -71,6 +71,8 @@ export default abstract class GameObject {
         this.center.x += step.x;
         if (timePast >= time) {
           clearInterval(moveTimer);
+          this.center.x = target.x;
+          this.center.y = target.y;
           this.room.ReSendMessage(JSON.stringify({
             action: actionList.objectupdate,
             id: this.id,
