@@ -243,6 +243,7 @@ export class GameRoom {
 
   private CreateShips() {
     const list: objectMapInfo[] = [];
+    const ships : Ship[] = [];
     this.players.forEach((player, index) => {
       const mirror = index === 0 ? true : false;
       const center = gameField[0] / 2;
@@ -266,6 +267,7 @@ export class GameRoom {
           radius: ship.rect.width / 2,
           mirror: mirror,
         });
+        ships.push(ship)
       });
     });
     const listMsg: objectInfo = {
@@ -275,6 +277,9 @@ export class GameRoom {
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
     });
+    ships.forEach((sh) => {
+      sh.StartMove();
+    })
   }
 
   private CreateBattleShip (owner: string) {
