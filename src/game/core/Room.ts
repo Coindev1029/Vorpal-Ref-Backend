@@ -186,7 +186,7 @@ export class GameRoom {
       position: planet2.center,
       radius: planet2.radius,
       orbitRadius: defCoords.orbDiam / 2,
-      orbitCenter: star1.center,
+      orbitCenter: star2.center,
       startAngle: 90,
       year: shipCreationStartTime / 1000,
       rotationSpeed: config.planetRotationSpeed * 10,
