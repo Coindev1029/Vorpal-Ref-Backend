@@ -28,30 +28,33 @@ export const defCoords = {
     star: {
       width: 100,
       height: 100,
+      radius: 50
     },
     planet: {
       width: 40,
       height: 40,
+      radius: 20
     },
     ship: {
       width: 40,
       height: 40,
+      radius: 20
     },
   },
   star1: {
-    x: 350,
-    y: 150,
+    x: 400,
+    y: 200,
   },
   star2: {
     x: 350,
     y: 750,
   },
   planet1: {
-    x: 380,
-    y: 30,
+    x: 400,
+    y: 50,
   },
   planet2: {
-    x: 380,
-    y: 930,
+    x: 400,
+    y: 950,
   },
 };

@@ -15,10 +15,10 @@ export class BattlesShip extends GameObject {
     _room: GameRoom,
     _owner: string,
     _coords: play.coords,
-    _sprite: play.sprite,
+    _radius: number,
     _manager: ObjectListManager<any>,
   ) {
-    super(_room, _owner, _coords, _sprite, 'battleship');
+    super(_room, _owner, _coords, _radius, 'battleship');
     this.manager = _manager;
     this.onCreate();
   }
@@ -31,8 +31,8 @@ export class BattlesShip extends GameObject {
       });
       if (stars.length > 0) {
         const trg: Star = stars[0];
-        this.rect.x = trg.rect.x + trg.rect.width;
-        this.rect.y = trg.rect.y + trg.rect.height;
+        this.center.x = trg.center.x + (trg.radius * 2);
+        this.center.y = trg.center.y + (trg.radius * 2);
         const msg = {
           action: actionList.objectupdate,
           data: {

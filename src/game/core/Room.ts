@@ -123,37 +123,37 @@ export class GameRoom {
       this,
       this.players[0].publicKey,
       config.defCoords.star1,
-      config.defCoords.sprites.star,
+      config.defCoords.sprites.star.radius,
     );
 
     list.push({
       id: star1.getId(),
       owner: star1.owner,
       class: star1.class,
-      position: star1.center(),
-      radius: star1.rect.width / 2,
+      position: star1.center,
+      radius: star1.radius,
     });
 
     const star2 = new Star(
       this,
       this.players[1].publicKey,
       config.defCoords.star2,
-      config.defCoords.sprites.star,
+      config.defCoords.sprites.star.radius,
     );
 
     list.push({
       id: star2.getId(),
       owner: star2.owner,
       class: star2.class,
-      position: star2.center(),
-      radius: star2.rect.width / 2,
+      position: star2.center,
+      radius: star2.radius,
     });
 
     const planet1 = new Planet(
       this,
       this.players[0].publicKey,
       config.defCoords.planet1,
-      config.defCoords.sprites.planet,
+      config.defCoords.sprites.planet.radius,
       false
     );
 
@@ -161,8 +161,8 @@ export class GameRoom {
       id: planet1.getId(),
       owner: planet1.owner,
       class: planet1.class,
-      position: planet1.center(),
-      radius: planet1.rect.width / 2,
+      position: planet1.center,
+      radius: planet1.radius,
       orbitRadius: defCoords.orbDiam / 2,
       year: shipCreationStartTime,
       rotationSpeed: config.planetRotationSpeed
@@ -172,7 +172,7 @@ export class GameRoom {
       this,
       this.players[1].publicKey,
       config.defCoords.planet2,
-      config.defCoords.sprites.planet,
+      config.defCoords.sprites.planet.radius,
       true
     );
 
@@ -180,8 +180,8 @@ export class GameRoom {
       id: planet2.getId(),
       owner: planet2.owner,
       class: planet2.class,
-      position: planet2.center(),
-      radius: planet2.rect.width / 2,
+      position: planet2.center,
+      radius: planet2.radius,
       orbitRadius: defCoords.orbDiam / 2,
       year: shipCreationStartTime,
       rotationSpeed: config.planetRotationSpeed,
@@ -254,7 +254,7 @@ export class GameRoom {
           this,
           player.publicKey,
           { x: pos, y: yPosition },
-          defCoords.sprites.ship,
+          defCoords.sprites.ship.radius,
           this.manager,
           mirror,
         );
@@ -263,8 +263,8 @@ export class GameRoom {
           id: ship.getId(),
           owner: ship.owner,
           class: ship.class,
-          position: ship.center(),
-          radius: ship.rect.width / 2,
+          position: ship.center,
+          radius: ship.radius,
           mirror: mirror,
         });
         ships.push(ship)
@@ -293,15 +293,15 @@ export class GameRoom {
         this,
         owner,
         { x: xPosition, y: yPosition },
-        defCoords.sprites.ship,
+        defCoords.sprites.ship.radius,
         this.manager
       );
       list.push({
         id: bShip.getId(),
         owner: bShip.owner,
         class: bShip.class,
-        position: bShip.center(),
-        radius: bShip.rect.width / 2,
+        position: bShip.center,
+        radius: bShip.radius,
         mirror: mirror,
       });
 

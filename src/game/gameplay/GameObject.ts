@@ -9,7 +9,7 @@ export default abstract class GameObject {
   protected room: GameRoom;
   protected inMoving =  false;
 
-  public rect: play.rect;
+  public center: play.coords;
   public radius: number;
   public RoomAction: any;
   public owner: string;
@@ -19,17 +19,16 @@ export default abstract class GameObject {
     _room: GameRoom,
     _owner: string,
     _coords: play.coords,
-    _sprite: play.sprite,
+    _radius: number,
     _class: string,
   ) {
     const _id = this.GenerateId(idLength);
     this.room = _room;
     this.owner = _owner;
-    this.radius = _sprite.width / 2;
+    this.radius = _radius;
     this.id = _id;
-    this.rect = {
+    this.center = {
       ..._coords,
-      ..._sprite,
     };
     this.class = _class;
   }
@@ -47,29 +46,29 @@ export default abstract class GameObject {
     return result;
   }
 
-  public async MoveTo(target: coords, time: number ) : Promise<rect> {
+  public async MoveTo(target: coords, time: number ) : Promise<coords> {
     return await new Promise ((resolve, reject) => {
       if (this.inMoving) {
          reject(1)
       }
       this.inMoving = true;
       const frames = Math.ceil(time / moveFrame)
-      const point : coords = {x: target.x - this.radius, y: target.y - this.radius}
-      const step : coords = {x: (point.x - this.rect.x) / frames, y: (point.y - this.rect.y) / frames}
+      const point : coords = {x: target.x, y: target.y}
+      const step : coords = {x: (point.x - this.center.x) / frames, y: (point.y - this.center.y) / frames}
       this.room.ReSendMessage(JSON.stringify({
         action: actionList.objectupdate,
         id: this.id,
         data: {
            event: 'startmoving',
-           target: point,
+           target: target,
            timeTo: time
         }
       }))
       let timePast = 0
       const moveTimer = setInterval(() => {
         timePast += moveFrame;
-        this.rect.y += step.y;
-        this.rect.x += step.x;
+        this.center.y += step.y;
+        this.center.x += step.x;
         if (timePast >= time) {
           clearInterval(moveTimer);
           this.room.ReSendMessage(JSON.stringify({
@@ -77,11 +76,11 @@ export default abstract class GameObject {
             id: this.id,
             data: {
                event: 'stopmoving',
-               position: this.center(),
+               position: this.center,
             }
           }))
           this.inMoving = false;
-          resolve(this.rect)
+          resolve(this.center)
         }
       }, moveFrame)
     })
@@ -91,12 +90,12 @@ export default abstract class GameObject {
     return this.id;
   }
 
-  public center(): coords {
+  /* public center(): coords {
     return {
       x: this.rect.x + this.rect.width / 2,
       y: this.rect.y + this.rect.height / 2,
     };
-  }
+  } */
 
   abstract destroy: () => void;
 }

@@ -17,12 +17,12 @@ export default class Planet extends GameObject {
     _room: GameRoom,
     _owner: string,
     _coords: play.coords,
-    _sprite: play.sprite,
+    _radius: number,
     dir: boolean,
   ) {
-    super(_room, _owner, _coords, _sprite, 'planet');
+    super(_room, _owner, _coords, _radius, 'planet');
     this.dir = dir;
-    this.defY = _coords.y + _sprite.height / 2 + defCoords.orbDiam / 2;
+    this.defY = this.center.y + defCoords.orbDiam / 2;
     this.onCreate();
   }
 
@@ -30,10 +30,10 @@ export default class Planet extends GameObject {
     // WriteLog(this.owner, 'Planet placed');
 
     this.timer = setInterval(() => {
-      this.rect.x =
+      this.center.x =
         gameField[0] / 2 +
         defCoords.orbDiam * (this.dir ? -1 : 1) * Math.cos(this.angle);
-      this.rect.y =
+      this.center.y =
         this.defY +
         defCoords.orbDiam * (this.dir ? -1 : 1) * Math.sin(this.angle);
 
@@ -49,7 +49,7 @@ export default class Planet extends GameObject {
        this.room.ReSendMessage(JSON.stringify({
           action: actionList.objectupdate,
           id: this.id,
-          coords: this.center(),
+          coords: this.center,
           data: {
             owner: this.owner,
             angle: this.angle,

@@ -13,9 +13,9 @@ export default class Star extends GameObject {
     _room: GameRoom,
     _owner: string,
     _coords: play.coords,
-    _sprite: play.sprite,
+    _radius: number,
   ) {
-    super(_room, _owner, _coords, _sprite, 'star');
+    super(_room, _owner, _coords, _radius, 'star');
     this.onCreate();
   }
 

@@ -26,11 +26,11 @@ export class Ship extends GameObject {
     _room: GameRoom,
     _owner: string,
     _coords: play.coords,
-    _sprite: play.sprite,
+    _radius: number,
     _manager: ObjectListManager<any>,
     dir: boolean,
   ) {
-    super(_room, _owner, _coords, _sprite, 'ship');
+    super(_room, _owner, _coords, _radius, 'ship');
     this.dir = dir;
     this.manager = _manager;
     this.onCreate();
@@ -41,10 +41,10 @@ export class Ship extends GameObject {
     const enemies = ships.filter((sh) => {
       return sh.owner !== this.owner;
     });
-    const coords = this.center();
+    const coords = this.center;
     const targets = enemies.sort((a, b) => {
-      const itemCoordsA = a.center();
-      const itemCoordsB = b.center();
+      const itemCoordsA = a.center;
+      const itemCoordsB = b.center;
       const distanceA =
         (coords.x - itemCoordsA.x) ** 2 + (coords.y - itemCoordsA.y) ** 2;
       const distanceB =
@@ -82,8 +82,8 @@ export class Ship extends GameObject {
     if (targets.length > 0) {
       const trg = targets[0];
 
-      this.rect.x += trg.rect.x;
-      this.rect.y += trg.rect.y + 120 * (this.dir ? -1 : 1);
+      this.center.x += trg.center.x;
+      this.center.y += trg.center.y + 120 * (this.dir ? -1 : 1);
 
       const msg = {
         action: actionList.objectupdate,
@@ -110,8 +110,8 @@ export class Ship extends GameObject {
     if (targets.length > 0) {
       const trg = targets[0];
 
-      this.rect.x += trg.rect.x;
-      this.rect.y += trg.rect.y + 60 * (this.dir ? -1 : 1);
+      this.center.x += trg.rect.x;
+      this.center.y += trg.rect.y + 60 * (this.dir ? -1 : 1);
       const aiming = Math.random();
       const isHit = aiming < this.hitChance;
 
@@ -190,9 +190,9 @@ export class Ship extends GameObject {
   }
   
   public StartMove() {
-    this.MoveTo({x: this.rect.x, y: defCoords.battleLine + 50 * (this.dir ? -1 : 1)}, shipMovingTime);
+    this.MoveTo({x: this.center.x, y: defCoords.battleLine + 50 * (this.dir ? -1 : 1)}, shipMovingTime);
     setTimeout(() => {
-      this.rect.y = defCoords.battleLine + 50 * (this.dir ? -1 : 1);
+      this.center.y = defCoords.battleLine + 50 * (this.dir ? -1 : 1);
       this.timer = setInterval(() => {
         this.AttackShip();
       }, defShipFireDelay);

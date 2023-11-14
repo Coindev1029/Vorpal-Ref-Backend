@@ -23,6 +23,10 @@ export const actionList = {
   buyitem: 'buyitem'
 }
 
+export const EmptyFunction = () => {
+  return;
+}
+
 export type action =
   | 'auth'
   | 'unauth'
