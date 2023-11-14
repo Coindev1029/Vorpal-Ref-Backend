@@ -35,5 +35,6 @@ export interface objectDisplayInfo {
   year?: number;
   day?: number;
   rotationSpeed?: number;
+  rotationPeriod?: number;
 }
 

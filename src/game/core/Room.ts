@@ -184,7 +184,8 @@ export class GameRoom {
       radius: planet2.rect.width / 2,
       orbitRadius: defCoords.orbDiam / 2,
       year: shipCreationStartTime,
-      rotationSpeed: config.planetRotationSpeed
+      rotationSpeed: config.planetRotationSpeed,
+      rotationPeriod: config.FrameInterval
     });
 
     this.manager = new ObjectListManager();
