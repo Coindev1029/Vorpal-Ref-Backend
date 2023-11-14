@@ -1,7 +1,7 @@
 import { WriteLog } from '../../database/log';
 import GameObject from './GameObject';
 import { play } from '../types';
-import { FrameInterval, SyncInterval, defCoords, gameField, planetRotationSpeed } from '../config';
+import { FrameInterval, SyncInterval, defCoords, gameField, planetRotationSpeed, planetYearAngle } from '../config';
 import { GameRoom } from '../core/Room';
 import { actionList } from '../types/msg';
 
@@ -37,7 +37,7 @@ export default class Planet extends GameObject {
         this.defY +
         defCoords.orbDiam * (this.dir ? -1 : 1) * Math.sin(this.angle);
 
-      this.angle += 0.004185;
+      this.angle += planetYearAngle;
       this.rotation += planetRotationSpeed;
 
       if (this.angle >= Math.PI * 2) {

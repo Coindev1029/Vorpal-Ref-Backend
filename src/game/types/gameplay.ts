@@ -36,5 +36,8 @@ export interface objectDisplayInfo {
   day?: number;
   rotationSpeed?: number;
   rotationPeriod?: number;
+  orbitCenter?: coords;
+  startAngle?: number;
+  orbitSpeed?: number;
 }
 

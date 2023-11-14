@@ -164,8 +164,11 @@ export class GameRoom {
       position: planet1.center,
       radius: planet1.radius,
       orbitRadius: defCoords.orbDiam / 2,
-      year: shipCreationStartTime,
-      rotationSpeed: config.planetRotationSpeed
+      orbitCenter: star1.center,
+      startAngle: -90,
+      year: shipCreationStartTime / 1000,
+      rotationSpeed: config.planetRotationSpeed * 10,
+      orbitSpeed: config.planetYearAngle * 10
     });
 
     const planet2 = new Planet(
@@ -183,9 +186,11 @@ export class GameRoom {
       position: planet2.center,
       radius: planet2.radius,
       orbitRadius: defCoords.orbDiam / 2,
-      year: shipCreationStartTime,
-      rotationSpeed: config.planetRotationSpeed,
-      rotationPeriod: config.FrameInterval
+      orbitCenter: star1.center,
+      startAngle: 90,
+      year: shipCreationStartTime / 1000,
+      rotationSpeed: config.planetRotationSpeed * 10,
+      orbitSpeed: config.planetYearAngle * 10
     });
 
     this.manager = new ObjectListManager();
