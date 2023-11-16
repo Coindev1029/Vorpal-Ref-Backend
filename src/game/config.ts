@@ -1,7 +1,7 @@
 export const idLength = 64;
 export const signTimeout = 120000;
 export const roomTestTimeout = 30000;
-export const gameTimerValue = 15000;
+export const gameTimerValue = 5000;
 export const pingPongDelay = 3000;
 export const default_ws_port = 3078;
 export const gameField = [800, 1000];
