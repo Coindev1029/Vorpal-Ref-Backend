@@ -1,5 +1,6 @@
 import WebSocket from 'ws';
 import { PlayerState } from '.';
+import { coords } from './gameplay';
 
 export interface GameObject {
   coords: number[];
@@ -29,6 +30,4 @@ export interface UserEvent {
   data: any;
 }
 
-export const EmptyFunction = () => {
-  return;
-}
+export type MoveFunction = (_id: string, center: coords) => any
