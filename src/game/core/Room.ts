@@ -120,7 +120,8 @@ export class GameRoom {
         JSON.stringify({
           action: actionList.gamestart,
           playerPosition: playerPosition,
-          orbitRadius: defCoords.orbDiam / 2,
+          orbitRadius: defCoords.orbRadius,
+          objectMovesPerSec: 1000 / config.FrameInterval
         }),
       );
     });

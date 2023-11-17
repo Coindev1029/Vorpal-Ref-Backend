@@ -57,7 +57,7 @@ export default abstract class GameObject {
         action: actionList.objectupdate,
         id: this.id,
         data: {
-          event: 'stopmoving',
+          event: actionList.stopmoving,
           position: this.center,
         },
       }),
@@ -87,7 +87,7 @@ export default abstract class GameObject {
         reject(1);
       }
       this.inMoving = true;
-      const frames = Math.ceil(time / moveFrame);
+      const frames = Math.ceil(time / FrameInterval);
       const point: coords = { x: target.x, y: target.y };
       const step: coords = {
         x: (point.x - this.center.x) / frames,
@@ -98,7 +98,7 @@ export default abstract class GameObject {
           action: actionList.objectupdate,
           id: this.id,
           data: {
-            event: 'startmoving',
+            event: actionList.startmoving,
             target: target,
             timeTo: time,
           },
@@ -113,7 +113,7 @@ export default abstract class GameObject {
         if (timePast >= time) {
           resolve(this.MoveStop(target, onFinish));
         }
-      }, moveFrame);
+      }, FrameInterval);
     });
   }
 
@@ -138,16 +138,17 @@ export default abstract class GameObject {
         };
         this.center.x += values.x;
         this.center.y += values.y;
+        if (onMove) onMove(this.id, this.center);
         if (limit) {
           if (this.center.x >= limit.x || this.center.y >= limit.x) {
-            resolve(this.MoveStop());
+            resolve(this.MoveStop(this.center, onFinish));
           }
         }
         if (this.isOutside()) {
-          resolve(this.MoveStop());
+          resolve(this.MoveStop(this.center, onFinish));
           this.destroy();
         }
-      }, moveFrame);
+      }, FrameInterval);
     });
   }
 

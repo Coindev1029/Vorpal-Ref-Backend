@@ -49,12 +49,11 @@ export default class Planet extends GameObject {
        this.room.ReSendMessage(JSON.stringify({
           action: actionList.objectupdate,
           id: this.id,
+          owner: this.owner,
+          class: this.class,
           coords: this.center,
-          data: {
-            owner: this.owner,
-            angle: this.angle,
-            rotation: this.rotation
-          }
+          angle: this.angle,
+          rotation: this.rotation,
        }))
     }, SyncInterval)
   }

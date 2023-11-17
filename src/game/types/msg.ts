@@ -6,6 +6,8 @@ export const actionList = {
   auth: 'auth',
   event: 'event',
   unauth: 'unauth',
+  startmoving: 'startmoving',
+  stopmoving: 'stopmoving',
   entergame: 'entergame',
   withdrawgame: 'withdrawgame',
   exitgame: 'exitgame',
