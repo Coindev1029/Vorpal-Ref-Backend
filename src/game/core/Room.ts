@@ -28,12 +28,17 @@ export class GameRoom {
   constructor(_server: GameIoServer, _players: PlayerRow[]) {
     this.server = _server;
     this.players = _players;
-    const race1: race = raceArr[Math.floor(Math.random() * raceArr.length)]
-    const race2: race = raceArr[Math.floor(Math.random() * raceArr.length)]
-    this.store = new Store(_players[0].publicKey, _players[1].publicKey, race1, race2)
+    const race1: race = raceArr[Math.floor(Math.random() * raceArr.length)];
+    const race2: race = raceArr[Math.floor(Math.random() * raceArr.length)];
+    this.store = new Store(
+      _players[0].publicKey,
+      _players[1].publicKey,
+      race1,
+      race2,
+    );
 
     this.players.forEach((player, index) => {
-       player.ws.on('message', (message) => {
+      player.ws.on('message', (message) => {
         let msg: any;
         try {
           msg = JSON.parse(String(message));
@@ -42,29 +47,29 @@ export class GameRoom {
         }
         try {
           msg = JSON.parse(String(msg));
-        } catch (e) {
-
-        }
+        } catch (e) {}
         // WriteLog(player.publicKey, `Received in game : ${String(message)}`)
 
-        switch(msg.action) {
-          case actionList.buyitem :
+        switch (msg.action) {
+          case actionList.buyitem:
             if (msg.data) {
-              const result = this.store.BuyItem(player.publicKey, msg.data.name)
+              const result = this.store.BuyItem(
+                player.publicKey,
+                msg.data.name,
+              );
               const responce = {
                 action: 'buyreport',
-                result: result
-              }
-              player.ws.send(JSON.stringify(responce))
+                result: result,
+              };
+              player.ws.send(JSON.stringify(responce));
             }
             break;
-          case actionList.exitgame :
+          case actionList.exitgame:
             this.Finish(index === 0 ? 1 : 0);
             break;
         }
-
-       })
-    })
+      });
+    });
   }
 
   public SetId(_id: number): boolean {
@@ -109,12 +114,15 @@ export class GameRoom {
         roomId: this.GetId(),
       };
       this.server.UpdatePlayerState(player.id, state);
-      const playerPosition = player.publicKey === this.players[0].publicKey ? 'top': 'bottom'
-      player.ws.send(JSON.stringify({
-        action: actionList.gamestart,
-        playerPosition: playerPosition,
-        orbitRadius: defCoords.orbDiam / 2
-      }));
+      const playerPosition =
+        player.publicKey === this.players[0].publicKey ? 'top' : 'bottom';
+      player.ws.send(
+        JSON.stringify({
+          action: actionList.gamestart,
+          playerPosition: playerPosition,
+          orbitRadius: defCoords.orbDiam / 2,
+        }),
+      );
     });
     this.isActive = true;
     const list: objectDisplayInfo[] = [];
@@ -152,9 +160,9 @@ export class GameRoom {
     const planet1 = new Planet(
       this,
       this.players[0].publicKey,
-      config.defCoords.planet1,
+      { x: star1.center.x, y: star1.center.y - config.defCoords.orbRadius },
       config.defCoords.sprites.planet.radius,
-      false
+      false,
     );
 
     list.push({
@@ -168,15 +176,15 @@ export class GameRoom {
       startAngle: -90,
       year: shipCreationStartTime / 1000,
       rotationSpeed: config.planetRotationSpeed * 10,
-      orbitSpeed: config.planetYearAngle * 10
+      orbitSpeed: config.planetYearAngle * 10,
     });
 
     const planet2 = new Planet(
       this,
       this.players[1].publicKey,
-      config.defCoords.planet2,
+      { x: star2.center.x, y: star2.center.y + config.defCoords.orbRadius },
       config.defCoords.sprites.planet.radius,
-      true
+      true,
     );
 
     list.push({
@@ -190,18 +198,18 @@ export class GameRoom {
       startAngle: 90,
       year: shipCreationStartTime / 1000,
       rotationSpeed: config.planetRotationSpeed * 10,
-      orbitSpeed: config.planetYearAngle * 10
+      orbitSpeed: config.planetYearAngle * 10,
     });
 
     this.manager = new ObjectListManager();
-    this.manager.addObject(star1); 
+    this.manager.addObject(star1);
     this.manager.addObject(star2);
     this.manager.addObject(planet1);
     this.manager.addObject(planet2);
 
     const listMsg = {
       action: actionList.objectcreate,
-      list: list
+      list: list,
     };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
@@ -212,11 +220,11 @@ export class GameRoom {
     this.shipCreationTimer = setInterval(() => {
       const shipList = this.manager.getObjectsByClassName('ship');
       const shipList1 = shipList.filter((sh) => {
-        return sh.owner === this.players[0].publicKey
-      })
+        return sh.owner === this.players[0].publicKey;
+      });
       const shipList2 = shipList.filter((sh) => {
-        return sh.owner === this.players[1].publicKey
-      })
+        return sh.owner === this.players[1].publicKey;
+      });
       if (shipList1.length === 0 || shipList2.length === 0) {
         this.CreateShips();
       }
@@ -224,20 +232,19 @@ export class GameRoom {
     this.battleShipCreationTimer = setInterval(() => {
       const shipList = this.manager.getObjectsByClassName('battleship');
       const shipList1 = shipList.filter((sh) => {
-        return sh.owner === this.players[0].publicKey
-      })
+        return sh.owner === this.players[0].publicKey;
+      });
       const shipList2 = shipList.filter((sh) => {
-        return sh.owner === this.players[1].publicKey
-      })
+        return sh.owner === this.players[1].publicKey;
+      });
       if (shipList1.length === 0) {
-        this.CreateBattleShip (this.players[0].publicKey)
+        this.CreateBattleShip(this.players[0].publicKey);
       }
 
       if (shipList2.length === 0) {
-         this.CreateBattleShip (this.players[1].publicKey)
+        this.CreateBattleShip(this.players[1].publicKey);
       }
-    }, shipCreationStartTime * 3)
-
+    }, shipCreationStartTime * 3);
   }
 
   public ReSendMessage(message: string) {
@@ -248,7 +255,7 @@ export class GameRoom {
 
   private CreateShips() {
     const list: objectMapInfo[] = [];
-    const ships : Ship[] = [];
+    const ships: Ship[] = [];
     this.players.forEach((player, index) => {
       const mirror = index === 0 ? true : false;
       const center = gameField[0] / 2;
@@ -272,47 +279,47 @@ export class GameRoom {
           radius: ship.radius,
           mirror: mirror,
         });
-        ships.push(ship)
+        ships.push(ship);
       });
     });
     const listMsg: objectInfo = {
       action: actionList.objectcreate,
-      list: list
+      list: list,
     };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
     });
     ships.forEach((sh) => {
       sh.StartMove();
-    })
+    });
   }
 
-  private CreateBattleShip (owner: string) {
+  private CreateBattleShip(owner: string) {
     const list: objectMapInfo[] = [];
 
-      const mirror = owner === this.players[0].publicKey ? true : false;
-      const center = gameField[0] / 2;
-      const xPosition = (gameField[0] / 4 ) * (mirror ? 3 : 1);
-      const yPosition = mirror ? 200 : 800;
-      const bShip = new BattlesShip(
-        this,
-        owner,
-        { x: xPosition, y: yPosition },
-        defCoords.sprites.ship.radius,
-        this.manager
-      );
-      list.push({
-        id: bShip.getId(),
-        owner: bShip.owner,
-        class: bShip.class,
-        position: bShip.center,
-        radius: bShip.radius,
-        mirror: mirror,
-      });
+    const mirror = owner === this.players[0].publicKey ? true : false;
+    const center = gameField[0] / 2;
+    const xPosition = (gameField[0] / 4) * (mirror ? 3 : 1);
+    const yPosition = mirror ? 200 : 800;
+    const bShip = new BattlesShip(
+      this,
+      owner,
+      { x: xPosition, y: yPosition },
+      defCoords.sprites.ship.radius,
+      this.manager,
+    );
+    list.push({
+      id: bShip.getId(),
+      owner: bShip.owner,
+      class: bShip.class,
+      position: bShip.center,
+      radius: bShip.radius,
+      mirror: mirror,
+    });
 
     const listMsg: objectInfo = {
       action: actionList.objectcreate,
-      list: list
+      list: list,
     };
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
@@ -323,13 +330,13 @@ export class GameRoom {
     if (this.isActive) {
       let winner = 0;
       this.players.forEach((player, index) => {
-       /* player.ws.send(JSON.stringify({
+        /* player.ws.send(JSON.stringify({
          wallet: owner,
          msg: 'Star destroyed'
        })) */
-          if(player.publicKey === owner) {
-            winner = index === 0 ? 1 : 0;
-          }
+        if (player.publicKey === owner) {
+          winner = index === 0 ? 1 : 0;
+        }
       });
       this.manager.removeObject(id);
       this.Finish(winner);

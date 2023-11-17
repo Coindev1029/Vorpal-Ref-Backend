@@ -25,11 +25,12 @@ export const moveFrame = 20; // step in ms
 export const defCoords = {
   battleLine: 500,
   orbDiam: 150,
+  orbRadius: 75,
   sprites: {
     star: {
-      width: 100,
-      height: 100,
-      radius: 50
+      width: 50,
+      height: 50,
+      radius: 25
     },
     planet: {
       width: 40,
@@ -37,14 +38,14 @@ export const defCoords = {
       radius: 20
     },
     ship: {
-      width: 40,
-      height: 40,
-      radius: 20
+      width: 30,
+      height: 30,
+      radius: 15
     },
   },
   star1: {
     x: 400,
-    y: 200,
+    y: 250,
   },
   star2: {
     x: 350,

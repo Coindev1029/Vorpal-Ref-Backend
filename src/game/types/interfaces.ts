@@ -28,3 +28,7 @@ export interface UserEvent {
   type: string;
   data: any;
 }
+
+export const EmptyFunction = () => {
+  return;
+}

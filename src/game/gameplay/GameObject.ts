@@ -8,6 +8,7 @@ export default abstract class GameObject {
   protected id: string = '';
   protected room: GameRoom;
   protected inMoving =  false;
+  protected moveTimer: NodeJS.Timer;
 
   public center: play.coords;
   public radius: number;
@@ -65,12 +66,12 @@ export default abstract class GameObject {
         }
       }))
       let timePast = 0
-      const moveTimer = setInterval(() => {
+      this.moveTimer = setInterval(() => {
         timePast += moveFrame;
         this.center.y += step.y;
         this.center.x += step.x;
         if (timePast >= time) {
-          clearInterval(moveTimer);
+          clearInterval(this.moveTimer);
           this.center.x = target.x;
           this.center.y = target.y;
           this.room.ReSendMessage(JSON.stringify({
