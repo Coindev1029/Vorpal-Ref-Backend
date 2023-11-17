@@ -22,6 +22,7 @@ export const playerStartGold = 100;
 export const playerExpPerLevel = 200;
 export const playerMaxLevel = 16;
 export const moveFrame = 100; // step in ms
+export const shipRange = 200;
 export const defCoords = {
   battleLine: 500,
   orbDiam: 150,
