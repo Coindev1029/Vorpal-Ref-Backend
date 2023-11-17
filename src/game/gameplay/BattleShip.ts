@@ -1,7 +1,7 @@
 import { play } from '../types';
 import ObjectListManager from '../core/ListManager';
 import { GameRoom } from '../core/Room';
-import { actionList } from '../types/msg';
+import { actionList, classes } from '../types/msg';
 import GameObject from './GameObject';
 import { defBattleShipHealth } from '../config';
 import Star from './Star';
@@ -18,7 +18,7 @@ export class BattlesShip extends GameObject {
     _radius: number,
     _manager: ObjectListManager<any>,
   ) {
-    super(_room, _owner, _coords, _radius, 'battleship');
+    super(_room, _owner, _coords, _radius, classes.battleship);
     this.manager = _manager;
     this.onCreate();
   }

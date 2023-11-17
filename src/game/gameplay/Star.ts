@@ -3,7 +3,7 @@ import GameObject from './GameObject';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
 import { defShipHealth, defStarHealth } from '../config';
-import { actionList } from '../types/msg';
+import { actionList, classes } from '../types/msg';
 
 export default class Star extends GameObject {
   public energy: number;
@@ -15,7 +15,7 @@ export default class Star extends GameObject {
     _coords: play.coords,
     _radius: number,
   ) {
-    super(_room, _owner, _coords, _radius, 'star');
+    super(_room, _owner, _coords, _radius, classes.star);
     this.onCreate();
   }
 
@@ -29,6 +29,7 @@ export default class Star extends GameObject {
   }
 
   protected onDestroy() {
+    clearInterval(this.lifeTimer);
     this.room.StarDestroy(this.owner, this.id);
   }
 

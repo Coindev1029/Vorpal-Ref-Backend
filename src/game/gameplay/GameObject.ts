@@ -82,9 +82,9 @@ export default abstract class GameObject {
     onMove?: MoveFunction,
     onFinish?: MoveFunction,
   ): Promise<coords> {
-    return await new Promise((resolve, reject) => {
+    return await new Promise((resolve) => {
       if (this.inMoving) {
-        reject(1);
+        this.MoveStop();
       }
       this.inMoving = true;
       const frames = Math.ceil(time / FrameInterval);

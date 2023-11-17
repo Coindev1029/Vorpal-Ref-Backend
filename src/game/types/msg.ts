@@ -25,6 +25,14 @@ export const actionList = {
   buyitem: 'buyitem'
 }
 
+export const classes = {
+  star: 'star',
+  planet: 'planet',
+  ship: 'ship',
+  battleship: 'battleship',
+  shell: 'shell'
+}
+
 export type action =
   | 'auth'
   | 'unauth'

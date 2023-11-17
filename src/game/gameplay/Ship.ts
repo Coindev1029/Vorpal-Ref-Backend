@@ -12,7 +12,7 @@ import {
 import { GameRoom } from '../core/Room';
 import ObjectListManager from '../core/ListManager';
 import { WriteLog } from '../../database/log';
-import { actionList } from '../types/msg';
+import { actionList, classes } from '../types/msg';
 import { coords, rect } from '../types/gameplay';
 
 export class Ship extends GameObject {
@@ -30,14 +30,14 @@ export class Ship extends GameObject {
     _manager: ObjectListManager<any>,
     dir: boolean,
   ) {
-    super(_room, _owner, _coords, _radius, 'ship');
+    super(_room, _owner, _coords, _radius, classes.ship);
     this.dir = dir;
     this.manager = _manager;
     this.onCreate();
   }
 
   private SearchTarget() {
-    const ships = this.manager.getObjectsByClassName('ship');
+    const ships = this.manager.getObjectsByClassName(classes.ship);
     const enemies = ships.filter((sh) => {
       return sh.owner !== this.owner;
     });
@@ -75,7 +75,7 @@ export class Ship extends GameObject {
 
   private AttackStar() {
     const targets = this.manager
-      .getObjectsByClassName('star')
+      .getObjectsByClassName(classes.star)
       .filter((star) => {
         return star.owner !== this.owner;
       });
@@ -103,7 +103,7 @@ export class Ship extends GameObject {
 
   private AttackBattleShip() {
     const targets = this.manager
-      .getObjectsByClassName('battleship')
+      .getObjectsByClassName(classes.battleship)
       .filter((star) => {
         return star.owner !== this.owner;
       });
