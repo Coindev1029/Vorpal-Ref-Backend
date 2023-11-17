@@ -15,6 +15,7 @@ export const actionList = {
   rightclick: 'rightclick',
   keypress: 'keypress',
   gamestart: 'gamestart',
+  gameend: 'gameend',
   gamefinish: 'gamefinish',
   globaldataupdate: 'globaldataupdate',
   objectcreate: 'objectcreate',
@@ -22,7 +23,8 @@ export const actionList = {
   objectList: 'objectlist',
   objectdestroy: 'objectdestroy',
   playerPosition: 'playerPosition',
-  buyitem: 'buyitem'
+  buyitem: 'buyitem',
+  buyreport: 'buyreport'
 }
 
 export const classes = {

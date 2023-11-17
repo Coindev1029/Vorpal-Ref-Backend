@@ -56,6 +56,23 @@ export default class Star extends GameObject {
     return result
   }
 
+  public UnHoldPosition (point: coords) {
+    let result = false;
+    this.AttackPositions.forEach((pos) => {
+      if (pos.center === point && pos.hold === true) {
+          pos.hold = false;
+          result = true;
+      }
+    })
+    return result
+  }
+
+  public GetFreePositions () {
+    return this.AttackPositions.filter((pos) => {
+      return pos.hold === false;
+    })
+  }
+
   protected onCreate() {
     // WriteLog(this.owner, 'Star placed');
     this.energy = defStarHealth;

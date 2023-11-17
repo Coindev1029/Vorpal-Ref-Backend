@@ -14,6 +14,7 @@ import ObjectListManager from '../core/ListManager';
 import { WriteLog } from '../../database/log';
 import { actionList, classes } from '../types/msg';
 import { coords, rect } from '../types/gameplay';
+import Star from './Star';
 
 export class Ship extends GameObject {
   private timer: NodeJS.Timer;
@@ -21,6 +22,7 @@ export class Ship extends GameObject {
   private dir: boolean = true; // true - up, false - down
   private hitChance: number = defShipHitChance;
   private manager: ObjectListManager<any>;
+  private TargetStar: Star;
 
   constructor(
     _room: GameRoom,
@@ -74,7 +76,15 @@ export class Ship extends GameObject {
   }
 
   public Activate() {
-      this.StartMove();
+    const stars = this.manager
+    .getObjectsByClassName(classes.star)
+    .filter((star) => {
+      return star.owner !== this.owner;
+    });
+    if (stars.length > 0) {
+      this.TargetStar = stars[0];
+    }
+    this.StartMove();
   }
 
   private AttackStar() {

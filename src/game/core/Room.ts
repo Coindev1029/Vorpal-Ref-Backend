@@ -8,7 +8,7 @@ import ObjectListManager from './ListManager';
 import Planet from '../gameplay/Planet';
 import { objectDisplayInfo, objectMapInfo } from '../types/gameplay';
 import GameObject from '../gameplay/GameObject';
-import { actionList, objectInfo } from '../types/msg';
+import { actionList, classes, objectInfo } from '../types/msg';
 import { defCoords, gameField, shipCreationStartTime } from '../config';
 import { Ship } from '../gameplay/Ship';
 import { BattlesShip } from '../gameplay/BattleShip';
@@ -58,7 +58,7 @@ export class GameRoom {
                 msg.data.name,
               );
               const responce = {
-                action: 'buyreport',
+                action: actionList.buyreport,
                 result: result,
               };
               player.ws.send(JSON.stringify(responce));
@@ -223,7 +223,7 @@ export class GameRoom {
     this.CreateShips();
 
     this.shipCreationTimer = setInterval(() => {
-      const shipList = this.manager.getObjectsByClassName('ship');
+      const shipList = this.manager.getObjectsByClassName(classes.ship);
       const shipList1 = shipList.filter((sh) => {
         return sh.owner === this.players[0].publicKey;
       });
@@ -235,7 +235,7 @@ export class GameRoom {
       }
     }, shipCreationStartTime);
     this.battleShipCreationTimer = setInterval(() => {
-      const shipList = this.manager.getObjectsByClassName('battleship');
+      const shipList = this.manager.getObjectsByClassName(classes.battleship);
       const shipList1 = shipList.filter((sh) => {
         return sh.owner === this.players[0].publicKey;
       });
@@ -369,7 +369,7 @@ export class GameRoom {
       this.server.UpdatePlayerState(player.id, state);
       player.ws.send(
         JSON.stringify({
-          action: 'gameend',
+          action: actionList.gameend,
           win: winner === index ? true : false,
         }),
       );
