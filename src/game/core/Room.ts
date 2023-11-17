@@ -215,9 +215,10 @@ export class GameRoom {
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
     });
-
-    star1.Activate();
-    star2.Activate();
+    setTimeout(() => {
+      star1.Activate();
+      star2.Activate();
+    }, 1)
 
     this.CreateShips();
 
