@@ -41,3 +41,8 @@ export interface objectDisplayInfo {
   orbitSpeed?: number;
 }
 
+export interface StarAttackPosition {
+  center: coords;
+  hold: boolean;
+}
+

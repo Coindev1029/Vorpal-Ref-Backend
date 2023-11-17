@@ -48,20 +48,22 @@ export default abstract class GameObject {
     return result;
   }
 
-  public MoveStop(point: coords = this.center, onFinish?: MoveFunction) {
+  public MoveStop(point: coords = this.center, notify = true, onFinish?: MoveFunction) {
     if (this.moveTimer) clearInterval(this.moveTimer);
     this.center.x = point.x;
     this.center.y = point.y;
-    this.room.ReSendMessage(
-      JSON.stringify({
-        action: actionList.objectupdate,
-        id: this.id,
-        data: {
-          event: actionList.stopmoving,
-          position: this.center,
-        },
-      }),
-    );
+    if (notify) {
+      this.room.ReSendMessage(
+        JSON.stringify({
+          action: actionList.objectupdate,
+          id: this.id,
+          data: {
+            event: actionList.stopmoving,
+            position: this.center,
+          },
+        }),
+      );
+    }
     this.inMoving = false;
     if (onFinish) onFinish(this.id, this.center);
     return this.center;
@@ -84,7 +86,7 @@ export default abstract class GameObject {
   ): Promise<coords> {
     return await new Promise((resolve) => {
       if (this.inMoving) {
-        this.MoveStop();
+        this.MoveStop(this.center, false);
       }
       this.inMoving = true;
       const frames = Math.ceil(time / FrameInterval);
@@ -111,7 +113,7 @@ export default abstract class GameObject {
         this.center.x += step.x;
         if (onMove) onMove(this.id, this.center);
         if (timePast >= time) {
-          resolve(this.MoveStop(target, onFinish));
+          resolve(this.MoveStop(target, true, onFinish));
         }
       }, FrameInterval);
     });
@@ -124,9 +126,9 @@ export default abstract class GameObject {
     onMove?: MoveFunction,
     onFinish?: MoveFunction,
   ): Promise<coords> {
-    return await new Promise((resolve, reject) => {
+    return await new Promise((resolve) => {
       if (this.inMoving) {
-        reject(1);
+        this.MoveStop(this.center, false)
       }
       const queX = Math.cos(angle);
       const queY = Math.sin(angle);
@@ -141,11 +143,11 @@ export default abstract class GameObject {
         if (onMove) onMove(this.id, this.center);
         if (limit) {
           if (this.center.x >= limit.x || this.center.y >= limit.x) {
-            resolve(this.MoveStop(this.center, onFinish));
+            resolve(this.MoveStop(this.center, true, onFinish));
           }
         }
         if (this.isOutside()) {
-          resolve(this.MoveStop(this.center, onFinish));
+          resolve(this.MoveStop(this.center, true, onFinish));
           this.destroy();
         }
       }, FrameInterval);
