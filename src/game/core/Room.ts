@@ -216,6 +216,9 @@ export class GameRoom {
       player.ws.send(JSON.stringify(listMsg));
     });
 
+    star1.Activate();
+    star2.Activate();
+
     this.CreateShips();
 
     this.shipCreationTimer = setInterval(() => {
@@ -291,7 +294,7 @@ export class GameRoom {
       player.ws.send(JSON.stringify(listMsg));
     });
     ships.forEach((sh) => {
-      sh.StartMove();
+      sh.Activate();
     });
   }
 

@@ -73,6 +73,10 @@ export class Ship extends GameObject {
     }
   }
 
+  public Activate() {
+      this.StartMove();
+  }
+
   private AttackStar() {
     const targets = this.manager
       .getObjectsByClassName(classes.star)

@@ -45,18 +45,32 @@ export default class Star extends GameObject {
     }))
   }
 
+  public HoldPosition (point: coords) {
+    let result = false;
+    this.AttackPositions.forEach((pos) => {
+      if (pos.center === point && pos.hold === false) {
+          pos.hold = true;
+          result = true;
+      }
+    })
+    return result
+  }
+
   protected onCreate() {
     // WriteLog(this.owner, 'Star placed');
     this.energy = defStarHealth;
-    this.FillAttackPositions();
-    this.lifeTimer = setInterval(() => {
-      this.TakeDamage(1);
-    }, 1000);
   }
 
   protected onDestroy() {
     clearInterval(this.lifeTimer);
     this.room.StarDestroy(this.owner, this.id);
+  }
+
+  public Activate() {
+    this.FillAttackPositions();
+    this.lifeTimer = setInterval(() => {
+      this.TakeDamage(1);
+    }, 1000);
   }
 
   public TakeDamage(damage: number) {
