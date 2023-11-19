@@ -120,90 +120,6 @@ export class Ship extends GameObject {
     }
   }
 
-  private AttackBattleShip() {
-    const targets = this.manager
-      .getObjectsByClassName(classes.battleship)
-      .filter((star) => {
-        return star.owner !== this.owner;
-      });
-    if (targets.length > 0) {
-      const trg = targets[0];
-
-      this.center.x += trg.rect.x;
-      this.center.y += trg.rect.y + 60 * (this.dir ? -1 : 1);
-      const aiming = Math.random();
-      const isHit = aiming < this.hitChance;
-
-      if (isHit) {
-        const damage =
-          defShipDamage[0] +
-          Math.round((defShipDamage[1] - defShipDamage[0]) * Math.random());
-        trg.TakeDamage(damage);
-        this.room.ReSendMessage(JSON.stringify({
-          action: actionList.event,
-          type: 'attack',
-          result: 'hit',
-          damage: damage
-        }))
-      } else {
-        const damage =
-          defShipDamage[0] +
-          Math.round((defShipDamage[1] - defShipDamage[0]) * Math.random());
-          this.room.ReSendMessage(JSON.stringify({
-            action: actionList.event,
-            type: 'attack',
-            result: 'miss',
-            damage: damage
-          }))
-      }
-
-      setTimeout(() => {
-        this.AttackBattleShip();
-      }, defShipFireDelay);
-    } else {
-      this.AttackStar();
-    }
-  }
-
-  private AttackShip() {
-    const target = this.SearchTarget();
-    const aiming = Math.random();
-    const isHit = aiming < this.hitChance;
-    if (target === null) {
-      return this.AttackBattleShip();
-    }
-    const damage =
-    defShipDamage[0] +
-    Math.round((defShipDamage[1] - defShipDamage[0]) * Math.random());
-    if (isHit) {
-      target.TakeDamage(damage);
-      this.room.ReSendMessage(JSON.stringify({
-        action: actionList.event,
-        type: 'attack',
-        result: 'hit',
-        damage: damage
-      }))
-    } else {
-        this.room.ReSendMessage(JSON.stringify({
-          action: actionList.event,
-          type: 'attack',
-          result: 'miss',
-          damage: damage
-        }))
-    }
-    const msg = {
-      action: actionList.objectupdate,
-      data: {
-        from: this.id,
-        to: target.id,
-        wasHP: target.getHp(),
-        damage: damage,
-        hit: isHit,
-      },
-    };
-    this.room.ReSendMessage(JSON.stringify(msg));
-  }
-
   protected onCreate() {
     this.hp = defShipHealth;
   }
@@ -229,6 +145,11 @@ export class Ship extends GameObject {
         if (rangeA > rangeB) return 1;
         return 0;
     })
+    const logMsg = {
+      action: actionList.log,
+      ...positions
+    }
+    this.room.ReSendMessage(JSON.stringify(logMsg))
     return positions.length > 0 ? positions[0].center : this.ReservePosition();
   }
 

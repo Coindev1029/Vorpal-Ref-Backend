@@ -217,10 +217,9 @@ export class GameRoom {
     });
     setTimeout(() => {
       star1.Activate();
-      star2.Activate();
+      star2.Activate();   
+      this.CreateShips();
     }, 1)
-
-    this.CreateShips();
 
     this.shipCreationTimer = setInterval(() => {
       const shipList = this.manager.getObjectsByClassName(classes.ship);
