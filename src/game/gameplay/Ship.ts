@@ -291,7 +291,7 @@ export class Ship extends GameObject {
           this.SearchTargetByPosition();
         }, defShipFireDelay)
       } else {
-        this.MoveTo(this.center, Math.round(5000 * (range / 700)), this.SearchTargetByPosition());
+        this.MoveTo(this.center, Math.round(shipMovingTime * (range / 700)), this.SearchTargetByPosition());
       }
      } else {
        this.StartMove();
@@ -302,7 +302,14 @@ export class Ship extends GameObject {
   public StartMove() {
     const defTarget = this.GetClosestPosition(this.center, this.TargetStar);
     const rangeToDefTarget = this.manager.calcRange(this.center, defTarget);
-    if (rangeToDefTarget < 5) {
+    const testMsg = {
+      action: actionList.log,
+      id: this.id,
+      targetPos: defTarget,
+      range: rangeToDefTarget
+    }
+    this.room.ReSendMessage(JSON.stringify(testMsg))
+    /* if (rangeToDefTarget < 5) {
       if (!this.isOnStarPosition) { 
         this.AttackStar();
         this.TargetStar.HoldPosition(defTarget);
@@ -310,10 +317,10 @@ export class Ship extends GameObject {
         this.MoveStop(defTarget, true);
       }
       return;
-    }
+    } */
     // x: this.center.x, y: defCoords.battleLine + 50 * (this.dir ? -1 : 1)}
     
-    this.MoveTo(defTarget, shipMovingTime, this.SearchTargetByPosition());
+    // this.MoveTo(defTarget, shipMovingTime, this.SearchTargetByPosition());
     /* setTimeout(() => {
       this.center.y = defCoords.battleLine + 50 * (this.dir ? -1 : 1);
       this.timer = setInterval(() => {
