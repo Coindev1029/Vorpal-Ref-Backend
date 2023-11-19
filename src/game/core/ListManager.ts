@@ -81,6 +81,7 @@ export default class ObjectListManager<T extends GameObject> {
   getClosestObjects(
     _id: string,
     classes: string[] | 'all' = 'all',
+    enemy = true,
     range: number = 9999,
   ): string[] {
     const result: string[] = [];
@@ -89,7 +90,7 @@ export default class ObjectListManager<T extends GameObject> {
       return result;
     }
     let list = this.getAllObjects().filter((obj) => {
-      return obj.getId() !== _id;
+      return obj.getId() !== _id && (enemy ? ob.owner !== obj.owner : true);
     });
     if (classes !== 'all') {
       list = list.filter((obj) => {

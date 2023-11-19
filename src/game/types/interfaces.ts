@@ -30,4 +30,4 @@ export interface UserEvent {
   data: any;
 }
 
-export type MoveFunction = (_id: string, center: coords) => any
+export type MoveFunction = (_id?: string, center?: coords) => void

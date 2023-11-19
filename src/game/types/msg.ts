@@ -24,7 +24,8 @@ export const actionList = {
   objectdestroy: 'objectdestroy',
   playerPosition: 'playerPosition',
   buyitem: 'buyitem',
-  buyreport: 'buyreport'
+  buyreport: 'buyreport',
+  log: 'log'
 }
 
 export const classes = {
