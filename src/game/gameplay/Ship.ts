@@ -178,7 +178,9 @@ export class Ship extends GameObject {
   }
 
   private SearchTargetByPosition = (_id = this.id, coords = this.center) => {
-    // const defTarget = this.GetClosestPosition(this.center, this.TargetStar);
+    if (!this.targetPosition) {
+      this.targetPosition = this.GetClosestPosition(this.center, this.TargetStar);
+    }
     const defTarget = this.targetPosition;
     this.room.ReSendMessage(
       JSON.stringify({
