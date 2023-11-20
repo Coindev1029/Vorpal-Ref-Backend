@@ -171,12 +171,8 @@ export class Ship extends GameObject {
   }
 
   private SearchTargetByPosition = (_id = this.id, coords = this.center) => {
-    this.room.ReSendMessage(JSON.stringify({
-      action: actionList.log,
-      event: 'targetSearch',
-      center: coords
-    }))
-    /* const defTarget = this.GetClosestPosition(this.center, this.TargetStar);
+    // const defTarget = this.GetClosestPosition(this.center, this.TargetStar);
+    const defTarget = this.targetPosition
     const rangeToDefTarget = this.manager.calcRange(this.center, defTarget);
     if (rangeToDefTarget < 5) {
       if (!this.isOnStarPosition) { 
@@ -192,6 +188,13 @@ export class Ship extends GameObject {
      if (Targets.length > 0) {
       const trg = this.manager.getObjectById(Targets[0])
       const range = this.manager.calcRange(coords, trg.center)
+      const listMsg = {
+        action: actionList.log,
+        event: 'SelectingTarget',
+        targetRange: range,
+        targetClass: trg.class
+      }
+      this.room.ReSendMessage(JSON.stringify(listMsg));
       if (range <= this.attackRange) {
         this.MoveStop(this.center, this.inMoving ? true : false);
         this.AttackObject(trg);
@@ -203,7 +206,7 @@ export class Ship extends GameObject {
       }
      } else {
        this.StartMove();
-     } */
+     }
      return () => {}
   }
   
