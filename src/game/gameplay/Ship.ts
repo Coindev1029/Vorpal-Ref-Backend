@@ -91,6 +91,7 @@ export class Ship extends GameObject {
           event: 'starDamage',
           nowHP: this.hp
         }
+        this.room.ReSendMessage(JSON.stringify(logMsg));
       }, FrameInterval)
     }
     return () => {}
@@ -170,7 +171,12 @@ export class Ship extends GameObject {
   }
 
   private SearchTargetByPosition(_id = this.id, coords = this.center): MoveFunction {
-    const defTarget = this.GetClosestPosition(this.center, this.TargetStar);
+    this.room.ReSendMessage(JSON.stringify({
+      action: actionList.log,
+      event: 'targetSearch',
+      center: coords
+    }))
+    /* const defTarget = this.GetClosestPosition(this.center, this.TargetStar);
     const rangeToDefTarget = this.manager.calcRange(this.center, defTarget);
     if (rangeToDefTarget < 5) {
       if (!this.isOnStarPosition) { 
@@ -197,7 +203,7 @@ export class Ship extends GameObject {
       }
      } else {
        this.StartMove();
-     }
+     } */
      return () => {}
   }
   
@@ -221,8 +227,8 @@ export class Ship extends GameObject {
       return;
     }
     // x: this.center.x, y: defCoords.battleLine + 50 * (this.dir ? -1 : 1)}
-    this.MoveTo(defTarget, shipMovingTime, () => {}, this.AttackStar());
-    // this.MoveTo(defTarget, shipMovingTime, this.SearchTargetByPosition());
+    //this.MoveTo(defTarget, shipMovingTime, () => {}, this.AttackStar());
+    this.MoveTo(defTarget, shipMovingTime, this.SearchTargetByPosition());
     /* setTimeout(() => {
       this.center.y = defCoords.battleLine + 50 * (this.dir ? -1 : 1);
       this.timer = setInterval(() => {
