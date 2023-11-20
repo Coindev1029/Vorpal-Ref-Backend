@@ -172,14 +172,14 @@ export class Ship extends GameObject {
 
   private SearchTargetByPosition = (_id = this.id, coords = this.center) => {
     // const defTarget = this.GetClosestPosition(this.center, this.TargetStar);
-    const defTarget = this.targetPosition
+    /* const defTarget = this.targetPosition
     const rangeToDefTarget = this.manager.calcRange(this.center, defTarget);
     const listMsg = {
       action: actionList.log,
       event: 'RangeToPosition',
       targetRange: rangeToDefTarget
     }
-    this.room.ReSendMessage(JSON.stringify(listMsg));
+    this.room.ReSendMessage(JSON.stringify(listMsg)); */
     /* if (rangeToDefTarget < 5) {
       if (!this.isOnStarPosition) { 
         this.AttackStar();
