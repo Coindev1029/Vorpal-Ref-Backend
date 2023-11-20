@@ -62,7 +62,7 @@ export class Ship extends GameObject {
     this.StartMove();
   }
 
-  private AttackStar() {
+  private AttackStar(_id = this.id, coords = this.center) {
     const trg = this.TargetStar;
     const logMsg = {
       action: actionList.log,
