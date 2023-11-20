@@ -185,11 +185,12 @@ export class Ship extends GameObject {
         action: actionList.log,
         event: 'params',
         coords: coords,
+        target: defTarget
       }),
     );
     try {
       const rangeToDefTarget = this.manager.calcRange(
-        { x: this.center.x, y: this.center.y },
+        { x: coords.x, y: coords.y },
         defTarget,
       );
       this.room.ReSendMessage(JSON.stringify({ rangeTo: rangeToDefTarget }));
