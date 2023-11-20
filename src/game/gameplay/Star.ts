@@ -73,6 +73,10 @@ export default class Star extends GameObject {
     })
   }
 
+  public GetAllPositions () {
+    return this.AttackPositions;
+  }
+
   protected onCreate() {
     // WriteLog(this.owner, 'Star placed');
     this.energy = defStarHealth;

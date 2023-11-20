@@ -30,7 +30,8 @@ export class Ship extends GameObject {
   private TargetStar: Star;
   private attackRange: number;
   private isAttacking: boolean = false;
-  private targetId = '';
+  private targetPosition: coords;
+  private listIndex: number = 0;
   private isOnStarPosition: boolean = false;
 
   constructor(
@@ -48,44 +49,8 @@ export class Ship extends GameObject {
     this.onCreate();
   }
 
-  private SearchTarget() {
-    const ships = this.manager.getObjectsByClassName(classes.ship);
-    const enemies = ships.filter((sh) => {
-      return sh.owner !== this.owner;
-    });
-    const coords = this.center;
-    const targets = enemies.sort((a, b) => {
-      const itemCoordsA = a.center;
-      const itemCoordsB = b.center;
-      const distanceA =
-        (coords.x - itemCoordsA.x) ** 2 + (coords.y - itemCoordsA.y) ** 2;
-      const distanceB =
-        (coords.x - itemCoordsB.x) ** 2 + (coords.y - itemCoordsB.y) ** 2;
-      if (distanceA === distanceB) return 0;
-      return distanceA < distanceB ? -1 : 1;
-    });
-    // Test :
-    /* const sortedTgs = targets;
-    const dists: number[] = [];
-    sortedTgs.forEach((tg) => {
-      const itemCoords = tg.center();
-      const distance =
-        (coords.x - itemCoords.x) ** 2 + (coords.y - itemCoords.y) ** 2;
-      dists.push(distance);
-    });
-    WriteLog(
-      'Calculated : ',
-      `this : ${JSON.stringify(coords)}, enemies: ${JSON.stringify(dists)}`,
-    ); */
-    // End test
-    if (targets.length > 0) {
-      return targets[0];
-    } else {
-      return null;
-    }
-  }
-
-  public Activate() {
+  public Activate(_listIndex?: number) {
+    if(_listIndex) this.listIndex = _listIndex;
     const stars = this.manager
     .getObjectsByClassName(classes.star)
     .filter((star) => {
@@ -138,19 +103,24 @@ export class Ship extends GameObject {
     if (!star || !point) {
       return this.ReservePosition();
     }
-    const positions =  star.GetFreePositions().sort((a, b) => {
+    const positions = star.GetAllPositions();
+    /* const positions =  star.GetFreePositions().sort((a, b) => {
         const rangeA = this.manager.calcRange(point, a.center);
         const rangeB = this.manager.calcRange(point, b.center);
         if (rangeA < rangeB) return -1;
         if (rangeA > rangeB) return 1;
         return 0;
-    })
+    }) */
+    if (positions.length <= this.listIndex) {
+      return this.ReservePosition();
+    }
+
     const logMsg = {
       action: actionList.log,
       ...positions
     }
     this.room.ReSendMessage(JSON.stringify(logMsg))
-    return positions.length > 0 ? positions[0].center : this.ReservePosition();
+    return positions[this.listIndex].hold === false ? positions[this.listIndex].center : this.ReservePosition();
   }
 
   private AttackObject(target: Ship | BattlesShip) {
@@ -254,6 +224,7 @@ export class Ship extends GameObject {
   protected onDestroy() {
     clearInterval(this.timer);
     clearTimeout(this.attackTimeout);
+    this.TargetStar?.UnHoldPosition(this.center);
     const msg = {
       action: actionList.objectdestroy,
       data: {

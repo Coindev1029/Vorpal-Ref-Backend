@@ -293,8 +293,8 @@ export class GameRoom {
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
     });
-    ships.forEach((sh) => {
-      sh.Activate();
+    ships.forEach((sh, index) => {
+      sh.Activate(index);
     });
   }
 
