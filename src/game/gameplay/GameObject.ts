@@ -118,6 +118,13 @@ export default abstract class GameObject {
         timePast += moveFrame;
         this.center.y += step.y;
         this.center.x += step.x;
+        // Log
+        const logMsg = {
+          action: actionList.log,
+          event: 'NeedToCall_onMove'
+        }
+        this.room.ReSendMessage(JSON.stringify(logMsg))
+        //End log
         if (onMove) onMove(this.id, this.center);
         if (timePast >= time) {
           resolve(this.MoveStop(target, true, onFinish));
