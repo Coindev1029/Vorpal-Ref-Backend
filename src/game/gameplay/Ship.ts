@@ -217,7 +217,7 @@ export class Ship extends GameObject {
             this.SearchTargetByPosition();
           }, defShipFireDelay) */
         } else {
-          this.MoveTo(this.center, Math.round(shipMovingTime * (range / 700)), this.SearchTargetByPosition());
+          this.MoveTo(this.center, Math.round(shipMovingTime * (range / 700)), this.SearchTargetByPosition);
         } 
       }
     } catch (e) {
