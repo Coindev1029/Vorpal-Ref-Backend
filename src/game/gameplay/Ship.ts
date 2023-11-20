@@ -182,30 +182,11 @@ export class Ship extends GameObject {
       this.targetPosition = this.GetClosestPosition(this.center, this.TargetStar);
     }
     const defTarget = this.targetPosition;
-    this.room.ReSendMessage(
-      JSON.stringify({
-        action: actionList.log,
-        event: 'params',
-        coords: coords,
-        target: defTarget
-      }),
+    const rangeToDefTarget = this.manager.calcRange(
+      { x: coords.x, y: coords.y },
+      defTarget,
     );
-    try {
-      const rangeToDefTarget = this.manager.calcRange(
-        { x: coords.x, y: coords.y },
-        defTarget,
-      );
-      this.room.ReSendMessage(JSON.stringify({ rangeTo: rangeToDefTarget }));
-    } catch (e) {
-      this.room.ReSendMessage(
-        JSON.stringify({
-          action: actionList.log,
-          event: 'err',
-          message: e.message,
-        }),
-      );
-    }
-    // const rangeToDefTarget = this.manager.calcRange(coords, defTarget);
+    this.room.ReSendMessage(JSON.stringify({ rangeTo: rangeToDefTarget }));
     /* 
     const messageLog = {
       action: actionList.log,
