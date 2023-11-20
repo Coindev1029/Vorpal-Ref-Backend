@@ -220,13 +220,7 @@ export class Ship extends GameObject {
         } 
       }
     } catch (e) {
-      const logMsg = {
-        action: actionList.log,
-        event: 'error',
-        message: e.message,
-      };
-      this.room.ReSendMessage(JSON.stringify(logMsg));
-      
+      this.SendLog('error', e.message);     
     }
 
     /* const Targets = this.manager.getClosestObjects(_id, [classes.ship, classes.battleship]);
