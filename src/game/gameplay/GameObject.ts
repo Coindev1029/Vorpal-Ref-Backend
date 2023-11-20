@@ -64,11 +64,13 @@ export default abstract class GameObject {
         }),
       );
     }
+    // log
     const logMsg = {
       action: actionList.log,
       onfinish: onFinish
     }
     this.room.ReSendMessage(JSON.stringify(logMsg));
+    // End log
     this.inMoving = false;
     if (onFinish) onFinish(this.id, this.center);
     return this.center;

@@ -222,7 +222,7 @@ export class Ship extends GameObject {
       return;
     }
     // x: this.center.x, y: defCoords.battleLine + 50 * (this.dir ? -1 : 1)}
-    this.MoveTo(defTarget, shipMovingTime, () => {});
+    this.MoveTo(defTarget, shipMovingTime, () => {}, () => { console.log("ok")});
     // this.MoveTo(defTarget, shipMovingTime, this.SearchTargetByPosition());
     /* setTimeout(() => {
       this.center.y = defCoords.battleLine + 50 * (this.dir ? -1 : 1);
