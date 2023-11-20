@@ -213,6 +213,15 @@ export class Ship extends GameObject {
           range,
         };
         this.room.ReSendMessage(JSON.stringify(logMsg));
+        if (range <= this.attackRange) {
+          this.MoveStop(this.center, this.inMoving ? true : false);
+          this.AttackObject(trg);
+          this.attackTimeout = setTimeout(() => {
+            this.SearchTargetByPosition();
+          }, defShipFireDelay)
+        } else {
+          this.MoveTo(this.center, Math.round(shipMovingTime * (range / 700)), this.SearchTargetByPosition());
+        } 
       }
     } catch (e) {
       const logMsg = {
@@ -221,6 +230,7 @@ export class Ship extends GameObject {
         message: e.message,
       };
       this.room.ReSendMessage(JSON.stringify(logMsg));
+      
     }
 
     /* const Targets = this.manager.getClosestObjects(_id, [classes.ship, classes.battleship]);
