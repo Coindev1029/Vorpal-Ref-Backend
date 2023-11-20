@@ -170,7 +170,7 @@ export class Ship extends GameObject {
      this.room.ReSendMessage(JSON.stringify(msg));
   }
 
-  private SearchTargetByPosition(_id = this.id, coords = this.center): MoveFunction {
+  private SearchTargetByPosition = (_id = this.id, coords = this.center) => {
     this.room.ReSendMessage(JSON.stringify({
       action: actionList.log,
       event: 'targetSearch',
