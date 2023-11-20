@@ -228,7 +228,7 @@ export class Ship extends GameObject {
     }
     // x: this.center.x, y: defCoords.battleLine + 50 * (this.dir ? -1 : 1)}
     //this.MoveTo(defTarget, shipMovingTime, () => {}, this.AttackStar());
-    this.MoveTo(defTarget, shipMovingTime, this.SearchTargetByPosition());
+    this.MoveTo(defTarget, shipMovingTime, this.SearchTargetByPosition);
     /* setTimeout(() => {
       this.center.y = defCoords.battleLine + 50 * (this.dir ? -1 : 1);
       this.timer = setInterval(() => {
