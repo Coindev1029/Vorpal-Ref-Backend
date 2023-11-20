@@ -230,7 +230,7 @@ export class Ship extends GameObject {
       range: rangeToDefTarget
     }
     this.room.ReSendMessage(JSON.stringify(testMsg))
-    /* if (rangeToDefTarget < 5) {
+    if (rangeToDefTarget < 5) {
       if (!this.isOnStarPosition) { 
         this.AttackStar();
         this.TargetStar.HoldPosition(defTarget);
@@ -238,9 +238,9 @@ export class Ship extends GameObject {
         this.MoveStop(defTarget, true);
       }
       return;
-    } */
+    }
     // x: this.center.x, y: defCoords.battleLine + 50 * (this.dir ? -1 : 1)}
-    
+    this.MoveTo(defTarget, shipMovingTime);
     // this.MoveTo(defTarget, shipMovingTime, this.SearchTargetByPosition());
     /* setTimeout(() => {
       this.center.y = defCoords.battleLine + 50 * (this.dir ? -1 : 1);
