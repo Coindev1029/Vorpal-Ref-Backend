@@ -33,6 +33,7 @@ export class Ship extends GameObject {
   private targetPosition: coords;
   private listIndex: number = 0;
   private isOnStarPosition: boolean = false;
+  private lastTargetId: string = ''
 
   constructor(
     _room: GameRoom,
@@ -207,12 +208,7 @@ export class Ship extends GameObject {
       if (Targets.length > 0) {
         const trg = this.manager.getObjectById(Targets[0]);
         const range = this.manager.calcRange(coords, trg.center);
-        const logMsg = {
-          action: actionList.log,
-          event: 'findTarget',
-          range,
-        };
-        this.room.ReSendMessage(JSON.stringify(logMsg));
+        this.SendLog('NewTarget', trg.class, range)
         if (range <= this.attackRange) {
           this.MoveStop(this.center, this.inMoving ? true : false);
           this.AttackObject(trg);
