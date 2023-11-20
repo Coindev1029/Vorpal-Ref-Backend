@@ -179,7 +179,10 @@ export class Ship extends GameObject {
 
   private SearchTargetByPosition = (_id = this.id, coords = this.center) => {
     if (!this.targetPosition) {
-      this.targetPosition = this.GetClosestPosition(this.center, this.TargetStar);
+      this.targetPosition = this.GetClosestPosition(
+        this.center,
+        this.TargetStar,
+      );
     }
     const defTarget = this.targetPosition;
     const rangeToDefTarget = this.manager.calcRange(
@@ -188,29 +191,37 @@ export class Ship extends GameObject {
     );
     this.room.ReSendMessage(JSON.stringify({ rangeTo: rangeToDefTarget }));
     if (rangeToDefTarget < 5) {
-      if (!this.isOnStarPosition) { 
+      if (!this.isOnStarPosition) {
         this.AttackStar();
         this.TargetStar.HoldPosition(defTarget);
         this.isOnStarPosition = true;
         this.MoveStop(defTarget, true);
       }
-      return () => {}
+      return () => {};
     }
-    
-    /* 
-    const messageLog = {
-      action: actionList.log,
-    }
-    this.room.ReSendMessage(JSON.stringify(listMsg)); */
-    /* if (rangeToDefTarget < 5) {
-      if (!this.isOnStarPosition) { 
-        this.AttackStar();
-        this.TargetStar.HoldPosition(defTarget);
-        this.isOnStarPosition = true;
-        this.MoveStop(defTarget, true);
+    try {
+      const Targets = this.manager.getClosestObjects(_id, [
+        classes.ship,
+        classes.battleship,
+      ]);
+      if (Targets.length > 0) {
+        const trg = this.manager.getObjectById(Targets[0]);
+        const range = this.manager.calcRange(coords, trg.center);
+        const logMsg = {
+          action: actionList.log,
+          event: 'findTarget',
+          range,
+        };
+        this.room.ReSendMessage(JSON.stringify(logMsg));
       }
-      return () => {}
-    } */
+    } catch (e) {
+      const logMsg = {
+        action: actionList.log,
+        event: 'error',
+        message: e.message,
+      };
+      this.room.ReSendMessage(JSON.stringify(logMsg));
+    }
 
     /* const Targets = this.manager.getClosestObjects(_id, [classes.ship, classes.battleship]);
      if (Targets.length > 0) {
