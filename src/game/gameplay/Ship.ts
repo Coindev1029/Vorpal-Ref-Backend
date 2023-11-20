@@ -63,13 +63,12 @@ export class Ship extends GameObject {
   }
 
   private AttackStar(_id = this.id, coords = this.center) {
-    const trg = this.TargetStar;
     const logMsg = {
       action: actionList.log,
       event: 'findStar',
-      ...trg
     }
     this.room.ReSendMessage(JSON.stringify(logMsg));
+    const trg = this.TargetStar;
     if (trg) {
 
       const msg = {
@@ -222,7 +221,7 @@ export class Ship extends GameObject {
       return;
     }
     // x: this.center.x, y: defCoords.battleLine + 50 * (this.dir ? -1 : 1)}
-    this.MoveTo(defTarget, shipMovingTime, () => {}, () => { console.log("ok")});
+    this.MoveTo(defTarget, shipMovingTime, () => {}, this.AttackStar());
     // this.MoveTo(defTarget, shipMovingTime, this.SearchTargetByPosition());
     /* setTimeout(() => {
       this.center.y = defCoords.battleLine + 50 * (this.dir ? -1 : 1);
