@@ -187,6 +187,16 @@ export class Ship extends GameObject {
       defTarget,
     );
     this.room.ReSendMessage(JSON.stringify({ rangeTo: rangeToDefTarget }));
+    if (rangeToDefTarget < 5) {
+      if (!this.isOnStarPosition) { 
+        this.AttackStar();
+        this.TargetStar.HoldPosition(defTarget);
+        this.isOnStarPosition = true;
+        this.MoveStop(defTarget, true);
+      }
+      return () => {}
+    }
+    
     /* 
     const messageLog = {
       action: actionList.log,
