@@ -173,6 +173,15 @@ export class Ship extends GameObject {
   private SearchTargetByPosition = (_id = this.id, coords = this.center) => {
     // const defTarget = this.GetClosestPosition(this.center, this.TargetStar);
     const defTarget = this.targetPosition;
+    try {
+      const rangeToDefTarget = this.manager.calcRange(coords, defTarget);
+      this.room.ReSendMessage(JSON.stringify({rangeTo: rangeToDefTarget}));
+    } catch (e) {
+      this.room.ReSendMessage(JSON.stringify({
+        event: 'err',
+        message: e.message
+      }));
+    }
     // const rangeToDefTarget = this.manager.calcRange(coords, defTarget);
     /* 
     const messageLog = {
