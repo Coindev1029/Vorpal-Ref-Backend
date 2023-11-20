@@ -81,6 +81,11 @@ export class Ship extends GameObject {
       this.timer = setInterval(() => {
         trg.TakeDamage(1);
         this.TakeDamage(1);
+        const logMsg = {
+          action: actionList.log,
+          event: 'starDamage',
+          nowHP: this.hp
+        }
       }, FrameInterval)
     }
     return () => {}
