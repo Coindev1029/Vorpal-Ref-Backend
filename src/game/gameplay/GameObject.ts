@@ -67,7 +67,7 @@ export default abstract class GameObject {
     this.inMoving = false;
     const logMsg = {
       action: actionList.log,
-      onfinish: String(onFinish)
+      onfinish: 'onfinish'
     }
     this.room.ReSendMessage(JSON.stringify(logMsg));
     if (onFinish) onFinish(this.id, this.center);
