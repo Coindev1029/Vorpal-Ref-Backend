@@ -64,6 +64,12 @@ export class Ship extends GameObject {
 
   private AttackStar() {
     const trg = this.TargetStar;
+    const logMsg = {
+      action: actionList.log,
+      event: 'findStar',
+      ...trg
+    }
+    this.room.ReSendMessage(JSON.stringify(logMsg));
     if (trg) {
 
       const msg = {
