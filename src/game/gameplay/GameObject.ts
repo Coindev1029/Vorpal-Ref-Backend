@@ -49,6 +49,11 @@ export default abstract class GameObject {
   }
 
   public MoveStop(point: coords = this.center, notify = true, onFinish?: MoveFunction) {
+    const logMsg = {
+      action: actionList.log,
+      onfinish: 'onfinish'
+    }
+    this.room.ReSendMessage(JSON.stringify(logMsg));
     if (this.moveTimer) clearInterval(this.moveTimer);
     this.center.x = point.x;
     this.center.y = point.y;
@@ -65,11 +70,6 @@ export default abstract class GameObject {
       );
     }
     this.inMoving = false;
-    const logMsg = {
-      action: actionList.log,
-      onfinish: 'onfinish'
-    }
-    this.room.ReSendMessage(JSON.stringify(logMsg));
     if (onFinish) onFinish(this.id, this.center);
     return this.center;
   }
