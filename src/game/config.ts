@@ -36,7 +36,7 @@ export const defCoords = {
     planet: {
       width: 40,
       height: 40,
-      radius: 20
+      radius: 5
     },
     ship: {
       width: 30,
@@ -49,7 +49,7 @@ export const defCoords = {
     y: 250,
   },
   star2: {
-    x: 350,
+    x: 400,
     y: 750,
   },
   planet1: {

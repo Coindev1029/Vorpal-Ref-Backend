@@ -274,9 +274,7 @@ export class Ship extends GameObject {
     this.TargetStar?.UnHoldPosition(this.center);
     const msg = {
       action: actionList.objectdestroy,
-      data: {
-        id: this.id,
-      },
+      id: this.id,
     };
     this.room.ReSendMessage(JSON.stringify(msg));
     this.manager.removeObject(this.id);
