@@ -22,7 +22,7 @@ import { BattlesShip } from './BattleShip';
 
 export class Ship extends GameObject {
   private timer: NodeJS.Timer;
-  private attackTimeout: NodeJS.Timeout;
+  private attackTimeout: NodeJS.Timer;
   private hp: number;
   private dir: boolean = true; // true - up, false - down
   private hitChance: number = defShipHitChance;
@@ -214,11 +214,12 @@ export class Ship extends GameObject {
           this.SendLog('NewTarget', trg.class, range);
           this.MoveStop(this.center, this.inMoving ? true : false);
           this.AttackObject(trg);
-          this.attackTimeout = setTimeout(() => {
+          this.attackTimeout = setInterval(() => {
             const trg = this.manager.getObjectById(Targets[0]);
             if (trg) {
               this.AttackObject(trg);
             } else {
+              clearInterval(this.attackTimeout);
               this.SearchTargetByPosition();
             }
           }, defShipFireDelay)
@@ -267,7 +268,8 @@ export class Ship extends GameObject {
 
   protected onDestroy() {
     clearInterval(this.timer);
-    clearTimeout(this.attackTimeout);
+    clearInterval(this.attackTimeout);
+    // clearTimeout(this.attackTimeout);
     this.TargetStar?.UnHoldPosition(this.center);
     const msg = {
       action: actionList.objectdestroy,
