@@ -140,6 +140,7 @@ export class Ship extends GameObject {
   }
 
   private AttackObject(target: Ship | BattlesShip) {
+    this.SendLog('Attacking', this.center, target.center, this.manager.calcRange(this.center, target.center));
     this.isAttacking = true;
     const aiming = Math.random();
     const isHit = aiming < this.hitChance;
