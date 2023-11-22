@@ -217,6 +217,7 @@ export class Ship extends GameObject {
             this.SearchTargetByPosition();
           }, defShipFireDelay) */
         } else {
+          this.SendLog('MoveToTagert', range, trg.class);
           this.MoveTo(this.center, Math.round(shipMovingTime * (range / 700)), this.SearchTargetByPosition);
         } 
       }
@@ -224,29 +225,6 @@ export class Ship extends GameObject {
       this.SendLog('error', e.message);     
     }
 
-    /* const Targets = this.manager.getClosestObjects(_id, [classes.ship, classes.battleship]);
-     if (Targets.length > 0) {
-      const trg = this.manager.getObjectById(Targets[0])
-      const range = this.manager.calcRange(coords, trg.center)
-      const listMsg = {
-        action: actionList.log,
-        event: 'SelectingTarget',
-        targetRange: range,
-        targetClass: trg.class
-      }
-      this.room.ReSendMessage(JSON.stringify(listMsg));
-       if (range <= this.attackRange) {
-        this.MoveStop(this.center, this.inMoving ? true : false);
-        this.AttackObject(trg);
-        this.attackTimeout = setTimeout(() => {
-          this.SearchTargetByPosition();
-        }, defShipFireDelay)
-      } else {
-        this.MoveTo(this.center, Math.round(shipMovingTime * (range / 700)), this.SearchTargetByPosition());
-      } 
-     } else {
-       this.StartMove();
-     } */
     return () => {};
   };
 
