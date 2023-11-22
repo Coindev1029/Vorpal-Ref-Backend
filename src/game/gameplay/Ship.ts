@@ -213,9 +213,9 @@ export class Ship extends GameObject {
           this.SendLog('NewTarget', trg.class, range);
           this.MoveStop(this.center, this.inMoving ? true : false);
           this.AttackObject(trg);
-          /* this.attackTimeout = setTimeout(() => {
+          this.attackTimeout = setTimeout(() => {
             this.SearchTargetByPosition();
-          }, defShipFireDelay) */
+          }, defShipFireDelay)
         } else {
           this.SendLog('MoveToTagert', range, trg.class);
           this.MoveTo(trg.center, Math.round(shipMovingTime * (range / 700)), this.SearchTargetByPosition);
