@@ -267,6 +267,7 @@ export class Ship extends GameObject {
   }
 
   protected onDestroy() {
+    this.SendLog('MustDestroy');
     clearInterval(this.timer);
     clearInterval(this.attackTimeout);
     // clearTimeout(this.attackTimeout);
@@ -283,7 +284,6 @@ export class Ship extends GameObject {
     this.hp -= damage;
     this.SendLog('DamageTaken:', `New hp - ${this.hp}`);
     if (this.hp <= 0) {
-      this.SendLog('MustDestroy');
       this.destroy();
     } else {
       this.room.ReSendMessage(
