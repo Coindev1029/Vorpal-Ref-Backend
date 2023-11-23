@@ -281,7 +281,9 @@ export class Ship extends GameObject {
 
   public TakeDamage(damage: number) {
     this.hp -= damage;
+    this.SendLog('DamageTaken:', `New hp - ${this.hp}`);
     if (this.hp <= 0) {
+      this.SendLog('MustDestroy');
       this.destroy();
     } else {
       this.room.ReSendMessage(
