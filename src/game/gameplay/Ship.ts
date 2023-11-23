@@ -217,8 +217,8 @@ export class Ship extends GameObject {
           this.attackTimeout = setInterval(() => {
             const trg = this.manager.getObjectById(Targets[0]);
             if (trg) {
-              this.SendLog('AttackEntry');
               this.AttackObject(trg);
+              this.SendLog('AttackEntry', `hp - ${trg.hp}`);
             } else {
               clearInterval(this.attackTimeout);
               this.SearchTargetByPosition();
