@@ -270,9 +270,13 @@ export class Ship extends GameObject {
     this.SendLog('MustDestroy');
     clearInterval(this.timer);
     clearInterval(this.attackTimeout);
+    try {
+      const isUnhold = this.TargetStar?.UnHoldPosition(this.center);
+      this.SendLog('UnHolded', isUnhold);
+    }  catch (e) {
+      this.SendLog('error', e.message);
+    }
     // clearTimeout(this.attackTimeout);
-    const isUnhold = this.TargetStar?.UnHoldPosition(this.center);
-    this.SendLog('UnHolded', isUnhold);
     const msg = {
       action: actionList.objectdestroy,
       id: this.id,
