@@ -227,6 +227,10 @@ export class Ship extends GameObject {
           this.SendLog('MoveToTagert', range, trg.class);
           this.MoveTo(trg.center, Math.round(shipMovingTime * (range / 700)), this.SearchTargetByPosition);
         } 
+      } else {
+        const defTarget = this.GetClosestPosition(this.center, this.TargetStar);
+        this.MoveTo(defTarget, shipMovingTime, this.SearchTargetByPosition);
+        this.SendLog('MoveToStar', 'Position : ', defTarget);
       }
     } catch (e) {
       this.SendLog('error', e.message);     
@@ -254,20 +258,12 @@ export class Ship extends GameObject {
       }
       return;
     }
-    // x: this.center.x, y: defCoords.battleLine + 50 * (this.dir ? -1 : 1)}
-    //this.MoveTo(defTarget, shipMovingTime, () => {}, this.AttackStar());
+
     this.MoveTo(defTarget, shipMovingTime, this.SearchTargetByPosition);
-    /* setTimeout(() => {
-      this.center.y = defCoords.battleLine + 50 * (this.dir ? -1 : 1);
-      this.timer = setInterval(() => {
-        this.AttackShip();
-      }, defShipFireDelay);
-    }, shipMovingTime); */
-    // this.hp = defShipHealth;
+
   }
 
   protected onDestroy() {
-    this.SendLog('MustDestroy');
     clearInterval(this.timer);
     clearInterval(this.attackTimeout);
     try {
@@ -281,7 +277,6 @@ export class Ship extends GameObject {
       action: actionList.objectdestroy,
       id: this.id,
     };
-    this.SendLog('DestroyMsg', msg);
     this.room.ReSendMessage(JSON.stringify(msg));
     this.manager.removeObject(this.id);
   }
