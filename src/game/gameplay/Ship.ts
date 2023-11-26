@@ -34,6 +34,7 @@ export class Ship extends GameObject {
   private listIndex: number = 0;
   private isOnStarPosition: boolean = false;
   private lastTargetId: string = ''
+  private defTarget: coords;
 
   constructor(
     _room: GameRoom,
@@ -228,9 +229,12 @@ export class Ship extends GameObject {
           this.MoveTo(trg.center, Math.round(shipMovingTime * (range / 700)), this.SearchTargetByPosition);
         } 
       } else {
-        const defTarget = this.GetClosestPosition(this.center, this.TargetStar);
-        this.MoveTo(defTarget, shipMovingTime, this.SearchTargetByPosition);
-        this.SendLog('MoveToStar', 'Position : ', defTarget);
+        try {
+          this.MoveTo(this.defTarget, shipMovingTime, this.SearchTargetByPosition);
+          this.SendLog('MoveToStar', 'Position : ', defTarget);
+        } catch (e) {
+          this.SendLog('error', e.message); 
+        }
       }
     } catch (e) {
       this.SendLog('error', e.message);     
@@ -240,26 +244,26 @@ export class Ship extends GameObject {
   };
 
   public StartMove() {
-    const defTarget = this.GetClosestPosition(this.center, this.TargetStar);
-    const rangeToDefTarget = this.manager.calcRange(this.center, defTarget);
+    this.defTarget = this.GetClosestPosition(this.center, this.TargetStar);
+    const rangeToDefTarget = this.manager.calcRange(this.center, this.defTarget);
     const testMsg = {
       action: actionList.log,
       id: this.id,
-      targetPos: defTarget,
+      targetPos: this.defTarget,
       range: rangeToDefTarget,
     };
     this.room.ReSendMessage(JSON.stringify(testMsg));
     if (rangeToDefTarget < 5) {
       if (!this.isOnStarPosition) {
         this.AttackStar();
-        this.TargetStar.HoldPosition(defTarget);
+        this.TargetStar.HoldPosition(this.defTarget);
         this.isOnStarPosition = true;
-        this.MoveStop(defTarget, true);
+        this.MoveStop(this.defTarget, true);
       }
       return;
     }
 
-    this.MoveTo(defTarget, shipMovingTime, this.SearchTargetByPosition);
+    this.MoveTo(this.defTarget, shipMovingTime, this.SearchTargetByPosition);
 
   }
 
