@@ -39,6 +39,8 @@ export interface objectDisplayInfo {
   orbitCenter?: coords;
   startAngle?: number;
   orbitSpeed?: number;
+  hp?: number;
+  energy?: number;
 }
 
 export interface StarAttackPosition {
