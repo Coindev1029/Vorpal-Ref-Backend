@@ -260,7 +260,7 @@ export class GameRoom {
   }
 
   private CreateShips() {
-    const list: objectMapInfo[] = [];
+    const list: objectDisplayInfo[] = [];
     const ships: Ship[] = [];
     this.players.forEach((player, index) => {
       const mirror = index === 0 ? true : false;
@@ -284,11 +284,12 @@ export class GameRoom {
           position: ship.center,
           radius: ship.radius,
           mirror: mirror,
+          hp: config.defShipHealth
         });
         ships.push(ship);
       });
     });
-    const listMsg: objectInfo = {
+    const listMsg = {
       action: actionList.objectcreate,
       list: list,
     };
