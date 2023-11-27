@@ -103,6 +103,7 @@ export default class Star extends GameObject {
         JSON.stringify({
           action: actionList.objectupdate,
           id: this.id,
+          class: this.class,
           enegry: this.energy,
         }),
       );

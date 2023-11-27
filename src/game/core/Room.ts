@@ -141,7 +141,7 @@ export class GameRoom {
       class: star1.class,
       position: star1.center,
       radius: star1.radius,
-      energy: 1000
+      energy: config.defStarHealth
     });
 
     const star2 = new Star(
@@ -157,7 +157,7 @@ export class GameRoom {
       class: star2.class,
       position: star2.center,
       radius: star2.radius,
-      energy: 1000
+      energy: config.defStarHealth
     });
 
     const planet1 = new Planet(
