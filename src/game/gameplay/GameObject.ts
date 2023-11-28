@@ -53,16 +53,18 @@ export default abstract class GameObject {
     this.center.x = point.x;
     this.center.y = point.y;
     if (notify) {
-      this.room.ReSendMessage(
-        JSON.stringify({
-          action: actionList.objectupdate,
-          id: this.id,
-          data: {
-            event: actionList.stopmoving,
-            position: this.center,
-          },
-        }),
-      );
+      setTimeout(() => {
+        this.room.ReSendMessage(
+          JSON.stringify({
+            action: actionList.objectupdate,
+            id: this.id,
+            data: {
+              event: actionList.stopmoving,
+              position: this.center,
+            },
+          }),
+        );
+      }, 20)
     }
     // log
     const logMsg = {

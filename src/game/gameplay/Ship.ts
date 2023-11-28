@@ -218,20 +218,17 @@ export class Ship extends GameObject {
             const trg = this.manager.getObjectById(Targets[0]);
             if (trg) {
               this.AttackObject(trg);
-              this.SendLog('AttackEntry', `hp - ${trg.hp}`);
             } else {
               clearInterval(this.attackTimeout);
               this.SearchTargetByPosition();
             }
           }, defShipFireDelay)
         } else {
-          this.SendLog('MoveToTagert', range, trg.class);
-          this.MoveTo(trg.center, Math.round(shipMovingTime * (range / 700)), this.SearchTargetByPosition);
+          this.MoveTo(trg.center, Math.round(shipMovingTime * (range / 350)), this.SearchTargetByPosition);
         } 
       } else {
         try {
           this.MoveTo(this.defTarget, shipMovingTime, this.SearchTargetByPosition);
-          this.SendLog('MoveToStar', 'Position : ', defTarget);
         } catch (e) {
           this.SendLog('error', e.message); 
         }
