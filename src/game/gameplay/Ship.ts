@@ -196,7 +196,7 @@ export class Ship extends GameObject {
     if (rangeToDefTarget < 5) {
       if (!this.isOnStarPosition) {
         this.AttackStar();
-        this.TargetStar.HoldPosition(defTarget);
+        // this.TargetStar.HoldPosition(defTarget);
         this.isOnStarPosition = true;
         this.MoveStop(defTarget, true);
       }
