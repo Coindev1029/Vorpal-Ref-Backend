@@ -53,7 +53,6 @@ export default abstract class GameObject {
     this.center.x = point.x;
     this.center.y = point.y;
     if (notify) {
-      setTimeout(() => {
         this.room.ReSendMessage(
           JSON.stringify({
             action: actionList.objectupdate,
@@ -64,7 +63,6 @@ export default abstract class GameObject {
             },
           }),
         );
-      }, 20)
     }
     // log
     const logMsg = {
@@ -102,7 +100,7 @@ export default abstract class GameObject {
   ): Promise<coords> {
     return await new Promise((resolve) => {
       if (this.inMoving) {
-        this.MoveStop(this.center, false);
+        this.MoveStop(this.center, true);
       }
       this.inMoving = true;
       const frames = Math.ceil(time / FrameInterval);
