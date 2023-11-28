@@ -242,6 +242,7 @@ export class Ship extends GameObject {
 
   public StartMove() {
     this.defTarget = this.GetClosestPosition(this.center, this.TargetStar);
+    this.TargetStar?.HoldPosition(this.defTarget);
     const rangeToDefTarget = this.manager.calcRange(this.center, this.defTarget);
     const testMsg = {
       action: actionList.log,
