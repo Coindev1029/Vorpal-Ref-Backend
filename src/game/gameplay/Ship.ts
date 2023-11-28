@@ -212,7 +212,7 @@ export class Ship extends GameObject {
         const range = this.manager.calcRange(coords, trg.center);
         if (range <= this.attackRange) {
           this.SendLog('NewTarget', trg.class, range);
-          this.MoveStop(this.center, this.inMoving ? true : false);
+          this.MoveStop(this.center, true /* this.inMoving ? true : false */);
           this.AttackObject(trg);
           this.attackTimeout = setInterval(() => {
             const trg = this.manager.getObjectById(Targets[0]);
