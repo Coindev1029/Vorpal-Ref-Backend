@@ -1,4 +1,5 @@
 export type GameObjectDictionary<T> = Record<string, T>;
+export type movings = 'target' | 'angle' | 'orbit' | 'none';
 
 export interface coords {
   x: number;
@@ -46,5 +47,15 @@ export interface objectDisplayInfo {
 export interface StarAttackPosition {
   center: coords;
   hold: boolean;
+}
+
+export interface ObjectMoveParams {
+  type: movings;
+  speed?: number;
+  target?: coords;
+  angle?: number;
+  angleSpeed?: number;
+  axisSpeed?: number;
+  orbitRadius?: number;
 }
 

@@ -1,4 +1,4 @@
-import { coords, rect } from '../types/gameplay';
+import { ObjectMoveParams, coords, movings, rect } from '../types/gameplay';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
 import { FrameInterval, gameField, idLength, moveFrame } from '../config';
@@ -16,6 +16,9 @@ export default abstract class GameObject {
   public RoomAction: any;
   public owner: string;
   public class: string;
+  public movingType: movings;
+  public speed: number;
+  public target: coords;
 
   constructor(
     _room: GameRoom,

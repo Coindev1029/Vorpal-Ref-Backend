@@ -14,6 +14,7 @@ import { Ship } from '../gameplay/Ship';
 import { BattlesShip } from '../gameplay/BattleShip';
 import Store from '../store/store';
 import { race, raceArr } from '../types/user';
+import ActionManager from './ActionManager';
 
 export class GameRoom {
   private players: PlayerRow[] = [];
@@ -21,6 +22,7 @@ export class GameRoom {
   private roomItselfId: number = -1;
   private isActive: boolean = false;
   private manager: ObjectListManager<any>;
+  private actionManager: ActionManager;
   private shipCreationTimer: NodeJS.Timer;
   private battleShipCreationTimer: NodeJS.Timer;
   private store: Store;
@@ -121,7 +123,8 @@ export class GameRoom {
           action: actionList.gamestart,
           playerPosition: playerPosition,
           orbitRadius: defCoords.orbRadius,
-          objectMovesPerSec: 1000 / config.FrameInterval
+          objectMovesPerSec: 1000 / config.FrameInterval,
+          gameField: gameField
         }),
       );
     });
