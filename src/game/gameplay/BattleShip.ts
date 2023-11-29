@@ -9,7 +9,6 @@ import Star from './Star';
 export class BattlesShip extends GameObject {
   private timer: NodeJS.Timer;
   private hp: number;
-  private manager: ObjectListManager<any>;
 
   constructor(
     _room: GameRoom,
@@ -18,7 +17,7 @@ export class BattlesShip extends GameObject {
     _radius: number,
     _manager: ObjectListManager<any>,
   ) {
-    super(_room, _owner, _coords, _radius, classes.battleship);
+    super(_room, _owner, _coords, _radius, classes.battleship, _manager);
     this.manager = _manager;
     this.onCreate();
   }

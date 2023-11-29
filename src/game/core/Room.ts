@@ -144,6 +144,7 @@ export class GameRoom {
       this.players[0].publicKey,
       config.defCoords.star1,
       config.defCoords.sprites.star.radius,
+      this.manager
     );
 
     list.push({
@@ -160,6 +161,7 @@ export class GameRoom {
       this.players[1].publicKey,
       config.defCoords.star2,
       config.defCoords.sprites.star.radius,
+      this.manager
     );
 
     list.push({
@@ -176,6 +178,7 @@ export class GameRoom {
       this.players[0].publicKey,
       { x: star1.center.x, y: star1.center.y - config.defCoords.orbRadius },
       config.defCoords.sprites.planet.radius,
+      this.manager,
       false,
     );
 
@@ -198,6 +201,7 @@ export class GameRoom {
       this.players[1].publicKey,
       { x: star2.center.x, y: star2.center.y + config.defCoords.orbRadius },
       config.defCoords.sprites.planet.radius,
+      this.manager,
       true,
     );
 

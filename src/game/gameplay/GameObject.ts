@@ -4,12 +4,14 @@ import { GameRoom } from '../core/Room';
 import { FrameInterval, gameField, idLength, moveFrame } from '../config';
 import { actionList } from '../types/msg';
 import { MoveFunction } from '../types/interfaces';
+import ObjectListManager from '../core/ListManager';
 
 export default abstract class GameObject {
   protected id: string = '';
   protected room: GameRoom;
   protected inMoving = false;
   protected moveTimer: NodeJS.Timer;
+  protected manager: ObjectListManager<any>;
 
   public center: play.coords;
   public radius: number;
@@ -26,6 +28,7 @@ export default abstract class GameObject {
     _coords: play.coords,
     _radius: number,
     _class: string,
+    _manager: ObjectListManager<any>,
   ) {
     const _id = this.GenerateId(idLength);
     this.room = _room;
@@ -86,6 +89,10 @@ export default abstract class GameObject {
       this.center.y < 0 ||
       this.center.y > gameField[1]
     );
+  }
+
+  public async MoveToPoint(point: coords) {
+    const distance = this.manager.calcRange(this.center, point);
   }
 
   public async MoveTo(

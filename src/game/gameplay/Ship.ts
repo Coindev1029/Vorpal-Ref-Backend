@@ -26,7 +26,6 @@ export class Ship extends GameObject {
   private hp: number;
   private dir: boolean = true; // true - up, false - down
   private hitChance: number = defShipHitChance;
-  private manager: ObjectListManager<any>;
   private TargetStar: Star;
   private attackRange: number;
   private targetPosition: coords;
@@ -45,7 +44,7 @@ export class Ship extends GameObject {
     _manager: ObjectListManager<any>,
     dir: boolean,
   ) {
-    super(_room, _owner, _coords, _radius, classes.ship);
+    super(_room, _owner, _coords, _radius, classes.ship, _manager);
     this.dir = dir;
     this.manager = _manager;
     this.attackRange = shipRange;
