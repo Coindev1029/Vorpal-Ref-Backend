@@ -376,9 +376,11 @@ export class GameRoom {
             if (target) {
               const range = this.manager.calcRange(ship.center, target.center);
               if (range <= config.shipRange) {
+                this.SendLog('must attack', range);
                 ship.StartAttacking(target);
               } else {
                 ship.MoveToPoint(target.center);
+                this.SendLog('to target', range);
               }
             } else {
               ship.MoveToPoint(ship.targetPosition);
@@ -394,7 +396,9 @@ export class GameRoom {
       this.ReSendMessage(JSON.stringify({
         action: actionList.objectupdate,
         class: classes.ship,
-        list: list
+        data: {
+          list: list
+        }
       }))
   }
 
