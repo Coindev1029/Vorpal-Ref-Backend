@@ -10,6 +10,7 @@ import {
   moveFrame,
   shipMovingTime,
   shipRange,
+  shipSpeed,
 } from '../config';
 import { GameRoom } from '../core/Room';
 import ObjectListManager from '../core/ListManager';
@@ -28,13 +29,13 @@ export class Ship extends GameObject {
   private hitChance: number = defShipHitChance;
   private TargetStar: Star;
   private attackRange: number;
-  private targetPosition: coords;
   private listIndex: number = 0;
   private isOnStarPosition: boolean = false;
   private lastTargetId: string = ''
   private defTarget: coords;
 
   public isAttacking: boolean = false;
+  public targetPosition: coords;
 
   constructor(
     _room: GameRoom,
@@ -46,9 +47,9 @@ export class Ship extends GameObject {
   ) {
     super(_room, _owner, _coords, _radius, classes.ship, _manager);
     this.dir = dir;
-    this.manager = _manager;
     this.attackRange = shipRange;
     this.onCreate();
+    this.speed = shipSpeed;
   }
 
   public Activate(_listIndex?: number) {
@@ -60,8 +61,12 @@ export class Ship extends GameObject {
       });
     if (stars.length > 0) {
       this.TargetStar = stars[0];
+      const positions = this.TargetStar.GetAllPositions()
+      this.TargetStar.HoldPosition(positions[this.listIndex].center);
+      this.targetPosition = positions[this.listIndex].center;
     }
-    this.StartMove();
+
+    // this.StartMove();
   }
 
   private AttackStar(_id = this.id, coords = this.center) {
@@ -83,6 +88,7 @@ export class Ship extends GameObject {
       };
       this.room.ReSendMessage(JSON.stringify(msg));
       this.isAttacking = true;
+      this.speed = 0;
       this.isOnStarPosition = true;
       this.timer = setInterval(() => {
         trg.TakeDamage(1);
@@ -141,7 +147,6 @@ export class Ship extends GameObject {
   }
 
   private AttackObject(target: Ship | BattlesShip) {
-    this.room.SendLog('Attacking', this.center, target.center, this.manager.calcRange(this.center, target.center));
     // this.isAttacking = true;
     const aiming = Math.random();
     const isHit = aiming < this.hitChance;
@@ -178,6 +183,34 @@ export class Ship extends GameObject {
       },
     };
     this.room.ReSendMessage(JSON.stringify(msg));
+  }
+
+  public FindTarget() {
+    const Targets = this.manager.getClosestObjects(this.id, [
+      classes.ship,
+      classes.battleship,
+    ]);
+    if (Targets.length === 0) {
+      return false;
+    }
+    const trg = this.manager.getObjectById(Targets[0]);
+    return trg;
+  }
+
+  public StartAttacking(target: Ship | BattlesShip) {
+    this.room.SendLog('Attacking', this.center, target.center, this.manager.calcRange(this.center, target.center));
+    this.isAttacking = true;
+    this.speed = 0;
+    this.attackTimeout = setInterval(() => {
+      const trg = this.manager.getObjectById(target.getId());
+      if (trg) {
+        this.AttackObject(trg);
+      } else {
+        clearInterval(this.attackTimeout);
+        this.speed = shipSpeed;
+        this.isAttacking = false;
+      }
+    }, defShipFireDelay)
   }
 
   private SearchTargetByPosition = (_id = this.id, coords = this.center) => {

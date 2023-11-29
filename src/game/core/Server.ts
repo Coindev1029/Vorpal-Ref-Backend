@@ -1,6 +1,7 @@
 import WebSocket, { Server } from 'ws';
 import Web3 from 'web3';
 import {
+  FrameInterval,
   default_ws_port,
   gameTimerValue,
   pingPongDelay,
@@ -287,6 +288,11 @@ export class GameIoServer {
       });
     });
     this.generator = this.RoomGenerator();
+    this.timer = setInterval(() => {
+      this.Rooms.forEach((room) => {
+        room.FrameUpdate();
+      })
+    }, FrameInterval);
   }
 
   public Finish() {

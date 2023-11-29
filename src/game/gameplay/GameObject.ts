@@ -19,7 +19,7 @@ export default abstract class GameObject {
   public owner: string;
   public class: string;
   public movingType: movings;
-  public speed: number;
+  public speed: number = 0;
   public target: coords;
 
   constructor(
@@ -91,8 +91,29 @@ export default abstract class GameObject {
     );
   }
 
-  public async MoveToPoint(point: coords) {
+  public async MoveToPoint(point: coords, callback: any) {
+    if (this.speed === 0) {
+      return false;
+    }
+    
     const distance = this.manager.calcRange(this.center, point);
+    const reached = distance <= this.speed ? true : false;
+    if (reached) {
+      this.center = point;
+      if (callback) callback();
+      return reached;
+    }
+
+    const dX = point.x - this.center.x;
+    const dY = point.y - this.center.y;
+    const angle = Math.atan2(dY, dX)
+    const newPoint : coords = {
+      x: this.center.x + (this.speed * Math.cos(angle)),
+      y: this.center.y + (this.speed * Math.sin(angle))
+    }
+    this.center = newPoint;
+    if (callback) callback();
+    return reached;
   }
 
   public async MoveTo(

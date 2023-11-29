@@ -14,7 +14,6 @@ import { Ship } from '../gameplay/Ship';
 import { BattlesShip } from '../gameplay/BattleShip';
 import Store from '../store/store';
 import { race, raceArr } from '../types/user';
-import ActionManager from './ActionManager';
 
 export class GameRoom {
   private players: PlayerRow[] = [];
@@ -22,7 +21,6 @@ export class GameRoom {
   private roomItselfId: number = -1;
   private isActive: boolean = false;
   private manager: ObjectListManager<any>;
-  private actionManager: ActionManager;
   private shipCreationTimer: NodeJS.Timer;
   private battleShipCreationTimer: NodeJS.Timer;
   private store: Store;
@@ -281,7 +279,7 @@ export class GameRoom {
       const mirror = index === 0 ? true : false;
       const center = gameField[0] / 2;
       const xPositions = [center - 80, center, center + 80];
-      const yPosition = mirror ? 250 : 700;
+      const yPosition = mirror ? 250 : 750;
       xPositions.forEach((pos, j) => {
         const ship = new Ship(
           this,
@@ -312,7 +310,8 @@ export class GameRoom {
       player.ws.send(JSON.stringify(listMsg));
     });
     ships.forEach((sh, index) => {
-      sh.Activate(index);
+      const posIndex = index < 3 ? index : index - 3;
+      sh.Activate(posIndex);
     });
   }
 
@@ -362,6 +361,47 @@ export class GameRoom {
       });
       this.manager.removeObject(id);
       this.Finish(winner);
+    }
+  }
+
+  public FrameUpdate() {
+    try {
+      const ships = this.manager.getObjectsByClassName(classes.ship);
+      const list : any[] = [];
+      ships.forEach((ship) => {
+        const rangeToStar = this.manager.calcRange(ship.center, ship.targetPosition);
+        if (!ship.isAttacking) {
+          if (rangeToStar <= config.shipSpeed) {
+            ship.center = ship.targetPosition;
+            ship.AttackStar();
+          } else {
+            const target = ship.FindTarget();
+            if (target) {
+              const range = this.manager.calcRange(ship.center, target.center);
+              if (range <= config.shipRange) {
+                ship.StartAttacking(target);
+              } else {
+                ship.MoveToPoint(target.center);
+              }
+            } else {
+              ship.MoveToPoint(ship.targetPosition);
+            }
+          }
+        }
+        list.push({
+          id: ship.id,
+          owner: ship.owner,
+          class: ship.class,
+          position: ship.center
+        })
+      })
+      this.ReSendMessage(JSON.stringify({
+        action: actionList.objectupdate,
+        class: classes.ship,
+        list: list
+      }))
+    } catch (e) {
+      this.SendLog('error', e.message);
     }
   }
 
