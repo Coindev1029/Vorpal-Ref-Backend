@@ -112,6 +112,7 @@ export class GameRoom {
   }
 
   public Start() {
+    try {
     this.players.forEach((player) => {
       const state: PlayerState = {
         auth: true,
@@ -264,6 +265,9 @@ export class GameRoom {
         this.CreateBattleShip(this.players[1].publicKey);
       }
     }, shipCreationStartTime * 3);
+    } catch (e) {
+      this.SendLog('error', e.message);
+    }
   }
 
   public ReSendMessage(message: string) {
