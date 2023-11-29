@@ -220,6 +220,8 @@ export class GameRoom {
       orbitSpeed: config.planetYearAngle * 10,
     });
 
+    this.SendLog('objs', list)
+
     this.manager.addObject(star1);
     this.manager.addObject(star2);
     this.manager.addObject(planet1);
@@ -229,10 +231,9 @@ export class GameRoom {
       action: actionList.objectcreate,
       list: list,
     };
-    this.players.forEach((player) => {
-      player.ws.send(JSON.stringify(listMsg));
-    });
-    
+    this.SendLog('objs', listMsg)
+    this.ReSendMessage(JSON.stringify(listMsg));
+
       /*
     setTimeout(() => {
       star1.Activate();
