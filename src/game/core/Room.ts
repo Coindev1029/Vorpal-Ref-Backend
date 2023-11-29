@@ -138,7 +138,6 @@ export class GameRoom {
     });
     this.isActive = true;
     const list: objectDisplayInfo[] = [];
-    try {
       const star1 = new Star(
         this,
         this.players[0].publicKey,
@@ -146,11 +145,8 @@ export class GameRoom {
         config.defCoords.sprites.star.radius,
         this.manager
       );
-    } catch (e) {
-      this.SendLog('error', e.message);
-    }
 
-    /*
+
     list.push({
       id: star1.getId(),
       owner: star1.owner,
@@ -159,7 +155,8 @@ export class GameRoom {
       radius: star1.radius,
       energy: config.defStarHealth
     });
-
+    this.SendLog('stars', list)
+    /*
     const star2 = new Star(
       this,
       this.players[1].publicKey,
