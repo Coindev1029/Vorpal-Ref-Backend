@@ -172,8 +172,7 @@ export class GameRoom {
       radius: star2.radius,
       energy: config.defStarHealth
     });
-    this.SendLog('stars', list)
-  /*
+
     const planet1 = new Planet(
       this,
       this.players[0].publicKey,
@@ -197,6 +196,8 @@ export class GameRoom {
       orbitSpeed: config.planetYearAngle * 10,
     });
 
+    this.SendLog('stars', list);
+  /*
     const planet2 = new Planet(
       this,
       this.players[1].publicKey,
