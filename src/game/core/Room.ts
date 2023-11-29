@@ -112,8 +112,8 @@ export class GameRoom {
   }
 
   public Start() {
-    this.SendLog('start');
-   /* try {
+   // this.SendLog('start');
+   
     this.players.forEach((player) => {
       const state: PlayerState = {
         auth: true,
@@ -138,7 +138,7 @@ export class GameRoom {
     });
     this.isActive = true;
     const list: objectDisplayInfo[] = [];
-
+    /*
     const star1 = new Star(
       this,
       this.players[0].publicKey,
@@ -265,10 +265,7 @@ export class GameRoom {
       if (shipList2.length === 0) {
         this.CreateBattleShip(this.players[1].publicKey);
       }
-    }, shipCreationStartTime * 3);
-    } catch (e) {
-      this.SendLog('error', e.message);
-    } */
+    }, shipCreationStartTime * 3); */
   }
 
   public ReSendMessage(message: string) {
