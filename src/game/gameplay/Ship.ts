@@ -184,7 +184,7 @@ export class Ship extends GameObject {
     };
     this.room.ReSendMessage(JSON.stringify(msg));
   }
-
+   /*
   public FindTarget() {
     const Targets = this.manager.getClosestObjects(this.id, [
       classes.ship,
@@ -195,8 +195,8 @@ export class Ship extends GameObject {
     }
     const trg = this.manager.getObjectById(Targets[0]);
     return trg;
-  }
-
+  } */
+  /*
   public StartAttacking(target: Ship | BattlesShip) {
     this.room.SendLog('Attacking', this.center, target.center, this.manager.calcRange(this.center, target.center));
     this.isAttacking = true;
@@ -211,7 +211,7 @@ export class Ship extends GameObject {
         this.isAttacking = false;
       }
     }, defShipFireDelay)
-  }
+  } */
 
   private SearchTargetByPosition = (_id = this.id, coords = this.center) => {
     if (!this.targetPosition) {
