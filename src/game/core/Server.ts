@@ -294,8 +294,7 @@ export class GameIoServer {
     });
     this.generator = this.RoomGenerator();
 
-    /* try {
-      this.timer = setInterval(() => {
+    this.timer = setInterval(() => {
         try {
           this.Rooms.forEach((room) => {
             room.FrameUpdate();
@@ -304,9 +303,7 @@ export class GameIoServer {
           WriteLog('error', e.message);
         }
       }, FrameInterval);
-    } catch (e) {
-      WriteLog('error', e.message);
-    } */
+
   }
 
   public Finish() {

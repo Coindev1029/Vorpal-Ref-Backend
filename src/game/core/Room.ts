@@ -236,7 +236,7 @@ export class GameRoom {
       this.CreateShips();
     }, 1)
 
-    /* this.shipCreationTimer = setInterval(() => {
+    this.shipCreationTimer = setInterval(() => {
       const shipList = this.manager.getObjectsByClassName(classes.ship);
       const shipList1 = shipList.filter((sh) => {
         return sh.owner === this.players[0].publicKey;
@@ -263,7 +263,7 @@ export class GameRoom {
       if (shipList2.length === 0) {
         this.CreateBattleShip(this.players[1].publicKey);
       }
-    }, shipCreationStartTime * 3); */
+    }, shipCreationStartTime * 3); 
   }
 
   public ReSendMessage(message: string) {
@@ -361,9 +361,9 @@ export class GameRoom {
     }
   }
 
-  /*public FrameUpdate() {
+  public FrameUpdate() {
     this.SendLog('update');
-     try {
+    /* try {
       const ships = this.manager.getObjectsByClassName(classes.ship);
       const list : any[] = [];
       ships.forEach((ship) => {
@@ -400,8 +400,8 @@ export class GameRoom {
       }))
     } catch (e) {
       this.SendLog('error', e.message);
-    } 
-  }*/
+    } */
+  }
 
   private Finish(winner: number | null = null) {
     this.isActive = false;
