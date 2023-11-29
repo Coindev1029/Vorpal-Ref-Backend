@@ -54,7 +54,7 @@ export class Ship extends GameObject {
 
   public Activate(_listIndex?: number) {
     if (_listIndex) this.listIndex = _listIndex;
-    const stars = this.manager
+    /* const stars = this.manager
       .getObjectsByClassName(classes.star)
       .filter((star) => {
         return star.owner !== this.owner;
@@ -64,7 +64,7 @@ export class Ship extends GameObject {
       const positions = this.TargetStar.GetAllPositions()
       this.TargetStar.HoldPosition(positions[this.listIndex].center);
       this.targetPosition = positions[this.listIndex].center;
-    }
+    } */
     this.room.SendLog('ship activated', _listIndex);
     // this.StartMove();
   }
