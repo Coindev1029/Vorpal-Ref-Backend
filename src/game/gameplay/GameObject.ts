@@ -79,13 +79,6 @@ export default abstract class GameObject {
     return this.center;
   }
 
-  public SendLog(...params: any[]) {
-    this.room.ReSendMessage(JSON.stringify({
-      action: actionList.log,
-      ...params
-    }))
-  }
-
   public isOutside() {
     return (
       this.center.x < 0 ||

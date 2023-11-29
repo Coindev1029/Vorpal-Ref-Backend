@@ -38,6 +38,7 @@ export class GameRoom {
       race1,
       race2,
     );
+    
 
     this.players.forEach((player, index) => {
       player.ws.on('message', (message) => {
@@ -103,6 +104,13 @@ export class GameRoom {
       }
     });
     return;
+  }
+
+  public SendLog(...params: any[]) {
+    this.ReSendMessage(JSON.stringify({
+      action: actionList.log,
+      ...params
+    }))
   }
 
   public Start() {

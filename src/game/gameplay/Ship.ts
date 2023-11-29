@@ -29,12 +29,13 @@ export class Ship extends GameObject {
   private manager: ObjectListManager<any>;
   private TargetStar: Star;
   private attackRange: number;
-  private isAttacking: boolean = false;
   private targetPosition: coords;
   private listIndex: number = 0;
   private isOnStarPosition: boolean = false;
   private lastTargetId: string = ''
   private defTarget: coords;
+
+  public isAttacking: boolean = false;
 
   constructor(
     _room: GameRoom,
@@ -141,8 +142,8 @@ export class Ship extends GameObject {
   }
 
   private AttackObject(target: Ship | BattlesShip) {
-    this.SendLog('Attacking', this.center, target.center, this.manager.calcRange(this.center, target.center));
-    this.isAttacking = true;
+    this.room.SendLog('Attacking', this.center, target.center, this.manager.calcRange(this.center, target.center));
+    // this.isAttacking = true;
     const aiming = Math.random();
     const isHit = aiming < this.hitChance;
     const damage =
@@ -211,7 +212,6 @@ export class Ship extends GameObject {
         const trg = this.manager.getObjectById(Targets[0]);
         const range = this.manager.calcRange(coords, trg.center);
         if (range <= this.attackRange) {
-          this.SendLog('NewTarget', trg.class, range);
           this.MoveStop(this.center, true /* this.inMoving ? true : false */);
           this.AttackObject(trg);
           this.attackTimeout = setInterval(() => {
@@ -230,11 +230,11 @@ export class Ship extends GameObject {
         try {
           this.MoveTo(this.defTarget, shipMovingTime, this.SearchTargetByPosition);
         } catch (e) {
-          this.SendLog('error', e.message); 
+          this.room.SendLog('error', e.message); 
         }
       }
     } catch (e) {
-      this.SendLog('error', e.message);     
+      this.room.SendLog('error', e.message);     
     }
 
     return () => {};
@@ -270,9 +270,9 @@ export class Ship extends GameObject {
     clearInterval(this.attackTimeout);
     try {
       const isUnhold = this.TargetStar?.UnHoldPosition(this.center);
-      this.SendLog('UnHolded', isUnhold);
+      this.room.SendLog('UnHolded', isUnhold);
     }  catch (e) {
-      this.SendLog('error', e.message);
+      this.room.SendLog('error', e.message);
     }
     // clearTimeout(this.attackTimeout);
     const msg = {
@@ -285,7 +285,6 @@ export class Ship extends GameObject {
 
   public TakeDamage(damage: number) {
     this.hp -= damage;
-    this.SendLog('DamageTaken:', `New hp - ${this.hp}`);
     if (this.hp <= 0) {
       this.destroy();
     } else {
