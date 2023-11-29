@@ -288,11 +288,20 @@ export class GameIoServer {
       });
     });
     this.generator = this.RoomGenerator();
-    this.timer = setInterval(() => {
-      this.Rooms.forEach((room) => {
-        room.FrameUpdate();
-      })
-    }, FrameInterval);
+
+    try {
+      this.timer = setInterval(() => {
+        try {
+          this.Rooms.forEach((room) => {
+            room.FrameUpdate();
+          })
+        } catch (e) {
+          WriteLog('error', e.message);
+        }
+      }, FrameInterval);
+    } catch (e) {
+      WriteLog('error', e.message);
+    }
   }
 
   public Finish() {
