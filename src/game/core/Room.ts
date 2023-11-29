@@ -220,8 +220,6 @@ export class GameRoom {
       orbitSpeed: config.planetYearAngle * 10,
     });
 
-    this.SendLog('objs', list)
-
     this.manager.addObject(star1);
     this.manager.addObject(star2);
     this.manager.addObject(planet1);
@@ -231,10 +229,8 @@ export class GameRoom {
       action: actionList.objectcreate,
       list: list,
     };
-    this.SendLog('objs', listMsg)
     this.ReSendMessage(JSON.stringify(listMsg));
 
-      /*
     setTimeout(() => {
       star1.Activate();
       star2.Activate();   
@@ -268,7 +264,7 @@ export class GameRoom {
       if (shipList2.length === 0) {
         this.CreateBattleShip(this.players[1].publicKey);
       }
-    }, shipCreationStartTime * 3); */
+    }, shipCreationStartTime * 3); 
   }
 
   public ReSendMessage(message: string) {
@@ -315,8 +311,8 @@ export class GameRoom {
       player.ws.send(JSON.stringify(listMsg));
     });
     ships.forEach((sh, index) => {
-      // const posIndex = index < 3 ? index : index - 3;
-      sh.Activate(index);
+      const posIndex = index < 3 ? index : index - 3;
+      sh.Activate(posIndex);
     });
   }
 
@@ -356,10 +352,7 @@ export class GameRoom {
     if (this.isActive) {
       let winner = 0;
       this.players.forEach((player, index) => {
-        /* player.ws.send(JSON.stringify({
-         wallet: owner,
-         msg: 'Star destroyed'
-       })) */
+
         if (player.publicKey === owner) {
           winner = index === 0 ? 1 : 0;
         }
