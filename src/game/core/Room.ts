@@ -36,7 +36,7 @@ export class GameRoom {
       race1,
       race2,
     );
-    
+    this.manager = new ObjectListManager();
 
     this.players.forEach((player, index) => {
       player.ws.on('message', (message) => {
@@ -137,7 +137,6 @@ export class GameRoom {
       );
     });
     this.isActive = true;
-    this.manager = new ObjectListManager();
     const list: objectDisplayInfo[] = [];
       const star1 = new Star(
         this,

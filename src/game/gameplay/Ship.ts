@@ -54,11 +54,17 @@ export class Ship extends GameObject {
 
   public Activate(_listIndex?: number) {
     if (_listIndex) this.listIndex = _listIndex;
-    /* const stars = this.manager
+    try {
+      const stars = this.manager
       .getObjectsByClassName(classes.star)
       .filter((star) => {
         return star.owner !== this.owner;
       });
+    } catch (e) {
+      this.room.SendLog('error', e.message);
+    }
+
+    /*
     if (stars.length > 0) {
       this.TargetStar = stars[0];
       const positions = this.TargetStar.GetAllPositions()
