@@ -65,7 +65,7 @@ export class Ship extends GameObject {
       this.TargetStar.HoldPosition(positions[this.listIndex].center);
       this.targetPosition = positions[this.listIndex].center;
     }
-
+    this.room.SendLog('ship activated', _listIndex);
     // this.StartMove();
   }
 
