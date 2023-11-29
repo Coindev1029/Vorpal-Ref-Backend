@@ -365,7 +365,8 @@ export class GameRoom {
   }
 
   public FrameUpdate() {
-    try {
+    this.SendLog('update');
+    /* try {
       const ships = this.manager.getObjectsByClassName(classes.ship);
       const list : any[] = [];
       ships.forEach((ship) => {
@@ -402,7 +403,7 @@ export class GameRoom {
       }))
     } catch (e) {
       this.SendLog('error', e.message);
-    }
+    } */
   }
 
   private Finish(winner: number | null = null) {
