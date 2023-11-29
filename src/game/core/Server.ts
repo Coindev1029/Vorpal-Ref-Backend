@@ -165,7 +165,7 @@ export class GameIoServer {
           ws.send('pong');
           return;
         }
-        WriteLog('0x0033', 'Received : ' + message);
+        // WriteLog('0x0033', 'Received : ' + message);
         let msg: any;
         try {
           msg = JSON.parse(message);
@@ -289,7 +289,7 @@ export class GameIoServer {
     });
     this.generator = this.RoomGenerator();
 
-    try {
+    /* try {
       this.timer = setInterval(() => {
         try {
           this.Rooms.forEach((room) => {
@@ -301,7 +301,7 @@ export class GameIoServer {
       }, FrameInterval);
     } catch (e) {
       WriteLog('error', e.message);
-    }
+    } */
   }
 
   public Finish() {
