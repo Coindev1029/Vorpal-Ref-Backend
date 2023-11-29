@@ -39,6 +39,7 @@ export default abstract class GameObject {
       ..._coords,
     };
     this.class = _class;
+    this.manager = _manager;
   }
 
   public GenerateId(length: number): string {

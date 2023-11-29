@@ -54,25 +54,20 @@ export class Ship extends GameObject {
 
   public Activate(_listIndex?: number) {
     if (_listIndex) this.listIndex = _listIndex;
-    try {
       const stars = this.manager
       .getObjectsByClassName(classes.star)
       .filter((star) => {
         return star.owner !== this.owner;
       });
-    } catch (e) {
-      this.room.SendLog('error', e.message);
-    }
 
-    /*
     if (stars.length > 0) {
       this.TargetStar = stars[0];
       const positions = this.TargetStar.GetAllPositions()
       this.TargetStar.HoldPosition(positions[this.listIndex].center);
       this.targetPosition = positions[this.listIndex].center;
-    } */
+    } 
     this.room.SendLog('ship activated', _listIndex);
-    // this.StartMove();
+    this.StartMove();
   }
 
   private AttackStar(_id = this.id, coords = this.center) {
