@@ -137,6 +137,7 @@ export class GameRoom {
       );
     });
     this.isActive = true;
+    this.manager = new ObjectListManager();
     const list: objectDisplayInfo[] = [];
       const star1 = new Star(
         this,
@@ -196,8 +197,6 @@ export class GameRoom {
       orbitSpeed: config.planetYearAngle * 10,
     });
 
-    this.SendLog('stars', list);
-  /*
     const planet2 = new Planet(
       this,
       this.players[1].publicKey,
@@ -220,8 +219,8 @@ export class GameRoom {
       rotationSpeed: config.planetRotationSpeed * 10,
       orbitSpeed: config.planetYearAngle * 10,
     });
-
-    this.manager = new ObjectListManager();
+    this.SendLog('objs', list);
+  /*
     this.manager.addObject(star1);
     this.manager.addObject(star2);
     this.manager.addObject(planet1);
