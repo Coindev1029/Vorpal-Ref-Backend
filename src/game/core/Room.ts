@@ -112,7 +112,8 @@ export class GameRoom {
   }
 
   public Start() {
-    try {
+    this.SendLog('start');
+   /* try {
     this.players.forEach((player) => {
       const state: PlayerState = {
         auth: true,
@@ -267,7 +268,7 @@ export class GameRoom {
     }, shipCreationStartTime * 3);
     } catch (e) {
       this.SendLog('error', e.message);
-    }
+    } */
   }
 
   public ReSendMessage(message: string) {
@@ -368,9 +369,9 @@ export class GameRoom {
     }
   }
 
-  public FrameUpdate() {
+  /*public FrameUpdate() {
     this.SendLog('update');
-    /* try {
+     try {
       const ships = this.manager.getObjectsByClassName(classes.ship);
       const list : any[] = [];
       ships.forEach((ship) => {
@@ -407,8 +408,8 @@ export class GameRoom {
       }))
     } catch (e) {
       this.SendLog('error', e.message);
-    } */
-  }
+    } 
+  }*/
 
   private Finish(winner: number | null = null) {
     this.isActive = false;
