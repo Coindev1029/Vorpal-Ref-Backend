@@ -138,15 +138,19 @@ export class GameRoom {
     });
     this.isActive = true;
     const list: objectDisplayInfo[] = [];
-    /*
-    const star1 = new Star(
-      this,
-      this.players[0].publicKey,
-      config.defCoords.star1,
-      config.defCoords.sprites.star.radius,
-      this.manager
-    );
+    try {
+      const star1 = new Star(
+        this,
+        this.players[0].publicKey,
+        config.defCoords.star1,
+        config.defCoords.sprites.star.radius,
+        this.manager
+      );
+    } catch (e) {
+      this.SendLog('error', e.message);
+    }
 
+    /*
     list.push({
       id: star1.getId(),
       owner: star1.owner,
