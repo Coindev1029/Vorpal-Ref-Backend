@@ -128,12 +128,17 @@ export class GameIoServer {
           const playerOne: PlayerRow = availablePlayers[indexPair[0]];
           const playerTwo: PlayerRow = availablePlayers[indexPair[1]];
           const players = [playerOne, playerTwo];
-
-          const room = new GameRoom(this, players);
-          room.SetId(this.Rooms.length);
-          this.Rooms.push(room);
-          WriteLog('Room creation : ', 'Room created, id : ' + room.GetId());
-          room.Start();
+          
+          try {
+            const room = new GameRoom(this, players);
+            room.SetId(this.Rooms.length);
+            this.Rooms.push(room);
+  
+            WriteLog('Room creation : ', 'Room created, id : ' + room.GetId());
+            room.Start();
+          } catch(e) {
+            WriteLog('Room creation error: ', e.message);
+          }          
         }
       }
     }, gameTimerValue);
