@@ -132,6 +132,7 @@ export class GameRoom {
           playerPosition: playerPosition,
           orbitRadius: defCoords.orbRadius,
           objectMovesPerSec: 1000 / config.FrameInterval,
+          battleLine: defCoords.battleLine,
           gameField: gameField
         }),
       );
