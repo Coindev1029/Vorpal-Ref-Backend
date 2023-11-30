@@ -380,11 +380,11 @@ export class GameRoom {
                 this.SendLog('must attack', range);
                 ship.StartAttacking(target);
               } else {
-                // ship.MoveToPoint(target.center);
+                ship.MoveToPoint(target.center);
                 this.SendLog('to target', range);
               }
             } else {
-              // ship.MoveToPoint(ship.targetPosition);
+              ship.MoveToPoint(ship.targetPosition);
             }
           }
         }
