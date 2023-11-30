@@ -279,7 +279,7 @@ export class GameRoom {
       const mirror = index === 0 ? true : false;
       const center = gameField[0] / 2;
       const xPositions = [center - 80, center, center + 80];
-      const yPosition = mirror ? 150 : 550;
+      const yPosition = mirror ? defCoords.battleLine - 150 : defCoords.battleLine + 150;
       xPositions.forEach((pos, j) => {
         const ship = new Ship(
           this,
