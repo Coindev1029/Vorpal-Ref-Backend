@@ -363,7 +363,6 @@ export class GameRoom {
   }
 
   public FrameUpdate() {
-    this.SendLog('update');
       const ships = this.manager.getObjectsByClassName(classes.ship);
       const list : any[] = [];
       ships.forEach((ship) => {
@@ -377,7 +376,6 @@ export class GameRoom {
             if (target) {
               const range = this.manager.calcRange(ship.center, target.center);
               if (range <= config.shipRange) {
-                this.SendLog('must attack', range);
                 ship.StartAttacking(target);
               } else {
                 ship.MoveToPoint(target.center);
@@ -394,13 +392,15 @@ export class GameRoom {
           position: ship.center
         })
       })
-      this.ReSendMessage(JSON.stringify({
-        action: actionList.objectupdate,
-        class: classes.ship,
-        data: {
-          list: list
-        }
-      }))
+      if (list.length > 0) {
+        this.ReSendMessage(JSON.stringify({
+          action: actionList.objectupdate,
+          class: classes.ship,
+          data: {
+            list: list
+          }
+        }))
+      }
   }
 
   private Finish(winner: number | null = null) {
