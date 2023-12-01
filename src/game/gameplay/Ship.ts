@@ -66,8 +66,6 @@ export class Ship extends GameObject {
       this.TargetStar.HoldPosition(positions[this.listIndex].center);
       this.targetPosition = positions[this.listIndex].center;
     } 
-    // this.room.SendLog('ship activated', _listIndex);
-    // this.StartMove();
   }
 
   private AttackStar(_id = this.id, coords = this.center) {
@@ -214,89 +212,6 @@ export class Ship extends GameObject {
     }, defShipFireDelay)
   }
 
-  private SearchTargetByPosition = (_id = this.id, coords = this.center) => {
-    if (!this.targetPosition) {
-      this.targetPosition = this.GetClosestPosition(
-        this.center,
-        this.TargetStar,
-      );
-    }
-    const defTarget = this.targetPosition;
-    const rangeToDefTarget = this.manager.calcRange(
-      { x: coords.x, y: coords.y },
-      defTarget,
-    );
-    this.room.ReSendMessage(JSON.stringify({ rangeTo: rangeToDefTarget }));
-    if (rangeToDefTarget < 5) {
-      if (!this.isOnStarPosition) {
-        this.AttackStar();
-        // this.TargetStar.HoldPosition(defTarget);
-        this.isOnStarPosition = true;
-        this.MoveStop(defTarget, true);
-      }
-      return () => {};
-    }
-    try {
-      const Targets = this.manager.getClosestObjects(_id, [
-        classes.ship,
-        classes.battleship,
-      ]);
-      if (Targets.length > 0) {
-        const trg = this.manager.getObjectById(Targets[0]);
-        const range = this.manager.calcRange(coords, trg.center);
-        if (range <= this.attackRange) {
-          this.MoveStop(this.center, true /* this.inMoving ? true : false */);
-          this.AttackObject(trg);
-          this.attackTimeout = setInterval(() => {
-            const trg = this.manager.getObjectById(Targets[0]);
-            if (trg) {
-              this.AttackObject(trg);
-            } else {
-              clearInterval(this.attackTimeout);
-              this.SearchTargetByPosition();
-            }
-          }, defShipFireDelay)
-        } else {
-          this.MoveTo(trg.center, Math.round(shipMovingTime * (range / 350)), this.SearchTargetByPosition);
-        } 
-      } else {
-        try {
-          this.MoveTo(this.defTarget, shipMovingTime, this.SearchTargetByPosition);
-        } catch (e) {
-          this.room.SendLog('error', e.message); 
-        }
-      }
-    } catch (e) {
-      this.room.SendLog('error', e.message);     
-    }
-
-    return () => {};
-  };
-
-  public StartMove() {
-    this.defTarget = this.GetClosestPosition(this.center, this.TargetStar);
-    this.TargetStar?.HoldPosition(this.defTarget);
-    const rangeToDefTarget = this.manager.calcRange(this.center, this.defTarget);
-    const testMsg = {
-      action: actionList.log,
-      id: this.id,
-      targetPos: this.defTarget,
-      range: rangeToDefTarget,
-    };
-    this.room.ReSendMessage(JSON.stringify(testMsg));
-    if (rangeToDefTarget < 5) {
-      if (!this.isOnStarPosition) {
-        this.AttackStar();
-        this.TargetStar.HoldPosition(this.defTarget);
-        this.isOnStarPosition = true;
-        this.MoveStop(this.defTarget, true);
-      }
-      return;
-    }
-
-    this.MoveTo(this.defTarget, shipMovingTime, this.SearchTargetByPosition);
-
-  }
 
   protected onDestroy() {
     clearInterval(this.timer);
