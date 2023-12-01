@@ -107,7 +107,7 @@ export default class Star extends GameObject {
           id: this.id,
           class: this.class,
           data: {
-            enegry: this.energy,
+            energy: this.energy,
           }
         }),
       );
