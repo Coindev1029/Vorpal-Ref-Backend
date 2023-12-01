@@ -106,7 +106,9 @@ export default class Star extends GameObject {
           action: actionList.objectupdate,
           id: this.id,
           class: this.class,
-          enegry: this.energy,
+          data: {
+            enegry: this.energy,
+          }
         }),
       );
     }
