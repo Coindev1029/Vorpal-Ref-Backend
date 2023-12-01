@@ -412,6 +412,17 @@ export class GameRoom {
       `${this.players[0].publicKey} VS ${this.players[1].publicKey}`,
       `Game finished`,
     );
+    const dt = new Date();
+    const objects = this.manager.getAllObjects();
+    objects.forEach((obj) => {
+      try {
+        obj.destroy();
+      } catch (e) {}
+      try {
+        this.manager.removeObject(obj.id);
+      } catch (e) {}
+    });
+
     this.players.forEach((player, index) => {
       const state: PlayerState = {
         auth: true,
@@ -428,16 +439,6 @@ export class GameRoom {
           win: winner === index ? true : false,
         }),
       );
-    });
-    const dt = new Date();
-    const objects = this.manager.getAllObjects();
-    objects.forEach((obj) => {
-      try {
-        obj.destroy();
-      } catch (e) {}
-      try {
-        this.manager.removeObject(obj.id);
-      } catch (e) {}
     });
 
     SaveGameResult({
