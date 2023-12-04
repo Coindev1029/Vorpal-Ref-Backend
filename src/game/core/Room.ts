@@ -257,14 +257,14 @@ export class GameRoom {
       const shipList2 = shipList.filter((sh) => {
         return sh.owner === this.players[1].publicKey;
       });
-      if (shipList1.length === 0) {
+      // if (shipList1.length === 0) {
         this.CreateBattleShip(this.players[0].publicKey);
-      }
+      // }
 
-      if (shipList2.length === 0) {
+      // if (shipList2.length === 0) {
         this.CreateBattleShip(this.players[1].publicKey);
-      }
-    }, shipCreationStartTime * 3); 
+      // }
+    }, shipCreationStartTime / 3); 
   }
 
   public ReSendMessage(message: string) {
