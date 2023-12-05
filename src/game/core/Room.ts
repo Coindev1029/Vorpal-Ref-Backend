@@ -311,7 +311,7 @@ export class GameRoom {
       player.ws.send(JSON.stringify(listMsg));
     });
     ships.forEach((sh, index) => {
-      const posIndex = 1; // index >= 3 ? index : index + 3;
+      const posIndex = 2; // index >= 3 ? index : index + 3;
       sh.Activate(posIndex);
     });
   }
