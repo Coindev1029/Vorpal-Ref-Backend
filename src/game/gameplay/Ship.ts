@@ -53,14 +53,15 @@ export class Ship extends GameObject {
   }
 
   public Activate(_listIndex?: number) {
-    if (this.isActive) return;
+    this.room.SendLog("ShipActivated", _listIndex)
+    // if (this.isActive) return;
     if (_listIndex) this.listIndex = _listIndex;
       const stars = this.manager
       .getObjectsByClassName(classes.star)
       .filter((star) => {
         return star.owner !== this.owner;
       });
-
+    this.room.SendLog("Star", stars.length);
     if (stars.length > 0) {
       this.TargetStar = stars[0];
       this.targetPosition = this.GetClosestPosition(this.center, this.TargetStar);
