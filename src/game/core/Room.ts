@@ -413,7 +413,7 @@ export class GameRoom {
         const stars = this.manager.getObjectsByClassName(classes.star);
         stars.forEach((star: Star) => {
           star.ResetPositions();
-          this.SendLog('PositionsReset', star.GetAllPositions());
+          // this.SendLog('PositionsReset', star.GetAllPositions());
         })
       }
   }
