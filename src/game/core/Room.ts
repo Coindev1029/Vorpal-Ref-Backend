@@ -368,6 +368,9 @@ export class GameRoom {
       const ships = this.manager.getObjectsByClassName(classes.ship);
       const list : any[] = [];
       ships.forEach((ship) => {
+        if (!ship.isActive) {
+          return;
+        }
         const rangeToStar = this.manager.calcRange(ship.center, ship.targetPosition);
         if (!ship.isAttacking) {
           if (rangeToStar <= config.shipSpeed) {

@@ -66,11 +66,13 @@ export class Ship extends GameObject {
         const position = this.GetClosestPosition(this.center, this.TargetStar, false);
         this.TargetStar.HoldPosition(position);
         this.targetPosition = position;
+        this.isActive = true;
         return;
       }
       const positions = this.TargetStar.GetAllPositions();
       this.TargetStar.HoldPosition(positions[this.listIndex].center);
       this.targetPosition = positions[this.listIndex].center;
+      this.isActive = true;
     }
   }
 

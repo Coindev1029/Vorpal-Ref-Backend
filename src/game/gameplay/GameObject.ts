@@ -21,6 +21,7 @@ export default abstract class GameObject {
   public movingType: movings;
   public speed: number = 0;
   public target: coords;
+  public isActive: boolean;
 
   constructor(
     _room: GameRoom,
