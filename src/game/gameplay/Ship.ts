@@ -63,7 +63,11 @@ export class Ship extends GameObject {
     if (stars.length > 0) {
       this.TargetStar = stars[0];
       if (this.listIndex < 0) {
-        const position = this.GetClosestPosition(this.center, this.TargetStar, false);
+        const position = this.GetClosestPosition(
+          this.center,
+          this.TargetStar,
+          false,
+        );
         this.TargetStar.HoldPosition(position);
         this.targetPosition = position;
         this.isActive = true;
@@ -118,8 +122,8 @@ export class Ship extends GameObject {
     if (free) {
       return positions[0].center;
     }
-    
-    return positions[this.listIndex].hold === false
+
+    return this.listIndex >= 0 && positions[this.listIndex].hold === false
       ? positions[this.listIndex].center
       : this.ReservePosition();
   }

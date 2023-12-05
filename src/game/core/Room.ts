@@ -313,7 +313,11 @@ export class GameRoom {
     ships.forEach((sh, index) => {
       const posIndex = -1; // index >= 3 ? index : index + 3;
       setTimeout(() => {
-        sh.Activate(posIndex);
+        try {
+          sh.Activate(posIndex);
+        } catch (e) {
+          this.SendLog("error", e.message);
+        }
       }, index * 5);
     });
   }
