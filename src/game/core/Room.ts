@@ -258,11 +258,11 @@ export class GameRoom {
         return sh.owner === this.players[1].publicKey;
       });
       // if (shipList1.length === 0) {
-        this.CreateBattleShip(this.players[0].publicKey);
+      // this.CreateBattleShip(this.players[0].publicKey);
       // }
 
       // if (shipList2.length === 0) {
-        this.CreateBattleShip(this.players[1].publicKey);
+      //  this.CreateBattleShip(this.players[1].publicKey);
       // }
     }, shipCreationStartTime / 3); 
   }
@@ -311,7 +311,7 @@ export class GameRoom {
       player.ws.send(JSON.stringify(listMsg));
     });
     ships.forEach((sh, index) => {
-      const posIndex = index < 3 ? index : index - 3;
+      const posIndex = index >= 3 ? index : index + 3;
       sh.Activate(posIndex);
     });
   }
