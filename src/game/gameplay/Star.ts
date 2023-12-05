@@ -69,6 +69,10 @@ export default class Star extends GameObject {
     return result
   }
 
+  public ResetPositions() {
+       this.FillAttackPositions();
+  }
+
   public GetFreePositions () {
     return this.AttackPositions.filter((pos) => {
       return pos.hold === false;
@@ -90,6 +94,7 @@ export default class Star extends GameObject {
   }
 
   public Activate() {
+    this.isActive = true;
     this.FillAttackPositions();
     this.lifeTimer = setInterval(() => {
       this.TakeDamage(1);
