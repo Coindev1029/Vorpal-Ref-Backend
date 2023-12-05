@@ -53,6 +53,7 @@ export class Ship extends GameObject {
   }
 
   public Activate(_listIndex?: number) {
+    if (this.isActive) return;
     if (_listIndex) this.listIndex = _listIndex;
       const stars = this.manager
       .getObjectsByClassName(classes.star)
@@ -64,9 +65,12 @@ export class Ship extends GameObject {
       this.TargetStar = stars[0];
       this.targetPosition = this.GetClosestPosition(this.center, this.TargetStar);
       this.TargetStar.HoldPosition(this.targetPosition);
+      this.room.SendLog('StarPosition', this.targetPosition, 'reserve?' , this.targetPosition === this.ReservePosition());
     } else {
       this.targetPosition = this.ReservePosition();
+      this.room.SendLog('StarReservePosition', this.targetPosition);
     }
+    this.isActive = true;
   }
 
   public AttackStar(_id = this.id, coords = this.center) {
@@ -120,7 +124,7 @@ export class Ship extends GameObject {
         };
   }
 
-  public GetClosestPosition(point?: coords, star?: Star): coords {
+  private GetClosestPosition(point?: coords, star?: Star): coords {
     if (!star || !point) {
       return this.ReservePosition();
     }
