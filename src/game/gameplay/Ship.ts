@@ -114,6 +114,11 @@ export class Ship extends GameObject {
       ...positions,
     };
     this.room.ReSendMessage(JSON.stringify(logMsg));
+
+    if (free) {
+      return positions[0].center;
+    }
+    
     return positions[this.listIndex].hold === false
       ? positions[this.listIndex].center
       : this.ReservePosition();
