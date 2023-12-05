@@ -409,6 +409,14 @@ export class GameRoom {
             list: list
           }
         }))
+      } else {
+        const stars = this.manager.getObjectsByClassName(classes.star);
+        stars.forEach((star: Star) => {
+          const positions = star.GetAllPositions();
+          positions.forEach((pos) => {
+            star.UnHoldPosition(pos.center);
+          })
+        })
       }
   }
 
