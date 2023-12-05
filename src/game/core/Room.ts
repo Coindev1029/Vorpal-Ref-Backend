@@ -8,7 +8,7 @@ import ObjectListManager from './ListManager';
 import Planet from '../gameplay/Planet';
 import { objectDisplayInfo, objectMapInfo } from '../types/gameplay';
 import GameObject from '../gameplay/GameObject';
-import { actionList, classes, objectInfo } from '../types/msg';
+import { PacketTitle, classes, objectInfo } from '../types/msg';
 import { defCoords, gameField, shipCreationStartTime } from '../config';
 import { Ship } from '../gameplay/Ship';
 import { BattlesShip } from '../gameplay/BattleShip';
@@ -52,20 +52,20 @@ export class GameRoom {
         // WriteLog(player.publicKey, `Received in game : ${String(message)}`)
 
         switch (msg.action) {
-          case actionList.buyitem:
+          case PacketTitle.buyitem:
             if (msg.data) {
               const result = this.store.BuyItem(
                 player.publicKey,
                 msg.data.name,
               );
               const responce = {
-                action: actionList.buyreport,
+                action: PacketTitle.buyreport,
                 result: result,
               };
               player.ws.send(JSON.stringify(responce));
             }
             break;
-          case actionList.exitgame:
+          case PacketTitle.exitgame:
             this.Finish(index === 0 ? 1 : 0);
             break;
         }
@@ -106,7 +106,7 @@ export class GameRoom {
 
   public SendLog(...params: any[]) {
     this.ReSendMessage(JSON.stringify({
-      action: actionList.log,
+      action: PacketTitle.log,
       ...params
     }))
   }
@@ -128,7 +128,7 @@ export class GameRoom {
         player.publicKey === this.players[0].publicKey ? 'top' : 'bottom';
       player.ws.send(
         JSON.stringify({
-          action: actionList.gamestart,
+          action: PacketTitle.gamestart,
           playerPosition: playerPosition,
           orbitRadius: defCoords.orbRadius,
           objectMovesPerSec: 1000 / config.FrameInterval,
@@ -226,7 +226,7 @@ export class GameRoom {
     this.manager.addObject(planet2);
 
     const listMsg = {
-      action: actionList.objectcreate,
+      action: PacketTitle.objectcreate,
       list: list,
     };
     this.ReSendMessage(JSON.stringify(listMsg));
@@ -304,7 +304,7 @@ export class GameRoom {
       });
     });
     const listMsg = {
-      action: actionList.objectcreate,
+      action: PacketTitle.objectcreate,
       list: list,
     };
     this.players.forEach((player) => {
@@ -346,7 +346,7 @@ export class GameRoom {
     });
 
     const listMsg: objectInfo = {
-      action: actionList.objectcreate,
+      action: PacketTitle.objectcreate,
       list: list,
     };
     this.players.forEach((player) => {
@@ -403,7 +403,7 @@ export class GameRoom {
       })
       if (list.length > 0) {
         this.ReSendMessage(JSON.stringify({
-          action: actionList.objectupdate,
+          action: PacketTitle.objectupdate,
           class: classes.ship,
           data: {
             list: list
@@ -450,7 +450,7 @@ export class GameRoom {
       this.server.UpdatePlayerState(player.id, state);
       player.ws.send(
         JSON.stringify({
-          action: actionList.gameend,
+          action: PacketTitle.gameend,
           win: winner === index ? true : false,
         }),
       );
