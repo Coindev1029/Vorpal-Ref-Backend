@@ -29,9 +29,9 @@ export class Ship extends GameObject {
   private hitChance: number = defShipHitChance;
   private TargetStar: Star;
   private attackRange: number;
-  private listIndex: number = 0;
+  private listIndex: number = -1;
   private isOnStarPosition: boolean = false;
-  private lastTargetId: string = ''
+  private lastTargetId: string = '';
   private defTarget: coords;
 
   public isAttacking: boolean = false;
@@ -54,7 +54,7 @@ export class Ship extends GameObject {
 
   public Activate(_listIndex?: number) {
     if (_listIndex) this.listIndex = _listIndex;
-      const stars = this.manager
+    const stars = this.manager
       .getObjectsByClassName(classes.star)
       .filter((star) => {
         return star.owner !== this.owner;
@@ -62,45 +62,16 @@ export class Ship extends GameObject {
 
     if (stars.length > 0) {
       this.TargetStar = stars[0];
-      const positions = this.TargetStar.GetAllPositions()
+      if (this.listIndex < 0) {
+        const position = this.GetClosestPosition(this.center, this.TargetStar, false);
+        this.TargetStar.HoldPosition(position);
+        this.targetPosition = position;
+        return;
+      }
+      const positions = this.TargetStar.GetAllPositions();
       this.TargetStar.HoldPosition(positions[this.listIndex].center);
       this.targetPosition = positions[this.listIndex].center;
-    } 
-  }
-
-  private AttackStar(_id = this.id, coords = this.center) {
-    const logMsg = {
-      action: actionList.log,
-      event: 'findStar',
-    };
-    this.room.ReSendMessage(JSON.stringify(logMsg));
-    const trg = this.TargetStar;
-    if (trg) {
-      const msg = {
-        action: actionList.log,
-        data: {
-          event: 'attackStar',
-          starId: trg.getId(),
-          willDamage: this.hp,
-          starEnergy: trg.energy,
-        },
-      };
-      this.room.ReSendMessage(JSON.stringify(msg));
-      this.isAttacking = true;
-      this.speed = 0;
-      this.isOnStarPosition = true;
-      this.timer = setInterval(() => {
-        trg.TakeDamage(1);
-        this.TakeDamage(1);
-        const logMsg = {
-          action: actionList.log,
-          event: 'starDamage',
-          nowHP: this.hp,
-        };
-        this.room.ReSendMessage(JSON.stringify(logMsg));
-      }, FrameInterval);
     }
-    return () => {};
   }
 
   protected onCreate() {
@@ -119,19 +90,20 @@ export class Ship extends GameObject {
         };
   }
 
-  public GetClosestPosition(point?: coords, star?: Star): coords {
+  public GetClosestPosition(point?: coords, star?: Star, free = false): coords {
     if (!star || !point) {
       return this.ReservePosition();
     }
-    const positions = star.GetAllPositions();
-    /* const positions =  star.GetFreePositions().sort((a, b) => {
-        const rangeA = this.manager.calcRange(point, a.center);
-        const rangeB = this.manager.calcRange(point, b.center);
-        if (rangeA < rangeB) return -1;
-        if (rangeA > rangeB) return 1;
-        return 0;
-    }) */
-    if (positions.length <= this.listIndex) {
+    const positions = free
+      ? star.GetAllPositions()
+      : star.GetFreePositions().sort((a, b) => {
+          const rangeA = this.manager.calcRange(point, a.center);
+          const rangeB = this.manager.calcRange(point, b.center);
+          if (rangeA < rangeB) return -1;
+          if (rangeA > rangeB) return 1;
+          return 0;
+        });
+    if (positions.length === 0) {
       return this.ReservePosition();
     }
 
@@ -197,7 +169,12 @@ export class Ship extends GameObject {
   }
 
   public StartAttacking(target: Ship | BattlesShip) {
-    this.room.SendLog('Attacking', this.center, target.center, this.manager.calcRange(this.center, target.center));
+    this.room.SendLog(
+      'Attacking',
+      this.center,
+      target.center,
+      this.manager.calcRange(this.center, target.center),
+    );
     this.isAttacking = true;
     this.speed = 0;
     this.attackTimeout = setInterval(() => {
@@ -209,9 +186,8 @@ export class Ship extends GameObject {
         this.speed = shipSpeed;
         this.isAttacking = false;
       }
-    }, defShipFireDelay)
+    }, defShipFireDelay);
   }
-
 
   protected onDestroy() {
     clearInterval(this.timer);
@@ -219,7 +195,7 @@ export class Ship extends GameObject {
     try {
       const isUnhold = this.TargetStar?.UnHoldPosition(this.center);
       this.room.SendLog('UnHolded', isUnhold);
-    }  catch (e) {
+    } catch (e) {
       this.room.SendLog('error', e.message);
     }
     // clearTimeout(this.attackTimeout);
