@@ -153,24 +153,7 @@ export class Ship extends GameObject {
       Math.round((defShipDamage[1] - defShipDamage[0]) * Math.random());
     if (isHit) {
       target.TakeDamage(damage);
-      this.room.ReSendMessage(
-        JSON.stringify({
-          action: PackTitle.event,
-          type: 'attack',
-          result: 'hit',
-          damage: damage,
-        }),
-      );
-    } else {
-      this.room.ReSendMessage(
-        JSON.stringify({
-          action: PackTitle.event,
-          type: 'attack',
-          result: 'miss',
-          damage: damage,
-        }),
-      );
-    }
+    } 
 
     this.room.ReSendMessage(PackFactory.getInstance().attack({
       from: this.id,
