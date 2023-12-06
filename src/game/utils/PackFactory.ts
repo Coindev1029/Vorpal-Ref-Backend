@@ -1,4 +1,4 @@
-import { Classes, PackTitle } from "src/game/types/Messages";
+import { Classes, PackTitle } from "../types/Messages";
 
 export class PackFactory {
     private static _instance: PackFactory;
