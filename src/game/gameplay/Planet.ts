@@ -5,7 +5,7 @@ import { FrameInterval, SyncInterval, defCoords, gameField, planetRotationSpeed,
 import { GameRoom } from '../core/Room';
 import { Classes, PackTitle } from '../types/Messages';
 import ObjectListManager from '../core/ListManager';
-import { PackFactory } from 'game/utils/PackFactory';
+import { PackFactory } from '../utils/PackFactory';
 
 export default class Planet extends GameObject {
   private timer: NodeJS.Timer;

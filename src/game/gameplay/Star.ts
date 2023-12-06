@@ -6,7 +6,7 @@ import { defCoords, defShipHealth, defStarHealth } from '../config';
 import { Classes, PackTitle } from '../types/Messages';
 import { StarAttackPosition, coords } from '../types/gameplay';
 import ObjectListManager from '../core/ListManager';
-import { PackFactory } from 'game/utils/PackFactory';
+import { PackFactory } from '../utils/PackFactory';
 
 export default class Star extends GameObject {
   public energy: number;
