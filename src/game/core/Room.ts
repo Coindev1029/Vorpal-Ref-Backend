@@ -309,7 +309,7 @@ export class GameRoom {
       action: PackTitle.objectcreate,
       list: list,
     };
-    this.SendLog('BSData', listMsg);
+    this.SendLog('BSData', list);
     this.ReSendMessage(JSON.stringify(listMsg));
 
     ships.forEach((sh, index) => {
