@@ -300,8 +300,7 @@ export class GameRoom {
           class: ship.class,
           position: ship.center,
           radius: ship.radius,
-          mirror: mirror,
-          hp: config.defShipHealth,
+          hp: ship.getHp(),
         });
         ships.push(ship);
       });
@@ -310,9 +309,9 @@ export class GameRoom {
       action: PackTitle.objectcreate,
       list: list,
     };
-    this.players.forEach((player) => {
-      player.ws.send(JSON.stringify(listMsg));
-    });
+    this.SendLog('BSData', listMsg);
+    this.ReSendMessage(JSON.stringify(listMsg));
+
     ships.forEach((sh, index) => {
       const posIndex = -1; // index >= 3 ? index : index + 3;
       setTimeout(() => {
