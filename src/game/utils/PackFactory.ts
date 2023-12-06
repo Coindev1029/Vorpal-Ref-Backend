@@ -24,10 +24,10 @@ export class PackFactory {
         });
     }
 
-    updateShipList(aList: any[]) {
+    updateShipList(aList: any[], className = Classes.ship) {
         return JSON.stringify({
             action: PackTitle.objectupdate,
-            class: Classes.ship,
+            class: className,
             data: {
                 list: aList
             }
