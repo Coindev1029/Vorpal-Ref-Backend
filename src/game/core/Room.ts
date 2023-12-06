@@ -349,6 +349,7 @@ export class GameRoom {
       action: PackTitle.objectcreate,
       list: list,
     };
+    this.manager.addObject(bShip);
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
     });

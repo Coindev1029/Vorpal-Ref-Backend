@@ -29,6 +29,7 @@ export class BattlesShip extends GameObject {
   private onCreate() {
     this.hp = defBattleShipHealth;
     this.room.SendLog("BattleShip created", "10s");
+    
     const stars = this.manager.getObjectsByClassName(Classes.star).filter((st: Star) => {
       return st.owner !== this.owner;
     });
