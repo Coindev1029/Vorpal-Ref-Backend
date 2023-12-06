@@ -81,23 +81,10 @@ export class Ship extends GameObject {
   }
 
   public AttackStar(_id = this.id, coords = this.center) {
-    const logMsg = {
-      action: PackTitle.log,
-      event: 'findStar',
-    };
-    this.room.ReSendMessage(JSON.stringify(logMsg));
+
     const trg = this.TargetStar;
     if (trg) {
-      const msg = {
-        action: PackTitle.log,
-        data: {
-          event: 'attackStar',
-          starId: trg.getId(),
-          willDamage: this.hp,
-          starEnergy: trg.energy,
-        },
-      };
-      this.room.ReSendMessage(JSON.stringify(msg));
+
       this.isAttacking = true;
       this.speed = 0;
       this.isOnStarPosition = true;
