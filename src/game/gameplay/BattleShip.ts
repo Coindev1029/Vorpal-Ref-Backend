@@ -2,13 +2,16 @@ import { play } from '../types';
 import ObjectListManager from '../core/ListManager';
 import { GameRoom } from '../core/Room';
 import GameObject from './GameObject';
-import { defBattleShipHealth } from '../config';
+import { bShipSpeed, defBattleShipHealth } from '../config';
 import Star from './Star';
 import { Classes, PackTitle } from '../types/Messages';
+import { coords } from '../types/gameplay';
 
 export class BattlesShip extends GameObject {
   private timer: NodeJS.Timer;
   private hp: number;
+  public targetPosition: coords = {x: 0, y: 0};
+  public isAttacking: boolean = false;
 
   constructor(
     _room: GameRoom,
@@ -19,36 +22,19 @@ export class BattlesShip extends GameObject {
   ) {
     super(_room, _owner, _coords, _radius, Classes.battleship, _manager);
     this.manager = _manager;
+    this.speed = bShipSpeed;
     this.onCreate();
   }
 
   private onCreate() {
     this.hp = defBattleShipHealth;
     this.room.SendLog("BattleShip created", "10s");
-    setTimeout(() => {
-      const stars = this.manager.getObjectsByClassName('star').filter((st) => {
-        return st.owner !== this.owner;
-      });
-      if (stars.length > 0) {
-        const trg: Star = stars[0];
-        this.center.x = trg.center.x + (trg.radius * 2);
-        this.center.y = trg.center.y + (trg.radius * 2);
-        const msg = {
-          action: PackTitle.objectupdate,
-          data: {
-            from: this.id,
-            starOwner: trg.owner,
-            wasHP: trg.energy,
-            periodic: 1,
-            state: 'started'
-          },
-        };
-        this.room.ReSendMessage(JSON.stringify(msg))
-        this.timer = setInterval(() => {
-          this.AttackStar();
-        }, 1000);
-      }
-    }, 10000);
+    const stars = this.manager.getObjectsByClassName(Classes.star).filter((st: Star) => {
+      return st.owner !== this.owner;
+    });
+    if (stars.length > 0) {
+      this.targetPosition = stars[0].BSPosition;
+    }
   }
 
   private onDestroy() {
@@ -63,21 +49,8 @@ export class BattlesShip extends GameObject {
     this.manager.removeObject(this.id);
   }
 
-  private DetectTarget(): Star | null {
-    const stars = this.manager.getObjectsByClassName('star');
-    stars.forEach((st) => {
-      if (st.owner !== this.owner) {
-        return st;
-      }
-    });
-    return null;
-  }
-
-  private AttackStar() {
-    const target: Star | null = this.DetectTarget();
-    if (target) {
-      target.TakeDamage(1);
-    }
+  public AttackState() {
+    this.isAttacking = true;
   }
 
   public TakeDamage(damage: number) {

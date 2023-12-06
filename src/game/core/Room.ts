@@ -258,11 +258,11 @@ export class GameRoom {
         return sh.owner === this.players[1].publicKey;
       });
       // if (shipList1.length === 0) {
-      // this.CreateBattleShip(this.players[0].publicKey);
+       this.CreateBattleShip(this.players[0].publicKey);
       // }
 
       // if (shipList2.length === 0) {
-      //  this.CreateBattleShip(this.players[1].publicKey);
+        this.CreateBattleShip(this.players[1].publicKey);
       // }
     }, shipCreationStartTime / 3); 
   }
@@ -333,7 +333,7 @@ export class GameRoom {
       this,
       owner,
       { x: xPosition, y: yPosition },
-      defCoords.sprites.ship.radius,
+      defCoords.sprites.battleShip.radius,
       this.manager,
     );
     list.push({
@@ -370,7 +370,9 @@ export class GameRoom {
 
   public FrameUpdate() {
       const ships = this.manager.getObjectsByClassName(Classes.ship);
+      const battleShips = this.manager.getObjectsByClassName(Classes.battleship);
       const list : any[] = [];
+      const bsList: any[] = [];
       ships.forEach((ship) => {
         if (!ship.isActive) {
           return;
@@ -400,6 +402,22 @@ export class GameRoom {
           owner: ship.owner,
           position: ship.center
         })
+      })
+      battleShips.forEach((BS: BattlesShip) => {
+        
+        if (!BS.isAttacking) BS.MoveToPoint(BS.targetPosition, () => {
+          const rangeToTarget = this.manager.calcRange(BS.center, BS.targetPosition);
+          this.SendLog('BS to target', rangeToTarget);
+          if (rangeToTarget < 5) {
+            BS.AttackState();
+          }
+          bsList.push({
+            id: BS.getId(),
+            owner: BS.owner,
+            position: BS.center
+          })
+        });
+
       })
       if (list.length > 0) {
         this.ReSendMessage(PackFactory.getInstance().updateShipList(list));

@@ -24,6 +24,7 @@ export const playerMaxLevel = 16;
 export const moveFrame = 100; // step in ms
 export const shipRange = 200;
 export const shipSpeed = 8;
+export const bShipSpeed = 4;
 export const defCoords = {
   battleLine: 500,
   orbDiam: 150,
@@ -44,6 +45,9 @@ export const defCoords = {
       height: 30,
       radius: 15
     },
+    battleShip: {
+      radius: 30
+    }
   },
   star1: {
     x: 400,

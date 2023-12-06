@@ -10,6 +10,7 @@ import ObjectListManager from '../core/ListManager';
 export default class Star extends GameObject {
   public energy: number;
   public AttackPositions: StarAttackPosition[] = [];
+  public BSPosition: coords;
   private lifeTimer: NodeJS.Timer;
 
   constructor(
@@ -55,7 +56,7 @@ export default class Star extends GameObject {
           result = true;
       }
     })
-    return result
+    return result;
   }
 
   public UnHoldPosition (point: coords) {
@@ -99,6 +100,9 @@ export default class Star extends GameObject {
     this.lifeTimer = setInterval(() => {
       this.TakeDamage(1);
     }, 1000);
+    const mirror = this.center.y < defCoords.battleLine ? -1 : 1;
+    const coordSum = defCoords.orbRadius + defCoords.sprites.battleShip.radius + 5;
+    this.BSPosition = {x: this.center.x + coordSum * mirror, y: this.center.y + coordSum * mirror};
   }
 
   public TakeDamage(damage: number) {

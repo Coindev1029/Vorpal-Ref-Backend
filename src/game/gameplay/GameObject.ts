@@ -93,7 +93,7 @@ export default abstract class GameObject {
     );
   }
 
-  public async MoveToPoint(point: coords, callback: any) {
+  public async MoveToPoint(point: coords, callback?: any) {
     if (this.speed === 0) {
       return false;
     }
