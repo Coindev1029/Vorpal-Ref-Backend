@@ -99,7 +99,7 @@ export default class Star extends GameObject {
     this.lifeTimer = setInterval(() => {
       this.TakeDamage(1);
     }, 1000);
-    const mirror = this.center.y < defCoords.battleLine ? -1 : 1;
+    const mirror = this.center.y < defCoords.battleLine ? 1 : -1;
     const coordSum = defCoords.orbRadius + defCoords.sprites.battleShip.radius + 5;
     this.BSPosition = { x: this.center.x + coordSum * mirror, y: this.center.y + coordSum * mirror };
   }

@@ -187,7 +187,7 @@ export class Ship extends GameObject {
     this.speed = 0;
     this.attackTimeout = setInterval(() => {
       const trg = this.manager.getObjectById(target.getId());
-      if (trg) {
+      if (trg && this.manager.calcRange(this.center, trg.center) <= shipRange) {
         this.AttackObject(trg);
       } else {
         clearInterval(this.attackTimeout);
