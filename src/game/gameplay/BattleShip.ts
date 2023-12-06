@@ -46,9 +46,7 @@ export class BattlesShip extends GameObject {
   private onDestroy() {
     const msg = {
       action: PackTitle.objectdestroy,
-      data: {
-        id: this.id,
-      },
+      id: this.id,
     };
     clearInterval(this.timer);
     this.room.ReSendMessage(JSON.stringify(msg));
