@@ -325,36 +325,40 @@ export class GameRoom {
   }
 
   private CreateBattleShip(owner: string) {
-    const list: objectDisplayInfo[] = [];
+    try {
+      const list: objectDisplayInfo[] = [];
 
-    const mirror = owner === this.players[0].publicKey ? true : false;
-    const center = gameField[0] / 2;
-    const xPosition = (gameField[0] / 4) * (mirror ? 3 : 1);
-    const yPosition = mirror ? 200 : 800;
-    const bShip = new BattlesShip(
-      this,
-      owner,
-      { x: xPosition, y: yPosition },
-      defCoords.sprites.battleShip.radius,
-      this.manager,
-    );
-    list.push({
-      id: bShip.getId(),
-      owner: bShip.owner,
-      class: bShip.class,
-      position: bShip.center,
-      radius: bShip.radius,
-      mirror: mirror,
-      hp: bShip.getHp()
-    });
-
-    const listMsg = {
-      action: PackTitle.objectcreate,
-      list: list,
-    };
-    this.manager.addObject(bShip);
-    this.ReSendMessage(JSON.stringify(listMsg));
-    bShip.Activate();
+      const mirror = owner === this.players[0].publicKey ? true : false;
+      const center = gameField[0] / 2;
+      const xPosition = (gameField[0] / 4) * (mirror ? 3 : 1);
+      const yPosition = mirror ? 200 : 800;
+      const bShip = new BattlesShip(
+        this,
+        owner,
+        { x: xPosition, y: yPosition },
+        defCoords.sprites.battleShip.radius,
+        this.manager,
+      );
+      list.push({
+        id: bShip.getId(),
+        owner: bShip.owner,
+        class: bShip.class,
+        position: bShip.center,
+        radius: bShip.radius,
+        mirror: mirror,
+        hp: bShip.getHp()
+      });
+  
+      const listMsg = {
+        action: PackTitle.objectcreate,
+        list: list,
+      };
+      this.manager.addObject(bShip);
+      this.ReSendMessage(JSON.stringify(listMsg));
+      bShip.Activate();
+    } catch (e) {
+      this.SendLog('error', e.message);
+    }
   }
 
   public StarDestroy(owner: string, id: string) {
