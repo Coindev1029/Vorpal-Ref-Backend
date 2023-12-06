@@ -1,4 +1,4 @@
-export * as msg from './msg';
+export * as msg from './Messages';
 export * as play from './gameplay';
 export { GameObject } from './interfaces'
 

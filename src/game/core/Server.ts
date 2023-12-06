@@ -11,7 +11,7 @@ import { WriteLog } from '../../database/log';
 import { PlayerState } from '../types';
 import { Player, PlayerRow, RoomEvent } from '../types/interfaces';
 import { GameRoom } from './Room';
-import { PackTitle } from 'game/types/msg';
+import { PackTitle } from 'game/types/Messages';
 
 const web3 = new Web3(Web3.givenProvider);
 

@@ -2,7 +2,7 @@ import { ObjectMoveParams, coords, movings, rect } from '../types/gameplay';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
 import { FrameInterval, gameField, idLength, moveFrame } from '../config';
-import { actionList } from '../types/msg';
+import { actionList } from '../types/Messages';
 import { MoveFunction } from '../types/interfaces';
 import ObjectListManager from '../core/ListManager';
 

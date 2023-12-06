@@ -1,7 +1,7 @@
 import { play } from '../types';
 import ObjectListManager from '../core/ListManager';
 import { GameRoom } from '../core/Room';
-import { actionList, Classes } from '../types/msg';
+import { actionList, Classes } from '../types/Messages';
 import GameObject from './GameObject';
 import { defBattleShipHealth } from '../config';
 import Star from './Star';

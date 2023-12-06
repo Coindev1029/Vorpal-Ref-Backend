@@ -7,7 +7,7 @@ import Star from '../gameplay/Star';
 import ObjectListManager from './ListManager';
 import Planet from '../gameplay/Planet';
 import { objectDisplayInfo, objectMapInfo } from '../types/gameplay';
-import { PackTitle, Classes, ObjectInfo } from '../types/msg';
+import { PackTitle, Classes, ObjectInfo } from '../types/Messages';
 import { defCoords, gameField, shipCreationStartTime } from '../config';
 import { Ship } from '../gameplay/Ship';
 import { BattlesShip } from '../gameplay/BattleShip';
@@ -461,5 +461,5 @@ export class GameRoom {
       date: dt.getTime(),
     });
   }
-  
+
 }

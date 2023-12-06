@@ -3,7 +3,7 @@ import GameObject from './GameObject';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
 import { defCoords, defShipHealth, defStarHealth } from '../config';
-import { actionList, Classes } from '../types/msg';
+import { actionList, Classes } from '../types/Messages';
 import { StarAttackPosition, coords } from '../types/gameplay';
 import ObjectListManager from '../core/ListManager';
 
