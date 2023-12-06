@@ -1,9 +1,16 @@
 import { WriteLog } from '../../database/log';
 import GameObject from './GameObject';
 import { play } from '../types';
-import { FrameInterval, SyncInterval, defCoords, gameField, planetRotationSpeed, planetYearAngle } from '../config';
+import {
+  FrameInterval,
+  SyncInterval,
+  defCoords,
+  gameField,
+  planetRotationSpeed,
+  planetYearAngle,
+} from '../config';
 import { GameRoom } from '../core/Room';
-import { actionList, Classes } from '../types/Messages';
+import { PackTitle, Classes } from '../types/Messages';
 import ObjectListManager from '../core/ListManager';
 
 export default class Planet extends GameObject {
@@ -48,16 +55,18 @@ export default class Planet extends GameObject {
     }, FrameInterval);
 
     this.syncTimer = setInterval(() => {
-       this.room.ReSendMessage(JSON.stringify({
-          action: actionList.objectupdate,
+      this.room.ReSendMessage(
+        JSON.stringify({
+          action: PackTitle.objectupdate,
           id: this.id,
           owner: this.owner,
           class: this.class,
           coords: this.center,
           angle: this.angle,
           rotation: this.rotation,
-       }))
-    }, SyncInterval)
+        }),
+      );
+    }, SyncInterval);
   }
 
   protected onDestroy() {

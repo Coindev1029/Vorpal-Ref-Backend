@@ -1,7 +1,7 @@
 import { play } from '../types';
 import ObjectListManager from '../core/ListManager';
 import { GameRoom } from '../core/Room';
-import { actionList, Classes } from '../types/Messages';
+import { PackTitle, Classes } from '../types/Messages';
 import GameObject from './GameObject';
 import { defBattleShipHealth } from '../config';
 import Star from './Star';
@@ -24,26 +24,26 @@ export class BattlesShip extends GameObject {
 
   private onCreate() {
     this.hp = defBattleShipHealth;
-    this.room.SendLog("BattleShip created", "10s");
+    this.room.SendLog('BattleShip created', '10s');
     setTimeout(() => {
       const stars = this.manager.getObjectsByClassName('star').filter((st) => {
         return st.owner !== this.owner;
       });
       if (stars.length > 0) {
         const trg: Star = stars[0];
-        this.center.x = trg.center.x + (trg.radius * 2);
-        this.center.y = trg.center.y + (trg.radius * 2);
+        this.center.x = trg.center.x + trg.radius * 2;
+        this.center.y = trg.center.y + trg.radius * 2;
         const msg = {
-          action: actionList.objectupdate,
+          action: PackTitle.objectupdate,
           data: {
             from: this.id,
             starOwner: trg.owner,
             wasHP: trg.energy,
             periodic: 1,
-            state: 'started'
+            state: 'started',
           },
         };
-        this.room.ReSendMessage(JSON.stringify(msg))
+        this.room.ReSendMessage(JSON.stringify(msg));
         this.timer = setInterval(() => {
           this.AttackStar();
         }, 1000);
@@ -53,7 +53,7 @@ export class BattlesShip extends GameObject {
 
   private onDestroy() {
     const msg = {
-      action: actionList.objectdestroy,
+      action: PackTitle.objectdestroy,
       data: {
         id: this.id,
       },
@@ -85,11 +85,13 @@ export class BattlesShip extends GameObject {
     if (this.hp <= 0) {
       this.destroy();
     } else {
-      this.room.ReSendMessage(JSON.stringify({
-        action: actionList.objectupdate,
-        id: this.id,
-        hp: this.hp
-      }))
+      this.room.ReSendMessage(
+        JSON.stringify({
+          action: PackTitle.objectupdate,
+          id: this.id,
+          hp: this.hp,
+        }),
+      );
     }
   }
 

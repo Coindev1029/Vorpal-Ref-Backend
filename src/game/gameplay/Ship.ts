@@ -20,7 +20,7 @@ import { coords, rect } from '../types/gameplay';
 import Star from './Star';
 import { MoveFunction } from '../types/interfaces';
 import { BattlesShip } from './BattleShip';
-import { PackFactory } from 'game/utils/PackFactory';
+import { PackFactory } from '../utils/PackFactory';
 
 export class Ship extends GameObject {
   private timer: NodeJS.Timer;
@@ -105,15 +105,9 @@ export class Ship extends GameObject {
       this.timer = setInterval(() => {
         trg.TakeDamage(1);
         this.TakeDamage(1);
-        const logMsg = {
-          action: PackTitle.log,
-          event: 'starDamage',
-          nowHP: this.hp,
-        };
-        this.room.ReSendMessage(JSON.stringify(logMsg));
       }, FrameInterval);
     }
-    return () => { };
+    return () => {};
   }
 
   protected onCreate() {
@@ -123,13 +117,13 @@ export class Ship extends GameObject {
   public ReservePosition(): coords {
     return this.dir
       ? {
-        x: defCoords.star2.x,
-        y: defCoords.star2.y - defCoords.orbDiam,
-      }
+          x: defCoords.star2.x,
+          y: defCoords.star2.y - defCoords.orbDiam,
+        }
       : {
-        x: defCoords.star1.x,
-        y: defCoords.star1.y + defCoords.orbDiam,
-      };
+          x: defCoords.star1.x,
+          y: defCoords.star1.y + defCoords.orbDiam,
+        };
   }
 
   private GetClosestPosition(point?: coords, star?: Star): coords {
@@ -144,12 +138,6 @@ export class Ship extends GameObject {
       if (rangeA > rangeB) return 1;
       return 0;
     });
-
-    const logMsg = {
-      action: PackTitle.log,
-      ...positions,
-    };
-    this.room.ReSendMessage(JSON.stringify(logMsg));
 
     if (positions.length === 0) {
       return this.ReservePosition();
@@ -186,13 +174,14 @@ export class Ship extends GameObject {
       );
     }
 
-    this.room.ReSendMessage(PackFactory.getInstance().attack({
-      from: this.id,
-      to: target.getId(),
-      damage: damage,
-      hit: isHit
-    }));
-
+    this.room.ReSendMessage(
+      PackFactory.getInstance().attack({
+        from: this.id,
+        to: target.getId(),
+        damage: damage,
+        hit: isHit,
+      }),
+    );
   }
 
   public FindTarget() {
@@ -253,10 +242,12 @@ export class Ship extends GameObject {
     if (this.hp <= 0) {
       this.destroy();
     } else {
-      this.room.ReSendMessage(PackFactory.getInstance().updateObject({
-        id: this.id,
-        hp: this.hp
-      }));
+      this.room.ReSendMessage(
+        PackFactory.getInstance().updateObject({
+          id: this.id,
+          hp: this.hp,
+        }),
+      );
     }
   }
 

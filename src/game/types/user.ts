@@ -20,7 +20,7 @@ export const raceArr : race[] = [
     "Insects",
     "Waters"
 ]
-export const userActionList = {
+export const userPackTitle = {
   slowDown: "slowDown",
   ultimate: "ultimate",
   rocketShot: "rocketshot",

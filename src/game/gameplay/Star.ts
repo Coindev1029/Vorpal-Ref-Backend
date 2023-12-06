@@ -3,7 +3,7 @@ import GameObject from './GameObject';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
 import { defCoords, defShipHealth, defStarHealth } from '../config';
-import { actionList, Classes } from '../types/Messages';
+import { PackTitle, Classes } from '../types/Messages';
 import { StarAttackPosition, coords } from '../types/gameplay';
 import ObjectListManager from '../core/ListManager';
 
@@ -36,50 +36,52 @@ export default class Star extends GameObject {
       });
     }
     this.AttackPositions = list;
-    this.room.ReSendMessage(JSON.stringify({
-      action: actionList.objectupdate,
-      id: this.id,
-      owner: this.owner,
-      data: {
-        event: 'starAttackPositions',
-        list: this.AttackPositions
-      }
-    }))
+    this.room.ReSendMessage(
+      JSON.stringify({
+        action: PackTitle.objectupdate,
+        id: this.id,
+        owner: this.owner,
+        data: {
+          event: 'starAttackPositions',
+          list: this.AttackPositions,
+        },
+      }),
+    );
   }
 
-  public HoldPosition (point: coords) {
+  public HoldPosition(point: coords) {
     let result = false;
     this.AttackPositions.forEach((pos) => {
       if (pos.center === point && pos.hold === false) {
-          pos.hold = true;
-          result = true;
+        pos.hold = true;
+        result = true;
       }
-    })
-    return result
+    });
+    return result;
   }
 
-  public UnHoldPosition (point: coords) {
+  public UnHoldPosition(point: coords) {
     let result = false;
     this.AttackPositions.forEach((pos) => {
       if (pos.center === point && pos.hold === true) {
-          pos.hold = false;
-          result = true;
+        pos.hold = false;
+        result = true;
       }
-    })
-    return result
+    });
+    return result;
   }
 
   public ResetPositions() {
-       this.FillAttackPositions();
+    this.FillAttackPositions();
   }
 
-  public GetFreePositions () {
+  public GetFreePositions() {
     return this.AttackPositions.filter((pos) => {
       return pos.hold === false;
-    })
+    });
   }
 
-  public GetAllPositions () {
+  public GetAllPositions() {
     return this.AttackPositions;
   }
 
@@ -108,12 +110,12 @@ export default class Star extends GameObject {
     } else {
       this.room.ReSendMessage(
         JSON.stringify({
-          action: actionList.objectupdate,
+          action: PackTitle.objectupdate,
           id: this.id,
           class: this.class,
           data: {
             energy: this.energy,
-          }
+          },
         }),
       );
     }

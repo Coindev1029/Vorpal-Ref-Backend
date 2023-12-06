@@ -11,7 +11,7 @@ import { WriteLog } from '../../database/log';
 import { PlayerState } from '../types';
 import { Player, PlayerRow, RoomEvent } from '../types/interfaces';
 import { GameRoom } from './Room';
-import { PackTitle } from 'game/types/Messages';
+import { PackTitle } from '../types/Messages';
 
 const web3 = new Web3(Web3.givenProvider);
 
@@ -128,17 +128,17 @@ export class GameIoServer {
           const playerOne: PlayerRow = availablePlayers[indexPair[0]];
           const playerTwo: PlayerRow = availablePlayers[indexPair[1]];
           const players = [playerOne, playerTwo];
-          
+
           try {
             const room = new GameRoom(this, players);
             room.SetId(this.Rooms.length);
             this.Rooms.push(room);
-  
+
             WriteLog('Room creation : ', 'Room created, id : ' + room.GetId());
             room.Start();
-          } catch(e) {
+          } catch (e) {
             WriteLog('Room creation error: ', e.message);
-          }          
+          }
         }
       }
     }, gameTimerValue);
@@ -295,15 +295,14 @@ export class GameIoServer {
     this.generator = this.RoomGenerator();
 
     this.timer = setInterval(() => {
-        try {
-          this.Rooms.forEach((room) => {
-            room.FrameUpdate();
-          })
-        } catch (e) {
-          WriteLog('error', e.message);
-        }
-      }, FrameInterval);
-
+      try {
+        this.Rooms.forEach((room) => {
+          room.FrameUpdate();
+        });
+      } catch (e) {
+        WriteLog('error', e.message);
+      }
+    }, FrameInterval);
   }
 
   public Finish() {
