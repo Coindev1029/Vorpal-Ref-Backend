@@ -7,13 +7,13 @@ import Star from '../gameplay/Star';
 import ObjectListManager from './ListManager';
 import Planet from '../gameplay/Planet';
 import { objectDisplayInfo, objectMapInfo } from '../types/gameplay';
-import GameObject from '../gameplay/GameObject';
-import { PacketTitle, classes, objectInfo } from '../types/msg';
+import { PackTitle, Classes, ObjectInfo } from '../types/msg';
 import { defCoords, gameField, shipCreationStartTime } from '../config';
 import { Ship } from '../gameplay/Ship';
 import { BattlesShip } from '../gameplay/BattleShip';
 import Store from '../store/store';
 import { race, raceArr } from '../types/user';
+import { PackFactory } from 'game/utils/PackFactory';
 
 export class GameRoom {
   private players: PlayerRow[] = [];
@@ -52,20 +52,20 @@ export class GameRoom {
         // WriteLog(player.publicKey, `Received in game : ${String(message)}`)
 
         switch (msg.action) {
-          case PacketTitle.buyitem:
+          case PackTitle.buyitem:
             if (msg.data) {
               const result = this.store.BuyItem(
                 player.publicKey,
                 msg.data.name,
               );
               const responce = {
-                action: PacketTitle.buyreport,
+                action: PackTitle.buyreport,
                 result: result,
               };
               player.ws.send(JSON.stringify(responce));
             }
             break;
-          case PacketTitle.exitgame:
+          case PackTitle.exitgame:
             this.Finish(index === 0 ? 1 : 0);
             break;
         }
@@ -106,7 +106,7 @@ export class GameRoom {
 
   public SendLog(...params: any[]) {
     this.ReSendMessage(JSON.stringify({
-      action: PacketTitle.log,
+      action: PackTitle.log,
       ...params
     }))
   }
@@ -128,7 +128,7 @@ export class GameRoom {
         player.publicKey === this.players[0].publicKey ? 'top' : 'bottom';
       player.ws.send(
         JSON.stringify({
-          action: PacketTitle.gamestart,
+          action: PackTitle.gamestart,
           playerPosition: playerPosition,
           orbitRadius: defCoords.orbRadius,
           objectMovesPerSec: 1000 / config.FrameInterval,
@@ -226,7 +226,7 @@ export class GameRoom {
     this.manager.addObject(planet2);
 
     const listMsg = {
-      action: PacketTitle.objectcreate,
+      action: PackTitle.objectcreate,
       list: list,
     };
     this.ReSendMessage(JSON.stringify(listMsg));
@@ -238,7 +238,7 @@ export class GameRoom {
     }, 1)
 
     this.shipCreationTimer = setInterval(() => {
-      const shipList = this.manager.getObjectsByClassName(classes.ship);
+      const shipList = this.manager.getObjectsByClassName(Classes.ship);
       const shipList1 = shipList.filter((sh) => {
         return sh.owner === this.players[0].publicKey;
       });
@@ -250,7 +250,7 @@ export class GameRoom {
       }
     }, shipCreationStartTime);
     this.battleShipCreationTimer = setInterval(() => {
-      const shipList = this.manager.getObjectsByClassName(classes.battleship);
+      const shipList = this.manager.getObjectsByClassName(Classes.battleship);
       const shipList1 = shipList.filter((sh) => {
         return sh.owner === this.players[0].publicKey;
       });
@@ -304,7 +304,7 @@ export class GameRoom {
       });
     });
     const listMsg = {
-      action: PacketTitle.objectcreate,
+      action: PackTitle.objectcreate,
       list: list,
     };
     this.players.forEach((player) => {
@@ -345,8 +345,8 @@ export class GameRoom {
       mirror: mirror,
     });
 
-    const listMsg: objectInfo = {
-      action: PacketTitle.objectcreate,
+    const listMsg: ObjectInfo = {
+      action: PackTitle.objectcreate,
       list: list,
     };
     this.players.forEach((player) => {
@@ -369,7 +369,7 @@ export class GameRoom {
   }
 
   public FrameUpdate() {
-      const ships = this.manager.getObjectsByClassName(classes.ship);
+      const ships = this.manager.getObjectsByClassName(Classes.ship);
       const list : any[] = [];
       ships.forEach((ship) => {
         if (!ship.isActive) {
@@ -402,15 +402,9 @@ export class GameRoom {
         })
       })
       if (list.length > 0) {
-        this.ReSendMessage(JSON.stringify({
-          action: PacketTitle.objectupdate,
-          class: classes.ship,
-          data: {
-            list: list
-          }
-        }))
+        this.ReSendMessage(PackFactory.getInstance().updateShipList(list));
       } else {
-        const stars = this.manager.getObjectsByClassName(classes.star);
+        const stars = this.manager.getObjectsByClassName(Classes.star);
         stars.forEach((star: Star) => {
           star.ResetPositions();
           // this.SendLog('PositionsReset', star.GetAllPositions());
@@ -450,7 +444,7 @@ export class GameRoom {
       this.server.UpdatePlayerState(player.id, state);
       player.ws.send(
         JSON.stringify({
-          action: PacketTitle.gameend,
+          action: PackTitle.gameend,
           win: winner === index ? true : false,
         }),
       );
@@ -467,4 +461,5 @@ export class GameRoom {
       date: dt.getTime(),
     });
   }
+  
 }

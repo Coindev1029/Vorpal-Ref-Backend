@@ -3,7 +3,7 @@ import GameObject from './GameObject';
 import { play } from '../types';
 import { FrameInterval, SyncInterval, defCoords, gameField, planetRotationSpeed, planetYearAngle } from '../config';
 import { GameRoom } from '../core/Room';
-import { actionList, classes } from '../types/msg';
+import { actionList, Classes } from '../types/msg';
 import ObjectListManager from '../core/ListManager';
 
 export default class Planet extends GameObject {
@@ -22,7 +22,7 @@ export default class Planet extends GameObject {
     _manager: ObjectListManager<any>,
     dir: boolean,
   ) {
-    super(_room, _owner, _coords, _radius, classes.planet, _manager);
+    super(_room, _owner, _coords, _radius, Classes.planet, _manager);
     this.dir = dir;
     this.defY = this.center.y + defCoords.orbDiam / 2;
     this.onCreate();

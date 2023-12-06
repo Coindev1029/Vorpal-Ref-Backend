@@ -3,7 +3,7 @@ import GameObject from './GameObject';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
 import { defCoords, defShipHealth, defStarHealth } from '../config';
-import { actionList, classes } from '../types/msg';
+import { actionList, Classes } from '../types/msg';
 import { StarAttackPosition, coords } from '../types/gameplay';
 import ObjectListManager from '../core/ListManager';
 
@@ -19,7 +19,7 @@ export default class Star extends GameObject {
     _radius: number,
     _manager: ObjectListManager<any>,
   ) {
-    super(_room, _owner, _coords, _radius, classes.star, _manager);
+    super(_room, _owner, _coords, _radius, Classes.star, _manager);
     this.onCreate();
   }
 

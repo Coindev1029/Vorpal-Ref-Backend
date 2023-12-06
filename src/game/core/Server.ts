@@ -11,7 +11,7 @@ import { WriteLog } from '../../database/log';
 import { PlayerState } from '../types';
 import { Player, PlayerRow, RoomEvent } from '../types/interfaces';
 import { GameRoom } from './Room';
-import { PacketTitle } from 'game/types/msg';
+import { PackTitle } from 'game/types/msg';
 
 const web3 = new Web3(Web3.givenProvider);
 
@@ -178,14 +178,14 @@ export class GameIoServer {
           return;
         }
         switch (msg.action) {
-          case PacketTitle.ping:
+          case PackTitle.ping:
             ws.send(
               JSON.stringify({
-                action: PacketTitle.pong,
+                action: PackTitle.pong,
               }),
             );
             break;
-          case PacketTitle.auth:
+          case PackTitle.auth:
             if (!msg.signature) return;
             try {
               const recoverMsg = this.AuthMsg();
@@ -196,7 +196,7 @@ export class GameIoServer {
                 if (player.publicKey === publicKey) {
                   ws.send(
                     JSON.stringify({
-                      action: PacketTitle.unauth,
+                      action: PackTitle.unauth,
                       message:
                         'Auth failed, player with this key is already online',
                     }),
@@ -212,7 +212,7 @@ export class GameIoServer {
               });
               ws.send(
                 JSON.stringify({
-                  action: PacketTitle.auth,
+                  action: PackTitle.auth,
                   state: 'success',
                   playerId: publicKey,
                 }),
@@ -221,14 +221,14 @@ export class GameIoServer {
               WriteLog('0x0089', e.message);
             }
             break;
-          case PacketTitle.entergame:
+          case PackTitle.entergame:
             const player = this.GetPlayerByParam(ws);
             WriteLog('0x005', 'Player : ' + JSON.stringify(player));
             if (player) {
               if (player.state.inLookingFor || player.state.inGame) {
                 ws.send(
                   JSON.stringify({
-                    action: PacketTitle.entergame,
+                    action: PackTitle.entergame,
                     status: 'failed',
                   }),
                 );
@@ -246,7 +246,7 @@ export class GameIoServer {
               WriteLog(player.publicKey, 'Now in game : ' + player.id);
               ws.send(
                 JSON.stringify({
-                  action: PacketTitle.entergame,
+                  action: PackTitle.entergame,
                   state: 'success',
                   message: 'Player now in queue',
                   playerId: player.publicKey,
@@ -254,7 +254,7 @@ export class GameIoServer {
               );
             }
             break;
-          case PacketTitle.withdrawgame:
+          case PackTitle.withdrawgame:
             const playerW = this.GetPlayerByParam(ws);
             if (playerW) {
               const playerNewState: PlayerState = {
@@ -268,7 +268,7 @@ export class GameIoServer {
               this.UpdatePlayerState(playerW.id, playerNewState);
               ws.send(
                 JSON.stringify({
-                  action: PacketTitle.withdrawgame,
+                  action: PackTitle.withdrawgame,
                   state: 'success',
                   message: 'Player now removed from queue',
                   playerId: playerW.publicKey,

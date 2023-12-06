@@ -1,126 +1,109 @@
 import { objectMapInfo } from "./gameplay";
 
-export enum PacketTitle {
-  ping = 'ping',
-  pong = 'pong',
-  auth = 'auth',
-  event = 'event',
-  unauth = 'unauth',
-  startmoving = 'startmoving',
-  stopmoving = 'stopmoving',
-  entergame = 'entergame',
-  withdrawgame = 'withdrawgame',
-  exitgame = 'exitgame',
-  leftclick = 'leftclick',
-  rightclick = 'rightclick',
-  keypress = 'keypress',
-  gamestart = 'gamestart',
-  gameend = 'gameend',
-  gamefinish = 'gamefinish',
-  globaldataupdate = 'globaldataupdate',
-  objectcreate = 'objectcreate',
-  objectupdate = 'objectupdate',
-  objectList = 'objectlist',
-  objectdestroy = 'objectdestroy',
-  playerPosition = 'playerPosition',
-  buyitem = 'buyitem',
-  buyreport = 'buyreport',
-  log = 'log'
+export enum PackTitle {
+    ping = 'ping',
+    pong = 'pong',
+    auth = 'auth',
+    event = 'event',
+    unauth = 'unauth',
+    startmoving = 'startmoving',
+    stopmoving = 'stopmoving',
+    entergame = 'entergame',
+    withdrawgame = 'withdrawgame',
+    exitgame = 'exitgame',
+    leftclick = 'leftclick',
+    rightclick = 'rightclick',
+    keypress = 'keypress',
+    gamestart = 'gamestart',
+    gameend = 'gameend',
+    gamefinish = 'gamefinish',
+    globaldataupdate = 'globaldataupdate',
+    objectcreate = 'objectcreate',
+    objectupdate = 'objectupdate',
+    objectList = 'objectlist',
+    objectdestroy = 'objectdestroy',
+    playerPosition = 'playerPosition',
+    buyitem = 'buyitem',
+    buyreport = 'buyreport',
+    log = 'log'
 }
 
-export const classes = {
-  star: 'star',
-  planet: 'planet',
-  ship: 'ship',
-  battleship: 'battleship',
-  shell: 'shell'
+export enum Classes {
+    star = 'star',
+    planet = 'planet',
+    ship = 'ship',
+    battleship = 'battleship',
+    shell = 'shell'
 }
 
-export type action =
-  | 'auth'
-  | 'unauth'
-  | 'entergame'
-  | 'withdrawgame'
-  | 'exitgame'
-  | 'leftclick'
-  | 'rightclick'
-  | 'keypress'
-  | 'gamestart'
-  | 'gamefinish'
-  | 'globaldataupdate'
-  | 'objectcreate'
-  | 'objectupdate'
-  | 'objectdestroy'
-  | 'objectlist';
-
-export type basic = {
-  action: action;
-  state: string;
-  owner: string;
-  objectId: string;
-  data: any;
+export type Basic = {
+    action: PackTitle;
+    state: string;
+    owner: string;
+    objectId: string;
+    data: any;
 };
 
-export type state = {
-  action: action;
-  state: string;
+export type State = {
+    action: PackTitle;
+    state: string;
 };
 
-export type data = {
-  action: action;
-  data: any;
+export type Data = {
+    action: PackTitle;
+    data: any;
 };
 
-export type authEntry = {
-  action: action;
-  signature: string;
+export type AuthEntry = {
+    action: PackTitle;
+    signature: string;
 };
 
-export type authReply = {
-  action: action;
-  state: string;
-  playerId: string;
+export type AuthReply = {
+    action: PackTitle;
+    state: string;
+    playerId: string;
 };
 
-export type authReject = {
-  action: action;
-  message: string;
+export type AuthReject = {
+    action: PackTitle;
+    message: string;
 };
 
-export type roomUpd = {
-  action: action;
+export type RoomUpd = {
+    action: PackTitle;
 };
 
-export type mouseMsg = {
-  action: action;
-  coords: number[];
-  objectId: string;
+export type MouseMsg = {
+    action: PackTitle;
+    coords: number[];
+    objectId: string;
 };
 
-export type keyboardMsg = {
-  action: action;
-  key: string;
+export type KeyboardMsg = {
+    action: PackTitle;
+    key: string;
 };
 
-export type gameStart = {
-  action: action;
-  opponent: string;
+export type GameStart = {
+    action: PackTitle;
+    opponent: string;
 };
 
-export type gameFinish = {
-  action: action;
-  win: boolean;
-  data: any;
+export type GameFinish = {
+    action: PackTitle;
+    win: boolean;
+    data: any;
 };
 
-export type objectLifecycle = {
-  action: action;
-  id: string;
-  coords: number[];
-  data: any;
+export type ObjectLifecycle = {
+    action: PackTitle;
+    id: string;
+    coords: number[];
+    data: any;
 };
 
-export type objectInfo = {
-  action: string,
-  list: objectMapInfo[]
+export type ObjectInfo = {
+    action: string,
+    list: objectMapInfo[]
 }
