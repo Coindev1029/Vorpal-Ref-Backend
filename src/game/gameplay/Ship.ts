@@ -91,12 +91,12 @@ export class Ship extends GameObject {
       this.timer = setInterval(() => {
         trg.TakeDamage(1);
         this.TakeDamage(1);
-        const logMsg = {
-          action: PackTitle.log,
-          event: 'starDamage',
-          nowHP: this.hp,
-        };
-        this.room.ReSendMessage(JSON.stringify(logMsg));
+        this.room.ReSendMessage(PackFactory.getInstance().attack({
+          from: this.id,
+          to: trg.getId(),
+          damage: 1,
+          hit: true
+        }));
       }, FrameInterval);
     }
     return () => { };

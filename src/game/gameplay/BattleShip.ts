@@ -2,16 +2,20 @@ import { play } from '../types';
 import ObjectListManager from '../core/ListManager';
 import { GameRoom } from '../core/Room';
 import GameObject from './GameObject';
-import { bShipSpeed, defBattleShipHealth } from '../config';
+import { bShipSpeed, defBattleShipDamage, defBattleShipHealth, defShipFireDelay, defShipHitChance, shipRange } from '../config';
 import Star from './Star';
 import { Classes, PackTitle } from '../types/Messages';
 import { coords } from '../types/gameplay';
+import { PackFactory } from '../utils/PackFactory';
+import { Ship } from './Ship';
 
 export class BattlesShip extends GameObject {
   private timer: NodeJS.Timer;
   private hp: number;
+  private targetStar: Star;
   public targetPosition: coords = {x: 0, y: 0};
   public isAttacking: boolean = false;
+  private hitChance: number = defShipHitChance;
 
   constructor(
     _room: GameRoom,
@@ -35,6 +39,7 @@ export class BattlesShip extends GameObject {
     });
     if (stars.length > 0) {
       this.targetPosition = stars[0].BSPosition;
+      this.targetStar = stars[0];
     }
   }
 
@@ -50,12 +55,52 @@ export class BattlesShip extends GameObject {
     this.manager.removeObject(this.id);
   }
 
+  private AttackStar() {
+    this.speed = 0;
+    this.room.ReSendMessage(PackFactory.getInstance().attack({
+      from: this.id,
+      to: this.targetStar.getId(),
+      damage: 1,
+      hit: true
+    }));
+    this.targetStar.TakeDamage(1);
+  }
+
+  private AttackShip(target: Ship) {
+    const aiming = Math.random();
+    const isHit = aiming < this.hitChance;
+    const damage =
+      defBattleShipDamage[0] +
+      Math.round((defBattleShipDamage[1] - defBattleShipDamage[0]) * Math.random());
+    if (isHit) {
+      target.TakeDamage(damage);
+    } 
+
+    this.room.ReSendMessage(PackFactory.getInstance().attack({
+      from: this.id,
+      to: target.getId(),
+      damage: damage,
+      hit: isHit
+    }));
+  }
+
   public Activate() {
     this.isActive = true;
   }
 
   public AttackState() {
     this.isAttacking = true;
+    this.timer = setInterval(() => {
+       this.AttackStar();
+       const enemyShips = this.manager.getClosestObjects(this.id, [Classes.ship]);
+       if (enemyShips.length > 0) {
+           const trg = this.manager.getObjectById(enemyShips[0])
+           const range = this.manager.calcRange(this.center, trg.center);
+           if (range <= shipRange) {
+              this.AttackShip(trg);
+           }
+       }
+    }, defShipFireDelay)
   }
 
   public TakeDamage(damage: number) {
