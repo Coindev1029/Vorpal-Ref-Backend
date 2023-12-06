@@ -14,13 +14,12 @@ import {
 } from '../config';
 import { GameRoom } from '../core/Room';
 import ObjectListManager from '../core/ListManager';
-import { WriteLog } from '../../database/log';
-import { coords, rect } from '../types/gameplay';
+import { coords } from '../types/gameplay';
 import Star from './Star';
 import { MoveFunction } from '../types/interfaces';
 import { BattlesShip } from './BattleShip';
-import { Classes, PackTitle } from '@game/types/Messages';
-import { PackFactory } from '@game/utils/PackFactory';
+import { Classes, PackTitle } from 'src/game/types/Messages';
+import { PackFactory } from 'src/game/utils/PackFactory';
 
 export class Ship extends GameObject {
   private timer: NodeJS.Timer;

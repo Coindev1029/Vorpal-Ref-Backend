@@ -1,9 +1,6 @@
 {
     "compilerOptions": {
         "baseUrl": ".",
-        "paths": {
-            "@game/*": ["src/game/*"]
-        },
         "outDir": "./dist",
         "target": "es5",
         "module": "commonjs",

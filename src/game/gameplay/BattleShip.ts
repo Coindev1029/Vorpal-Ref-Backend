@@ -4,7 +4,7 @@ import { GameRoom } from '../core/Room';
 import GameObject from './GameObject';
 import { defBattleShipHealth } from '../config';
 import Star from './Star';
-import { Classes, PackTitle } from '@game/types/Messages';
+import { Classes, PackTitle } from 'src/game/types/Messages';
 
 export class BattlesShip extends GameObject {
   private timer: NodeJS.Timer;
