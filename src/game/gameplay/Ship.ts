@@ -15,11 +15,12 @@ import {
 import { GameRoom } from '../core/Room';
 import ObjectListManager from '../core/ListManager';
 import { WriteLog } from '../../database/log';
-import { actionList, classes } from '../types/msg';
+import { PackTitle, Classes } from '../types/Messages';
 import { coords, rect } from '../types/gameplay';
 import Star from './Star';
 import { MoveFunction } from '../types/interfaces';
 import { BattlesShip } from './BattleShip';
+import { PackFactory } from 'game/utils/PackFactory';
 
 export class Ship extends GameObject {
   private timer: NodeJS.Timer;
@@ -45,7 +46,7 @@ export class Ship extends GameObject {
     _manager: ObjectListManager<any>,
     dir: boolean,
   ) {
-    super(_room, _owner, _coords, _radius, classes.ship, _manager);
+    super(_room, _owner, _coords, _radius, Classes.ship, _manager);
     this.dir = dir;
     this.attackRange = shipRange;
     this.onCreate();
@@ -56,7 +57,7 @@ export class Ship extends GameObject {
     if (this.isActive) return;
     if (_listIndex) this.listIndex = _listIndex;
     const stars = this.manager
-      .getObjectsByClassName(classes.star)
+      .getObjectsByClassName(Classes.star)
       .filter((star) => {
         return star.owner !== this.owner;
       });
@@ -82,14 +83,14 @@ export class Ship extends GameObject {
 
   public AttackStar(_id = this.id, coords = this.center) {
     const logMsg = {
-      action: actionList.log,
+      action: PackTitle.log,
       event: 'findStar',
     };
     this.room.ReSendMessage(JSON.stringify(logMsg));
     const trg = this.TargetStar;
     if (trg) {
       const msg = {
-        action: actionList.log,
+        action: PackTitle.log,
         data: {
           event: 'attackStar',
           starId: trg.getId(),
@@ -105,14 +106,14 @@ export class Ship extends GameObject {
         trg.TakeDamage(1);
         this.TakeDamage(1);
         const logMsg = {
-          action: actionList.log,
+          action: PackTitle.log,
           event: 'starDamage',
           nowHP: this.hp,
         };
         this.room.ReSendMessage(JSON.stringify(logMsg));
       }, FrameInterval);
     }
-    return () => {};
+    return () => { };
   }
 
   protected onCreate() {
@@ -122,13 +123,13 @@ export class Ship extends GameObject {
   public ReservePosition(): coords {
     return this.dir
       ? {
-          x: defCoords.star2.x,
-          y: defCoords.star2.y - defCoords.orbDiam,
-        }
+        x: defCoords.star2.x,
+        y: defCoords.star2.y - defCoords.orbDiam,
+      }
       : {
-          x: defCoords.star1.x,
-          y: defCoords.star1.y + defCoords.orbDiam,
-        };
+        x: defCoords.star1.x,
+        y: defCoords.star1.y + defCoords.orbDiam,
+      };
   }
 
   private GetClosestPosition(point?: coords, star?: Star): coords {
@@ -145,7 +146,7 @@ export class Ship extends GameObject {
     });
 
     const logMsg = {
-      action: actionList.log,
+      action: PackTitle.log,
       ...positions,
     };
     this.room.ReSendMessage(JSON.stringify(logMsg));
@@ -168,7 +169,7 @@ export class Ship extends GameObject {
       target.TakeDamage(damage);
       this.room.ReSendMessage(
         JSON.stringify({
-          action: actionList.event,
+          action: PackTitle.event,
           type: 'attack',
           result: 'hit',
           damage: damage,
@@ -177,29 +178,27 @@ export class Ship extends GameObject {
     } else {
       this.room.ReSendMessage(
         JSON.stringify({
-          action: actionList.event,
+          action: PackTitle.event,
           type: 'attack',
           result: 'miss',
           damage: damage,
         }),
       );
     }
-    const msg = {
-      action: actionList.objectupdate,
-      data: {
-        from: this.id,
-        to: target.getId(),
-        damage: damage,
-        hit: isHit,
-      },
-    };
-    this.room.ReSendMessage(JSON.stringify(msg));
+
+    this.room.ReSendMessage(PackFactory.getInstance().attack({
+      from: this.id,
+      to: target.getId(),
+      damage: damage,
+      hit: isHit
+    }));
+
   }
 
   public FindTarget() {
     const Targets = this.manager.getClosestObjects(this.id, [
-      classes.ship,
-      classes.battleship,
+      Classes.ship,
+      Classes.battleship,
     ]);
     if (Targets.length === 0) {
       return false;
@@ -242,7 +241,7 @@ export class Ship extends GameObject {
     }
     // clearTimeout(this.attackTimeout);
     const msg = {
-      action: actionList.objectdestroy,
+      action: PackTitle.objectdestroy,
       id: this.id,
     };
     this.room.ReSendMessage(JSON.stringify(msg));
@@ -254,13 +253,10 @@ export class Ship extends GameObject {
     if (this.hp <= 0) {
       this.destroy();
     } else {
-      this.room.ReSendMessage(
-        JSON.stringify({
-          action: actionList.objectupdate,
-          id: this.id,
-          hp: this.hp,
-        }),
-      );
+      this.room.ReSendMessage(PackFactory.getInstance().updateObject({
+        id: this.id,
+        hp: this.hp
+      }));
     }
   }
 
