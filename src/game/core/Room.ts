@@ -352,6 +352,7 @@ export class GameRoom {
     this.players.forEach((player) => {
       player.ws.send(JSON.stringify(listMsg));
     });
+    bShip.Activate();
   }
 
   public StarDestroy(owner: string, id: string) {
@@ -404,7 +405,9 @@ export class GameRoom {
         })
       })
       battleShips.forEach((BS: BattlesShip) => {
-        
+        if (!BS.isActive) {
+          return;
+        }
         if (!BS.isAttacking) BS.MoveToPoint(BS.targetPosition, () => {
           const rangeToTarget = this.manager.calcRange(BS.center, BS.targetPosition);
           this.SendLog('BS to target', rangeToTarget);

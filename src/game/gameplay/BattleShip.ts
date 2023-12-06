@@ -49,6 +49,10 @@ export class BattlesShip extends GameObject {
     this.manager.removeObject(this.id);
   }
 
+  public Activate() {
+    this.isActive = true;
+  }
+
   public AttackState() {
     this.isAttacking = true;
   }
