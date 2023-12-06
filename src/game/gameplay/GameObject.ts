@@ -1,4 +1,4 @@
-import { ObjectMoveParams, coords, movings, rect } from '../types/gameplay';
+import { coords, movings } from '../types/gameplay';
 import { PackTitle } from "./../types/Messages";
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
@@ -60,18 +60,18 @@ export default abstract class GameObject {
     if (this.moveTimer) clearInterval(this.moveTimer);
     this.center.x = point.x;
     this.center.y = point.y;
-    if (notify) {
-        this.room.ReSendMessage(
-          JSON.stringify({
-            action: PackTitle.objectupdate,
-            id: this.id,
-            data: {
-              event: PackTitle.stopmoving,
-              position: this.center,
-            },
-          }),
-        );
-    }
+    // if (notify) {
+    //     this.room.ReSendMessage(
+    //       JSON.stringify({
+    //         action: PackTitle.objectUpdate,
+    //         id: this.id,
+    //         data: {
+    //           event: PackTitle.stopmoving,
+    //           position: this.center,
+    //         },
+    //       }),
+    //     );
+    // }
     // log
     const logMsg = {
       action: PackTitle.log,
@@ -135,17 +135,17 @@ export default abstract class GameObject {
         x: (point.x - this.center.x) / frames,
         y: (point.y - this.center.y) / frames,
       };
-      this.room.ReSendMessage(
-        JSON.stringify({
-          action: PackTitle.objectupdate,
-          id: this.id,
-          data: {
-            event: PackTitle.startmoving,
-            target: target,
-            timeTo: time,
-          },
-        }),
-      );
+      // this.room.ReSendMessage(
+      //   JSON.stringify({
+      //     action: PackTitle.objectUpdate,
+      //     id: this.id,
+      //     data: {
+      //       event: PackTitle.startmoving,
+      //       target: target,
+      //       timeTo: time,
+      //     },
+      //   }),
+      // );
       let timePast = 0;
       this.moveTimer = setInterval(() => {
         timePast += moveFrame;

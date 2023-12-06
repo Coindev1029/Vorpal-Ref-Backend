@@ -239,10 +239,10 @@ export class Ship extends GameObject {
     if (this.hp <= 0) {
       this.destroy();
     } else {
-      this.room.ReSendMessage(PackFactory.getInstance().updateObject({
+      this.room.ReSendMessage(PackFactory.getInstance().objectUpdate([{
         id: this.id,
         hp: this.hp
-      }));
+      }]));
     }
   }
 
