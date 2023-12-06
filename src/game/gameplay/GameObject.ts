@@ -1,8 +1,8 @@
 import { ObjectMoveParams, coords, movings, rect } from '../types/gameplay';
+import { PackTitle } from "./../types/Messages";
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
 import { FrameInterval, gameField, idLength, moveFrame } from '../config';
-import { PackTitle } from '../types/Messages';
 import { MoveFunction } from '../types/interfaces';
 import ObjectListManager from '../core/ListManager';
 
@@ -56,31 +56,27 @@ export default abstract class GameObject {
     return result;
   }
 
-  public MoveStop(
-    point: coords = this.center,
-    notify = true,
-    onFinish?: MoveFunction,
-  ) {
+  public MoveStop(point: coords = this.center, notify = true, onFinish?: MoveFunction) {
     if (this.moveTimer) clearInterval(this.moveTimer);
     this.center.x = point.x;
     this.center.y = point.y;
     if (notify) {
-      this.room.ReSendMessage(
-        JSON.stringify({
-          action: PackTitle.objectupdate,
-          id: this.id,
-          data: {
-            event: PackTitle.stopmoving,
-            position: this.center,
-          },
-        }),
-      );
+        this.room.ReSendMessage(
+          JSON.stringify({
+            action: PackTitle.objectupdate,
+            id: this.id,
+            data: {
+              event: PackTitle.stopmoving,
+              position: this.center,
+            },
+          }),
+        );
     }
     // log
     const logMsg = {
       action: PackTitle.log,
-      onfinish: onFinish,
-    };
+      onfinish: onFinish
+    }
     this.room.ReSendMessage(JSON.stringify(logMsg));
     // End log
     this.inMoving = false;
@@ -101,7 +97,7 @@ export default abstract class GameObject {
     if (this.speed === 0) {
       return false;
     }
-
+    
     const distance = this.manager.calcRange(this.center, point);
     const reached = distance <= this.speed ? true : false;
     if (reached) {
@@ -112,11 +108,11 @@ export default abstract class GameObject {
 
     const dX = point.x - this.center.x;
     const dY = point.y - this.center.y;
-    const angle = Math.atan2(dY, dX);
-    const newPoint: coords = {
-      x: this.center.x + this.speed * Math.cos(angle),
-      y: this.center.y + this.speed * Math.sin(angle),
-    };
+    const angle = Math.atan2(dY, dX)
+    const newPoint : coords = {
+      x: this.center.x + (this.speed * Math.cos(angle)),
+      y: this.center.y + (this.speed * Math.sin(angle))
+    }
     this.center = newPoint;
     if (callback) callback();
     return reached;
@@ -172,7 +168,7 @@ export default abstract class GameObject {
   ): Promise<coords> {
     return await new Promise((resolve) => {
       if (this.inMoving) {
-        this.MoveStop(this.center, false);
+        this.MoveStop(this.center, false)
       }
       const queX = Math.cos(angle);
       const queY = Math.sin(angle);

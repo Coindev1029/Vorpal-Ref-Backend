@@ -13,7 +13,7 @@ import { Ship } from '../gameplay/Ship';
 import { BattlesShip } from '../gameplay/BattleShip';
 import Store from '../store/store';
 import { race, raceArr } from '../types/user';
-import { PackFactory } from '../utils/PackFactory';
+import { PackFactory } from '@game/utils/PackFactory';
 
 export class GameRoom {
   private players: PlayerRow[] = [];
@@ -105,17 +105,15 @@ export class GameRoom {
   }
 
   public SendLog(...params: any[]) {
-    this.ReSendMessage(
-      JSON.stringify({
-        action: PackTitle.log,
-        ...params,
-      }),
-    );
+    this.ReSendMessage(JSON.stringify({
+      action: PackTitle.log,
+      ...params
+    }))
   }
 
   public Start() {
-    // this.SendLog('start');
-
+   // this.SendLog('start');
+   
     this.players.forEach((player) => {
       const state: PlayerState = {
         auth: true,
@@ -135,19 +133,20 @@ export class GameRoom {
           orbitRadius: defCoords.orbRadius,
           objectMovesPerSec: 1000 / config.FrameInterval,
           battleLine: defCoords.battleLine,
-          gameField: gameField,
+          gameField: gameField
         }),
       );
     });
     this.isActive = true;
     const list: objectDisplayInfo[] = [];
-    const star1 = new Star(
-      this,
-      this.players[0].publicKey,
-      config.defCoords.star1,
-      config.defCoords.sprites.star.radius,
-      this.manager,
-    );
+      const star1 = new Star(
+        this,
+        this.players[0].publicKey,
+        config.defCoords.star1,
+        config.defCoords.sprites.star.radius,
+        this.manager
+      );
+
 
     list.push({
       id: star1.getId(),
@@ -155,7 +154,7 @@ export class GameRoom {
       class: star1.class,
       position: star1.center,
       radius: star1.radius,
-      energy: config.defStarHealth,
+      energy: config.defStarHealth
     });
 
     const star2 = new Star(
@@ -163,7 +162,7 @@ export class GameRoom {
       this.players[1].publicKey,
       config.defCoords.star2,
       config.defCoords.sprites.star.radius,
-      this.manager,
+      this.manager
     );
 
     list.push({
@@ -172,7 +171,7 @@ export class GameRoom {
       class: star2.class,
       position: star2.center,
       radius: star2.radius,
-      energy: config.defStarHealth,
+      energy: config.defStarHealth
     });
 
     const planet1 = new Planet(
@@ -234,9 +233,9 @@ export class GameRoom {
 
     setTimeout(() => {
       star1.Activate();
-      star2.Activate();
+      star2.Activate();   
       this.CreateShips();
-    }, 1);
+    }, 1)
 
     this.shipCreationTimer = setInterval(() => {
       const shipList = this.manager.getObjectsByClassName(Classes.ship);
@@ -265,7 +264,7 @@ export class GameRoom {
       // if (shipList2.length === 0) {
       //  this.CreateBattleShip(this.players[1].publicKey);
       // }
-    }, shipCreationStartTime / 3);
+    }, shipCreationStartTime / 3); 
   }
 
   public ReSendMessage(message: string) {
@@ -281,9 +280,7 @@ export class GameRoom {
       const mirror = index === 0 ? true : false;
       const center = gameField[0] / 2;
       const xPositions = [center - 80, center, center + 80];
-      const yPosition = mirror
-        ? defCoords.battleLine - 150
-        : defCoords.battleLine + 150;
+      const yPosition = mirror ? defCoords.battleLine - 150 : defCoords.battleLine + 150;
       xPositions.forEach((pos, j) => {
         const ship = new Ship(
           this,
@@ -301,7 +298,7 @@ export class GameRoom {
           position: ship.center,
           radius: ship.radius,
           mirror: mirror,
-          hp: config.defShipHealth,
+          hp: config.defShipHealth
         });
         ships.push(ship);
       });
@@ -319,7 +316,7 @@ export class GameRoom {
         try {
           sh.Activate(posIndex);
         } catch (e) {
-          this.SendLog('error', e.message);
+          this.SendLog("error", e.message);
         }
       }, index * 5);
     });
@@ -361,6 +358,7 @@ export class GameRoom {
     if (this.isActive) {
       let winner = 0;
       this.players.forEach((player, index) => {
+
         if (player.publicKey === owner) {
           winner = index === 0 ? 1 : 0;
         }
@@ -371,50 +369,47 @@ export class GameRoom {
   }
 
   public FrameUpdate() {
-    const ships = this.manager.getObjectsByClassName(Classes.ship);
-    const list: any[] = [];
-    ships.forEach((ship) => {
-      if (!ship.isActive) {
-        return;
-      }
-      const rangeToStar = this.manager.calcRange(
-        ship.center,
-        ship.targetPosition,
-      );
-      if (!ship.isAttacking) {
-        if (rangeToStar <= config.shipSpeed) {
-          ship.center = ship.targetPosition;
-          ship.AttackStar();
-        } else {
-          const target = ship.FindTarget();
-          if (target) {
-            const range = this.manager.calcRange(ship.center, target.center);
-            if (range <= config.shipRange) {
-              ship.StartAttacking(target);
-            } else {
-              ship.MoveToPoint(target.center);
-              this.SendLog('to target', range);
-            }
+      const ships = this.manager.getObjectsByClassName(Classes.ship);
+      const list : any[] = [];
+      ships.forEach((ship) => {
+        if (!ship.isActive) {
+          return;
+        }
+        const rangeToStar = this.manager.calcRange(ship.center, ship.targetPosition);
+        if (!ship.isAttacking) {
+          if (rangeToStar <= config.shipSpeed) {
+            ship.center = ship.targetPosition;
+            ship.AttackStar();
           } else {
-            ship.MoveToPoint(ship.targetPosition);
+            const target = ship.FindTarget();
+            if (target) {
+              const range = this.manager.calcRange(ship.center, target.center);
+              if (range <= config.shipRange) {
+                ship.StartAttacking(target);
+              } else {
+                ship.MoveToPoint(target.center);
+                this.SendLog('to target', range);
+              }
+            } else {
+              ship.MoveToPoint(ship.targetPosition);
+            }
           }
         }
+        list.push({
+          id: ship.id,
+          owner: ship.owner,
+          position: ship.center
+        })
+      })
+      if (list.length > 0) {
+        this.ReSendMessage(PackFactory.getInstance().updateShipList(list));
+      } else {
+        const stars = this.manager.getObjectsByClassName(Classes.star);
+        stars.forEach((star: Star) => {
+          star.ResetPositions();
+          // this.SendLog('PositionsReset', star.GetAllPositions());
+        })
       }
-      list.push({
-        id: ship.id,
-        owner: ship.owner,
-        position: ship.center,
-      });
-    });
-    if (list.length > 0) {
-      this.ReSendMessage(PackFactory.getInstance().updateShipList(list));
-    } else {
-      const stars = this.manager.getObjectsByClassName(Classes.star);
-      stars.forEach((star: Star) => {
-        star.ResetPositions();
-        // this.SendLog('PositionsReset', star.GetAllPositions());
-      });
-    }
   }
 
   private Finish(winner: number | null = null) {
@@ -466,4 +461,5 @@ export class GameRoom {
       date: dt.getTime(),
     });
   }
+
 }
