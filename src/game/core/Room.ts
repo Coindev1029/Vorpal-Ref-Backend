@@ -419,7 +419,7 @@ export class GameRoom {
         });
 
       })
-      this.SendLog('BSPositions', bsList);
+      this.SendLog('BSPositions', battleShips.length);
       if (bsList.length > 0) {
         this.ReSendMessage(PackFactory.getInstance().updateShipList(bsList, Classes.battleship));
       }
