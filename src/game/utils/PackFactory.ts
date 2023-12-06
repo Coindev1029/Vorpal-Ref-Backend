@@ -32,9 +32,9 @@ export class PackFactory {
     objectUpdate(aList: {
         id: string,
         event?: string,
-        hp?: number,
         position?: { x: number, y: number },
         rotation?: number,
+        hp?: number,
         /**
          * Any other data
          */
