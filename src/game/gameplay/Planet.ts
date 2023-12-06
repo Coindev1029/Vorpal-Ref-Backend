@@ -5,6 +5,7 @@ import { FrameInterval, SyncInterval, defCoords, gameField, planetRotationSpeed,
 import { GameRoom } from '../core/Room';
 import { Classes, PackTitle } from '../types/Messages';
 import ObjectListManager from '../core/ListManager';
+import { PackFactory } from 'game/utils/PackFactory';
 
 export default class Planet extends GameObject {
   private timer: NodeJS.Timer;
@@ -48,15 +49,11 @@ export default class Planet extends GameObject {
     }, FrameInterval);
 
     this.syncTimer = setInterval(() => {
-       this.room.ReSendMessage(JSON.stringify({
-         action: PackTitle.objectupdate,
-          id: this.id,
-          owner: this.owner,
-          class: this.class,
-          coords: this.center,
-          angle: this.angle,
-          rotation: this.rotation,
-       }))
+      this.room.ReSendMessage(PackFactory.getInstance().objectUpdate([{
+        id: this.id,
+        position: this.center,
+        rotation: this.rotation
+      }]));
     }, SyncInterval)
   }
 

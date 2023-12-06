@@ -48,7 +48,7 @@ export class GameRoom {
         }
         try {
           msg = JSON.parse(String(msg));
-        } catch (e) {}
+        } catch (e) { }
         // WriteLog(player.publicKey, `Received in game : ${String(message)}`)
 
         switch (msg.action) {
@@ -112,8 +112,8 @@ export class GameRoom {
   }
 
   public Start() {
-   // this.SendLog('start');
-   
+    // this.SendLog('start');
+
     this.players.forEach((player) => {
       const state: PlayerState = {
         auth: true,
@@ -139,13 +139,13 @@ export class GameRoom {
     });
     this.isActive = true;
     const list: objectDisplayInfo[] = [];
-      const star1 = new Star(
-        this,
-        this.players[0].publicKey,
-        config.defCoords.star1,
-        config.defCoords.sprites.star.radius,
-        this.manager
-      );
+    const star1 = new Star(
+      this,
+      this.players[0].publicKey,
+      config.defCoords.star1,
+      config.defCoords.sprites.star.radius,
+      this.manager
+    );
 
 
     list.push({
@@ -233,7 +233,7 @@ export class GameRoom {
 
     setTimeout(() => {
       star1.Activate();
-      star2.Activate();   
+      star2.Activate();
       this.CreateShips();
     }, 1)
 
@@ -258,13 +258,13 @@ export class GameRoom {
         return sh.owner === this.players[1].publicKey;
       });
       if (shipList1.length === 0) {
-       this.CreateBattleShip(this.players[0].publicKey);
+        this.CreateBattleShip(this.players[0].publicKey);
       }
 
       if (shipList2.length === 0) {
         this.CreateBattleShip(this.players[1].publicKey);
       }
-    }, shipCreationStartTime / 3); 
+    }, shipCreationStartTime / 3);
   }
 
   public ReSendMessage(message: string) {
@@ -371,71 +371,72 @@ export class GameRoom {
   }
 
   public FrameUpdate() {
-      const ships = this.manager.getObjectsByClassName(Classes.ship);
-      const battleShips = this.manager.getObjectsByClassName(Classes.battleship);
-      const list : any[] = [];
-      const bsList: any[] = [];
-      ships.forEach((ship) => {
-        if (!ship.isActive) {
-          return;
-        }
-        const rangeToStar = this.manager.calcRange(ship.center, ship.targetPosition);
-        if (!ship.isAttacking) {
-          if (rangeToStar <= config.shipSpeed) {
-            ship.center = ship.targetPosition;
-            ship.AttackStar();
-          } else {
-            const target = ship.FindTarget();
-            if (target) {
-              const range = this.manager.calcRange(ship.center, target.center);
-              if (range <= config.shipRange) {
-                ship.StartAttacking(target);
-              } else {
-                ship.MoveToPoint(target.center);
-                this.SendLog('to target', range);
-              }
+    const ships = this.manager.getObjectsByClassName(Classes.ship);
+    const battleShips = this.manager.getObjectsByClassName(Classes.battleship);
+    const list: any[] = [];
+    const bsList: any[] = [];
+    ships.forEach((ship) => {
+      if (!ship.isActive) {
+        return;
+      }
+      const rangeToStar = this.manager.calcRange(ship.center, ship.targetPosition);
+      if (!ship.isAttacking) {
+        if (rangeToStar <= config.shipSpeed) {
+          ship.center = ship.targetPosition;
+          ship.AttackStar();
+        } else {
+          const target = ship.FindTarget();
+          if (target) {
+            const range = this.manager.calcRange(ship.center, target.center);
+            if (range <= config.shipRange) {
+              ship.StartAttacking(target);
             } else {
-              ship.MoveToPoint(ship.targetPosition);
+              ship.MoveToPoint(target.center);
+              this.SendLog('to target', range);
             }
+          } else {
+            ship.MoveToPoint(ship.targetPosition);
           }
         }
-        list.push({
-          id: ship.id,
-          owner: ship.owner,
-          position: ship.center
-        })
+      }
+      list.push({
+        id: ship.id,
+        // owner: ship.owner,
+        position: ship.center
       })
-      battleShips.forEach((BS: BattlesShip) => {
-        if (!BS.isActive) {
-          return;
+    })
+    battleShips.forEach((BS: BattlesShip) => {
+      if (!BS.isActive) {
+        return;
+      }
+      if (!BS.isAttacking) BS.MoveToPoint(BS.targetPosition, () => {
+        const rangeToTarget = this.manager.calcRange(BS.center, BS.targetPosition);
+        // this.SendLog('BS to target', rangeToTarget);
+        if (rangeToTarget < 5) {
+          BS.AttackState();
         }
-        if (!BS.isAttacking) BS.MoveToPoint(BS.targetPosition, () => {
-          const rangeToTarget = this.manager.calcRange(BS.center, BS.targetPosition);
-          // this.SendLog('BS to target', rangeToTarget);
-          if (rangeToTarget < 5) {
-            BS.AttackState();
-          }
-          bsList.push({
-            id: BS.getId(),
-            owner: BS.owner,
-            position: BS.center
-          })
-        });
+        bsList.push({
+          id: BS.getId(),
+          // owner: BS.owner,
+          position: BS.center
+        })
+      });
 
+    })
+    // this.SendLog('BSPositions', battleShips.length);
+    if (bsList.length > 0) {
+      this.ReSendMessage(PackFactory.getInstance().objectUpdate(bsList));
+    }
+    if (list.length > 0) {
+      this.ReSendMessage(PackFactory.getInstance().objectUpdate(list));
+    }
+    else {
+      const stars = this.manager.getObjectsByClassName(Classes.star);
+      stars.forEach((star: Star) => {
+        star.ResetPositions();
+        // this.SendLog('PositionsReset', star.GetAllPositions());
       })
-      // this.SendLog('BSPositions', battleShips.length);
-      if (bsList.length > 0) {
-        this.ReSendMessage(PackFactory.getInstance().updateShipList(bsList, Classes.battleship));
-      }
-      if (list.length > 0) {
-        this.ReSendMessage(PackFactory.getInstance().updateShipList(list));
-      } else {
-        const stars = this.manager.getObjectsByClassName(Classes.star);
-        stars.forEach((star: Star) => {
-          star.ResetPositions();
-          // this.SendLog('PositionsReset', star.GetAllPositions());
-        })
-      }
+    }
   }
 
   private Finish(winner: number | null = null) {
@@ -452,10 +453,10 @@ export class GameRoom {
     objects.forEach((obj) => {
       try {
         obj.destroy();
-      } catch (e) {}
+      } catch (e) { }
       try {
         this.manager.removeObject(obj.id);
-      } catch (e) {}
+      } catch (e) { }
     });
 
     this.players.forEach((player, index) => {

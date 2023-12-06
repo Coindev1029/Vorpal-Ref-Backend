@@ -6,6 +6,7 @@ import { defCoords, defShipHealth, defStarHealth } from '../config';
 import { Classes, PackTitle } from '../types/Messages';
 import { StarAttackPosition, coords } from '../types/gameplay';
 import ObjectListManager from '../core/ListManager';
+import { PackFactory } from 'game/utils/PackFactory';
 
 export default class Star extends GameObject {
   public energy: number;
@@ -37,50 +38,48 @@ export default class Star extends GameObject {
       });
     }
     this.AttackPositions = list;
-    this.room.ReSendMessage(JSON.stringify({
-      action: PackTitle.objectupdate,
+    this.room.ReSendMessage(PackFactory.getInstance().objectUpdate([{
       id: this.id,
-      owner: this.owner,
+      event: 'starAttackPositions',
       data: {
-        event: 'starAttackPositions',
         list: this.AttackPositions
       }
-    }))
+    }]));
   }
 
-  public HoldPosition (point: coords) {
+  public HoldPosition(point: coords) {
     let result = false;
     this.AttackPositions.forEach((pos) => {
       if (pos.center === point && pos.hold === false) {
-          pos.hold = true;
-          result = true;
+        pos.hold = true;
+        result = true;
       }
     })
     return result;
   }
 
-  public UnHoldPosition (point: coords) {
+  public UnHoldPosition(point: coords) {
     let result = false;
     this.AttackPositions.forEach((pos) => {
       if (pos.center === point && pos.hold === true) {
-          pos.hold = false;
-          result = true;
+        pos.hold = false;
+        result = true;
       }
     })
     return result
   }
 
   public ResetPositions() {
-       this.FillAttackPositions();
+    this.FillAttackPositions();
   }
 
-  public GetFreePositions () {
+  public GetFreePositions() {
     return this.AttackPositions.filter((pos) => {
       return pos.hold === false;
     })
   }
 
-  public GetAllPositions () {
+  public GetAllPositions() {
     return this.AttackPositions;
   }
 
@@ -102,24 +101,19 @@ export default class Star extends GameObject {
     }, 1000);
     const mirror = this.center.y < defCoords.battleLine ? -1 : 1;
     const coordSum = defCoords.orbRadius + defCoords.sprites.battleShip.radius + 5;
-    this.BSPosition = {x: this.center.x + coordSum * mirror, y: this.center.y + coordSum * mirror};
+    this.BSPosition = { x: this.center.x + coordSum * mirror, y: this.center.y + coordSum * mirror };
   }
 
   public TakeDamage(damage: number) {
     this.energy -= damage;
     if (this.energy <= 0) {
       this.destroy();
-    } else {
-      this.room.ReSendMessage(
-        JSON.stringify({
-          action: PackTitle.objectupdate,
-          id: this.id,
-          class: this.class,
-          data: {
-            energy: this.energy,
-          }
-        }),
-      );
+    }
+    else {
+      this.room.ReSendMessage(PackFactory.getInstance().objectUpdate([{
+        id: this.id,
+        hp: this.energy
+      }]));
     }
   }
 

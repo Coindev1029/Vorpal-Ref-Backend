@@ -19,30 +19,31 @@ export class PackFactory {
         hit: boolean
     }): string {
         return JSON.stringify({
-            action: PackTitle.objectupdate,
+            action: PackTitle.objectUpdate,
             data: aData
         });
     }
 
-    updateShipList(aList: any[], className = Classes.ship) {
-        return JSON.stringify({
-            action: PackTitle.objectupdate,
-            class: className,
-            data: {
-                list: aList
-            }
-        })
-    }
-
-    updateObject(aData: {
+    /**
+     * Universal packet for object parameters update
+     * @param aList List of objects id and data
+     * @returns 
+     */
+    objectUpdate(aList: {
         id: string,
-        hp: number
-    }) {
+        event?: string,
+        hp?: number,
+        position?: { x: number, y: number },
+        rotation?: number,
+        /**
+         * Any other data
+         */
+        data?: any
+    }[]) {
         return JSON.stringify({
-            action: PackTitle.objectupdate,
-            id: aData.id,
-            hp: aData.hp
-        })
+            title: PackTitle.objectUpdate,
+            list: aList
+        });
     }
 
 }

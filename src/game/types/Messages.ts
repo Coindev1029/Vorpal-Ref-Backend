@@ -19,7 +19,7 @@ export enum PackTitle {
     gamefinish = 'gamefinish',
     globaldataupdate = 'globaldataupdate',
     objectcreate = 'objectcreate',
-    objectupdate = 'objectupdate',
+    objectUpdate = 'objectUpdate',
     objectList = 'objectlist',
     objectdestroy = 'objectdestroy',
     playerPosition = 'playerPosition',
