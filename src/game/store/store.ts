@@ -1,10 +1,3 @@
-import { play } from '../types';
-import ObjectListManager from '../core/ListManager';
-import { GameRoom } from '../core/Room';
-import { actionList } from '../types/Messages';
-import GameObject from '../gameplay/GameObject';
-import { defBattleShipHealth, playerStartGold } from '../config';
-import Star from '../gameplay/Star';
 import Player from './player';
 import { race } from '../types/user';
 import { ResponseObject } from '../../types';

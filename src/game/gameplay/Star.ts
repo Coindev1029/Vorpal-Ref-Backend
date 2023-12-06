@@ -3,7 +3,7 @@ import GameObject from './GameObject';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
 import { defCoords, defShipHealth, defStarHealth } from '../config';
-import { actionList, Classes } from '../types/Messages';
+import { Classes, PackTitle } from '../types/Messages';
 import { StarAttackPosition, coords } from '../types/gameplay';
 import ObjectListManager from '../core/ListManager';
 
@@ -37,7 +37,7 @@ export default class Star extends GameObject {
     }
     this.AttackPositions = list;
     this.room.ReSendMessage(JSON.stringify({
-      action: actionList.objectupdate,
+      action: PackTitle.objectupdate,
       id: this.id,
       owner: this.owner,
       data: {
@@ -108,7 +108,7 @@ export default class Star extends GameObject {
     } else {
       this.room.ReSendMessage(
         JSON.stringify({
-          action: actionList.objectupdate,
+          action: PackTitle.objectupdate,
           id: this.id,
           class: this.class,
           data: {

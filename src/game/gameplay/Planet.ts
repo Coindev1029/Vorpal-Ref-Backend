@@ -3,7 +3,7 @@ import GameObject from './GameObject';
 import { play } from '../types';
 import { FrameInterval, SyncInterval, defCoords, gameField, planetRotationSpeed, planetYearAngle } from '../config';
 import { GameRoom } from '../core/Room';
-import { actionList, Classes } from '../types/Messages';
+import { Classes, PackTitle } from '../types/Messages';
 import ObjectListManager from '../core/ListManager';
 
 export default class Planet extends GameObject {
@@ -49,7 +49,7 @@ export default class Planet extends GameObject {
 
     this.syncTimer = setInterval(() => {
        this.room.ReSendMessage(JSON.stringify({
-          action: actionList.objectupdate,
+         action: PackTitle.objectupdate,
           id: this.id,
           owner: this.owner,
           class: this.class,

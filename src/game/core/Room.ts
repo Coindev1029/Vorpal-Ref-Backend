@@ -13,7 +13,7 @@ import { Ship } from '../gameplay/Ship';
 import { BattlesShip } from '../gameplay/BattleShip';
 import Store from '../store/store';
 import { race, raceArr } from '../types/user';
-import { PackFactory } from 'game/utils/PackFactory';
+import { PackFactory } from '@game/utils/PackFactory';
 
 export class GameRoom {
   private players: PlayerRow[] = [];

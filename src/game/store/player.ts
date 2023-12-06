@@ -1,10 +1,4 @@
-import { play } from '../types';
-import ObjectListManager from '../core/ListManager';
-import { GameRoom } from '../core/Room';
-import { actionList } from '../types/Messages';
-import GameObject from '../gameplay/GameObject';
 import { defBattleShipHealth, playerExpPerLevel, playerMaxLevel, playerStartGold } from '../config';
-import Star from '../gameplay/Star';
 import { race } from '../types/user';
 
 export default class Player {

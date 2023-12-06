@@ -1,10 +1,10 @@
 import { play } from '../types';
 import ObjectListManager from '../core/ListManager';
 import { GameRoom } from '../core/Room';
-import { actionList, Classes } from '../types/Messages';
 import GameObject from './GameObject';
 import { defBattleShipHealth } from '../config';
 import Star from './Star';
+import { Classes, PackTitle } from '@game/types/Messages';
 
 export class BattlesShip extends GameObject {
   private timer: NodeJS.Timer;
@@ -34,7 +34,7 @@ export class BattlesShip extends GameObject {
         this.center.x = trg.center.x + (trg.radius * 2);
         this.center.y = trg.center.y + (trg.radius * 2);
         const msg = {
-          action: actionList.objectupdate,
+          action: PackTitle.objectupdate,
           data: {
             from: this.id,
             starOwner: trg.owner,
@@ -53,7 +53,7 @@ export class BattlesShip extends GameObject {
 
   private onDestroy() {
     const msg = {
-      action: actionList.objectdestroy,
+      action: PackTitle.objectdestroy,
       data: {
         id: this.id,
       },
@@ -86,7 +86,7 @@ export class BattlesShip extends GameObject {
       this.destroy();
     } else {
       this.room.ReSendMessage(JSON.stringify({
-        action: actionList.objectupdate,
+        action: PackTitle.objectupdate,
         id: this.id,
         hp: this.hp
       }))

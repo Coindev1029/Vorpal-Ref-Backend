@@ -1,8 +1,8 @@
 import { ObjectMoveParams, coords, movings, rect } from '../types/gameplay';
+import { PackTitle } from "./../types/Messages";
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
 import { FrameInterval, gameField, idLength, moveFrame } from '../config';
-import { actionList } from '../types/Messages';
 import { MoveFunction } from '../types/interfaces';
 import ObjectListManager from '../core/ListManager';
 
@@ -63,10 +63,10 @@ export default abstract class GameObject {
     if (notify) {
         this.room.ReSendMessage(
           JSON.stringify({
-            action: actionList.objectupdate,
+            action: PackTitle.objectupdate,
             id: this.id,
             data: {
-              event: actionList.stopmoving,
+              event: PackTitle.stopmoving,
               position: this.center,
             },
           }),
@@ -74,7 +74,7 @@ export default abstract class GameObject {
     }
     // log
     const logMsg = {
-      action: actionList.log,
+      action: PackTitle.log,
       onfinish: onFinish
     }
     this.room.ReSendMessage(JSON.stringify(logMsg));
@@ -137,10 +137,10 @@ export default abstract class GameObject {
       };
       this.room.ReSendMessage(
         JSON.stringify({
-          action: actionList.objectupdate,
+          action: PackTitle.objectupdate,
           id: this.id,
           data: {
-            event: actionList.startmoving,
+            event: PackTitle.startmoving,
             target: target,
             timeTo: time,
           },
