@@ -18,8 +18,8 @@ import { coords } from '../types/gameplay';
 import Star from './Star';
 import { MoveFunction } from '../types/interfaces';
 import { BattlesShip } from './BattleShip';
-import { Classes, PackTitle } from 'src/game/types/Messages';
-import { PackFactory } from 'src/game/utils/PackFactory';
+import { Classes, PackTitle } from '../types/Messages';
+import { PackFactory } from '../utils/PackFactory';
 
 export class Ship extends GameObject {
   private timer: NodeJS.Timer;
