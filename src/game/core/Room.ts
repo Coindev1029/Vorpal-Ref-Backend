@@ -325,7 +325,7 @@ export class GameRoom {
   }
 
   private CreateBattleShip(owner: string) {
-    const list: objectMapInfo[] = [];
+    const list: objectDisplayInfo[] = [];
 
     const mirror = owner === this.players[0].publicKey ? true : false;
     const center = gameField[0] / 2;
@@ -345,16 +345,15 @@ export class GameRoom {
       position: bShip.center,
       radius: bShip.radius,
       mirror: mirror,
+      hp: bShip.getHp()
     });
 
-    const listMsg: ObjectInfo = {
+    const listMsg = {
       action: PackTitle.objectcreate,
       list: list,
     };
     this.manager.addObject(bShip);
-    this.players.forEach((player) => {
-      player.ws.send(JSON.stringify(listMsg));
-    });
+    this.ReSendMessage(JSON.stringify(listMsg));
     bShip.Activate();
   }
 

@@ -103,6 +103,10 @@ export class BattlesShip extends GameObject {
     }, defShipFireDelay)
   }
 
+  public getHp() {
+    return this.hp;
+  }
+
   public TakeDamage(damage: number) {
     this.hp -= damage;
     if (this.hp <= 0) {
