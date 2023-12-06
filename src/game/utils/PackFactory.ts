@@ -1,4 +1,4 @@
-import { Classes, PackTitle } from "../types/Messages";
+import { PackTitle } from "../types/Messages";
 
 export class PackFactory {
     private static _instance: PackFactory;
@@ -39,7 +39,7 @@ export class PackFactory {
          * Any other data
          */
         data?: any
-    }[]) {
+    }[]): string {
         return JSON.stringify({
             title: PackTitle.objectUpdate,
             list: aList
