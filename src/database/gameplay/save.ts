@@ -1,5 +1,5 @@
 require('dotenv').config();
-import { GameResult } from 'src/types';
+import { GameResult } from '../../types';
 import { connection } from '../connection'
 
 async function CreatePlayerStatsRow ( player: string) : Promise<boolean> {

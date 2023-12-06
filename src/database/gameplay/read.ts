@@ -1,5 +1,5 @@
 require('dotenv').config();
-import { GameResult, PlayerStats } from 'src/types';
+import { GameResult, PlayerStats } from '../../types';
 import { connection } from '../connection'
 
 export async function GetGameById (id : number) : Promise<GameResult> {
