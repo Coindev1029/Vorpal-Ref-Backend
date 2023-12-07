@@ -79,7 +79,8 @@ export class PackFactory {
 
     attackRay(aData: {
         idFrom: string,
-        idTo: string
+        idTo: string,
+        isActive: boolean
     }): string {
         return JSON.stringify({
             action: PackTitle.attack,
