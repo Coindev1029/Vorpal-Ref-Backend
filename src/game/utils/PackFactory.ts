@@ -64,15 +64,26 @@ export class PackFactory {
         });
     }
 
-    attack(aData: {
-        from: string,
-        to: string,
-        damage: number,
-        angle?: number,
-        hit: boolean
+    attackLaser(aData: {
+        idFrom: string,
+        idTo: string,
+        damage?: number,
+        isMiss?: boolean
     }): string {
         return JSON.stringify({
-            action: PackTitle.objectUpdate,
+            action: PackTitle.attack,
+            type: 'laser',
+            data: aData
+        });
+    }
+
+    attackRay(aData: {
+        idFrom: string,
+        idTo: string
+    }): string {
+        return JSON.stringify({
+            action: PackTitle.attack,
+            type: 'ray',
             data: aData
         });
     }
