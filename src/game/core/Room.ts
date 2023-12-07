@@ -227,7 +227,7 @@ export class GameRoom {
     this.manager.addObject(planet2);
 
     const listMsg = {
-      action: PackTitle.objectcreate,
+      action: PackTitle.objectCreate,
       list: list,
     };
     this.ReSendMessage(JSON.stringify(listMsg));
@@ -306,7 +306,7 @@ export class GameRoom {
       });
     });
     const listMsg = {
-      action: PackTitle.objectcreate,
+      action: PackTitle.objectCreate,
       list: list,
     };
     this.SendLog('BSData', list);
@@ -349,7 +349,7 @@ export class GameRoom {
       });
 
       const listMsg = {
-        action: PackTitle.objectcreate,
+        action: PackTitle.objectCreate,
         list: list,
       };
       this.manager.addObject(bShip);

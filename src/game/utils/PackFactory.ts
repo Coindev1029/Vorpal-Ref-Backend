@@ -1,4 +1,4 @@
-import { PackTitle } from "../types/Messages";
+import { Classes, PackTitle } from "../types/Messages";
 
 export class PackFactory {
     private static _instance: PackFactory;
@@ -12,16 +12,33 @@ export class PackFactory {
         return PackFactory._instance;
     }
 
-    attack(aData: {
-        from: string,
-        to: string,
-        damage: number,
-        angle?: number,
-        hit: boolean
-    }): string {
+    objectCreate(aList: {
+
+        // common params
+        id: string,
+        owner: string,
+        class: Classes,
+        radius?: number,
+        position?: { x: number, y: number },
+        rotation?: number,
+        hp?: number,
+
+        /**
+         * special data for planets
+         */
+        planetData?: {
+            orbitRadius?: number,
+            orbitCenter?: { x: number, y: number },
+            startOrbitAngle?: number,
+            year?: number,
+            rotationSpeed?: number,
+            orbitSpeed?: number,
+        }
+
+    }[]): string {
         return JSON.stringify({
-            action: PackTitle.objectUpdate,
-            data: aData
+            title: PackTitle.objectCreate,
+            list: aList
         });
     }
 
@@ -44,6 +61,19 @@ export class PackFactory {
         return JSON.stringify({
             title: PackTitle.objectUpdate,
             list: aList
+        });
+    }
+
+    attack(aData: {
+        from: string,
+        to: string,
+        damage: number,
+        angle?: number,
+        hit: boolean
+    }): string {
+        return JSON.stringify({
+            action: PackTitle.objectUpdate,
+            data: aData
         });
     }
 
