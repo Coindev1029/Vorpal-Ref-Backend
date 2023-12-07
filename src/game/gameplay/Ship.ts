@@ -159,6 +159,7 @@ export class Ship extends GameObject {
       from: this.id,
       to: target.getId(),
       damage: damage,
+      angle: this.manager.calcAngle(this.center, target.center),
       hit: isHit
     }));
 

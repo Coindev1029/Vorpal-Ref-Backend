@@ -16,6 +16,7 @@ export class PackFactory {
         from: string,
         to: string,
         damage: number,
+        angle?: number,
         hit: boolean
     }): string {
         return JSON.stringify({
