@@ -42,6 +42,13 @@ export default class ObjectListManager<T extends GameObject> {
     return Math.sqrt((point2.x - point1.x) ** 2 + (point2.y - point1.y) ** 2);
   }
 
+  calcAngle(point1: coords, point2: coords) {
+    const dX = point2.x - point1.x;
+    const dY = point2.y - point1.y;
+    const angle = Math.atan2(dY, dX);
+    return angle;
+  }
+
   calcRangeByIds(id1: string, id2: string) {
     const ob1 = this.getObjectById(id1);
     const ob2 = this.getObjectById(id2);

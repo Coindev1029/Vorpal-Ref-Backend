@@ -265,7 +265,7 @@ export class GameRoom {
       if (shipList2.length === 0) {
         this.CreateBattleShip(this.players[1].publicKey);
       }
-    }, shipCreationStartTime / 3);
+    }, shipCreationStartTime * 3);
   }
 
   public ReSendMessage(message: string) {
@@ -329,7 +329,6 @@ export class GameRoom {
       const list: objectDisplayInfo[] = [];
 
       const mirror = owner === this.players[0].publicKey ? true : false;
-      const center = gameField[0] / 2;
       const xPosition = (gameField[0] / 4) * (mirror ? 3 : 1);
       const yPosition = mirror ? 200 : 800;
       const bShip = new BattlesShip(
@@ -346,9 +345,9 @@ export class GameRoom {
         position: bShip.center,
         radius: bShip.radius,
         mirror: mirror,
-        hp: bShip.getHp()
+        hp: bShip.getHp(),
       });
-  
+
       const listMsg = {
         action: PackTitle.objectcreate,
         list: list,
@@ -383,6 +382,7 @@ export class GameRoom {
       if (!ship.isActive) {
         return;
       }
+      let angle: number | null = null;
       const rangeToStar = this.manager.calcRange(
         ship.center,
         ship.targetPosition,
@@ -399,18 +399,26 @@ export class GameRoom {
               ship.StartAttacking(target);
             } else {
               ship.MoveToPoint(target.center);
-              this.SendLog('to target', range);
+              angle = this.manager.calcAngle(ship.center, target.center);
+            //  this.SendLog('to target', range);
             }
           } else {
             ship.MoveToPoint(ship.targetPosition);
           }
         }
       }
-      list.push({
-        id: ship.id,
-        // owner: ship.owner,
-        position: ship.center,
-      });
+      list.push(
+        angle !== null
+          ? {
+              id: ship.id,
+              position: ship.center,
+              angle: angle,
+            }
+          : {
+              id: ship.id,
+              position: ship.center,
+            },
+      );
     });
     battleShips.forEach((BS: BattlesShip) => {
       if (!BS.isActive) {
