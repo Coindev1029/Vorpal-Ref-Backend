@@ -88,15 +88,14 @@ export class Ship extends GameObject {
       this.isAttacking = true;
       this.speed = 0;
       this.isOnStarPosition = true;
+      this.room.ReSendMessage(PackFactory.getInstance().attackRay({
+        idFrom: this.id,
+        idTo: trg.getId(),
+        state: 'start',
+      }));
       this.timer = setInterval(() => {
         trg.TakeDamage(1);
         this.TakeDamage(1);
-        this.room.ReSendMessage(PackFactory.getInstance().attack({
-          from: this.id,
-          to: trg.getId(),
-          damage: 1,
-          hit: true
-        }));
       }, FrameInterval);
     }
     return () => { };
@@ -155,12 +154,11 @@ export class Ship extends GameObject {
       target.TakeDamage(damage);
     } 
 
-    this.room.ReSendMessage(PackFactory.getInstance().attack({
-      from: this.id,
-      to: target.getId(),
+    this.room.ReSendMessage(PackFactory.getInstance().attackLaser({
+      idFrom: this.id,
+      idTo: target.getId(),
       damage: damage,
-      angle: this.manager.calcAngle(this.center, target.center),
-      hit: isHit
+      isMiss: !isHit
     }));
 
   }
