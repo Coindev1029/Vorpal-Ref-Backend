@@ -106,3 +106,24 @@ export type ObjectInfo = {
     action: string,
     list: objectMapInfo[]
 }
+
+export interface ObjectCreationData {
+    id: string;
+    owner: string;
+    class: Classes;
+    radius?: number | undefined;
+    position?: {
+        x: number;
+        y: number;
+    } | undefined;
+    rotation?: number | undefined;
+    hp?: number | undefined;
+    planetData?: {
+        orbitRadius?: number,
+        orbitCenter?: { x: number, y: number },
+        startOrbitAngle?: number,
+        year?: number,
+        rotationSpeed?: number,
+        orbitSpeed?: number,
+    }
+}

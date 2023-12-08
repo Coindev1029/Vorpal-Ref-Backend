@@ -7,7 +7,7 @@ import Star from '../gameplay/Star';
 import ObjectListManager from './ListManager';
 import Planet from '../gameplay/Planet';
 import { objectDisplayInfo, objectMapInfo } from '../types/gameplay';
-import { PackTitle, Classes, ObjectInfo } from '../types/Messages';
+import { PackTitle, Classes, ObjectInfo, ObjectCreationData } from '../types/Messages';
 import { defCoords, gameField, shipCreationStartTime } from '../config';
 import { Ship } from '../gameplay/Ship';
 import { BattlesShip } from '../gameplay/BattleShip';
@@ -140,7 +140,7 @@ export class GameRoom {
       );
     });
     this.isActive = true;
-    const list: objectDisplayInfo[] = [];
+    const list: ObjectCreationData[] = []; // objectDisplayInfo[]
     const star1 = new Star(
       this,
       this.players[0].publicKey,
@@ -152,10 +152,10 @@ export class GameRoom {
     list.push({
       id: star1.getId(),
       owner: star1.owner,
-      class: star1.class,
+      class: Classes.star,
       position: star1.center,
       radius: star1.radius,
-      energy: config.defStarHealth,
+      hp: config.defStarHealth,
     });
 
     const star2 = new Star(
@@ -169,10 +169,10 @@ export class GameRoom {
     list.push({
       id: star2.getId(),
       owner: star2.owner,
-      class: star2.class,
+      class: Classes.star,
       position: star2.center,
       radius: star2.radius,
-      energy: config.defStarHealth,
+      hp: config.defStarHealth,
     });
 
     const planet1 = new Planet(
@@ -187,15 +187,17 @@ export class GameRoom {
     list.push({
       id: planet1.getId(),
       owner: planet1.owner,
-      class: planet1.class,
+      class: Classes.planet,
       position: planet1.center,
       radius: planet1.radius,
-      orbitRadius: defCoords.orbDiam / 2,
-      orbitCenter: star1.center,
-      startAngle: -90,
-      year: shipCreationStartTime / 1000,
-      rotationSpeed: config.planetRotationSpeed * 10,
-      orbitSpeed: config.planetYearAngle * 10,
+      planetData: {
+        orbitRadius: defCoords.orbDiam / 2,
+        orbitCenter: star1.center,
+        startOrbitAngle: -90,
+        year: shipCreationStartTime / 1000,
+        rotationSpeed: config.planetRotationSpeed * 10,
+        orbitSpeed: config.planetYearAngle * 10,
+      }
     });
 
     const planet2 = new Planet(
@@ -210,15 +212,17 @@ export class GameRoom {
     list.push({
       id: planet2.getId(),
       owner: planet2.owner,
-      class: planet2.class,
+      class: Classes.planet,
       position: planet2.center,
       radius: planet2.radius,
-      orbitRadius: defCoords.orbDiam / 2,
-      orbitCenter: star2.center,
-      startAngle: 90,
-      year: shipCreationStartTime / 1000,
-      rotationSpeed: config.planetRotationSpeed * 10,
-      orbitSpeed: config.planetYearAngle * 10,
+      planetData: {
+        orbitRadius: defCoords.orbDiam / 2,
+        orbitCenter: star2.center,
+        startOrbitAngle: 90,
+        year: shipCreationStartTime / 1000,
+        rotationSpeed: config.planetRotationSpeed * 10,
+        orbitSpeed: config.planetYearAngle * 10,
+      }
     });
 
     this.manager.addObject(star1);
@@ -226,11 +230,7 @@ export class GameRoom {
     this.manager.addObject(planet1);
     this.manager.addObject(planet2);
 
-    const listMsg = {
-      action: PackTitle.objectCreate,
-      list: list,
-    };
-    this.ReSendMessage(JSON.stringify(listMsg));
+    this.ReSendMessage(PackFactory.getInstance().objectCreate(list));
 
     setTimeout(() => {
       star1.Activate();
