@@ -11,7 +11,6 @@ export default class Planet extends GameObject {
   private timer: NodeJS.Timer;
   private syncTimer: NodeJS.Timer;
   private dir: boolean;
-  private angle = 0;
   private defY = 0;
   private rotation = 0;
 
