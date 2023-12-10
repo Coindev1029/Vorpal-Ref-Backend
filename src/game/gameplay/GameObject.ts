@@ -1,5 +1,5 @@
 import { coords, movings } from '../types/gameplay';
-import { PackTitle } from "./../types/Messages";
+import { PackTitle } from './../types/Messages';
 import { play } from '../types';
 import { GameRoom } from '../core/Room';
 import { FrameInterval, gameField, idLength, moveFrame } from '../config';
@@ -14,12 +14,14 @@ export default abstract class GameObject {
   protected manager: ObjectListManager<any>;
 
   public center: play.coords;
+  public angle: number;
   public radius: number;
   public RoomAction: any;
   public owner: string;
   public class: string;
   public movingType: movings;
   public speed: number = 0;
+  public angleSpeed: number = 0;
   public target: coords;
   public isActive: boolean = false;
 
@@ -30,6 +32,7 @@ export default abstract class GameObject {
     _radius: number,
     _class: string,
     _manager: ObjectListManager<any>,
+    _angle?: number,
   ) {
     const _id = this.GenerateId(idLength);
     this.room = _room;
@@ -41,6 +44,7 @@ export default abstract class GameObject {
     };
     this.class = _class;
     this.manager = _manager;
+    this.angle = _angle || 0;
   }
 
   public GenerateId(length: number): string {
@@ -56,27 +60,18 @@ export default abstract class GameObject {
     return result;
   }
 
-  public MoveStop(point: coords = this.center, notify = true, onFinish?: MoveFunction) {
+  public MoveStop(
+    point: coords = this.center,
+    notify = true,
+    onFinish?: MoveFunction,
+  ) {
     if (this.moveTimer) clearInterval(this.moveTimer);
     this.center.x = point.x;
     this.center.y = point.y;
-    // if (notify) {
-    //     this.room.ReSendMessage(
-    //       JSON.stringify({
-    //         action: PackTitle.objectUpdate,
-    //         id: this.id,
-    //         data: {
-    //           event: PackTitle.stopmoving,
-    //           position: this.center,
-    //         },
-    //       }),
-    //     );
-    // }
-    // log
     const logMsg = {
       action: PackTitle.log,
-      onfinish: onFinish
-    }
+      onfinish: onFinish,
+    };
     this.room.ReSendMessage(JSON.stringify(logMsg));
     // End log
     this.inMoving = false;
@@ -93,11 +88,30 @@ export default abstract class GameObject {
     );
   }
 
-  public async MoveToPoint(point: coords, callback?: any) {
+  public async MoveAngle(target: number, callback?: any) {
+    if (this.angleSpeed === 0) {
+      return false;
+    }
+
+    if (target > Math.PI * 2) {
+      target = target % (Math.PI * 2);
+    }
+
+    if (Math.abs(target - this.angle) <= this.angleSpeed) {
+      this.angle = target;
+      return true;
+    }
+
+    const direction = this.manager.angleDirection(target, this.angle);
+    this.angle += this.angleSpeed * direction;
+    return true;
+  }
+
+  public async MoveToPoint(point: coords, withRotation? : boolean, callback?: any) {
     if (this.speed === 0) {
       return false;
     }
-    
+
     const distance = this.manager.calcRange(this.center, point);
     const reached = distance <= this.speed ? true : false;
     if (reached) {
@@ -108,12 +122,16 @@ export default abstract class GameObject {
 
     const dX = point.x - this.center.x;
     const dY = point.y - this.center.y;
-    const angle = Math.atan2(dY, dX)
-    const newPoint : coords = {
-      x: this.center.x + (this.speed * Math.cos(angle)),
-      y: this.center.y + (this.speed * Math.sin(angle))
-    }
+    const angle = Math.atan2(dY, dX);
+    const newPoint: coords = {
+      x: this.center.x + this.speed * Math.cos(angle),
+      y: this.center.y + this.speed * Math.sin(angle),
+    };
     this.center = newPoint;
+    if (withRotation) {
+      const aTarget = this.manager.calcAngle(this.center, point);
+      this.MoveAngle(aTarget);
+    }
     if (callback) callback();
     return reached;
   }
@@ -168,7 +186,7 @@ export default abstract class GameObject {
   ): Promise<coords> {
     return await new Promise((resolve) => {
       if (this.inMoving) {
-        this.MoveStop(this.center, false)
+        this.MoveStop(this.center, false);
       }
       const queX = Math.cos(angle);
       const queY = Math.sin(angle);

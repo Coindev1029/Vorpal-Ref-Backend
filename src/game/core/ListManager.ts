@@ -1,4 +1,4 @@
-import { coords } from '../types/gameplay';
+import { angleDirection, coords } from '../types/gameplay';
 import GameObject from '../gameplay/GameObject';
 
 export default class ObjectListManager<T extends GameObject> {
@@ -47,6 +47,10 @@ export default class ObjectListManager<T extends GameObject> {
     const dY = point2.y - point1.y;
     const angle = Math.atan2(dY, dX);
     return angle;
+  }
+
+  angleDirection(angle1: number, angle2: number) : angleDirection {
+      return angle2 >= angle1 ? 1 : -1;
   }
 
   calcRangeByIds(id1: string, id2: string) {

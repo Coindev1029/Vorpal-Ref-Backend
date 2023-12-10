@@ -1,5 +1,6 @@
 export type GameObjectDictionary<T> = Record<string, T>;
 export type movings = 'target' | 'angle' | 'orbit' | 'none';
+export type angleDirection = -1 | 1;
 
 export interface coords {
   x: number;

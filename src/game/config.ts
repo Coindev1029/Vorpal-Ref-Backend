@@ -10,6 +10,7 @@ export const SyncInterval = 1000;
 export const shipMovingTime = 5000;
 export const shipCreationStartTime = 60000; // 147580;
 export const planetRotationSpeed = 0.064;
+export const shipRotationSpeed = 0.1;
 export const planetYearAngle = 0.004185;
 export const defShipHealth = 100;
 export const defBattleShipHealth = 300;

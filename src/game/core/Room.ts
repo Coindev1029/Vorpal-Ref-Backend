@@ -382,7 +382,6 @@ export class GameRoom {
       if (!ship.isActive) {
         return;
       }
-      let angle: number | null = null;
       const rangeToStar = this.manager.calcRange(
         ship.center,
         ship.targetPosition,
@@ -398,8 +397,7 @@ export class GameRoom {
             if (range <= config.shipRange) {
               ship.StartAttacking(target);
             } else {
-              ship.MoveToPoint(target.center);
-              angle = this.manager.calcAngle(ship.center, target.center);
+              ship.MoveToPoint(target.center, true);
             //  this.SendLog('to target', range);
             }
           } else {
@@ -408,16 +406,11 @@ export class GameRoom {
         }
       }
       list.push(
-        angle !== null
-          ? {
-              id: ship.id,
-              position: ship.center,
-              angle: angle,
-            }
-          : {
-              id: ship.id,
-              position: ship.center,
-            },
+        {
+          id: ship.id,
+          position: ship.center,
+          angle: ship.angle,
+        }
       );
     });
     battleShips.forEach((BS: BattlesShip) => {
@@ -425,7 +418,7 @@ export class GameRoom {
         return;
       }
       if (!BS.isAttacking)
-        BS.MoveToPoint(BS.targetPosition, () => {
+        BS.MoveToPoint(BS.targetPosition, false, () => {
           const rangeToTarget = this.manager.calcRange(
             BS.center,
             BS.targetPosition,
