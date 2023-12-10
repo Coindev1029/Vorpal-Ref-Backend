@@ -395,7 +395,7 @@ export class GameRoom {
             //  this.SendLog('to target', range);
             }
           } else {
-            ship.MoveToPoint(ship.targetPosition);
+            ship.MoveToPoint(ship.targetPosition, true);
           }
         }
       }
