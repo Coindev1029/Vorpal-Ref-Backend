@@ -44,8 +44,9 @@ export class Ship extends GameObject {
     _radius: number,
     _manager: ObjectListManager<any>,
     dir: boolean,
+    _angle?: number
   ) {
-    super(_room, _owner, _coords, _radius, Classes.ship, _manager);
+    super(_room, _owner, _coords, _radius, Classes.ship, _manager, _angle);
     this.dir = dir;
     this.attackRange = shipRange;
     this.onCreate();

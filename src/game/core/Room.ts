@@ -7,7 +7,7 @@ import Star from '../gameplay/Star';
 import ObjectListManager from './ListManager';
 import Planet from '../gameplay/Planet';
 import { objectDisplayInfo, objectMapInfo } from '../types/gameplay';
-import { PackTitle, Classes, ObjectInfo, ObjectCreationData } from '../types/Messages';
+import { PackTitle, Classes, ObjectInfo, ObjectCreationData, ObjectUpdateData } from '../types/Messages';
 import { defCoords, gameField, shipCreationStartTime } from '../config';
 import { Ship } from '../gameplay/Ship';
 import { BattlesShip } from '../gameplay/BattleShip';
@@ -275,7 +275,7 @@ export class GameRoom {
   }
 
   private CreateShips() {
-    const list: objectDisplayInfo[] = [];
+    const list: ObjectCreationData[] = [];
     const ships: Ship[] = [];
     this.players.forEach((player, index) => {
       const mirror = index === 0 ? true : false;
@@ -284,6 +284,7 @@ export class GameRoom {
       const yPosition = mirror
         ? defCoords.battleLine - 150
         : defCoords.battleLine + 150;
+      const startAngle = mirror ? -Math.PI / 2 : Math.PI / 2
       xPositions.forEach((pos, j) => {
         const ship = new Ship(
           this,
@@ -292,25 +293,22 @@ export class GameRoom {
           defCoords.sprites.ship.radius,
           this.manager,
           mirror,
+          startAngle
         );
         this.manager.addObject(ship);
         list.push({
           id: ship.getId(),
           owner: ship.owner,
-          class: ship.class,
+          class: Classes.ship,
           position: ship.center,
+          rotation: startAngle,
           radius: ship.radius,
           hp: ship.getHp(),
         });
         ships.push(ship);
       });
     });
-    const listMsg = {
-      action: PackTitle.objectCreate,
-      list: list,
-    };
-    this.SendLog('BSData', list);
-    this.ReSendMessage(JSON.stringify(listMsg));
+    this.ReSendMessage(PackFactory.getInstance().objectCreate(list));
 
     ships.forEach((sh, index) => {
       const posIndex = -1; // index >= 3 ? index : index + 3;
@@ -326,7 +324,7 @@ export class GameRoom {
 
   private CreateBattleShip(owner: string) {
     try {
-      const list: objectDisplayInfo[] = [];
+      const list: ObjectCreationData[] = [];
 
       const mirror = owner === this.players[0].publicKey ? true : false;
       const xPosition = (gameField[0] / 4) * (mirror ? 3 : 1);
@@ -341,19 +339,14 @@ export class GameRoom {
       list.push({
         id: bShip.getId(),
         owner: bShip.owner,
-        class: bShip.class,
+        class: Classes.battleship,
         position: bShip.center,
         radius: bShip.radius,
-        mirror: mirror,
         hp: bShip.getHp(),
       });
 
-      const listMsg = {
-        action: PackTitle.objectCreate,
-        list: list,
-      };
       this.manager.addObject(bShip);
-      this.ReSendMessage(JSON.stringify(listMsg));
+      this.ReSendMessage(PackFactory.getInstance().objectCreate(list));
       bShip.Activate();
     } catch (e) {
       this.SendLog('error', e.message);
@@ -376,8 +369,8 @@ export class GameRoom {
   public FrameUpdate() {
     const ships = this.manager.getObjectsByClassName(Classes.ship);
     const battleShips = this.manager.getObjectsByClassName(Classes.battleship);
-    const list: any[] = [];
-    const bsList: any[] = [];
+    const list: ObjectUpdateData[] = [];
+    const bsList: ObjectUpdateData[] = [];
     ships.forEach((ship) => {
       if (!ship.isActive) {
         return;
@@ -409,7 +402,9 @@ export class GameRoom {
         {
           id: ship.id,
           position: ship.center,
-          angle: ship.angle,
+          data: {
+            angle: ship.angle,
+          }
         }
       );
     });

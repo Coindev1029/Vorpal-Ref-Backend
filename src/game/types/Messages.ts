@@ -127,3 +127,12 @@ export interface ObjectCreationData {
         orbitSpeed?: number,
     }
 }
+
+export interface ObjectUpdateData {
+    id: string,
+    event?: string,
+    position?: { x: number, y: number },
+    rotation?: number,
+    hp?: number,
+    data?: any
+}
