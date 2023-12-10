@@ -114,7 +114,6 @@ export class GameRoom {
   }
 
   public Start() {
-    // this.SendLog('start');
 
     this.players.forEach((player) => {
       const state: PlayerState = {
@@ -392,7 +391,7 @@ export class GameRoom {
               ship.StartAttacking(target);
             } else {
               ship.MoveToPoint(target.center, true);
-            //  this.SendLog('to target', range);
+             this.SendLog('Angle to target', angle);
             }
           } else {
             ship.MoveToPoint(ship.targetPosition, true);
@@ -417,18 +416,15 @@ export class GameRoom {
             BS.center,
             BS.targetPosition,
           );
-          // this.SendLog('BS to target', rangeToTarget);
           if (rangeToTarget < 5) {
             BS.AttackState();
           }
           bsList.push({
             id: BS.getId(),
-            // owner: BS.owner,
             position: BS.center,
           });
         });
     });
-    // this.SendLog('BSPositions', battleShips.length);
     if (bsList.length > 0) {
       this.ReSendMessage(PackFactory.getInstance().objectUpdate(bsList));
     }
@@ -438,7 +434,6 @@ export class GameRoom {
       const stars = this.manager.getObjectsByClassName(Classes.star);
       stars.forEach((star: Star) => {
         star.ResetPositions();
-        // this.SendLog('PositionsReset', star.GetAllPositions());
       });
     }
   }

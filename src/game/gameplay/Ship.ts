@@ -68,15 +68,8 @@ export class Ship extends GameObject {
         this.TargetStar,
       );
       this.TargetStar.HoldPosition(this.targetPosition);
-      this.room.SendLog(
-        'StarPosition',
-        this.targetPosition,
-        'reserve?',
-        this.targetPosition === this.ReservePosition(),
-      );
     } else {
       this.targetPosition = this.ReservePosition();
-      // this.room.SendLog('StarReservePosition', this.targetPosition);
     }
     this.isActive = true;
   }
@@ -177,12 +170,6 @@ export class Ship extends GameObject {
   }
 
   public StartAttacking(target: Ship | BattlesShip) {
-    this.room.SendLog(
-      'Attacking',
-      this.center,
-      target.center,
-      this.manager.calcRange(this.center, target.center),
-    );
     this.isAttacking = true;
     this.speed = 0;
     this.attackTimeout = setInterval(() => {
@@ -204,7 +191,6 @@ export class Ship extends GameObject {
       const isUnhold =
         this.TargetStar?.UnHoldPosition(this.targetPosition) ||
         this.TargetStar?.UnHoldPosition(this.center);
-      this.room.SendLog('UnHolded', isUnhold);
     } catch (e) {
       this.room.SendLog('error', e.message);
     }

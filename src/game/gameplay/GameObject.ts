@@ -68,12 +68,6 @@ export default abstract class GameObject {
     if (this.moveTimer) clearInterval(this.moveTimer);
     this.center.x = point.x;
     this.center.y = point.y;
-    const logMsg = {
-      action: PackTitle.log,
-      onfinish: onFinish,
-    };
-    this.room.ReSendMessage(JSON.stringify(logMsg));
-    // End log
     this.inMoving = false;
     if (onFinish) onFinish(this.id, this.center);
     return this.center;
@@ -99,11 +93,14 @@ export default abstract class GameObject {
 
     if (Math.abs(target - this.angle) <= this.angleSpeed) {
       this.angle = target;
+      if (callback) callback();
       return true;
     }
 
     const direction = this.manager.angleDirection(target, this.angle);
     this.angle += this.angleSpeed * direction;
+    this.room.SendLog("New angle dist", this.angle);
+    if (callback) callback();
     return true;
   }
 
