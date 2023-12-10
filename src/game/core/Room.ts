@@ -403,9 +403,7 @@ export class GameRoom {
         {
           id: ship.id,
           position: ship.center,
-          data: {
-            rotation: ship.angle,
-          }
+          rotation: ship.angle,
         }
       );
     });
