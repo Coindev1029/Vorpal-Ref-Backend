@@ -387,7 +387,8 @@ export class GameRoom {
           if (target) {
             const range = this.manager.calcRange(ship.center, target.center);
             const angle = this.manager.calcAngle(ship.center, target.center);
-            if (range <= config.shipRange && angle < 0.01) {
+            this.SendLog()
+            if (range <= config.shipRange) {   // && angle < 0.01
               ship.StartAttacking(target);
             } else {
               ship.MoveToPoint(target.center, true);
