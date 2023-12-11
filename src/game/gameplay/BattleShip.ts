@@ -23,8 +23,9 @@ export class BattlesShip extends GameObject {
     _coords: play.coords,
     _radius: number,
     _manager: ObjectListManager<any>,
+    _angle?: number
   ) {
-    super(_room, _owner, _coords, _radius, Classes.battleship, _manager);
+    super(_room, _owner, _coords, _radius, Classes.battleship, _manager, _angle);
     this.manager = _manager;
     this.speed = bShipSpeed;
     this.onCreate();

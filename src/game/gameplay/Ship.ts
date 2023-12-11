@@ -124,12 +124,6 @@ export class Ship extends GameObject {
       return 0;
     });
 
-    const logMsg = {
-      action: PackTitle.log,
-      ...positions,
-    };
-    this.room.ReSendMessage(JSON.stringify(logMsg));
-
     if (positions.length === 0) {
       return this.ReservePosition();
     }

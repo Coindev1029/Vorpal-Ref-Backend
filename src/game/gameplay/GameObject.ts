@@ -87,8 +87,8 @@ export default abstract class GameObject {
       return false;
     }
 
-    if (target > Math.PI * 2) {
-      target = target % (Math.PI * 2);
+    if (Math.abs(target) > Math.PI) {
+      target = target % Math.PI;
     }
 
     if (Math.abs(target - this.angle) <= this.angleSpeed) {
