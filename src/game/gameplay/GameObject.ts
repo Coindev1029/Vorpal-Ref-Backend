@@ -93,12 +93,11 @@ export default abstract class GameObject {
 
     if (Math.abs(target - this.angle) <= this.angleSpeed) {
       this.angle = target;
-      if (callback) callback();
-      return true;
     }
 
     const direction = this.manager.angleDirection(target, this.angle);
     this.angle += this.angleSpeed * direction;
+    this.room.SendLog('Rotated', target - this.angle);
     if (callback) callback();
     return true;
   }

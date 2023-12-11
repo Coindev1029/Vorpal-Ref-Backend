@@ -401,7 +401,7 @@ export class GameRoom {
           }
         }
       }
-      this.SendLog('Ship rotation', ship.angle);
+      // this.SendLog('Ship rotation', ship.angle);
       list.push(
         {
           id: ship.id,
