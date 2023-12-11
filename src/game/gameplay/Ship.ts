@@ -10,6 +10,7 @@ import {
   moveFrame,
   shipMovingTime,
   shipRange,
+  shipRotationSpeed,
   shipSpeed,
 } from '../config';
 import { GameRoom } from '../core/Room';
@@ -51,6 +52,7 @@ export class Ship extends GameObject {
     this.attackRange = shipRange;
     this.onCreate();
     this.speed = shipSpeed;
+    this.angleSpeed = shipRotationSpeed;
   }
 
   public Activate(_listIndex?: number) {
