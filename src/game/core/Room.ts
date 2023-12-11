@@ -283,7 +283,7 @@ export class GameRoom {
       const yPosition = mirror
         ? defCoords.battleLine - 150
         : defCoords.battleLine + 150;
-      const startAngle = Math.PI / 2 // mirror ? -Math.PI / 2 : Math.PI / 2
+      const startAngle = mirror ? -Math.PI / 2 : Math.PI / 2
       xPositions.forEach((pos, j) => {
         const ship = new Ship(
           this,
@@ -306,6 +306,7 @@ export class GameRoom {
         });
         ships.push(ship);
       });
+      this.SendLog("Ships start angle", startAngle)
     });
     this.ReSendMessage(PackFactory.getInstance().objectCreate(list));
 
@@ -387,12 +388,11 @@ export class GameRoom {
           if (target) {
             const range = this.manager.calcRange(ship.center, target.center);
             const angle = this.manager.calcAngle(ship.center, target.center);
-            this.SendLog()
+            this.SendLog('Angle to target', angle);
             if (range <= config.shipRange) {   // && angle < 0.01
               ship.StartAttacking(target);
             } else {
               ship.MoveToPoint(target.center, true);
-             this.SendLog('Angle to target', angle);
             }
           } else {
             ship.MoveToPoint(ship.targetPosition, true);

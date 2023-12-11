@@ -99,7 +99,6 @@ export default abstract class GameObject {
 
     const direction = this.manager.angleDirection(target, this.angle);
     this.angle += this.angleSpeed * direction;
-    this.room.SendLog("New angle dist", this.angle);
     if (callback) callback();
     return true;
   }
