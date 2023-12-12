@@ -36,7 +36,7 @@ export class Ship extends GameObject {
 
   public isAttacking: boolean = false;
   public targetPosition: coords;
-  public TargetStar: Star;
+  private TargetStar: Star;
 
   constructor(
     _room: GameRoom,
@@ -79,6 +79,7 @@ export class Ship extends GameObject {
   public AttackStar(_id = this.id, coords = this.center) {
 
     const trg = this.TargetStar;
+    this.angle = this.manager.calcAngle(this.center, trg.center);
     if (trg) {
 
       this.isAttacking = true;
@@ -168,6 +169,7 @@ export class Ship extends GameObject {
   public StartAttacking(target: Ship | BattlesShip) {
     this.isAttacking = true;
     this.speed = 0;
+    this.angle = this.manager.calcAngle(this.center, target.center);
     this.attackTimeout = setInterval(() => {
       const trg = this.manager.getObjectById(target.getId());
       if (trg && this.manager.calcRange(this.center, trg.center) <= shipRange) {

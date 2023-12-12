@@ -383,24 +383,24 @@ export class GameRoom {
         if (rangeToStar <= config.shipSpeed) {
           ship.center = ship.targetPosition;
           ship.AttackStar();
-          ship.angle = this.manager.calcAngle(ship.center, ship.TargetStar.center);
+          // ship.angle = this.manager.calcAngle(ship.center, ship.TargetStar.center);
+          // this.SendLog('Ship angle diff, space target', ship.TargetStar.center - ship.angle);
         } else {
           const target = ship.FindTarget();
           if (target) {
             const range = this.manager.calcRange(ship.center, target.center);
             const angle = this.manager.calcAngle(ship.center, target.center);
-            this.SendLog('Ship angle diff', angle - ship.angle);
             if (range <= config.shipRange && (angle - ship.angle) < 0.1) {   // && angle < 0.01
               ship.StartAttacking(target);
-              ship.angle = angle;
+              // ship.angle = angle;
               // ship.MoveAngle(target);
             } else {
               ship.MoveToPoint(target.center, false);
-              ship.angle = angle;
+              // ship.angle = angle;
             }
           } else {
             ship.MoveToPoint(ship.targetPosition, false);
-            ship.angle = this.manager.calcAngle(ship.center, ship.targetPosition);
+            // ship.angle = this.manager.calcAngle(ship.center, ship.targetPosition);
           }
         }
       } else {
