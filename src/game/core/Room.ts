@@ -328,7 +328,7 @@ export class GameRoom {
       const mirror = owner === this.players[0].publicKey ? true : false;
       const xPosition = (gameField[0] / 4) * (mirror ? 3 : 1);
       const yPosition = mirror ? 200 : 800;
-      const startAngle = (Math.PI / 2) * (mirror ? -1 : 1);
+      const startAngle = 0; // (Math.PI / 2) * (mirror ? -1 : 1);
       const bShip = new BattlesShip(
         this,
         owner,
