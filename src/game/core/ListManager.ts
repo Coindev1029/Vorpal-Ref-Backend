@@ -45,7 +45,8 @@ export default class ObjectListManager<T extends GameObject> {
   calcAngle(point1: coords, point2: coords) {
     const dX = point2.x - point1.x;
     const dY = point2.y - point1.y;
-    const angle = Math.atan2(dY, dX);
+    let angle = Math.atan2(dY, dX);
+    angle = (angle + Math.PI) % (2 * Math.PI) - Math.PI;
     return angle;
   }
 

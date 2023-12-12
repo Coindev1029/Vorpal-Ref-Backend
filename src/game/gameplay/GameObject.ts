@@ -90,6 +90,7 @@ export default abstract class GameObject {
     if (Math.abs(target) > Math.PI) {
       // target = target % Math.PI;
       this.room.SendLog("rotation error", "target exceeds atan2 value", target);
+      return false;
     }
 
     if (Math.abs(Math.abs(target) - Math.abs(this.angle)) <= this.angleSpeed) {
@@ -135,6 +136,7 @@ export default abstract class GameObject {
     this.center = newPoint;
     if (withRotation) {
       const aTarget = this.manager.calcAngle(this.center, point);
+      this.room.SendLog('Calculated angle', aTarget);
       this.MoveAngle(aTarget);
     }
     if (callback) callback();
