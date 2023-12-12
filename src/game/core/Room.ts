@@ -283,7 +283,7 @@ export class GameRoom {
       const yPosition = mirror
         ? defCoords.battleLine - 150
         : defCoords.battleLine + 150;
-      const startAngle = mirror ? -Math.PI / 2 : Math.PI / 2
+      const startAngle = 0; // mirror ? -Math.PI / 2 : Math.PI / 2
       xPositions.forEach((pos, j) => {
         const ship = new Ship(
           this,
@@ -329,7 +329,7 @@ export class GameRoom {
       const mirror = owner === this.players[0].publicKey ? true : false;
       const xPosition = (gameField[0] / 4) * (mirror ? 3 : 1);
       const yPosition = mirror ? 200 : 800;
-      const startAngle = 0; // (Math.PI / 2) * (mirror ? -1 : 1);
+      const startAngle = (Math.PI / 2) * (mirror ? -1 : 1);
       const bShip = new BattlesShip(
         this,
         owner,
