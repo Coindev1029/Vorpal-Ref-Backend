@@ -126,7 +126,7 @@ export class GameRoom {
       };
       this.server.UpdatePlayerState(player.id, state);
       const playerPosition =
-        player.publicKey === this.players[0].publicKey ? 'bottom' : 'top';
+        player.publicKey === this.players[0].publicKey ? 'top' : 'bottom';
       player.ws.send(
         JSON.stringify({
           action: PackTitle.gamestart,
@@ -383,6 +383,7 @@ export class GameRoom {
         if (rangeToStar <= config.shipSpeed) {
           ship.center = ship.targetPosition;
           ship.AttackStar();
+          ship.angle = this.manager.calcAngle(ship.center, ship.targetPosition);
         } else {
           const target = ship.FindTarget();
           if (target) {
@@ -391,12 +392,15 @@ export class GameRoom {
             this.SendLog('Ship angle diff', angle - ship.angle);
             if (range <= config.shipRange) {   // && angle < 0.01
               ship.StartAttacking(target);
+              ship.angle = angle;
               // ship.MoveAngle(target);
             } else {
               ship.MoveToPoint(target.center, false);
+              ship.angle = angle;
             }
           } else {
             ship.MoveToPoint(ship.targetPosition, false);
+            ship.angle = this.manager.calcAngle(ship.center, ship.targetPosition);
           }
         }
       }
