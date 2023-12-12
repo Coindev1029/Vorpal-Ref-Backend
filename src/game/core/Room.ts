@@ -305,7 +305,6 @@ export class GameRoom {
           hp: ship.getHp(),
         });
         ships.push(ship);       
-        this.SendLog("Ship screation angle", ship.angle);
       });
     });
     this.ReSendMessage(PackFactory.getInstance().objectCreate(list));
@@ -314,7 +313,6 @@ export class GameRoom {
       setTimeout(() => {
         try {
           sh.Activate(posIndex);
-          this.SendLog("Ship start angle", sh.angle);
         } catch (e) {
           this.SendLog('error', e.message);
         }
@@ -390,7 +388,7 @@ export class GameRoom {
           if (target) {
             const range = this.manager.calcRange(ship.center, target.center);
             const angle = this.manager.calcAngle(ship.center, target.center);
-            // this.SendLog('Ship angle', ship.angle);
+            this.SendLog('Ship angle diff', angle - ship.angle);
             if (range <= config.shipRange) {   // && angle < 0.01
               ship.StartAttacking(target);
               // ship.MoveAngle(target);
