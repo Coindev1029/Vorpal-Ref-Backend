@@ -28,7 +28,6 @@ export class Ship extends GameObject {
   private hp: number;
   private dir: boolean = true; // true - up, false - down
   private hitChance: number = defShipHitChance;
-  private TargetStar: Star;
   private attackRange: number;
   private listIndex: number = 0;
   private isOnStarPosition: boolean = false;
@@ -37,6 +36,7 @@ export class Ship extends GameObject {
 
   public isAttacking: boolean = false;
   public targetPosition: coords;
+  public TargetStar: Star;
 
   constructor(
     _room: GameRoom,

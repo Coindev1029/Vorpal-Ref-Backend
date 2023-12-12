@@ -383,7 +383,7 @@ export class GameRoom {
         if (rangeToStar <= config.shipSpeed) {
           ship.center = ship.targetPosition;
           ship.AttackStar();
-          ship.angle = this.manager.calcAngle(ship.center, ship.targetPosition);
+          ship.angle = this.manager.calcAngle(ship.center, ship.TargetStar.center);
         } else {
           const target = ship.FindTarget();
           if (target) {
