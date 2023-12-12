@@ -283,7 +283,7 @@ export class GameRoom {
       const yPosition = mirror
         ? defCoords.battleLine - 150
         : defCoords.battleLine + 150;
-      const startAngle = 0; // mirror ? -Math.PI / 2 : Math.PI / 2
+      const startAngle = (Math.PI / 2) * (mirror ? -1 : 1);
       xPositions.forEach((pos, j) => {
         const ship = new Ship(
           this,
