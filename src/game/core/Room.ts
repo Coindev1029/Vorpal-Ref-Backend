@@ -394,10 +394,10 @@ export class GameRoom {
               ship.StartAttacking(target);
               // ship.MoveAngle(target);
             } else {
-              ship.MoveToPoint(target.center, true);
+              ship.MoveToPoint(target.center, false);
             }
           } else {
-            ship.MoveToPoint(ship.targetPosition, true);
+            ship.MoveToPoint(ship.targetPosition, false);
           }
         }
       }
