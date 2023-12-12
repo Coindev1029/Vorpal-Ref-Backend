@@ -126,7 +126,7 @@ export class GameRoom {
       };
       this.server.UpdatePlayerState(player.id, state);
       const playerPosition =
-        player.publicKey === this.players[0].publicKey ? 'top' : 'bottom';
+        player.publicKey === this.players[0].publicKey ? 'bottom' : 'top';
       player.ws.send(
         JSON.stringify({
           action: PackTitle.gamestart,
