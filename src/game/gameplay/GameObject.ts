@@ -88,17 +88,26 @@ export default abstract class GameObject {
     }
 
     if (Math.abs(target) > Math.PI) {
-      target = target % Math.PI;
+      // target = target % Math.PI;
+      this.room.SendLog("rotation error", "target exceeds atan2 value", target);
     }
 
     if (Math.abs(Math.abs(target) - Math.abs(this.angle)) <= this.angleSpeed) {
       this.angle = target;
     }
 
+    switch (true) {
+      case this.angle >= 0 && target > 0:
+        this.room.SendLog("case1");
+        break;
+      case this.angle < 0 && target < 0:
+        this.room.SendLog("case2");
+        break;
+    }
+
     const direction = this.manager.angleDirection(target, this.angle);
-    this.room.SendLog('Before rotation, dir', direction);
-    this.angle = target; // += this.angleSpeed * direction;
-    this.room.SendLog('Rotated', target - this.angle);
+    // this.angle += this.angleSpeed * direction;
+    // this.room.SendLog('Rotated', target - this.angle);
     if (callback) callback();
     return true;
   }
