@@ -6,7 +6,7 @@ import * as config from '../config';
 import Star from '../gameplay/Star';
 import ObjectListManager from './ListManager';
 import Planet from '../gameplay/Planet';
-import { objectDisplayInfo, objectMapInfo } from '../types/gameplay';
+import { coords, objectDisplayInfo, objectMapInfo } from '../types/gameplay';
 import { PackTitle, Classes, ObjectInfo, ObjectCreationData, ObjectUpdateData } from '../types/Messages';
 import { defCoords, gameField, shipCreationStartTime } from '../config';
 import { Ship } from '../gameplay/Ship';
@@ -379,10 +379,11 @@ export class GameRoom {
         ship.center,
         ship.targetPosition,
       );
+      let targetId: string = "";
       if (!ship.isAttacking) {
         if (rangeToStar <= config.shipSpeed) {
           ship.center = ship.targetPosition;
-          ship.AttackStar();
+          targetId = ship.AttackStar();
           // ship.angle = this.manager.calcAngle(ship.center, ship.TargetStar.center);
           // this.SendLog('Ship angle diff, space target', ship.TargetStar.center - ship.angle);
         } else {
@@ -398,6 +399,7 @@ export class GameRoom {
               ship.MoveToPoint(target.center, false);
               // ship.angle = angle;
             }
+            targetId = target.getId();
           } else {
             ship.MoveToPoint(ship.targetPosition, false);
             // ship.angle = this.manager.calcAngle(ship.center, ship.targetPosition);
@@ -418,6 +420,9 @@ export class GameRoom {
           id: ship.id,
           position: ship.center,
           rotation: ship.angle,
+          data: {
+            target: targetId
+          }
         }
       );
     });

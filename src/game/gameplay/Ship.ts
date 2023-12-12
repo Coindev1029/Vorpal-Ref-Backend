@@ -95,7 +95,7 @@ export class Ship extends GameObject {
         this.TakeDamage(1);
       }, FrameInterval);
     }
-    return () => { };
+    return this.TargetStar.getId();
   }
 
   protected onCreate() {
