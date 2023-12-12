@@ -314,6 +314,7 @@ export class GameRoom {
       setTimeout(() => {
         try {
           sh.Activate(posIndex);
+          this.SendLog("Ship start angle", sh.angle);
         } catch (e) {
           this.SendLog('error', e.message);
         }
