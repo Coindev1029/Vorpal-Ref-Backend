@@ -403,6 +403,14 @@ export class GameRoom {
             ship.angle = this.manager.calcAngle(ship.center, ship.targetPosition);
           }
         }
+      } else {
+        const target = ship.FindTarget();
+        if (target) {
+          const angle = this.manager.calcAngle(ship.center, target.center);
+          ship.angle = angle;
+        } else {
+          ship.angle = this.manager.calcAngle(ship.center, ship.targetPosition);
+        }
       }
       // this.SendLog('Ship rotation', ship.angle);
       list.push(
