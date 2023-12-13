@@ -79,7 +79,7 @@ export class Ship extends GameObject {
   public AttackStar(_id = this.id, coords = this.center) {
 
     const trg = this.TargetStar;
-    this.angle = this.manager.calcAngle(this.center, trg.center);
+    this.angle = this.manager.calcDisplayAngle(this.center, trg.center);
     if (trg) {
 
       this.isAttacking = true;
