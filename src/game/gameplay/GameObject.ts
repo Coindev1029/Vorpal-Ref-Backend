@@ -132,7 +132,7 @@ export default abstract class GameObject {
     const dY = point.y - this.center.y;
     const angle = Math.atan2(dY, dX); */
     const angle = this.manager.calcAngle(this.center, point);
-    this.angle = angle;
+    this.angle = this.manager.calcDisplayAngle(this.center, point);
     const newPoint: coords = {
       x: this.center.x + this.speed * Math.cos(angle),
       y: this.center.y + this.speed * Math.sin(angle),

@@ -408,10 +408,10 @@ export class GameRoom {
       } else {
         const target = ship.FindTarget();
         if (target) {
-          const angle = this.manager.calcAngle(ship.center, target.center);
+          const angle = this.manager.calcDisplayAngle(ship.center, target.center);
           ship.angle = angle;
         } else {
-          ship.angle = this.manager.calcAngle(ship.center, ship.targetPosition);
+          ship.angle = this.manager.calcDisplayAngle(ship.center, ship.targetPosition);
         }
       }
       this.SendLog('Ship rotation', ship.angle);
