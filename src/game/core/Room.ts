@@ -283,7 +283,7 @@ export class GameRoom {
       const yPosition = mirror
         ? defCoords.battleLine + 150
         : defCoords.battleLine - 150;
-      const startAngle = (Math.PI / 2) * (mirror ? 1 : -1);
+      const startAngle = (Math.PI / 2) * (mirror ? -1 : 1);
       xPositions.forEach((pos, j) => {
         const ship = new Ship(
           this,
@@ -414,7 +414,7 @@ export class GameRoom {
           ship.angle = this.manager.calcAngle(ship.center, ship.targetPosition);
         }
       }
-      // this.SendLog('Ship rotation', ship.angle);
+      this.SendLog('Ship rotation', ship.angle);
       list.push(
         {
           id: ship.id,
