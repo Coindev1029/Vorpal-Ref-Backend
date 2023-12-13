@@ -123,7 +123,7 @@ export class GameIoServer {
       if (availablePlayers.length > 1) {
         const indexPair = this.SelectIndexes(availablePlayers.length - 1);
         if (indexPair.length > 1) {
-          WriteLog('0x0169', 'Room generation started : ' + String(indexPair));
+          // WriteLog('0x0169', 'Room generation started : ' + String(indexPair));
 
           const playerOne: PlayerRow = availablePlayers[indexPair[0]];
           const playerTwo: PlayerRow = availablePlayers[indexPair[1]];

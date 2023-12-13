@@ -52,18 +52,18 @@ export const defCoords = {
   },
   star1: {
     x: 400,
-    y: 250,
+    y: 750,
   },
   star2: {
     x: 400,
-    y: 750,
+    y: 250,
   },
   planet1: {
     x: 400,
-    y: 50,
+    y: 950,
   },
   planet2: {
     x: 400,
-    y: 950,
+    y: 50,
   },
 };
