@@ -243,7 +243,7 @@ app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
 });
 
-InitGameIoServer()
+// InitGameIoServer()
 
 /* 
 const credentials = {
