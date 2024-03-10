@@ -1,3 +1,4 @@
+import { StartWatchingTimer, actualStarList } from "blockchain/Stars/watcher";
 import { InitGameIoServer } from "./game";
 const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
@@ -87,6 +88,10 @@ app.get('/api/public/:project', async (req, res) => {
 
   res.status(200).send(resp)
 
+})
+
+app.get('/api/getstarlis', (req, res) => {
+   res.status(200).send(actualStarList);
 })
 
 app.post('/api/admin/requestdata', async (req, res) => {
@@ -244,6 +249,7 @@ app.listen(port, () => {
 });
 
 // InitGameIoServer()
+StartWatchingTimer();
 
 /* 
 const credentials = {

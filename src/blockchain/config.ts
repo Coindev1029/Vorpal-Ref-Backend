@@ -18,6 +18,16 @@ export const chainData = {
     }
 }
 
+export const opBSCData = {
+	networkId: 5611,
+	networkHexID: '0x15eb',
+	chainName: 'Binance Tsetnet opBNB',
+	ethSymbol: 'TBNB',
+	rpcUrl: "https://opbnb-testnet-rpc.bnbchain.org"
+}
+
+export const contractWatchingTimeout = 60000;
+
 
 export const Erc20ABI = [
 	{
