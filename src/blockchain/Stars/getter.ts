@@ -1,7 +1,7 @@
-import { opBSCData } from "blockchain/config";
 import Web3 from "web3";
+import { opBSCData } from "../../blockchain/config";
 import { StarNFTABI } from "./ABI";
-import { Race, StarData, StarList, StarParams } from "types";
+import { Race, StarData, StarList, StarParams } from "../../types";
 
 
 const contracts = {
