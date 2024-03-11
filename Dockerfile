@@ -12,6 +12,8 @@ RUN npm run build && ls
 
 FROM node:20.11.1-alpine3.19 as server
 
+WORKDIR /app
+
 COPY --from=builder /app/dist /app
 
 CMD node index.js
