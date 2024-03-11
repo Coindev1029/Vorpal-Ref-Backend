@@ -1,3 +1,4 @@
+import { StartWatchingTimer, actualStarList } from "blockchain/Stars/watcher";
 import { InitGameIoServer } from "./game";
 const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
@@ -18,11 +19,11 @@ const port = process.argv[2] ? process.argv[2] : process.env.DEFAULT_PORT
 // var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
 // var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
 
-const chainMonitoring = setInterval(() => {
+/* const chainMonitoring = setInterval(() => {
   WatchBlocks().then(
       UpdateVestings()
   )
-}, 86400000) 
+}, 86400000) */
 
 app.use(express.json());
 
@@ -87,6 +88,10 @@ app.get('/api/public/:project', async (req, res) => {
 
   res.status(200).send(resp)
 
+})
+
+app.get('/api/getstarlist', (req, res) => {
+   res.status(200).send("Star list will be here"); // actualStarList
 })
 
 app.post('/api/admin/requestdata', async (req, res) => {
@@ -244,6 +249,7 @@ app.listen(port, () => {
 });
 
 // InitGameIoServer()
+StartWatchingTimer();
 
 /* 
 const credentials = {
