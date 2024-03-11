@@ -1,4 +1,4 @@
-const config = {
+export const config = {
    networkId: 97,
    connectOptions: {
     keepAlive: true,
@@ -18,13 +18,13 @@ const config = {
   startBlock: 1500000
 }
 
-const nessesary_keys = {
+export const nessesary_keys = {
 	publickey: 'referral_public_key',
 	privatekey: 'referral_private_key',
 	lastblock: 'last_passed_block'
 }
 
-Erc20ABI = [
+export const Erc20ABI = [
 	{
 		"anonymous": false,
 		"inputs": [
@@ -221,10 +221,3 @@ Erc20ABI = [
 		"type": "function"
 	}
 ]
-
-module.exports = {
-    config,
-    Erc20ABI,
-	nessesary_keys
-}
-

@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "baseUrl": "src",
+        "outDir": "./dist",
+        "target": "es5",
+        "module": "commonjs",
+        "types": ["node"],
+        "lib": ["es6"],
+        "jsx": "react",
+        "moduleResolution": "node",
+        "allowJs": false,
+        "preserveConstEnums": true,
+        "removeComments": true,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "strictNullChecks": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": false,
+        "resolveJsonModule": true,
+        "isolatedModules": false,
+        "noFallthroughCasesInSwitch": true,
+        "downlevelIteration": true,
+    },
+    "include": ["src"],
+    "exclude": ["node_modules", "build"]
+}

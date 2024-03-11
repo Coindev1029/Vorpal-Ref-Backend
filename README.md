@@ -1,3 +1,4 @@
+
 Referral cabinet. Using for get the referral link, watching and withdrawing revenue
 
 
@@ -27,3 +28,71 @@ Deploy:
 
    npm start
 
+   Default port is 3055, you can specify another port in command: 
+   
+   npm start 3034
+
+Supposed the cross-origin headers made on server and now not applied in this source code.
+
+Requests: 
+
+API_URL = https://staging-api.vorpal.finance/
+
+Get:
+
+1. Links: 
+
+ {API_URL}api/getlinksbyowner/{id}, id - ERC20 address
+
+ Responce body :
+
+ [{
+   address : string, // '0x....'
+   link_key : string // link id,
+   value_primary : number,
+   value_secondary : number,
+ }]
+
+2. User data:
+
+ {API_URL}api/getownerdata/{id}, id - ERC20 address
+
+ Responce body :
+ {
+      links : array (usually one element),
+      refCount: number,
+      balanceScheduled: number,
+      balanceAvailable: number
+ }
+
+Post:
+
+3. Create link :
+
+ {API_URL}api, body: 
+ {
+   action: "CreateLink",
+   owner:  '0x123123123123123123123123123123', // ERC20 address
+   reward1 : 90,
+   reward2: 10  //  reward1,  reward2  - not nessesary but must be not larger than 100 summary if exists
+ }
+
+ Displaying only one link per address
+
+4. Register referral
+
+ {API_URL}api, body: 
+ {
+   action: "RegisterReferral",
+   client:  '0x123123123123123123123123123123', // ERC20 address, must not be a link's owner
+   link: 'fdlfk3lklk45kl4l3' // Referral link id
+ }
+
+5. Withdraw:
+ 
+ {API_URL}api/withdraw, body: 
+ {
+   address: '0x123123123123123123123123123123', // Link's owner
+   signature:  '0x123123123123123123123123123123123123123123', // Row of signed message by owner< wessage: withdraw_{timestamp}
+   /* timestamp - 1st second of current hour */
+ }

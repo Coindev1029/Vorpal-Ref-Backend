@@ -1,5 +1,6 @@
 require('dotenv').config();
-const { connection } = require('./connection')
+import { connection } from './connection'
+import { CreateGameTables } from './gameplay/tables';
 const { migrate } = require("postgres-migrations")
 const Web3 = require('web3')
 const config = require('../blockchain/config')
@@ -31,7 +32,7 @@ async function DBCreateTables () {
     const TableUsersQuery = 'CREATE TABLE IF NOT EXISTS users ('+
       'id SERIAL PRIMARY KEY,'+
       'login varchar(256) NOT NULL UNIQUE,'+
-      'rights varchar(256) NOT NULL UNIQUE,'+
+      'rights varchar(256) NOT NULL,'+
       'address varchar(512) NOT NULL UNIQUE );'
 
     const TableVestingsQuery = 'CREATE TABLE IF NOT EXISTS vestings ('+
@@ -47,7 +48,22 @@ async function DBCreateTables () {
     const TableCDQuery = 'CREATE TABLE IF NOT EXISTS common_data ('+
       'id SERIAL PRIMARY KEY,'+
       'key varchar(512) NOT NULL UNIQUE,'+
-      'value varchar(512) );'
+      'value TEXT );'
+
+    const TableNEKeysQuery = 'CREATE TABLE IF NOT EXISTS keys_not_editable ('+
+    'id SERIAL PRIMARY KEY,'+
+    'key varchar(512) NOT NULL UNIQUE);'
+
+    const TablePDQuery = 'CREATE TABLE IF NOT EXISTS public_keys ('+
+      'id SERIAL PRIMARY KEY,'+
+      'key varchar(512) NOT NULL UNIQUE,'+
+      'project varchar(512) NOT NULL );'
+
+    const TableLogsQuery = 'CREATE TABLE IF NOT EXISTS logs ('+
+      'id SERIAL PRIMARY KEY,'+
+      'date timestamp NOT NULL,'+
+      'address varchar(512) NOT NULL,'+
+      'message varchar(512) );'
   
     await connection.query(TableOneQuery)
     await connection.query(TableTwoQuery)
@@ -55,6 +71,11 @@ async function DBCreateTables () {
     await connection.query(TableUsersQuery)
     await connection.query(TableVestingsQuery)
     await connection.query(TableCDQuery)
+    await connection.query(TableNEKeysQuery)
+    await connection.query(TableLogsQuery)
+    await connection.query(TablePDQuery)
+
+    await CreateGameTables()
     
     const web3 = new Web3(config.rpc); 
     const endBlock = await web3.eth.getBlockNumber()
@@ -66,7 +87,7 @@ async function DBCreateTables () {
     return true
   }
 
-async function DBMigration () {
+export async function DBMigration () {
 
   try {
     await migrate({ connection }, process.env.DB_MIGRATION_DIR)

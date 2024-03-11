@@ -30,7 +30,7 @@ async function SetupBalances (owner) {
 }
 
 //New link generation, returns new link
-async function AddNewLink ( owner, reward1, reward2 ) {
+async function AddNewLink ( owner, reward1 = 90, reward2 = 10 ) {
    if (IsWrongString(owner)) return null
    if (typeof(reward1) !== 'number' || typeof(reward2) !== 'number'  || ( reward2 + reward1 > 100)) return null
 
@@ -121,7 +121,7 @@ async function GetLinksByOwner (owner) {
    return links.rows
 }
 
-async function GetRefCount ( link ) {
+async function GetRefCount ( link: any ) {
    
    const countQuery = `SELECT COUNT(*) from address_to_referral WHERE link_key = '${link}';`;
 
@@ -130,9 +130,11 @@ async function GetRefCount ( link ) {
    return countRequest.rows
 }
 
-module.exports = {
-  AddNewLink,
-  RegisterReferral,
-  GetLinksByOwner,
-  GetRefCount
+export {
+     IsWrongString,
+     SetupBalances,
+     AddNewLink,
+     RegisterReferral,
+     GetLinksByOwner,
+     GetRefCount
 }

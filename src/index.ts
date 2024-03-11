@@ -1,10 +1,14 @@
+import { InitGameIoServer } from "./game";
 const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
 const { GetBalances, UpdateVestings } = require('./database/balances')
+const { RequestAdminData, SaveNewData, RequestUserData } = require('./admin')
 const { WithdrawRevenue } = require('./database/withdraw')
 const express = require('express');
 const bodyParser = require('body-parser');
 const { WatchBlocks } = require('./blockchain/WatchBlocks');
+const { UpdateUserDataAction } = require('./admin/user');
+const { RequestPublicData } = require('./database/open');
 const app = express();
 
 dEnv.config();
@@ -75,6 +79,66 @@ app.get('/api/getownerdata/:id', async (req, res) => {
    }));
 })
 
+app.get('/api/public/:project', async (req, res) => {
+
+  const resp = JSON.stringify({
+    content: await RequestPublicData(req.params.project)
+  })
+
+  res.status(200).send(resp)
+
+})
+
+app.post('/api/admin/requestdata', async (req, res) => {
+
+   /*
+   res.setHeader("Access-Control-Allow-Origin", "*" );
+   res.setHeader('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE");
+   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+   res.setHeader('Access-Control-Allow-Credentials', 'true');
+   */
+   console.log ("Requested")
+   console.log (req.body)
+   const authResult = await RequestAdminData(req.body)
+   console.log (authResult)
+   res.status(200).send(JSON.stringify({
+      data : authResult
+   }))
+})
+
+app.post('/api/admin/savedata', async (req, res) => {
+  console.log ("Saving...")
+  console.log (req.body)
+  const saveResult = await SaveNewData (req.body)
+  console.log (saveResult)
+  res.status(200).send(JSON.stringify({
+    data : saveResult
+ }))
+})
+
+app.post('/api/admin/getusers', async (req, res) => {
+
+  const Users = await RequestUserData ( req.body )
+
+  res.status(200).send(JSON.stringify({
+    data : Users
+ }))
+})
+
+app.post('/api/admin/updateusers', async (req, res) => {
+  /*
+  res.setHeader("Access-Control-Allow-Origin", "*" );
+  res.setHeader('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE");
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  */
+
+  const updateReport = await UpdateUserDataAction (req.body)
+
+  res.status(200).send(JSON.stringify({
+    data : updateReport
+ }))
+})
 
 app.post('/api/withdraw', async (req, res) => {
   /*
@@ -88,8 +152,7 @@ app.post('/api/withdraw', async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
 
     const postData = req.body;
-    console.log("Withdraw data : ")
-    console.log(postData)
+
     if (!postData || !postData.address || !postData.signature) {
       res.status(400).send(JSON.stringify({
         success: false,
@@ -99,8 +162,7 @@ app.post('/api/withdraw', async (req, res) => {
     }
     console.log("Wait for processing")
     const withdrawmsg = await WithdrawRevenue(postData.address, postData.signature)
-    console.log("Withdraw result : ")
-    console.log(withdrawmsg)
+
     res.status(withdrawmsg.success ? 200 : 400).send(JSON.stringify(withdrawmsg));
 })
 
@@ -109,9 +171,6 @@ app.post('/api/withdraw', async (req, res) => {
 app.post('/api', async (req, res) => {
 
   const postData = req.body;
-
-  console.log("req body: ")
-  console.log(postData)
 
   /* res.setHeader("Access-Control-Allow-Origin", "*" );
   res.setHeader('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE");
@@ -166,8 +225,10 @@ app.post('/api', async (req, res) => {
       }
       res.status(200).send(JSON.stringify({
         creation: "getLinks",
-        result: await GetLinksByOwner ( postData.owner )
+        result: await GetLinksByOwner ( postData.owner ),
+        warn: "Deprecated. Please request from /api/getlinksbyowner/0x1e... as a get param"
       }));
+    break;
      default:
         res.status(200).send(JSON.stringify({
           condition: 'Default'
@@ -176,17 +237,13 @@ app.post('/api', async (req, res) => {
      break;
   }
 
-
-
-  /* res.status(200).send(JSON.stringify({
-    condition: 'Default'
-  }));
-  res.end() */
 })
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
 });
+
+// InitGameIoServer()
 
 /* 
 const credentials = {
@@ -204,7 +261,7 @@ httpsServer.listen(process.argv[3] ? process.argv[3] : process.env.DEFAULT_PORT_
 
 {
   action: "CreateLink",
-  owner:  '0x047d3295Bb5b14fF3F85Ecb29f08A1B47278Ff78',
+  owner:  '',
   reward1: 90,
   reward2: 10
 }
@@ -213,13 +270,13 @@ var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
 
 {
   action: "RegisterReferral",
-  client: '0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F',
-  link: 'ac21766476906b650f7502530a796f19'
+  client: '',
+  link: ''
 }
 
 {
   action: "GetLinksByOwner",
-  owner:  '0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F'
+  owner:  ''
 }
 
 Actions: "CreateLink", "RegisterReferral", "GetLinksByOwner"
