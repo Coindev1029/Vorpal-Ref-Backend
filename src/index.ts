@@ -1,4 +1,4 @@
-import { StartWatchingTimer, actualStarList } from "blockchain/Stars/watcher";
+import { StartWatchingTimer, actualStarList } from "./blockchain/Stars/watcher";
 import { InitGameIoServer } from "./game";
 const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
