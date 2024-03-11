@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  backend:
+    image: vorpal_api:latest
+    container_name: vorpal_api
+    ports:
+      - 3055:3055
+      - 3089:3089
+    networks:
+      - redis-network
+    links:
+      - redis
+    env_file:
+      - .env
+    restart: on-failure  
+  redis:
+    image: redis:7
+    container_name: vorpal_redis
+    networks:
+      - redis-network
+    ports:
+      - 6379:6379
+
+networks:
+  redis-network:
