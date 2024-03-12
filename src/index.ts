@@ -1,4 +1,5 @@
-import { StartWatchingTimer, actualStarList } from "./blockchain/Stars/watcher";
+import { timeUpdateRequestLimit } from "blockchain/config";
+import { StartWatchingTimer, UpdateLastTime, UpdateStars, actualStarList, lastUpdateRequqstTime } from "./blockchain/Stars/watcher";
 import { InitGameIoServer } from "./game";
 const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
@@ -94,6 +95,18 @@ app.get('/api/getstarlist', (req, res) => {
    res.status(200).send(actualStarList); // actualStarList
 })
 
+app.post('/api/updatestars', (req, res) => {
+  const date = new Date().getTime();
+  const timePast = date - lastUpdateRequqstTime;
+  if (timePast > timeUpdateRequestLimit) {
+    UpdateLastTime(date);
+    UpdateStars();
+    res.status(200).send({success: true, message: 'Star update requested'});
+  } else {
+    res.status(200).send({success: false, message: 'Too small request interval'}); // actualStarList
+  }
+})
+
 app.post('/api/admin/requestdata', async (req, res) => {
 
    /*
@@ -131,12 +144,7 @@ app.post('/api/admin/getusers', async (req, res) => {
 })
 
 app.post('/api/admin/updateusers', async (req, res) => {
-  /*
-  res.setHeader("Access-Control-Allow-Origin", "*" );
-  res.setHeader('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE");
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  */
+
 
   const updateReport = await UpdateUserDataAction (req.body)
 
@@ -146,12 +154,6 @@ app.post('/api/admin/updateusers', async (req, res) => {
 })
 
 app.post('/api/withdraw', async (req, res) => {
-  /*
-  res.setHeader("Access-Control-Allow-Origin", "*" );
-  res.setHeader('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE");
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  */
 
   res.setHeader('Access-Control-Request-Headers', 'Content-Type, Accept');
   res.setHeader('Content-Type', 'application/json');
@@ -176,13 +178,6 @@ app.post('/api/withdraw', async (req, res) => {
 app.post('/api', async (req, res) => {
 
   const postData = req.body;
-
-  /* res.setHeader("Access-Control-Allow-Origin", "*" );
-  res.setHeader('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE");
-  res.setHeader('Access-Control-Request-Headers', 'Content-Type, Accept');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Content-Type', 'application/json'); */
 
 
   if (!postData || !postData.action) {
@@ -250,68 +245,4 @@ app.listen(port, () => {
 
 // InitGameIoServer()
 StartWatchingTimer();
-
-/* 
-const credentials = {
-  key: process.env.HTTPS_PRIVATE_KEY, 
-  cert: process.env.HTTPS_CERT};
-
-var httpServer = http.createServer(app);
-var httpsServer = https.createServer(credentials, app);
-
-httpServer.listen(process.argv[2] ? process.argv[2] : process.env.DEFAULT_PORT);
-httpsServer.listen(process.argv[3] ? process.argv[3] : process.env.DEFAULT_PORT_HTTPS);
-
-*/
-/*
-
-{
-  action: "CreateLink",
-  owner:  '',
-  reward1: 90,
-  reward2: 10
-}
-var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
-var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
-
-{
-  action: "RegisterReferral",
-  client: '',
-  link: ''
-}
-
-{
-  action: "GetLinksByOwner",
-  owner:  ''
-}
-
-Actions: "CreateLink", "RegisterReferral", "GetLinksByOwner"
-
-
-fetch("/api", {
-method: "post", 
-headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-body: JSON.stringify({
-         action: "GetLinksByOwner",
-         owner:  '0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F'
-      })
-}
-).then(res => res.json()).then((res) => console.log(res))
-
-fetch("/api", {
-method: "post", 
-header: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-      },
-body: JSON.stringify({
-         action: "GetLinksByOwner",
-         owner:  '0xAE8A7aC2358505a11f51c7a1C1522D7b95Afe66F'
-      })
-}
-).then(res => res.json()).then((res) => console.log(res))
-*/
-  
 

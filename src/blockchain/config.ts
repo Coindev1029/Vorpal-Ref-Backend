@@ -27,7 +27,7 @@ export const opBSCData = {
 }
 
 export const contractWatchingTimeout = 3600000;
-
+export const timeUpdateRequestLimit = 600000;
 
 export const Erc20ABI = [
 	{
