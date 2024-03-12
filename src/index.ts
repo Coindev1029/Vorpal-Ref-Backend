@@ -91,7 +91,7 @@ app.get('/api/public/:project', async (req, res) => {
 })
 
 app.get('/api/getstarlist', (req, res) => {
-   res.status(200).send("Star list will be here"); // actualStarList
+   res.status(200).send(actualStarList); // actualStarList
 })
 
 app.post('/api/admin/requestdata', async (req, res) => {

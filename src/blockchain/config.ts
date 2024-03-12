@@ -26,7 +26,7 @@ export const opBSCData = {
 	rpcUrl: "https://opbnb-testnet-rpc.bnbchain.org"
 }
 
-export const contractWatchingTimeout = 86400000;
+export const contractWatchingTimeout = 3600000;
 
 
 export const Erc20ABI = [
