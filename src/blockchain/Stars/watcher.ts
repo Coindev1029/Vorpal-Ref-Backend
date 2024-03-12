@@ -1,6 +1,6 @@
 import { contractWatchingTimeout } from "../../blockchain/config";
 import { StarData, StarList } from "../../types";
-import { GetAllStarData } from "./getter";
+import { GetAllStarData, GetSingleStarData } from "./getter";
 import { WriteLog } from "../../database/log";
 
 export let actualStarList: StarList = [];
@@ -16,6 +16,25 @@ export async function UpdateStars() {
         const stars = await GetAllStarData();
         if (stars) {
           actualStarList = stars;
+        }
+     } catch (e) {
+      WriteLog("Failed to load stars", e.message);
+     }
+}
+
+export async function UpdateSingleStar (starId: number) {
+    try {
+        const newdata = await GetSingleStarData(starId);
+        if (newdata) {
+          const newstarList: StarList = [];
+          for (let j = 0; j < actualStarList.length; j++) {
+            if (j !== starId) {
+                newstarList.push(actualStarList[j])
+            } else {
+                newstarList.push(newdata)
+            }
+          }
+          actualStarList = [...newstarList];
         }
      } catch (e) {
       WriteLog("Failed to load stars", e.message);
