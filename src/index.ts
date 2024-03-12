@@ -95,12 +95,12 @@ app.get('/api/getstarlist', (req, res) => {
    res.status(200).send(actualStarList); // actualStarList
 })
 
-app.post('/api/updatestars', (req, res) => {
+app.post('/api/updatestars', async (req, res) => {
   const date = new Date().getTime();
   const timePast = date - lastUpdateRequqstTime;
   if (timePast > timeUpdateRequestLimit) {
     UpdateLastTime(date);
-    UpdateStars();
+    await UpdateStars();
     res.status(200).send({success: true, message: 'Star update requested'});
   } else {
     res.status(200).send({success: false, message: 'Too small request interval'}); // actualStarList
