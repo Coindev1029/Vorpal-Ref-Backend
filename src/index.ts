@@ -1,4 +1,4 @@
-import { timeUpdateRequestLimit } from "blockchain/config";
+import { timeUpdateRequestLimit } from "./blockchain/config";
 import { StartWatchingTimer, UpdateLastTime, UpdateStars, actualStarList, lastUpdateRequqstTime } from "./blockchain/Stars/watcher";
 import { InitGameIoServer } from "./game";
 const dEnv = require('dotenv');
