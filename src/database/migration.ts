@@ -98,11 +98,13 @@ async function DBCreateTables() {
  );
   `;
 
-  const TableWalletLogin = `
-  CREATE TABLE IF NOT EXISTS "wallet_to_login" (
+  const BoxLog = `
+  CREATE TABLE IF NOT EXISTS "box_log" (
     id serial PRIMARY KEY,
-    ownerAddress varchar(512),
-    ownerLogin  varchar(128)
+    boxId integer,
+    opening timestamp,
+    openResult varchar(128),
+    openAmount integer
   );
   `;
 
@@ -116,6 +118,7 @@ async function DBCreateTables() {
   await connection.query(TableLogsQuery);
   await connection.query(TablePDQuery);
   await connection.query(TableBoxes);
+  await connection.query(TableResource);
   await connection.query(TableResource);
   await connection.query(TablePDQuery);
 

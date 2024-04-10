@@ -52,3 +52,13 @@ export type StarData = {
 };
 
 export type StarList = StarData[];
+export type boxOpenResults =
+  | 'laser1'
+  | 'laser2'
+  | 'laser3'
+  | 'spore'
+  | 'spice'
+  | 'metal'
+  | 'biomass'
+  | 'carbon'
+  | 'token';
