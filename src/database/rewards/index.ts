@@ -8,10 +8,26 @@ export async function CreateBox(
   ownerLogin: string = '',
 ) {
   if (!ownerAddress && !ownerLogin) return false;
+  const holderData = await GetHolderData(ownerAddress);
+  if (!holderData) {
+    await CreateNewHolder(ownerAddress, ownerLogin);
+  }
   const query = `
     INSERT INTO boxes (ownerAddress, ownerLogin, level, isOpen) 
     VALUES ('${ownerAddress}', '${ownerLogin}', ${level}, false);`;
   await connection.query(query);
+  return true;
+}
+
+export async function GiveResources(ownerAddress: string = '',
+ownerLogin: string = '', resource: string, amount: number) {
+  const holderData = await GetHolderData(ownerAddress);
+  if (!holderData) {
+    await CreateNewHolder(ownerAddress, ownerLogin);
+  }
+  const balanceQuery = `UPDATE resources SET ${resource} = ${resource} + ${amount} 
+  WHERE ownerAddress = '${ownerAddress}'`;
+  await connection.query(balanceQuery);
   return true;
 }
 
