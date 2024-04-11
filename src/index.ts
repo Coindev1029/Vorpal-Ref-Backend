@@ -26,6 +26,10 @@ const port = process.argv[2] ? process.argv[2] : process.env.DEFAULT_PORT
       UpdateVestings()
   )
 }, 86400000) */
+//Boxes:
+app.post('/api/boxes/create', CreateBox)
+
+// End boxes
 
 app.use(express.json());
 
@@ -155,8 +159,6 @@ app.post('/api/admin/savedata', async (req, res) => {
     data : saveResult
  }))
 })
-
-app.post('/api/boxes/create', CreateBox)
 
 app.post('/api/admin/getusers', async (req, res) => {
 

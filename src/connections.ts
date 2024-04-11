@@ -29,3 +29,20 @@ export const CreateBox = async (req, res) => {
     box: boxId
   })
 };
+
+export const GiveResources = async (req, res) => {
+    res.send({ok: 'ok'})
+}
+
+export const OpenBox = async (req, res) => {
+    res.send({ok: 'ok'})
+}
+
+export const GetUserBoxes = async (req, res) => {
+    res.send({ok: 'ok'})
+}
+
+export const GetUserResources = async (req, res) => {
+    res.send({ok: 'ok'})
+}
+
