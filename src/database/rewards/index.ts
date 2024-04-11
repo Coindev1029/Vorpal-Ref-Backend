@@ -2,7 +2,7 @@ require('dotenv').config();
 import { boxOpenResults } from 'types';
 import { connection } from './../connection';
 
-export async function CreateBox(
+export async function CreateNewBox(
   level: number,
   ownerAddress: string = '',
   ownerLogin: string = '',
@@ -16,7 +16,9 @@ export async function CreateBox(
     INSERT INTO boxes (ownerAddress, ownerLogin, level, isOpen) 
     VALUES ('${ownerAddress}', '${ownerLogin}', ${level}, false);`;
   await connection.query(query);
-  return true;
+  const idQuery = `SELECT max(id) FROM boxes;`;
+  const info = await connection.query(idQuery);
+  return info.rows[0];
 }
 
 export async function GiveResources(ownerAddress: string = '',

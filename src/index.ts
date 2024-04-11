@@ -155,6 +155,8 @@ app.post('/api/admin/savedata', async (req, res) => {
  }))
 })
 
+app.post('/api/boxes/create', CreateBox)
+
 app.post('/api/admin/getusers', async (req, res) => {
 
   const Users = await RequestUserData ( req.body )
