@@ -15,6 +15,50 @@ export async function CreateBox(
   return true;
 }
 
+export async function GetHolderData(address: string) {
+  const selectionQuery = `
+	  SELECT * FROM resources WHERE ownerAddress = '${address}' LIMIT 1;
+	`;
+  const result = await connection.query(selectionQuery);
+  if (result.rows.length === 0) {
+    return null;
+  }
+  return result.rows[0];
+}
+
+export async function GetBoxOwner(boxId: number) {
+  const selectionQuery = `
+	  SELECT ownerAddress, ownerLogin FROM boxes WHERE id= '${boxId}' LIMIT 1;
+	`;
+  const result = await connection.query(selectionQuery);
+  if (result.rows.length > 0) {
+    return result.rows[0];
+  } else {
+    return null;
+  }
+}
+
+export async function GetBoxData() {}
+
+export async function GetLoginByAddress(address: string) {}
+
+export async function GetUserAvailableBoxes(address: string) {}
+
+export async function CreateNewHolder(address: string, login?: string) {
+  const userLogin = login || address;
+  const isUserExists = await GetHolderData(address);
+  if (isUserExists) {
+    return false;
+  }
+  const creationQuery = `
+     INSERT INTO resources 
+	 (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon)
+      VALUES ('${address}', '${userLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    `;
+  await connection.query(creationQuery);
+  return true;
+}
+
 export async function OpenBox(boxId: number) {
   let openAmount = 0;
   const value = Math.round(Math.random() * 10000);
@@ -56,13 +100,13 @@ export async function OpenBox(boxId: number) {
     VALUES (${boxId}, to_timestamp(${Math.round(
     new Date().getTime() / 1000,
   )}, '${rewardType}', ${openAmount}));`;
-  const balanceQuery = `UPDATE resources SET ${rewardType} = ${rewardType} + ${openAmount}`;
+  const balanceQuery = `UPDATE resources SET ${rewardType} = ${rewardType} + ${openAmount} 
+  WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;
+  await connection.query(logQuery);
+  await connection.query(balanceQuery);
+  return true;
 }
 
-export async function GetUserBalanceRow (ownerAddress = "", ownerLogin = "") {
-    
-}
+export async function GetUserBalanceRow(ownerAddress = '', ownerLogin = '') {}
 
-export async function GetBoxesByOwner() {
-
-}
+export async function GetBoxesByOwner() {}
