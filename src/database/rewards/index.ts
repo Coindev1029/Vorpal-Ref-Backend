@@ -16,7 +16,7 @@ export async function CreateNewBox(
   const query = `
     INSERT INTO boxes (ownerAddress, ownerLogin, level, isOpen) 
     VALUES ('${ownerAddress}', '${ownerLogin}', ${level}, false);`;
-  WriteLog('Box creation query: ', query);
+ // WriteLog('Box creation query: ', query);
   await connection.query(query);
   const idQuery = `SELECT max(id) FROM boxes;`;
   const info = await connection.query(idQuery);
@@ -75,7 +75,7 @@ export async function CreateNewHolder(address: string, login?: string) {
 	 (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon)
       VALUES ('${address}', '${userLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0);
     `;
-  WriteLog('User creation query: ', creationQuery);
+  // WriteLog('User creation query: ', creationQuery);
   await connection.query(creationQuery);
   return true;
 }
