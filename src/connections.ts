@@ -22,7 +22,7 @@ GetValueByKey('ADMIN_WALLET').then((value) => {
   }
 */
 
-const CreateBox = async (req, res) => {
+export const CreateBox = async (req, res) => {
   const body = req.body;
   const boxId = await CreateNewBox(body.level, body.ownerAddress, body.ownerLogin);
   res.status(200).send({

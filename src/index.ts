@@ -1,6 +1,7 @@
 import { timeUpdateRequestLimit } from "./blockchain/config";
 import { StartWatchingTimer, UpdateLastTime, UpdateSingleStar, UpdateStars, actualStarList, lastUpdateRequqstTime } from "./blockchain/Stars/watcher";
 import { InitGameIoServer } from "./game";
+import { CreateBox } from "connections";
 const dEnv = require('dotenv');
 const { AddNewLink,  RegisterReferral, GetLinksByOwner, GetRefCount } = require('./database/links');
 const { GetBalances, UpdateVestings } = require('./database/balances')
