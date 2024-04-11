@@ -1,5 +1,5 @@
-const { CreateNewBox } = require('database/rewards');
-const { GetValueByKey } = require('database/balances');
+import { CreateNewBox } from './database/rewards';
+import { GetValueByKey } from './database/balances';
 const express = require('express');
 
 const AuthMsg = (): string => {
