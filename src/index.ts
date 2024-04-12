@@ -1,7 +1,7 @@
 import { timeUpdateRequestLimit } from "./blockchain/config";
 import { StartWatchingTimer, UpdateLastTime, UpdateSingleStar, UpdateStars, actualStarList, lastUpdateRequqstTime } from "./blockchain/Stars/watcher";
 import { InitGameIoServer } from "./game";
-import { AdminDataRequest, AdminSaveData, AdminUpdateUserData, CreateBox, GetAdminUserData, GetAllStars, GetLinksByOwnerResponse, GetOwnerDataResponse, GetProjectData, ReferralApiDefault, UpdateAllStars, UpdateOneStar, WithdrawRewardAction } from "./connections";
+import { AdminDataRequest, AdminSaveData, AdminUpdateUserData, CreateBox, GetAdminUserData, GetAllStars, GetLinksByOwnerResponse, GetOwnerDataResponse, GetProjectData, ReferralApiDefault, UpdateAllStars, UpdateOneStar, WithdrawRewardAction } from "./responces";
 const dEnv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
