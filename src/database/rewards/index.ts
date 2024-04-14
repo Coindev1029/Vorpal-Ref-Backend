@@ -115,9 +115,12 @@ export async function OpenBox(boxId: number) {
     VALUES (${boxId}, CURRENT_TIMESTAMP, '${rewardType}');`;
   const balanceQuery = `UPDATE resources SET ${rewardType} = ${rewardType} + ${openAmount} 
   WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;
-  await connection.query(logQuery);
-  await connection.query(balanceQuery);
-  return true;
+  const logs = await connection.query(logQuery);
+  const assets = await connection.query(balanceQuery);
+  return ({
+    logs: logs.rows,
+    newBalance: assets.rows
+  });
 }
 
 export async function GetUserBalanceRow(ownerAddress = '', ownerLogin = '') {}
