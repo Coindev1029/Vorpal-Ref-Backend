@@ -74,6 +74,12 @@ export const GetUserBoxes = async (req, res) => {
 }
 
 export const GetUserResources = async (req, res) => {
+  const body = req.body;
+  if (!body.boxId || !body.signature) {
+    res.status(400).send({
+      error: "Some of nessesary parameters is missing"
+   })
+  }
     res.send({ok: 'ok'})
 }
 
