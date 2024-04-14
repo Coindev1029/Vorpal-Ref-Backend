@@ -1,4 +1,4 @@
-import { CreateNewBox } from '../database/rewards';
+import { CreateNewBox, OpenBox } from '../database/rewards';
 import { GetValueByKey } from '../database/balances';
 import { error } from 'console';
 const express = require('express');
@@ -26,28 +26,46 @@ GetValueByKey('ADMIN_WALLET').then((value) => {
 
 export const CreateBox = async (req, res) => {
   const body = req.body;
+  if (!body.level ||!body.ownerAddress || !body.ownerLogin || !body.signature) {
+    res.status(400).send({
+      error: "Some of nessesary parameters is missing"
+   })
+  }
   try {
     // const isHolderCreated = await CreateNewHolder(body.ownerAddress)
     const boxId = await CreateNewBox(body.level, body.ownerAddress, body.ownerLogin);
     res.status(200).send({
-      box: boxId
+      box: boxId.max
    })
   } catch (e) {
     res.status(400).send({
       error: String(e.message)
    })
   }
-  /* const boxId = await CreateNewBox(body.level, body.ownerAddress, body.ownerLogin);
-  res.status(200).send({
-    box: boxId
-  }) */
 };
 
-export const GiveResources = async (req, res) => {
-    res.send({ok: 'ok'})
+export const OpenBoxRequest = async (req, res) => {
+  const body = req.body;
+    if (!body.boxId || !body.signature) {
+      res.status(400).send({
+        error: "Some of nessesary parameters is missing"
+     })
+    }
+  try {
+    const openingResult = await OpenBox(body.boxId);
+    res.status(200).send({
+      rewards: openingResult
+   })
+  } catch (e) {
+    res.status(400).send({
+      error: String(e.message)
+   })
+  }
+  res.send({ok: 'ok'})
 }
 
-export const OpenBox = async (req, res) => {
+
+export const GiveResources = async (req, res) => {
     res.send({ok: 'ok'})
 }
 

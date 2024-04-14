@@ -1,6 +1,6 @@
 import { StartWatchingTimer } from "./blockchain/Stars/watcher";
 import { InitGameIoServer } from "./game";
-import { AdminDataRequest, AdminSaveData, AdminUpdateUserData, CreateBox, GetAdminUserData, GetAllStars, GetLinksByOwnerResponse, GetOwnerDataResponse, GetProjectData, ReferralApiDefault, UpdateAllStars, UpdateOneStar, WithdrawRewardAction } from "./responces";
+import { AdminDataRequest, AdminSaveData, AdminUpdateUserData, CreateBox, GetAdminUserData, GetAllStars, GetLinksByOwnerResponse, GetOwnerDataResponse, GetProjectData, OpenBoxRequest, ReferralApiDefault, UpdateAllStars, UpdateOneStar, WithdrawRewardAction } from "./responces";
 const dEnv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -31,6 +31,8 @@ app.get('/', (req, res) => {
 
 // Boxes
 app.post('/api/boxes/create', CreateBox)
+
+app.post('/api/boxes/open', OpenBoxRequest)
 
 // Referral
 app.post('/api', ReferralApiDefault)
