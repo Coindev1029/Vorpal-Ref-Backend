@@ -24,10 +24,13 @@ GetValueByKey('ADMIN_WALLET').then((value) => {
 
 export const CreateBox = async (req, res) => {
   const body = req.body;
-  const boxId = await CreateNewBox(body.level, body.ownerAddress, body.ownerLogin);
+  res.status(200).send({
+    box: 'creation link'
+  })
+  /* const boxId = await CreateNewBox(body.level, body.ownerAddress, body.ownerLogin);
   res.status(200).send({
     box: boxId
-  })
+  }) */
 };
 
 export const GiveResources = async (req, res) => {
