@@ -1,6 +1,7 @@
 import { CreateNewBox } from '../database/rewards';
 import { GetValueByKey } from '../database/balances';
 const express = require('express');
+// const bodyParser = require('body-parser');
 
 const AuthMsg = (): string => {
   const dt = new Date().getTime();
@@ -26,7 +27,7 @@ export const CreateBox = async (req, res) => {
   const body = req.body;
   // const CreateNewHolderQuery = `INSERT INTO resources (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon) VALUES ('${body.ownerAddress}', '${body.ownerLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
  res.status(200).send({
-     body: body
+     req
   })
   /* const boxId = await CreateNewBox(body.level, body.ownerAddress, body.ownerLogin);
   res.status(200).send({
