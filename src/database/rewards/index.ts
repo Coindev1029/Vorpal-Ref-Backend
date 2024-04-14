@@ -76,7 +76,7 @@ export async function CreateNewHolder(address: string, login?: string) {
       VALUES ('${address}', '${userLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0);
     `;
   // WriteLog('User creation query: ', creationQuery);
-  await connection.query(creationQuery);
+  const result = await connection.query(creationQuery);
   return true;
 }
 
