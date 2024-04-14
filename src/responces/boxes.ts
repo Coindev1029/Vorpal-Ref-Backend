@@ -26,10 +26,11 @@ GetValueByKey('ADMIN_WALLET').then((value) => {
 
 export const CreateBox = async (req, res) => {
   const body = req.body;
-  // const CreateNewHolderQuery = `INSERT INTO resources (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon) VALUES ('${body.ownerAddress}', '${body.ownerLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
   try {
+    // const isHolderCreated = await CreateNewHolder(body.ownerAddress)
+    const boxId = await CreateNewBox(body.level, body.ownerAddress, body.ownerLogin);
     res.status(200).send({
-      body: req.body
+      box: boxId
    })
   } catch (e) {
     res.status(400).send({

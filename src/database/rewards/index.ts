@@ -36,9 +36,7 @@ ownerLogin: string = '', resource: string, amount: number) {
 }
 
 export async function GetHolderData(address: string) {
-  const selectionQuery = `
-	  SELECT * FROM resources WHERE ownerAddress = '${address}' LIMIT 1;
-	`;
+  const selectionQuery = `SELECT * FROM resources WHERE ownerAddress = '${address}' LIMIT 1;`;
   const result = await connection.query(selectionQuery);
   if (result.rows.length === 0) {
     return null;
@@ -70,11 +68,7 @@ export async function CreateNewHolder(address: string, login?: string) {
   if (isUserExists) {
     return false;
   }
-  const creationQuery = `
-     INSERT INTO resources 
-	 (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon)
-      VALUES ('${address}', '${userLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    `;
+  const creationQuery = `INSERT INTO resources (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon) VALUES ('${address}', '${userLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
   // WriteLog('User creation query: ', creationQuery);
   const result = await connection.query(creationQuery);
   return true;
