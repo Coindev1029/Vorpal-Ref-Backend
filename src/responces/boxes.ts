@@ -29,7 +29,8 @@ export const CreateBox = async (req, res) => {
   // const CreateNewHolderQuery = `INSERT INTO resources (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon) VALUES ('${body.ownerAddress}', '${body.ownerLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
   try {
     res.status(200).send({
-      request: String(req)
+      requestItself: req,
+      body: req.body
    })
   } catch (e) {
     res.status(400).send({
