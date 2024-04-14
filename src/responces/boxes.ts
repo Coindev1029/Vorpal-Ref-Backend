@@ -2,7 +2,7 @@ import { CreateNewBox } from '../database/rewards';
 import { GetValueByKey } from '../database/balances';
 import { error } from 'console';
 const express = require('express');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
 const AuthMsg = (): string => {
   const dt = new Date().getTime();

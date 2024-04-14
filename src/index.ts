@@ -1,5 +1,4 @@
-import { timeUpdateRequestLimit } from "./blockchain/config";
-import { StartWatchingTimer, UpdateLastTime, UpdateSingleStar, UpdateStars, actualStarList, lastUpdateRequqstTime } from "./blockchain/Stars/watcher";
+import { StartWatchingTimer } from "./blockchain/Stars/watcher";
 import { InitGameIoServer } from "./game";
 import { AdminDataRequest, AdminSaveData, AdminUpdateUserData, CreateBox, GetAdminUserData, GetAllStars, GetLinksByOwnerResponse, GetOwnerDataResponse, GetProjectData, ReferralApiDefault, UpdateAllStars, UpdateOneStar, WithdrawRewardAction } from "./responces";
 const dEnv = require('dotenv');
@@ -10,9 +9,6 @@ const app = express();
 dEnv.config();
 
 const port = process.argv[2] ? process.argv[2] : process.env.DEFAULT_PORT
-
-//Boxes:
-app.post('/api/boxes/create', CreateBox)
 
 // End boxes
 
@@ -33,18 +29,28 @@ app.get('/', (req, res) => {
    res.setHeader('Access-Control-Allow-Credentials', 'true');
    */
 
+// Boxes
+app.post('/api/boxes/create', CreateBox)
+
+// Referral
+app.post('/api', ReferralApiDefault)
+
 app.get('/api/getlinksbyowner/:id', GetLinksByOwnerResponse)
 
 app.get('/api/getownerdata/:id', GetOwnerDataResponse)
 
 app.get('/api/public/:project', GetProjectData)
 
+app.post('/api/withdraw', WithdrawRewardAction)
+
+// Stars (server contract parser)
 app.get('/api/getstarlist', GetAllStars)
 
 app.post('/api/updatestars', UpdateAllStars)
 
 app.post('/api/updateonestar/:id', UpdateOneStar)
 
+// Admin panel
 app.post('/api/admin/requestdata', AdminDataRequest)
 
 app.post('/api/admin/savedata', AdminSaveData)
@@ -52,12 +58,6 @@ app.post('/api/admin/savedata', AdminSaveData)
 app.post('/api/admin/getusers', GetAdminUserData)
 
 app.post('/api/admin/updateusers', AdminUpdateUserData)
-
-app.post('/api/withdraw', WithdrawRewardAction)
-
-
-
-app.post('/api', ReferralApiDefault)
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
