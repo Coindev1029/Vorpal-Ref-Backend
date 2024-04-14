@@ -112,9 +112,9 @@ export async function OpenBox(boxId: number) {
     }
   })();
   const logQuery = `INSERT INTO box_log (boxId, opening, openResult)
-    VALUES (${boxId}, to_timestamp(${Math.round(
+    VALUES (${boxId}, ${Math.round(
     new Date().getTime() / 1000,
-  )}, 'YYYY-MM-DD HH24:MI:SS'), '${rewardType}', ${openAmount});`;
+  )}, '${rewardType}', ${openAmount});`;
   const balanceQuery = `UPDATE resources SET ${rewardType} = ${rewardType} + ${openAmount} 
   WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;
   await connection.query(logQuery);
