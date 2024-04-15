@@ -1,4 +1,4 @@
-import { CreateNewBox, OpenBox } from '../database/rewards';
+import { CreateNewBox, GetUserBalanceRow, OpenBox } from '../database/rewards';
 import { GetValueByKey } from '../database/balances';
 import { error } from 'console';
 const express = require('express');
@@ -54,14 +54,13 @@ export const OpenBoxRequest = async (req, res) => {
   try {
     const openingResult = await OpenBox(body.boxId);
     res.status(200).send({
-      rewards: openingResult
+      ok: openingResult
    })
   } catch (e) {
     res.status(400).send({
       error: String(e.message)
    })
   }
-  res.send({ok: 'ok'})
 }
 
 
@@ -75,9 +74,19 @@ export const GetUserBoxes = async (req, res) => {
 
 export const GetUserResources = async (req, res) => {
   const body = req.body;
-  if (!body.boxId || !body.signature) {
+  if (!body.userAddress && !body.userLogin) {
     res.status(400).send({
-      error: "Some of nessesary parameters is missing"
+      error: "Nessesary parameters is missing"
+   })
+  }
+  try {
+    const assets = await GetUserBalanceRow(body.userAddress || '0x00', body.userLogin || '');
+    res.status(200).send({
+      assets: assets
+   })
+  } catch (e) {
+    res.status(400).send({
+      error: String(e.message)
    })
   }
     res.send({ok: 'ok'})

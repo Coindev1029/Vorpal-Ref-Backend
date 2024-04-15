@@ -1,6 +1,6 @@
 import { StartWatchingTimer } from "./blockchain/Stars/watcher";
 import { InitGameIoServer } from "./game";
-import { AdminDataRequest, AdminSaveData, AdminUpdateUserData, CreateBox, GetAdminUserData, GetAllStars, GetLinksByOwnerResponse, GetOwnerDataResponse, GetProjectData, OpenBoxRequest, ReferralApiDefault, UpdateAllStars, UpdateOneStar, WithdrawRewardAction } from "./responces";
+import { AdminDataRequest, AdminSaveData, AdminUpdateUserData, CreateBox, GetAdminUserData, GetAllStars, GetLinksByOwnerResponse, GetOwnerDataResponse, GetProjectData, GetUserResources, OpenBoxRequest, ReferralApiDefault, UpdateAllStars, UpdateOneStar, WithdrawRewardAction } from "./responces";
 const dEnv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -34,14 +34,14 @@ app.post('/api/boxes/create', CreateBox)
 
 app.post('/api/boxes/open', OpenBoxRequest)
 
+app.post('/api/box/assets', GetUserResources)
+
 // Referral
 app.post('/api', ReferralApiDefault)
 
 app.get('/api/getlinksbyowner/:id', GetLinksByOwnerResponse)
 
 app.get('/api/getownerdata/:id', GetOwnerDataResponse)
-
-app.get('/api/public/:project', GetProjectData)
 
 app.post('/api/withdraw', WithdrawRewardAction)
 
@@ -53,6 +53,8 @@ app.post('/api/updatestars', UpdateAllStars)
 app.post('/api/updateonestar/:id', UpdateOneStar)
 
 // Admin panel
+app.get('/api/public/:project', GetProjectData)
+
 app.post('/api/admin/requestdata', AdminDataRequest)
 
 app.post('/api/admin/savedata', AdminSaveData)

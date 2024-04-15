@@ -118,11 +118,24 @@ export async function OpenBox(boxId: number) {
   const logs = await connection.query(logQuery);
   const assets = await connection.query(balanceQuery);
   return ({
-    logs: logs.rows,
-    newBalance: assets.rows
+    success: true
   });
 }
 
-export async function GetUserBalanceRow(ownerAddress = '', ownerLogin = '') {}
+export async function GetUserBalanceRow(ownerAddress = '', ownerLogin = '') {
+  if (!ownerAddress && !ownerLogin) {
+    return null;
+  }
+  const balanceQuery = `
+  SELECT laser1, laser2, laser3, token, spore, spice, metal, biomass, carbon 
+  FROM resources 
+  WHERE ownerAddress = '${ownerAddress}' OR ownerLogin = '${ownerLogin}' 
+  LIMIT 1;`;
+  const assets = await connection.query(balanceQuery);
+  if (assets.rows.length === 0) {
+    return null;
+  }
+  return assets.rows[0]
+}
 
 export async function GetBoxesByOwner() {}
