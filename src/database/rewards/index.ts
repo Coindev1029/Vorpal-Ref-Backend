@@ -30,7 +30,7 @@ ownerLogin: string = '', resource: string, amount: number) {
     await CreateNewHolder(ownerAddress, ownerLogin);
   }
   const balanceQuery = `UPDATE resources SET ${resource} = ${resource} + ${amount} 
-  WHERE ownerAddress = '${ownerAddress}'`;
+  WHERE ownerAddress = '${ownerAddress}';`;
   await connection.query(balanceQuery);
   return true;
 }
