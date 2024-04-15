@@ -1,6 +1,7 @@
+import { GiveResources } from "database/rewards";
 import { StartWatchingTimer } from "./blockchain/Stars/watcher";
 import { InitGameIoServer } from "./game";
-import { AdminDataRequest, AdminSaveData, AdminUpdateUserData, CreateBox, GetAdminUserData, GetAllStars, GetLinksByOwnerResponse, GetOwnerDataResponse, GetProjectData, GetUserResources, OpenBoxRequest, ReferralApiDefault, UpdateAllStars, UpdateOneStar, WithdrawRewardAction } from "./responces";
+import { AdminDataRequest, AdminSaveData, AdminUpdateUserData, CreateBox, GetAdminUserData, GetAllStars, GetLinksByOwnerResponse, GetOwnerDataResponse, GetProjectData, GetUserAvailableBoxes, GetUserResources, OpenBoxRequest, ReferralApiDefault, UpdateAllStars, UpdateOneStar, WithdrawRewardAction } from "./responces";
 const dEnv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -33,6 +34,10 @@ app.get('/', (req, res) => {
 app.post('/api/boxes/create', CreateBox)
 
 app.post('/api/boxes/open', OpenBoxRequest)
+
+app.post('/api/boxes/available', GetUserAvailableBoxes)
+
+app.post('/api/boxes/assets/give', GiveResources)
 
 app.post('/api/boxes/assets', GetUserResources)
 

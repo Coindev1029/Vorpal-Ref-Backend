@@ -1,4 +1,10 @@
-import { CreateNewBox, GetUserBalanceRow, OpenBox } from '../database/rewards';
+import {
+  CreateNewBox,
+  GetAvailableBoxesByOwner,
+  GetUserBalanceRow,
+  GiveResources,
+  OpenBox,
+} from '../database/rewards';
 import { GetValueByKey } from '../database/balances';
 import { error } from 'console';
 const express = require('express');
@@ -26,69 +32,115 @@ GetValueByKey('ADMIN_WALLET').then((value) => {
 
 export const CreateBox = async (req, res) => {
   const body = req.body;
-  if (!body.level ||!body.ownerAddress || !body.ownerLogin || !body.signature) {
+  if (
+    !body.level ||
+    !body.ownerAddress ||
+    !body.ownerLogin ||
+    !body.signature
+  ) {
     res.status(400).send({
-      error: "Some of nessesary parameters is missing"
-   })
+      error: 'Some of nessesary parameters is missing',
+    });
   }
   try {
     // const isHolderCreated = await CreateNewHolder(body.ownerAddress)
-    const boxId = await CreateNewBox(body.level, body.ownerAddress, body.ownerLogin);
+    const boxId = await CreateNewBox(
+      body.level,
+      body.ownerAddress,
+      body.ownerLogin,
+    );
     res.status(200).send({
-      box: boxId.max
-   })
+      box: boxId.max,
+    });
   } catch (e) {
     res.status(400).send({
-      error: String(e.message)
-   })
+      error: String(e.message),
+    });
   }
 };
 
 export const OpenBoxRequest = async (req, res) => {
   const body = req.body;
-    if (!body.boxId || !body.signature) {
-      res.status(400).send({
-        error: "Some of nessesary parameters is missing"
-     })
-    }
+  if (!body.boxId || !body.signature) {
+    res.status(400).send({
+      error: 'Some of nessesary parameters is missing',
+    });
+  }
   try {
     const openingResult = await OpenBox(body.boxId);
     res.status(200).send({
-      ok: openingResult
-   })
+      ok: openingResult,
+    });
   } catch (e) {
     res.status(400).send({
-      error: String(e.message)
-   })
+      error: String(e.message),
+    });
   }
-}
+};
 
+export const GiveResourcesResponce = async (req, res) => {
+  const body = req.body;
+  if (!body.signature) {
+    res.status(400).send({
+      error: 'Message must be sgned by admin',
+    });
+  }
+  if (!body.ownerAddress && !body.ownerLogin) {
+    res.status(400).send({
+      error: 'Nessesary user parameters is missing',
+    });
+  }
+  if (!body.resource || !body.amount) {
+    res.status(400).send({
+      error: 'Resource parameters is missing',
+    });
+  }
+  const result = await GiveResources(
+    body.ownerAddress || '',
+    body.ownerLogin || '',
+    body.resource,
+    body.amount,
+  );
 
-export const GiveResources = async (req, res) => {
-    res.send({ok: 'ok'})
-}
+  res.status(200).send(result);
+};
 
 export const GetUserBoxes = async (req, res) => {
-    res.send({ok: 'ok'})
-}
+  res.send({ ok: 'ok' });
+};
 
 export const GetUserResources = async (req, res) => {
   const body = req.body;
-  if (!body.userAddress && !body.userLogin) {
+  if (!body.ownerAddress && !body.ownerLogin) {
     res.status(400).send({
-      error: "Nessesary parameters is missing"
-   })
+      error: 'Nessesary parameters is missing',
+    });
   }
   try {
-    const assets = await GetUserBalanceRow(body.userAddress || '0x00', body.userLogin || '');
+    const assets = await GetUserBalanceRow(
+      body.ownerAddress || '0x00',
+      body.ownerLogin || '',
+    );
     res.status(200).send({
-      assets: assets
-   })
+      assets: assets,
+    });
   } catch (e) {
     res.status(400).send({
-      error: String(e.message)
-   })
+      error: String(e.message),
+    });
   }
-    res.send({ok: 'ok'})
-}
+  // res.send({ ok: 'ok' });
+};
 
+export const GetUserAvailableBoxes = async (req, res) => {
+  const body = req.body;
+  if (!body.ownerAddress && !body.ownerLogin) {
+    res.status(400).send({
+      error: 'Nessesary parameters is missing',
+    });
+  }
+  const result = await GetAvailableBoxesByOwner (body.ownerAddress || '',
+  body.ownerLogin || '')
+  res.status(200).send(result)
+
+}
