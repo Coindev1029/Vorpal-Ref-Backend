@@ -129,8 +129,7 @@ export async function GetUserBalanceRow(ownerAddress = '', ownerLogin = '') {
   const balanceQuery = `
   SELECT laser1, laser2, laser3, token, spore, spice, metal, biomass, carbon 
   FROM resources 
-  WHERE ownerAddress = '${ownerAddress}' OR ownerLogin = '${ownerLogin}' 
-  LIMIT 1;`;
+  WHERE ${ownerLogin ? "ownerLogin" : "ownerAddress"} = '${ownerAddress}' LIMIT 1;`;
   const assets = await connection.query(balanceQuery);
   if (assets.rows.length === 0) {
     return null;

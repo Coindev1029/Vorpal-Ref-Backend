@@ -34,7 +34,7 @@ app.post('/api/boxes/create', CreateBox)
 
 app.post('/api/boxes/open', OpenBoxRequest)
 
-app.post('/api/box/assets', GetUserResources)
+app.post('/api/boxes/assets', GetUserResources)
 
 // Referral
 app.post('/api', ReferralApiDefault)
