@@ -50,9 +50,15 @@ export async function GetBoxOwner(boxId: number) {
 	`;
   const result = await connection.query(selectionQuery);
   if (result.rows.length > 0) {
-    return result.rows[0];
+    return {
+      success: true,
+      data: result.rows[0]
+    }
   } else {
-    return null;
+    return {
+      success: false,
+      error: "Box not exist or not open"
+    };
   }
 }
 
