@@ -15,7 +15,7 @@ export async function CreateNewBox(
     await CreateNewHolder(ownerAddress, ownerLogin);
   }
   const query = `
-    INSERT INTO boxes (ownerAddress, ownerLogin, level, isOpen) 
+    INSERT INTO boxes (ownerAddress, ownerLogin, level, isopen) 
     VALUES ('${ownerAddress}', '${ownerLogin}', ${level}, false);`;
  // WriteLog('Box creation query: ', query);
   await connection.query(query);
@@ -50,7 +50,7 @@ export async function CreateNewHolder(address: string, login?: string) {
 
 export async function OpenBox(boxId: number) {
   let openAmount = 0;
-  const boxCheckQuery = `SELECT isOpen FROM boxes WHERE id = ${boxId};`;
+  const boxCheckQuery = `SELECT isopen FROM boxes WHERE id = ${boxId};`;
   const check = await connection.query(boxCheckQuery);
   if (check.rows.length === 0) {
     return ({
@@ -58,7 +58,7 @@ export async function OpenBox(boxId: number) {
       error: "Box id not exist"
     });
   }
-  if (check.rows[0].isOpen === true || check.rows[0].isOpen === "true" ) {
+  if (check.rows[0].isopen === true || check.rows[0].isopen === "true" ) {
     return ({
       success: false,
       error: "Box is already open"
@@ -103,7 +103,7 @@ export async function OpenBox(boxId: number) {
     VALUES (${boxId}, CURRENT_TIMESTAMP, '${rewardType}', ${openAmount});`;
   const balanceQuery = `UPDATE resources SET ${rewardType} = ${rewardType} + ${openAmount} 
   WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;
-  const boxCloseQuery = `UPDATE boxes SET isOpen = false WHERE id = ${boxId};`;
+  const boxCloseQuery = `UPDATE boxes SET isopen = true WHERE id = ${boxId};`;
   const logs = await connection.query(logQuery);
   const assets = await connection.query(balanceQuery);
   await connection.query(boxCloseQuery);
