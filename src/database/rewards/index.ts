@@ -56,11 +56,16 @@ export async function GetBoxOwner(boxId: number) {
   }
 }
 
-export async function GetBoxData() {}
+export async function GetBoxOpenResult(boxId: number) {
+  const logQuery = `SELECT * FROM box_log WHERE id = ${boxId};`;
+  const result = await connection.query(logQuery);
+  if (result.rows.length === 0) {
+    return null;
+  }
+  return result.rows[0];
+}
 
 export async function GetLoginByAddress(address: string) {}
-
-export async function GetUserAvailableBoxes(address: string) {}
 
 export async function CreateNewHolder(address: string, login?: string) {
   const ownerLogin = login || address;
@@ -125,8 +130,8 @@ export async function OpenBox(boxId: number) {
         return 'token';
     }
   })();
-  const logQuery = `INSERT INTO box_log (boxId, opening, openResult)
-    VALUES (${boxId}, CURRENT_TIMESTAMP, '${rewardType}');`;
+  const logQuery = `INSERT INTO box_log (boxId, opening, openResult, openAmount)
+    VALUES (${boxId}, CURRENT_TIMESTAMP, '${rewardType}', ${openAmount});`;
   const balanceQuery = `UPDATE resources SET ${rewardType} = ${rewardType} + ${openAmount} 
   WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;
   const boxCloseQuery = `UPDATE boxes SET isOpen = false WHERE id = ${boxId};`;

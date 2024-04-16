@@ -1,6 +1,7 @@
 import {
   CreateNewBox,
   GetAvailableBoxesByOwner,
+  GetBoxOpenResult,
   GetUserBalanceRow,
   GiveResources,
   OpenBox,
@@ -143,4 +144,15 @@ export const GetUserAvailableBoxes = async (req, res) => {
   body.ownerLogin || '')
   res.status(200).send(result)
 
+}
+
+export const GetBoxOpenResultResponce = async (req, res) => {
+  const body = req.body;
+  if (!body.boxId) {
+    res.status(400).send({
+      error: 'Nessesary parameters is missing',
+    });
+  }
+  const result = await GetBoxOpenResult (body.boxId);
+  return result
 }

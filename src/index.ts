@@ -7,6 +7,7 @@ import {
   CreateBox,
   GetAdminUserData,
   GetAllStars,
+  GetBoxOpenResultResponce,
   GetLinksByOwnerResponse,
   GetOwnerDataResponse,
   GetProjectData,
@@ -53,6 +54,8 @@ app.get('/', (req, res) => {
 app.post('/api/boxes/create', CreateBox);
 
 app.post('/api/boxes/open', OpenBoxRequest);
+
+app.post('/api/boxes/openresult', GetBoxOpenResultResponce);
 
 app.post('/api/boxes/available', GetUserAvailableBoxes);
 
