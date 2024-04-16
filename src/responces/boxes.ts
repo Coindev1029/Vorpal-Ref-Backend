@@ -154,5 +154,5 @@ export const GetBoxOpenResultResponce = async (req, res) => {
     });
   }
   const result = await GetBoxOpenResult (body.boxId);
-  return result
+  res.status(200).send(result)
 }
