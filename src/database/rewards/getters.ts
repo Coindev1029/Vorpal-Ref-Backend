@@ -3,6 +3,18 @@ import { boxOpenResults } from 'types';
 import { connection } from './../connection';
 import { WriteLog } from '../../database/log';
 
+const zeroAssets = {
+  laser1: 0,
+  laser2: 0,
+  laser3: 0,
+  token: 0,
+  spore: 0,
+  spice: 0,
+  metal: 0,
+  biomass: 0,
+  carbon: 0
+}
+
 export async function GetBoxOpenResult(boxId: number) {
   const logQuery = `SELECT * FROM box_log WHERE id = ${boxId};`;
   const result = await connection.query(logQuery);
@@ -24,7 +36,7 @@ export async function GetHolderData(address: string) {
   const selectionQuery = `SELECT * FROM resources WHERE ownerAddress = '${address}' LIMIT 1;`;
   const result = await connection.query(selectionQuery);
   if (result.rows.length === 0) {
-    return null;
+    return (zeroAssets);
   }
   return result.rows[0];
 }
@@ -37,7 +49,9 @@ export async function GetBoxOwner(boxId: number) {
   if (result.rows.length > 0) {
     return result.rows[0];
   } else {
-    return null;
+    return ({
+      error: "Box with chosen id not found"
+    });
   }
 }
 
@@ -53,7 +67,7 @@ export async function GetUserBalanceRow(ownerAddress = '', ownerLogin = '') {
   }' LIMIT 1;`;
   const assets = await connection.query(balanceQuery);
   if (assets.rows.length === 0) {
-    return null;
+    return (zeroAssets);
   }
   return assets.rows[0];
 }
