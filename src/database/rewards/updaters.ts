@@ -27,8 +27,9 @@ export async function CreateNewBox(
 export async function GiveResources(ownerAddress: string = '',
 ownerLogin: string = '', resource: string, amount: number) {
   const holderData = await GetHolderData(ownerAddress);
+  console.log(holderData)
   if (!holderData) {
-    await CreateNewHolder(ownerAddress, ownerLogin);
+    const creation = await CreateNewHolder(ownerAddress, ownerLogin);
   }
   const balanceQuery = `UPDATE resources SET ${resource} = ${resource} + ${amount} 
   WHERE ownerAddress = '${ownerAddress}';`;
@@ -45,6 +46,7 @@ export async function CreateNewHolder(address: string, login?: string) {
   const creationQuery = `INSERT INTO resources (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon) VALUES ('${address}', '${ownerLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
   // WriteLog('User creation query: ', creationQuery);
   const result = await connection.query(creationQuery);
+  console.log(result)
   return true;
 }
 
