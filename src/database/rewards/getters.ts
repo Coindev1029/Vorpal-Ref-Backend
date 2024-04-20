@@ -32,6 +32,16 @@ export async function GetBoxOpenResult(boxId: number) {
 
 export async function GetLoginByAddress(address: string) {}
 
+export async function IsHolderExists (address: string): Promise<Boolean> {
+  const selectionQuery = `SELECT * FROM resources WHERE ownerAddress = '${address}' LIMIT 1;`;
+  const result = await connection.query(selectionQuery);
+  if (result.rows.length === 0) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 export async function GetHolderData(address: string) {
   const selectionQuery = `SELECT * FROM resources WHERE ownerAddress = '${address}' LIMIT 1;`;
   const result = await connection.query(selectionQuery);

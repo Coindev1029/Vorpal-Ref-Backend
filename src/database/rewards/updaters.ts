@@ -2,7 +2,7 @@ require('dotenv').config();
 import { boxOpenResults } from 'types';
 import { connection } from './../connection';
 import { WriteLog } from '../../database/log';
-import { GetHolderData, GetUserBalanceRow } from './getters';
+import { GetHolderData, GetUserBalanceRow, IsHolderExists } from './getters';
 
 export async function CreateNewBox(
   level: number,
@@ -10,7 +10,7 @@ export async function CreateNewBox(
   ownerLogin: string = ''
 ) {
   if (!ownerAddress && !ownerLogin) return false;
-  const holderData = await GetHolderData(ownerAddress);
+  const holderData = await IsHolderExists(ownerAddress);
   if (!holderData) {
     await CreateNewHolder(ownerAddress, ownerLogin);
   }
@@ -26,8 +26,8 @@ export async function CreateNewBox(
 
 export async function GiveResources(ownerAddress: string = '',
 ownerLogin: string = '', resource: string, amount: number) {
-  const holderData = await GetHolderData(ownerAddress);
-  console.log(holderData)
+  const holderData = await IsHolderExists(ownerAddress);
+
   if (!holderData) {
     const creation = await CreateNewHolder(ownerAddress, ownerLogin);
   }
@@ -39,15 +39,15 @@ ownerLogin: string = '', resource: string, amount: number) {
 
 export async function CreateNewHolder(address: string, login?: string) {
   const ownerLogin = login || address;
-  const isUserExists = await GetHolderData(address);
+  const isUserExists = await IsHolderExists(address);
   if (isUserExists) {
     return false;
   }
   const creationQuery = `INSERT INTO resources (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon) VALUES ('${address}', '${ownerLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
-  WriteLog('User creation query: ', creationQuery);
+  // WriteLog('User creation query: ', creationQuery);
   const result = await connection.query(creationQuery);
-  WriteLog('Insertion result: ', JSON.stringify(result));
-  console.log('Insertion result: ', result)
+  // WriteLog('Insertion result: ', JSON.stringify(result));
+  // console.log('Insertion result: ', result)
   return true;
 }
 
