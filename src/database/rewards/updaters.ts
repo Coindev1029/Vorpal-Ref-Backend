@@ -2,7 +2,7 @@ require('dotenv').config();
 import { boxOpenResults } from 'types';
 import { connection } from './../connection';
 import { WriteLog } from '../../database/log';
-import { GetHolderData } from './getters';
+import { GetHolderData, GetUserBalanceRow } from './getters';
 
 export async function CreateNewBox(
   level: number,
@@ -33,7 +33,7 @@ ownerLogin: string = '', resource: string, amount: number) {
   const balanceQuery = `UPDATE resources SET ${resource} = ${resource} + ${amount} 
   WHERE ownerAddress = '${ownerAddress}';`;
   await connection.query(balanceQuery);
-  return true;
+  return await GetUserBalanceRow(ownerAddress, ownerLogin);
 }
 
 export async function CreateNewHolder(address: string, login?: string) {
