@@ -44,9 +44,10 @@ export async function CreateNewHolder(address: string, login?: string) {
     return false;
   }
   const creationQuery = `INSERT INTO resources (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon) VALUES ('${address}', '${ownerLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
-  // WriteLog('User creation query: ', creationQuery);
+  WriteLog('User creation query: ', creationQuery);
   const result = await connection.query(creationQuery);
-  console.log(result)
+  WriteLog('Insertion result: ', JSON.stringify(result));
+  console.log('Insertion result: ', result)
   return true;
 }
 
