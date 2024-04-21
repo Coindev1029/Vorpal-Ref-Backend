@@ -47,7 +47,7 @@ export const CreateBox = async (req, res) => {
     // const isHolderCreated = await CreateNewHolder(body.ownerAddress)
     const boxId = await CreateNewBox(
       body.level,
-      body.ownerAddress,
+      body.ownerAddress.toLowerCase(),
       body.ownerLogin,
     );
     res.status(200).send({
@@ -97,7 +97,7 @@ export const GiveResourcesResponce = async (req, res) => {
     });
   }
   const result = await GiveResources(
-    body.ownerAddress || '',
+    body.ownerAddress?.toLowerCase() || '',
     body.ownerLogin || '',
     body.resource,
     body.amount,
@@ -119,7 +119,7 @@ export const GetUserResources = async (req, res) => {
   }
   try {
     const assets = await GetUserBalanceRow(
-      body.ownerAddress || '0x00',
+      body.ownerAddress?.toLowerCase() || '0x00',
       body.ownerLogin || '',
     );
     res.status(200).send({
@@ -140,7 +140,7 @@ export const GetUserAvailableBoxes = async (req, res) => {
       error: 'Nessesary parameters is missing',
     });
   }
-  const result = await GetAvailableBoxesByOwner (body.ownerAddress || '',
+  const result = await GetAvailableBoxesByOwner (body.ownerAddress?.toLowerCase() || '',
   body.ownerLogin || '')
   res.status(200).send(result)
 
