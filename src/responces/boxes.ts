@@ -47,16 +47,21 @@ export const CreateBox = async (req, res) => {
       error: 'Some of nessesary parameters is missing',
     });
   }
-  const msg = GetSignableMessage();
-  const address = web3.eth.accounts
-  .recover(msg, body.signature)
-  .toLowerCase();
-  const adminAddress = await GetValueByKey("ADMIN_WALLET");
-
-  if (address !== adminAddress.toLowerCase()) {
-     res.status(403).send("Invalid signature");
-     return;
+  try {
+    const msg = GetSignableMessage();
+    const address = web3.eth.accounts.recover(msg, body.signature)
+    .toLowerCase();
+    const adminAddress = await GetValueByKey("ADMIN_WALLET");
+  
+    if (address !== adminAddress.toLowerCase()) {
+       res.status(403).send("Invalid signature");
+       return;
+    }
+  } catch (e) {
+    res.status(400).send("Wrong signature");
+    return;
   }
+
   try {
     // const isHolderCreated = await CreateNewHolder(body.ownerAddress)
     const boxId = await CreateNewBox(
