@@ -54,7 +54,10 @@ export const CreateBox = async (req, res) => {
     const adminAddress = await GetValueByKey("ADMIN_WALLET");
   
     if (address !== adminAddress.toLowerCase()) {
-       res.status(403).send("Invalid signature");
+       res.status(403).send({
+        error: "Invalid signature",
+        recovery: address
+      });
        return;
     }
   } catch (e) {
