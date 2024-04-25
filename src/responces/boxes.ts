@@ -8,7 +8,7 @@ import {
 } from '../database/rewards';
 import { GetValueByKey } from '../database/balances';
 import { error } from 'console';
-import { GetSignableMessage } from 'utils/auth';
+import { GetSignableMessage } from '../utils/auth';
 import Web3 from 'web3';
 const express = require('express');
 const bodyParser = require('body-parser');
