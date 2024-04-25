@@ -56,13 +56,11 @@ export const CreateBox = async (req, res) => {
     if (address !== adminAddress.toLowerCase()) {
        res.status(403).send({
         error: "Invalid signature",
-        timeMsg: msg,
-        recovery: address
       });
        return;
     }
   } catch (e) {
-    res.status(400).send("Wrong signature");
+    res.status(400).send({ error: "Wrong signature"});
     return;
   }
 
@@ -119,6 +117,23 @@ export const GiveResourcesResponce = async (req, res) => {
       error: 'Resource parameters is missing',
     });
   }
+  try {
+    const msg = GetSignableMessage();
+    const address = web3.eth.accounts.recover(msg, body.signature)
+    .toLowerCase();
+    const adminAddress = await GetValueByKey("ADMIN_WALLET");
+  
+    if (address !== adminAddress.toLowerCase()) {
+       res.status(403).send({
+        error: "Invalid signature",
+      });
+       return;
+    }
+  } catch (e) {
+    res.status(400).send({ error: "Wrong signature"});
+    return;
+  }
+  
   const result = await GiveResources(
     body.ownerAddress?.toLowerCase() || '',
     body.ownerLogin || '',
