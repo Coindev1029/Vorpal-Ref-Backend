@@ -2,6 +2,7 @@ import {
   CreateNewBox,
   GetAvailableBoxesByOwner,
   GetBoxOpenResult,
+  GetBoxOwner,
   GetUserBalanceRow,
   GiveResources,
   OpenBox,
@@ -133,7 +134,7 @@ export const GiveResourcesResponce = async (req, res) => {
     res.status(400).send({ error: "Wrong signature"});
     return;
   }
-  
+
   const result = await GiveResources(
     body.ownerAddress?.toLowerCase() || '',
     body.ownerLogin || '',
@@ -186,11 +187,37 @@ export const GetUserAvailableBoxes = async (req, res) => {
 
 export const GetBoxOpenResultResponce = async (req, res) => {
   const body = req.body;
+
   if (!body.boxId) {
     res.status(400).send({
       error: 'Nessesary parameters is missing',
     });
   }
+
+  try {
+    const msg = GetSignableMessage();
+    const address = web3.eth.accounts.recover(msg, body.signature)
+    .toLowerCase();
+    const adminAddress = await GetValueByKey("ADMIN_WALLET");
+    const boxOwner = await GetBoxOwner(body.boxId);
+
+    if (!boxOwner) {
+      res.status(400).send({
+        error: "Invalid box id",
+      });
+    }
+  
+    if (address !== adminAddress.toLowerCase() && address !== boxOwner.toLowerCase()) {
+       res.status(403).send({
+        error: "Caller have no rights to open",
+      });
+       return;
+    }
+  } catch (e) {
+    res.status(400).send({ error: "Wrong signature"});
+    return;
+  }
+
   const result = await GetBoxOpenResult (body.boxId);
   res.status(200).send(result)
 }

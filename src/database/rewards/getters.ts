@@ -51,17 +51,15 @@ export async function GetHolderData(address: string) {
   return result.rows[0];
 }
 
-export async function GetBoxOwner(boxId: number) {
+export async function GetBoxOwner(boxId: number): Promise<string> {
   const selectionQuery = `
         SELECT ownerAddress, ownerLogin FROM boxes WHERE id= '${boxId}' LIMIT 1;
       `;
   const result = await connection.query(selectionQuery);
   if (result.rows.length > 0) {
-    return result.rows[0];
+    return result.rows[0].owneraddress;
   } else {
-    return ({
-      error: "Box with chosen id not found"
-    });
+    return "";
   }
 }
 
