@@ -8,8 +8,12 @@ import {
 } from '../database/rewards';
 import { GetValueByKey } from '../database/balances';
 import { error } from 'console';
+import { GetSignableMessage } from 'utils/auth';
+import Web3 from 'web3';
 const express = require('express');
 const bodyParser = require('body-parser');
+
+const web3 = new Web3(Web3.givenProvider);
 
 const AuthMsg = (): string => {
   const dt = new Date().getTime();
@@ -42,6 +46,16 @@ export const CreateBox = async (req, res) => {
     res.status(400).send({
       error: 'Some of nessesary parameters is missing',
     });
+  }
+  const msg = GetSignableMessage();
+  const address = web3.eth.accounts
+  .recover(msg, body.signature)
+  .toLowerCase();
+  const adminAddress = await GetValueByKey("ADMIN_WALLET");
+
+  if (address !== adminAddress.toLowerCase()) {
+     res.status(403).send("Invalid signature");
+     return;
   }
   try {
     // const isHolderCreated = await CreateNewHolder(body.ownerAddress)
