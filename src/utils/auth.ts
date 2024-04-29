@@ -18,7 +18,7 @@ export function CheckTelegramAuth(auth_data: TelegramAuthData): {
   const data_check_string = data_check_arr.join('\n');
   const secret_key = crypto
     .createHash('sha256')
-    .update(process.env.BOT_TOKEN)
+    .update(process.env.TELEGRAM_API_TOKEN)
     .digest();
   const hashResult = crypto
     .createHmac('sha256', secret_key)
