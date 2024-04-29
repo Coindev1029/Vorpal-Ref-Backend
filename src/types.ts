@@ -62,3 +62,12 @@ export type boxOpenResults =
   | 'biomass'
   | 'carbon'
   | 'token';
+
+  export interface TelegramAuthData {
+    hash: string;
+    first_name: string;
+    last_name: string;
+    id: number;
+    username: string;
+    auth_date: number;
+  }
