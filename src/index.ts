@@ -51,7 +51,7 @@ app.get('/', (req, res) => {
    res.setHeader('Access-Control-Allow-Credentials', 'true');
    */
 
-app.post('./api/telegram/auth', AuthByTelegram);
+app.post('/api/telegram/auth', AuthByTelegram);
 
 // Boxes
 app.post('/api/boxes/create', CreateBox);

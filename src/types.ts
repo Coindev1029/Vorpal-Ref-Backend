@@ -64,10 +64,10 @@ export type boxOpenResults =
   | 'token';
 
   export interface TelegramAuthData {
-    hash: string;
-    first_name: string;
-    last_name: string;
-    id: number;
-    username: string;
     auth_date: number;
+    first_name: string;
+    hash: string;
+    id: number;
+    last_name: string;
+    username: string;
   }
