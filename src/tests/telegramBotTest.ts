@@ -1,3 +1,4 @@
+import { Telegraf, Markup } from "telegraf";
 import { InitTelegramClient, TelegramBotServer } from "../telegram";
 require('dotenv').config();
 
@@ -12,3 +13,25 @@ console.log("Telergram bot testing...");
 const tgServer = new TelegramBotServer();
 
 tgServer.start();
+
+const tg_token = process.env.TELEGRAM_API_TOKEN;
+
+if (!tg_token) {
+    throw new Error("Telegram token not found")
+  }
+
+console.log("Token: ", tg_token);
+
+const bot = new Telegraf(tg_token);
+
+bot.command('start', (ctx) => {
+  ctx.reply(
+    'Press btn to start game',
+    Markup.keyboard([
+      Markup.button.webApp(
+        'Start vorpal game',
+        process.env.TELEGRAM_CLIENT_URL || '',
+      ),
+    ]),
+  );
+});
