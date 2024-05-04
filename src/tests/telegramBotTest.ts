@@ -1,4 +1,5 @@
 import { InitTelegramClient } from "../telegram";
+require('dotenv').config();
 
 console.log("Telergram bot testing...");
 InitTelegramClient().then((res) => {
