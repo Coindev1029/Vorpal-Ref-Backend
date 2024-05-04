@@ -4,7 +4,6 @@ require('dotenv').config();
 export async function InitTelegramClient() {
   return new Promise((resolve, reject) => {
     const tg_token = process.env.TELEGRAM_API_TOKEN;
-    console.log("Token: ", tg_token);
   
     if (!tg_token) {
       reject("Api token not found");

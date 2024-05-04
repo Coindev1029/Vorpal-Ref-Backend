@@ -20,11 +20,10 @@ if (!tg_token) {
     throw new Error("Telegram token not found")
   }
 
-console.log("Token: ", tg_token);
-
 const bot = new Telegraf(tg_token);
 
 bot.command('start', (ctx) => {
+  console.log("Commant start received")
   ctx.reply(
     'Press btn to start game',
     Markup.keyboard([
@@ -35,3 +34,5 @@ bot.command('start', (ctx) => {
     ]),
   );
 });
+
+bot.launch();
