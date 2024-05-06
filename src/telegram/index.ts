@@ -27,8 +27,7 @@ export class TelegramBotServer {
         inline_keyboard: [ 
           [{ 
             text: 'Invite friiend', 
-            callback_data: `duel&${ctx.ctx.from.username}`,
-            url: `https://t.me/share/url?url=https://t.me/Wgl_starmaptest_bot}` 
+            callback_data: `duel_${ctx.ctx.from.username}`
           }], 
         ] 
       }) 
