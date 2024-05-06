@@ -30,7 +30,7 @@ export class TelegramBotServer {
       }) 
     }; 
 
-    ctx.reply(ctx.chat.id, "Duel creation started", btn);
+    ctx.reply("Duel creation started", btn);
   }
 
   startCmdHandler = (ctx: any) => {
