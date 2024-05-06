@@ -1,4 +1,6 @@
 import { Telegraf, Markup } from 'telegraf';
+import { TelegramAuthData } from 'types';
+import { CreateTelegramAuthHash } from 'utils/auth';
 require('dotenv').config();
 
 export class TelegramBotServer {
@@ -14,19 +16,40 @@ export class TelegramBotServer {
     this.bot = new Telegraf(this.tg_token);
   }
 
-  public start() {
-    this.bot.command('start', (ctx) => {
-      ctx.reply(
-        'Press btn to start game',
-        Markup.keyboard([
-          Markup.button.webApp(
-            'Start vorpal game',
-            process.env.TELEGRAM_CLIENT_URL || '',
-          ),
-        ]),
-      );
-    });
+  getLastAuthDate = (): number => {
+     const dt = new Date().getTime();
+     return Math.round((dt - (dt % 86400000)) / 1000);
+  }
 
+  duelCmdHandler = (ctx: any) => {
+    ctx.reply("Duel created");
+  }
+
+  startCmdHandler = (ctx: any) => {
+    const linkAuthDataPrev: TelegramAuthData = {
+      auth_date: this.getLastAuthDate(),
+      last_name: ctx.from.last_name || "",
+      first_name: ctx.from.first_name,
+      id: ctx.from.id,
+      username: ctx.from.username || "",
+      hash: ""
+    }
+    const authHash = CreateTelegramAuthHash(linkAuthDataPrev);
+
+    ctx.reply(
+      'Press btn to start game',
+      Markup.keyboard([
+        Markup.button.webApp(
+          'Start vorpal game',
+          `${process.env.TELEGRAM_CLIENT_URL}&authHash=${authHash}` || '',
+        ),
+      ]),
+    );
+  }
+
+  public start() {
+    this.bot.command('start', this.startCmdHandler);
+    this.bot.command('new_duel', this.duelCmdHandler);
     this.bot.launch();
   }
 

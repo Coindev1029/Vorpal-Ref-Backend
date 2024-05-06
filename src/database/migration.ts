@@ -98,6 +98,18 @@ async function DBCreateTables() {
  );
   `;
 
+  const Duels = `
+  CREATE TABLE IF NOT EXISTS "duels" (
+    id serial PRIMARY KEY,
+    duel_id varchar(512),
+    login1 varchar(128),
+    login2 varchar(128),
+    creation integer,
+    isFinished boolean,
+    isExpired boolean
+  );
+  `
+
   const BoxLog = `
   CREATE TABLE IF NOT EXISTS "box_log" (
     id serial PRIMARY KEY,
@@ -121,6 +133,7 @@ async function DBCreateTables() {
   await connection.query(TableResource);
   await connection.query(TableResource);
   await connection.query(TablePDQuery);
+  await connection.query(BoxLog);
 
   await CreateGameTables();
 

@@ -4,3 +4,4 @@ export * from './common';
 export * from './links';
 export * from './referral';
 export * from './stars';
+export * from './duel';
