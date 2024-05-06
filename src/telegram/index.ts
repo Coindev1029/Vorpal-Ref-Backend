@@ -21,8 +21,8 @@ export class TelegramBotServer {
      return Math.round((dt - (dt % 86400000)) / 1000);
   }
 
-  duelCmdHandler = (ctx: any) => {
-    ctx.reply("Duel created");
+  duelStartCmdHandler = (ctx: any) => {
+    ctx.reply("Duel creation started");
   }
 
   startCmdHandler = (ctx: any) => {
@@ -49,7 +49,7 @@ export class TelegramBotServer {
 
   public start() {
     this.bot.command('start', this.startCmdHandler);
-    this.bot.command('new_duel', this.duelCmdHandler);
+    this.bot.command('new_duel', this.duelStartCmdHandler);
     this.bot.launch();
   }
 
