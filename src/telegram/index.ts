@@ -25,7 +25,11 @@ export class TelegramBotServer {
     let btn = { 
       reply_markup: JSON.stringify({ 
         inline_keyboard: [ 
-          [{ text: 'Invite friiend', callback_data: '1' }], 
+          [{ 
+            text: 'Invite friiend', 
+            callback_data: `duel&${ctx.ctx.from.username}`,
+            url: `https://t.me/share/url?url=https://t.me/Wgl_starmaptest_bot}` 
+          }], 
         ] 
       }) 
     }; 
