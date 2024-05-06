@@ -1,6 +1,6 @@
 import { Telegraf, Markup } from 'telegraf';
-import { TelegramAuthData } from 'types';
-import { CreateTelegramAuthHash } from 'utils/auth';
+import { TelegramAuthData } from '../types';
+import { CreateTelegramAuthHash } from '../utils/auth';
 require('dotenv').config();
 
 export class TelegramBotServer {
