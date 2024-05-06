@@ -25,10 +25,7 @@ export class TelegramBotServer {
     let btn = { 
       reply_markup: JSON.stringify({ 
         inline_keyboard: [ 
-          [{ 
-            text: 'Invite friiend', 
-            callback_data: `duel_${ctx.ctx.from.username}`
-          }], 
+          [{ text: 'Invite friend', callback_data: '1' }], 
         ] 
       }) 
     }; 
