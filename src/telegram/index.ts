@@ -22,13 +22,17 @@ export class TelegramBotServer {
   }
 
   duelStartCmdHandler = (ctx: any) => {
-    let btn = { 
+    /* let btn = { 
       reply_markup: JSON.stringify({ 
         inline_keyboard: [ 
           [{ text: 'Invite friend', callback_data: '1' }], 
         ] 
       }) 
-    }; 
+    }; */
+
+    const btn = Markup.inlineKeyboard([
+      Markup.button.url('Invite friend', 'https://t.me/Wgl_starmaptest_bot'),
+    ]);
 
     ctx.reply("Duel creation started", btn);
   }
