@@ -1,6 +1,6 @@
 import { Telegraf, Markup } from 'telegraf';
 import { TelegramAuthData } from '../types';
-import { CreateTelegramAuthHash } from '../utils/auth';
+import { CreateTelegramAuthHash, GetDaylyAuthDate } from '../utils/auth';
 require('dotenv').config();
 
 export class TelegramBotServer {
@@ -22,12 +22,20 @@ export class TelegramBotServer {
   }
 
   duelStartCmdHandler = (ctx: any) => {
-    ctx.reply("Duel creation started");
+    let btn = { 
+      reply_markup: JSON.stringify({ 
+        inline_keyboard: [ 
+          [{ text: 'Invite friiend', callback_data: '1' }], 
+        ] 
+      }) 
+    }; 
+
+    ctx.reply(ctx.chat.id, "Duel creation started", btn);
   }
 
   startCmdHandler = (ctx: any) => {
     const linkAuthDataPrev: TelegramAuthData = {
-      auth_date: this.getLastAuthDate(),
+      auth_date: GetDaylyAuthDate(),
       last_name: ctx.from.last_name || "",
       first_name: ctx.from.first_name,
       id: ctx.from.id,
@@ -41,7 +49,7 @@ export class TelegramBotServer {
       Markup.keyboard([
         Markup.button.webApp(
           'Start vorpal game',
-          `${process.env.TELEGRAM_CLIENT_URL}&authHash=${authHash}` || '',
+          `${process.env.TELEGRAM_CLIENT_URL}&authHash=${authHash}&authDate=${GetDaylyAuthDate()}` || '',
         ),
       ]),
     );
