@@ -63,11 +63,21 @@ export type boxOpenResults =
   | 'carbon'
   | 'token';
 
-  export interface TelegramAuthData {
-    auth_date: number;
-    first_name: string;
-    hash: string;
-    id: number;
-    last_name: string;
-    username: string;
-  }
+export interface TelegramAuthData {
+  auth_date: number;
+  first_name: string;
+  hash: string;
+  id: number;
+  last_name: string;
+  username: string;
+}
+
+export interface DuelInfo {
+  duel_id: string;
+  login1: string;
+  login2?: string;
+  creation: number;
+  isfinished?: string;
+  isexpired?: string;
+  winner?: string;
+}

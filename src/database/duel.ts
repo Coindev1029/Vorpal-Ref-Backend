@@ -1,3 +1,5 @@
+import { DuelInfo } from "../types";
+
 const { connection } = require('./connection');
 const md5 = require('md5');
 
@@ -15,7 +17,7 @@ export async function IsUserInDuel(user: string) {
   }
 }
 
-export async function GetDuelData(duelId: string) {
+export async function GetDuelData(duelId: string): Promise<DuelInfo | null> {
   const query = `SELECT "login1", "login2", "creation", "isfinished", "winner" FROM "duels" WHERE "duel_id" = '${duelId}';`;
   try {
     const result = await connection.query(query);
@@ -30,11 +32,26 @@ export async function GetDuelData(duelId: string) {
 }
 
 export async function GetOpponent (login: string) {
-  const query = `SELECT "login2" FROM "duels" WHERE "isfinished" = false AND "login1" = ${login};`;
+  const query = `SELECT "login2" FROM "duels" WHERE "isfinished" = false AND "login1" = '${login}';`;
   try {
     const result = await connection.query(query);
     if (result.rows.length > 0) {
       return result.rows[0].login2;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    return null;
+  }
+}
+
+export async function GetDuelDataByUser (login: string): Promise<DuelInfo | null> {
+  const query = `SELECT "login1", "login2", "creation", "isfinished", "winner" FROM "duels" 
+  WHERE "login1" = '${login}' OR "login2" = '${login}' ORDER BY "creation" DESC LIMIT 1;`;
+  try {
+    const result = await connection.query(query);
+    if (result.rows.length > 0) {
+      return result.rows[0];
     } else {
       return null;
     }

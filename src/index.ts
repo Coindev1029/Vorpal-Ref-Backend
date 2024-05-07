@@ -7,6 +7,7 @@ import {
   AdminUpdateUserData,
   AuthByTelegram,
   CreateBox,
+  DuelDataByLoginResponce,
   DuelDataResponce,
   FinishDuelResponce,
   GetAdminUserData,
@@ -86,6 +87,10 @@ app.get('/api/isinduel/:login', IsUserInDuelResponce);
 app.get('/api/getopponent/:login', OpponentResponce);
 
 app.get('/api/dueldata/:id', DuelDataResponce);
+
+app.get('/api/dueldatabylogin/:id', DuelDataByLoginResponce);
+
+app.get('/api/getduelid/:login', DuelDataResponce);
 
 app.post('/api/finishduel', FinishDuelResponce);
 

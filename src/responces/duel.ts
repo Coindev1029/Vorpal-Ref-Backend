@@ -3,6 +3,7 @@ import { GetSignableMessage } from '../utils/auth';
 import {
   FinishDuel,
   GetDuelData,
+  GetDuelDataByUser,
   GetOpponent,
   IsUserInDuel,
 } from '../database/duel';
@@ -51,6 +52,21 @@ export const DuelDataResponce = async (req, res) => {
   }
 
   const data = await GetDuelData(req.params.id);
+  res.status(200).send(JSON.stringify({ data: data }));
+  return;
+};
+
+export const DuelDataByLoginResponce = async (req, res) => {
+  if (!req.params.login) {
+    res.status(400).send(
+      JSON.stringify({
+        error: 'Duel login is wrong or not specified',
+      }),
+    );
+    return;
+  }
+
+  const data = await GetDuelDataByUser(req.params.login);
   res.status(200).send(JSON.stringify({ data: data }));
   return;
 };
