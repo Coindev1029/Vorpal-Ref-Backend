@@ -47,7 +47,7 @@ export class TelegramBotServer {
       hash: ""
     }
     const authHash = CreateTelegramAuthHash(linkAuthDataPrev);
-
+    
     ctx.reply(
       'Press btn to start game',
       Markup.keyboard([
@@ -62,6 +62,9 @@ export class TelegramBotServer {
   public start() {
     this.bot.command('start', this.startCmdHandler);
     this.bot.command('new_duel', this.duelStartCmdHandler);
+    this.bot.on('inline_query', (ctx) => {
+      ctx.reply("Inline query reply");
+    })
     this.bot.launch();
   }
 

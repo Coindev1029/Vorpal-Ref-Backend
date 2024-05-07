@@ -29,6 +29,20 @@ export async function GetDuelData(duelId: string) {
   }
 }
 
+export async function GetOpponent (login: string) {
+  const query = `SELECT "login2" FROM "duels" WHERE "isfinished" = false AND "login1" = ${login};`;
+  try {
+    const result = await connection.query(query);
+    if (result.rows.length > 0) {
+      return result.rows[0].login2;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    return null;
+  }
+}
+
 export async function FinishDuel(duelId: string, winner: string) {
   const query = `UPDATE "duels" SET isfinished = true, winner = '${winner}' WHERE "duel_id" = '${duelId}';`;
   try {

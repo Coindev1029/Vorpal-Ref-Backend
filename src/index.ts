@@ -7,6 +7,8 @@ import {
   AdminUpdateUserData,
   AuthByTelegram,
   CreateBox,
+  DuelDataResponce,
+  FinishDuelResponce,
   GetAdminUserData,
   GetAllStars,
   GetBoxOpenResultResponce,
@@ -16,7 +18,9 @@ import {
   GetUserAvailableBoxes,
   GetUserResources,
   GiveResourcesResponce,
+  IsUserInDuelResponce,
   OpenBoxRequest,
+  OpponentResponce,
   ReferralApiDefault,
   UpdateAllStars,
   UpdateOneStar,
@@ -75,6 +79,15 @@ app.get('/api/getlinksbyowner/:id', GetLinksByOwnerResponse);
 app.get('/api/getownerdata/:id', GetOwnerDataResponse);
 
 app.post('/api/withdraw', WithdrawRewardAction);
+
+// Duel
+app.get('/api/isinduel/:login', IsUserInDuelResponce);
+
+app.get('/api/getopponent/:login', OpponentResponce);
+
+app.get('/api/dueldata/:id', DuelDataResponce);
+
+app.post('/api/finishduel', FinishDuelResponce);
 
 // Stars (server contract parser)
 app.get('/api/getstarlist', GetAllStars);
