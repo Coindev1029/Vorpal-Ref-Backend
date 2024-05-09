@@ -88,7 +88,7 @@ app.get('/api/getopponent/:login', OpponentResponce);
 
 app.get('/api/dueldata/:id', DuelDataResponce);
 
-app.get('/api/dueldatabylogin/:id', DuelDataByLoginResponce);
+app.get('/api/dueldatabylogin/:login', DuelDataByLoginResponce);
 
 app.get('/api/getduelid/:login', DuelDataResponce);
 
