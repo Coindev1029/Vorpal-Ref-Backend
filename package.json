@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
+    "startTg": "node dist/tgstart.js",
     "log": "node dist/tests/logreader.js"
   },
   "keywords": [],

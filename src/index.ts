@@ -1,5 +1,3 @@
-import { TelegramBotServer } from './telegram';
-import { StartWatchingTimer } from './blockchain/Stars/watcher';
 import { InitGameIoServer } from './game';
 import {
   AdminDataRequest,
@@ -115,7 +113,3 @@ app.post('/api/admin/updateusers', AdminUpdateUserData);
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
 });
-
-// InitGameIoServer()
-new TelegramBotServer().start();
-StartWatchingTimer();
