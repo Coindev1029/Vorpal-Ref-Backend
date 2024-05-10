@@ -15,40 +15,51 @@ export function TelegramBotLaunch() {
   const startHandler = (duel = false) => {
     return async (msg, match) => {
       const chatId = msg.chat.id;
+      console.log('Chat started: ', chatId);
       if (duel) console.log('Match params', match);
 
-      const linkAuthDataPrev: TelegramAuthData = {
-        auth_date: GetDaylyAuthDate(),
-        last_name: msg.from.last_name || '',
-        first_name: msg.from.first_name,
-        id: msg.from.id,
-        username: msg.from.username || '',
-        hash: '',
-      };
-      const authHash = CreateTelegramAuthHash(linkAuthDataPrev);
-      const app_url = `${
-        process.env.TELEGRAM_CLIENT_URL
-      }?authHash=${authHash}&authDate=${GetDaylyAuthDate()}`;
+      try {
+        const linkAuthDataPrev: TelegramAuthData = {
+          auth_date: GetDaylyAuthDate(),
+          last_name: msg.from.last_name || '',
+          first_name: msg.from.first_name,
+          id: msg.from.id,
+          username: msg.from.username || '',
+          hash: '',
+        };
+        const authHash = CreateTelegramAuthHash(linkAuthDataPrev);
+        const app_url = `${
+          process.env.TELEGRAM_CLIENT_URL
+        }?authHash=${authHash}&authDate=${GetDaylyAuthDate()}`;
 
-      const inviterLogin = match[1];
+        console.log('Starmap url: ', app_url);
 
-      const createdDuel = await GetDuelDataByUser (inviterLogin);
-      
-      if (!createdDuel) {
+        const inviterLogin = match[1];
+
+        const createdDuel = await GetDuelDataByUser(inviterLogin);
+
+        if (!createdDuel) {
+          bot.sendMessage(
+            chatId,
+            'Welcome! Enter duel command to play with friends',
+            Markup.keyboard([
+              Markup.button.webApp('Start vorpal game', app_url),
+            ]),
+          );
+        }
+
         bot.sendMessage(
           chatId,
           'Welcome! Enter duel command to play with friends',
           Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
         );
+      } catch (e) {
+        console.log('Start cmd exception: ', e.message);
+        bot.sendMessage(
+          chatId,
+          'Bot-side error'
+        );
       }
-
-      console.log('Url:', app_url);
-
-      bot.sendMessage(
-        chatId,
-        'Welcome! Enter duel command to play with friends',
-        Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
-      );
     };
   };
 
@@ -82,15 +93,15 @@ export function TelegramBotLaunch() {
       return;
     }
 
-    const userLastDuel = await GetDuelDataByUser (msg.from.username);
-    console.log("Last duel", userLastDuel)
+    const userLastDuel = await GetDuelDataByUser(msg.from.username);
+    console.log('Last duel', userLastDuel);
     if (!userLastDuel) {
-      await CreateDuel (msg.from.username, '');
+      await CreateDuel(msg.from.username, '');
     } else {
       const isFinished = userLastDuel.isfinished;
-      const creation = Number (userLastDuel.creation);
-      const dateSec = Math.round(new Date().getTime() / 1000)
-      if (!isFinished && (dateSec - creation < duel_lifetime)) {
+      const creation = Number(userLastDuel.creation);
+      const dateSec = Math.round(new Date().getTime() / 1000);
+      if (!isFinished && dateSec - creation < duel_lifetime) {
         bot.sendMessage(
           chatId,
           'You already in duel',
@@ -98,9 +109,9 @@ export function TelegramBotLaunch() {
         );
         return;
       }
-      if (!isFinished && (dateSec - creation >= duel_lifetime)) {
-        await FinishDuel (userLastDuel.duel_id, '');
-        await CreateDuel (msg.from.username, '');
+      if (!isFinished && dateSec - creation >= duel_lifetime) {
+        await FinishDuel(userLastDuel.duel_id, '');
+        await CreateDuel(msg.from.username, '');
       }
     }
 
