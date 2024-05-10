@@ -99,7 +99,7 @@ app.post('/api/finishduel', FinishDuelResponce);
 
 app.post('/api/updateonlinecount', UpdateOnlineCount);
 
-app.post('./api/duelrewardcondition', RewardConditionResponce)
+app.post('/api/duelrewardcondition', RewardConditionResponce)
 
 // Stars (server contract parser)
 app.get('/api/getstarlist', GetAllStars);
