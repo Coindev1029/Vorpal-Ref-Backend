@@ -70,6 +70,15 @@ export function TelegramBotLaunch() {
             );
             return;
           }
+          if (duel && !createdDuel.isfinished && dateSec - createdDuel.creation > duel_lifetime) {
+            await FinishDuel (createdDuel.duel_id, "");
+            bot.sendMessage(
+              chatId,
+              `Duel with a @${inviterLogin} is expired. You can create new or single play on starmap:`,
+              Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
+            );
+            return;
+          }
           if (!createdDuel.isfinished && dateSec - createdDuel.creation < duel_lifetime ) {
             if (createdDuel.login1 && createdDuel.login2) {
               bot.sendMessage(
