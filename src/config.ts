@@ -24,7 +24,7 @@ export const nessesary_keys = {
 	lastblock: 'last_passed_block'
 }
 
-export const duel_lifetime = 900000;
+export const duel_lifetime = 900;
 
 export const Erc20ABI = [
 	{
