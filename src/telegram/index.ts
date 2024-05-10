@@ -1,74 +1,108 @@
-import { Telegraf, Markup } from 'telegraf';
+import { Markup } from 'telegraf';
 import { TelegramAuthData } from '../types';
-import { CreateTelegramAuthHash, GetDaylyAuthDate } from '../utils/auth';
+import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../utils/auth';
+
+const TelegramBot = require('node-telegram-bot-api');
 require('dotenv').config();
 
-export class TelegramBotServer {
-  tg_token: string;
-  bot: Telegraf;
-   
-  constructor() {
-    const token = process.env.TELEGRAM_API_TOKEN;
-    if (!token) {
-      throw new Error("Telegram token not found")
-    }
-    this.tg_token = token;
-    this.bot = new Telegraf(this.tg_token);
-  }
+const tg_token = process.env.TELEGRAM_API_TOKEN; 
 
-  getLastAuthDate = (): number => {
-     const dt = new Date().getTime();
-     return Math.round((dt - (dt % 86400000)) / 1000);
-  }
+export function TelegramBotLaunch() {
+  const bot = new TelegramBot(tg_token, { polling: true });
 
-  duelStartCmdHandler = (ctx: any) => {
-    /* let btn = { 
-      reply_markup: JSON.stringify({ 
-        inline_keyboard: [ 
-          [{ text: 'Invite friend', callback_data: '1' }], 
-        ] 
-      }) 
-    }; */
+  const startHandler = (duel = false) => {return (msg, match) => {
+    const chatId = msg.chat.id;
+    if (duel) console.log('Match params', match);
 
-    const btn = Markup.inlineKeyboard([
-      Markup.button.url('Invite friend', 'https://t.me/Wgl_starmaptest_bot'),
-    ]);
-
-    ctx.reply("Duel creation started", btn);
-  }
-
-  startCmdHandler = (ctx: any) => {
     const linkAuthDataPrev: TelegramAuthData = {
       auth_date: GetDaylyAuthDate(),
-      last_name: ctx.from.last_name || "",
-      first_name: ctx.from.first_name,
-      id: ctx.from.id,
-      username: ctx.from.username || "",
-      hash: ""
-    }
+      last_name: msg.from.last_name || '',
+      first_name: msg.from.first_name,
+      id: msg.from.id,
+      username: msg.from.username || '',
+      hash: '',
+    };
     const authHash = CreateTelegramAuthHash(linkAuthDataPrev);
-    
-    ctx.reply(
-      'Press btn to start game',
-      Markup.keyboard([
-        Markup.button.webApp(
-          'Start vorpal game',
-          `${process.env.TELEGRAM_CLIENT_URL}&authHash=${authHash}&authDate=${GetDaylyAuthDate()}` || '',
-        ),
-      ]),
+    const app_url = `${
+      process.env.TELEGRAM_CLIENT_URL
+    }?authHash=${authHash}&authDate=${GetDaylyAuthDate()}`;
+
+    console.log("Url:", app_url);
+
+    bot.sendMessage(
+      chatId,
+      'Welcome! Enter duel command to play with friends',
+      Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
     );
-  }
+  }}
 
-  public start() {
-    this.bot.command('start', this.startCmdHandler);
-    this.bot.command('new_duel', this.duelStartCmdHandler);
-    this.bot.on('inline_query', (ctx) => {
-      ctx.reply("Inline query reply");
-    })
-    this.bot.launch();
-  }
+  bot.onText(/\/start/, startHandler(false));
 
-  public stop() {
-    this.bot.stop();
-  }
+  bot.onText(/\/start (.+)/, startHandler(true));
+
+  bot.onText(/\/duel/, (msg) => {
+    const chatId = msg.chat.id;
+
+    const linkAuthDataPrev: TelegramAuthData = {
+      auth_date: GetDaylyAuthDate(),
+      last_name: msg.from.last_name || '',
+      first_name: msg.from.first_name,
+      id: msg.from.id,
+      username: msg.from.username || '',
+      hash: '',
+    };
+    const authHash = CreateTelegramAuthHash(linkAuthDataPrev);
+    const app_url = `${
+      process.env.TELEGRAM_CLIENT_URL
+    }?authHash=${authHash}&authDate=${GetDaylyAuthDate()}`;
+
+    const keyboard = {
+      inline_keyboard: [[{ text: 'Send invitation', switch_inline_query: '' }]],
+    };
+
+    bot.sendMessage(chatId, 'Hello! Invite your friend to a duel:', {
+      reply_markup: JSON.stringify(keyboard),
+    });
+
+    bot.sendMessage(
+      chatId,
+      'Your app url: ',
+      Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
+    );
+  });
+
+  bot.on('inline_query', (query) => {
+    const deepLink = `https://t.me/Wgl_starmaptest_bot?start=${query.from.username}`;
+
+    const results = [
+      {
+        type: 'article',
+        id: '1',
+        title: 'Send invitation message',
+        input_message_content: {
+          message_text: `Duel call from ${query.from.first_name} ${query.from.last_name}`,
+          parse_mode: 'Markdown',
+        },
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: 'Confirm invitation', url: deepLink }], //callback_data: metadataString
+          ],
+        },
+      },
+    ];
+
+    bot.answerInlineQuery(query.id, results);
+  });
+
+  bot.on('polling_error', (error) => {
+    console.error('Polling error:', error);
+  });
+
+  bot.on('webhook_error', (error) => {
+    console.error('Webhook error:', error);
+  });
+
+  bot.on('error', (error) => {
+    console.error('Bot error:', error);
+  });
 }

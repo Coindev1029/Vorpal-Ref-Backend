@@ -81,7 +81,7 @@ export async function GetOpponent (login: string) {
 }
 
 export async function GetDuelDataByUser (login: string): Promise<DuelInfo | null> {
-  const query = `SELECT "login1", "login2", "creation", "isfinished", "winner" FROM "duels" 
+  const query = `SELECT "duel_id", "login1", "login2", "creation", "isfinished", "winner" FROM "duels" 
   WHERE "login1" = '${login}' OR "login2" = '${login}' ORDER BY "creation" DESC LIMIT 1;`;
   try {
     const result = await connection.query(query);

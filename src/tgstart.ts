@@ -1,9 +1,4 @@
-import { TelegramBotServer } from './telegram';
-import { StartWatchingTimer } from './blockchain/Stars/watcher';
+import { TelegramBotLaunch } from "./telegram";
 
-const dEnv = require('dotenv');
-dEnv.config();
 
-// InitGameIoServer()
-new TelegramBotServer().start();
-StartWatchingTimer();
+TelegramBotLaunch();
