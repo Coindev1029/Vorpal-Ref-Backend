@@ -151,6 +151,7 @@ export function TelegramBotLaunch() {
       const isFinished = userLastDuel.isfinished;
       const creation = Number(userLastDuel.creation);
       const dateSec = Math.round(new Date().getTime() / 1000);
+      console.log("Duel dates: ", dateSec, creation, dateSec - creation, duel_lifetime);
       if (!isFinished && dateSec - creation < duel_lifetime && userLastDuel.login1 && userLastDuel.login2) {
         bot.sendMessage(
           chatId,
