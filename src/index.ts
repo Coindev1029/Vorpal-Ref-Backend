@@ -1,3 +1,4 @@
+import { TelegramBotLaunch } from './telegram';
 import { InitGameIoServer } from './game';
 import {
   AdminDataRequest,
@@ -122,3 +123,5 @@ app.post('/api/admin/updateusers', AdminUpdateUserData);
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
 });
+
+TelegramBotLaunch();
