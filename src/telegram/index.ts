@@ -48,7 +48,7 @@ export function TelegramBotLaunch() {
         }
 
         const createdDuel = await GetDuelDataByUser(inviterLogin);
-        console.log('Last duel: ', createdDuel);
+        // console.log('Last duel: ', createdDuel);
         const dateSec = Math.round(new Date().getTime() / 1000);
         if (!createdDuel) {
           bot.sendMessage(
@@ -144,14 +144,13 @@ export function TelegramBotLaunch() {
     }
 
     const userLastDuel = await GetDuelDataByUser(msg.from.username);
-    console.log('Last duel', userLastDuel);
+    // console.log('Last duel', userLastDuel);
     if (!userLastDuel) {
       await CreateDuel(msg.from.username, '');
     } else {
       const isFinished = userLastDuel.isfinished;
       const creation = Number(userLastDuel.creation);
       const dateSec = Math.round(new Date().getTime() / 1000);
-      console.log("Duel dates: ", dateSec, creation, dateSec - creation, duel_lifetime);
       if (!isFinished && dateSec - creation < duel_lifetime && userLastDuel.login1 && userLastDuel.login2) {
         bot.sendMessage(
           chatId,
