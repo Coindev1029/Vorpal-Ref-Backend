@@ -18,11 +18,13 @@ import {
   GetUserResources,
   GiveResourcesResponce,
   IsUserInDuelResponce,
+  OnlineCountResponce,
   OpenBoxRequest,
   OpponentResponce,
   ReferralApiDefault,
   UpdateAllStars,
   UpdateOneStar,
+  UpdateOnlineCount,
   WithdrawRewardAction,
 } from './responces';
 const dEnv = require('dotenv');
@@ -90,7 +92,11 @@ app.get('/api/dueldatabylogin/:login', DuelDataByLoginResponce);
 
 app.get('/api/getduelid/:login', DuelDataResponce);
 
+app.get('/api/onlinecount', OnlineCountResponce)
+
 app.post('/api/finishduel', FinishDuelResponce);
+
+app.post('/api/updateonlinecount', UpdateOnlineCount);
 
 // Stars (server contract parser)
 app.get('/api/getstarlist', GetAllStars);

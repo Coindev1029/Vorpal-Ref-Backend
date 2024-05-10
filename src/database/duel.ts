@@ -1,7 +1,42 @@
 import { DuelInfo } from "../types";
+import { GetValueByKey, SetValueByKey } from "./balances";
 
 const { connection } = require('./connection');
 const md5 = require('md5');
+const onlineCountKey = "DUEL_ONLINE_COUNT";
+
+export async function SetOnlineCount (count: number) {
+   await SetValueByKey(onlineCountKey, count);
+   return true;
+}
+
+export async function GetOnlineCount () {
+  return await GetValueByKey(onlineCountKey);
+}
+
+export async function AddDuelOpponent (duelId: string, login: string) {
+  const query = `UPDATE "duels" SET "login2" = '${login}' WHERE "duel_id" = '${duelId}';`;
+  try {
+    const result = await connection.query(query);
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+export async function GetDuelPairCount (part1: string, part2: string) {
+   const query = `SELECT count(*) FROM "duels" WHERE (login1 = '${part1}' AND login2 = '${part2}') OR (login1 = '${part2}' AND login2 = '${part1}');`;
+   try {
+    const result = await connection.query(query);
+    if (result.rows.length > 0) {
+      return result.rows[0].count;
+    } else {
+      return 0;
+    }
+  } catch (e) {
+    return 0
+  }
+}
 
 export async function IsUserInDuel(user: string) {
   const query = `SELECT "duel_id" FROM "duels" WHERE ("login1" = '${user}' OR "login2" = '${user}') AND isfinished = false;`;
@@ -74,7 +109,7 @@ export async function FinishDuel(duelId: string, winner: string) {
   }
 }
 
-export async function CreateDuel(login1: string, login2: string) {
+export async function CreateDuel(login1: string, login2: string = "") {
   const dt = Math.round(new Date().getTime() / 1000);
   const duel_id = md5(`${dt}_${login1}_${login2}`);
   if ((await IsUserInDuel(login1)) || (await IsUserInDuel(login2))) return null;

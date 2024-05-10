@@ -106,7 +106,8 @@ async function DBCreateTables() {
     login2 varchar(128),
     creation integer,
     isFinished boolean,
-    isExpired boolean
+    isExpired boolean,
+    winner varchar(128)
   );
   `
 
@@ -133,6 +134,7 @@ async function DBCreateTables() {
   await connection.query(TableResource);
   await connection.query(TableResource);
   await connection.query(TablePDQuery);
+  await connection.query(Duels);
   await connection.query(BoxLog);
 
   await CreateGameTables();
