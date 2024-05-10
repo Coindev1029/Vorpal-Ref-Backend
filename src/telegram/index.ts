@@ -107,11 +107,11 @@ export function TelegramBotLaunch() {
           }
         }
 
-        bot.sendMessage(
+        /* bot.sendMessage(
           chatId,
           'Welcome! Enter duel command to play with friends',
           Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
-        );
+        ); */
       } catch (e) {
         console.log('Start cmd exception: ', e.message);
         bot.sendMessage(
