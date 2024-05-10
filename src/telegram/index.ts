@@ -36,9 +36,10 @@ export function TelegramBotLaunch() {
 
         const inviterLogin = match[1];
 
-        const createdDuel = await GetDuelDataByUser(inviterLogin);
+        // const createdDuel = await GetDuelDataByUser(inviterLogin);
+        console.log('Last duel: ', app_url);
 
-        if (!createdDuel) {
+        /* if (!createdDuel) {
           bot.sendMessage(
             chatId,
             'Welcome! Enter duel command to play with friends',
@@ -46,7 +47,7 @@ export function TelegramBotLaunch() {
               Markup.button.webApp('Start vorpal game', app_url),
             ]),
           );
-        }
+        } */
 
         bot.sendMessage(
           chatId,
