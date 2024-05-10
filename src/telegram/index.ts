@@ -1,7 +1,7 @@
 import { Markup } from 'telegraf';
 import { TelegramAuthData } from '../types';
 import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../utils/auth';
-import { CreateDuel, FinishDuel, GetDuelDataByUser } from '../database/duel';
+import { AddDuelOpponent, CreateDuel, FinishDuel, GetDuelDataByUser } from '../database/duel';
 import { duel_lifetime } from '../config';
 
 const TelegramBot = require('node-telegram-bot-api');
@@ -35,10 +35,21 @@ export function TelegramBotLaunch() {
         console.log('Starmap url: ', app_url);
 
         const inviterLogin = match[1];
+ 
+        if (duel && !msg.from.username) {
+          bot.sendMessage(
+            chatId,
+            'Welcome! You need to have a visible username to enter a duel',
+            Markup.keyboard([
+              Markup.button.webApp('Start vorpal game', app_url),
+            ]),
+          );
+          return;
+        }
 
         const createdDuel = await GetDuelDataByUser(inviterLogin);
-        console.log('Last duel: ', app_url);
-
+        console.log('Last duel: ', createdDuel);
+        const dateSec = Math.round(new Date().getTime() / 1000);
         if (!createdDuel) {
           bot.sendMessage(
             chatId,
@@ -47,6 +58,44 @@ export function TelegramBotLaunch() {
               Markup.button.webApp('Start vorpal game', app_url),
             ]),
           );
+        } else {
+          if (duel && !createdDuel.isfinished && 
+            dateSec - createdDuel.creation < duel_lifetime && 
+            (createdDuel.login1 && !createdDuel.login2)) {
+             await AddDuelOpponent (createdDuel.duel_id, msg.from.username);
+             bot.sendMessage(
+              chatId,
+              `You joined to a duel with a @${inviterLogin}, go to starmap:`,
+              Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
+            );
+            return;
+          }
+          if (!createdDuel.isfinished && dateSec - createdDuel.creation < duel_lifetime ) {
+            if (createdDuel.login1 && createdDuel.login2) {
+              bot.sendMessage(
+                chatId,
+                'You already in duel, go to starmap:',
+                Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
+              );
+            } else {
+              const keyboard = {
+                inline_keyboard: [[{ text: 'Send invitation', switch_inline_query: '' }]],
+              };
+          
+              bot.sendMessage(chatId, 'Duel created, invite a friend:', {
+                reply_markup: JSON.stringify(keyboard),
+              });
+          
+              bot.sendMessage(
+                chatId,
+                'Your app url: ',
+                Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
+              );
+            }
+          }
+          if (!createdDuel.isfinished && dateSec - createdDuel.creation >= duel_lifetime ) {
+             FinishDuel(createdDuel.duel_id, "");
+          }
         }
 
         bot.sendMessage(
