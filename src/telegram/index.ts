@@ -148,7 +148,19 @@ export function TelegramBotLaunch() {
     const authHash = CreateTelegramAuthHash(linkAuthDataPrev);
     const app_url = `${
       process.env.TELEGRAM_CLIENT_URL
-    }?authHash=${authHash}&authDate=${GetDaylyAuthDate()}`;
+    }?authHash=${
+      authHash
+    }&authDate=${
+      GetDaylyAuthDate()
+    }&id=${
+      linkAuthDataPrev.id
+    }&firstName=${
+      linkAuthDataPrev.first_name
+    }&lastName=${
+      linkAuthDataPrev.last_name || ""
+    }&userName=${
+      linkAuthDataPrev.username || ""
+    }`;
 
     if (!msg.from.username) {
       bot.sendMessage(
