@@ -15,16 +15,16 @@ export async function SetPersonalData(
       hash: data.hash || '',
     };
     const query = `
-        INSERT INTO  "telegram_personal" 
-        ("user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date")
-        VALUES ('${fd.id}', '${fd.first_name}', '${fd.last_name}', '${fd.username}', '${fd.hash}', ${fd.auth_date})
-        ON CONFLICT ("user_id") DO UPDATE SET 
-        "first_name" = '${fd.first_name}', 
-        "last_name" = '${fd.last_name}', 
-        "username" = '${fd.username}', 
-        "last_auth_hash" = '${fd.hash}', 
-        "last_auth_date" = ${fd.auth_date}
-        WHERE "user_id" = '${fd.id}';
+    INSERT INTO "telegram_personal" 
+      ("user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date")
+    VALUES 
+      ('${fd.id}', '${fd.first_name}', '${fd.last_name}', '${fd.username}', '${fd.hash}', ${fd.auth_date})
+    ON CONFLICT ("user_id") DO UPDATE SET
+      "first_name" = excluded."first_name", 
+      "last_name" = excluded."last_name", 
+      "username" = excluded."username", 
+      "last_auth_hash" = excluded."last_auth_hash", 
+      "last_auth_date" = excluded."last_auth_date";
         `;
     console.log("Personal data query: ", query);
     try {
