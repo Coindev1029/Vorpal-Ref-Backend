@@ -73,6 +73,17 @@ export function TelegramBotLaunch() {
             ]),
           );
         } else {
+          if (duel 
+            && linkAuthDataPrev.username === inviterLogin.toLowerCase() 
+            && !createdDuel.isfinished 
+            && dateSec - createdDuel.creation < duel_lifetime) {
+            bot.sendMessage(
+              chatId,
+              `Enter starmap and wait your friend: `,
+              Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
+            );
+            return;
+          }
           if (duel && !createdDuel.isfinished && 
             dateSec - createdDuel.creation < duel_lifetime && 
             (createdDuel.login1 && !createdDuel.login2)) {
