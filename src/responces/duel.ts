@@ -24,7 +24,7 @@ export const IsUserInDuelResponce = async (req, res) => {
     return;
   }
 
-  const data = await IsUserInDuel(req.params.login);
+  const data = await IsUserInDuel(req.params.login.toLowerCase());
   res.status(200).send(JSON.stringify({ inDuel: data }));
   return;
 };
@@ -69,7 +69,7 @@ export const DuelDataByLoginResponce = async (req, res) => {
     return;
   }
 
-  const data = await GetDuelDataByUser(req.params.login);
+  const data = await GetDuelDataByUser(req.params.login.toLowerCase());
   res.status(200).send(JSON.stringify({ data: data }));
   return;
 };
@@ -92,7 +92,7 @@ export const FinishDuelResponce = async (req, res) => {
     return;
   }
 
-  const result = await FinishDuel(body.duelId, body.winner);
+  const result = await FinishDuel(body.duelId, body.winner.toLowerCase());
 
   res.status(200).send(JSON.stringify({ result: result }));
   return;
@@ -107,7 +107,7 @@ export const RewardConditionResponce = async (req, res) => {
     return;
   }
 
-  const duelCount = await GetDuelPairCount(body.login1, body.login2);
+  const duelCount = await GetDuelPairCount(body.login1.toLowerCase(), body.login2.toLowerCase());
   res.status(200).send({
     reward: duelCount <= 1 ? true: false,
   });
