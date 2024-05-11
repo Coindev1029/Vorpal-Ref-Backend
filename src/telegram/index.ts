@@ -113,7 +113,7 @@ export function TelegramBotLaunch() {
           Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
         ); */
       } catch (e) {
-        console.log('Start cmd exception: ', e.message, e.fileName, e.lineNumber);
+        console.log('Start cmd exception: ', e);
         bot.sendMessage(
           chatId,
           'Bot-side error'
