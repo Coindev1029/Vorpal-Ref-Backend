@@ -198,7 +198,7 @@ export function TelegramBotLaunch() {
         id: '1',
         title: 'Send invitation message',
         input_message_content: {
-          message_text: `Duel call from ${query.from.first_name} ${query.from.last_name}`,
+          message_text: `Duel call from ${query.from.first_name} ${query.from.last_name || ""}`,
           parse_mode: 'Markdown',
         },
         reply_markup: {
