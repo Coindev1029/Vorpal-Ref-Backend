@@ -47,7 +47,7 @@ export function TelegramBotLaunch() {
           return;
         }
 
-        const createdDuel = await GetDuelDataByUser(inviterLogin.toLowerCase());
+        const createdDuel = inviterLogin? await GetDuelDataByUser(inviterLogin) : null;
         // console.log('Last duel: ', createdDuel);
         const dateSec = Math.round(new Date().getTime() / 1000);
         if (!createdDuel) {
