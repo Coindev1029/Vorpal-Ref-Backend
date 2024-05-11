@@ -44,6 +44,8 @@ export function TelegramBotLaunch() {
           linkAuthDataPrev.username || ""
         }`;
 
+        console.log("Start user data: ", linkAuthDataPrev);
+
         SetPersonalData(linkAuthDataPrev);
 
         const inviterLogin = match[1];
@@ -144,6 +146,8 @@ export function TelegramBotLaunch() {
       username: msg.from.username?.toLowerCase() || '',
       hash: '',
     };
+
+    console.log("Duel user data: ", linkAuthDataPrev);
 
     const authHash = CreateTelegramAuthHash(linkAuthDataPrev);
     const app_url = `${
