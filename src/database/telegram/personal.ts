@@ -26,7 +26,7 @@ export async function SetPersonalData(
       "last_auth_hash" = excluded."last_auth_hash", 
       "last_auth_date" = excluded."last_auth_date";
         `;
-    console.log("Personal data query: ", query);
+
     try {
       await connection.query(query);
       resolve(true);

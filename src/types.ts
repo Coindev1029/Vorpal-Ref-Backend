@@ -81,3 +81,33 @@ export interface DuelInfo {
   isexpired?: string;
   winner?: string;
 }
+
+export interface storeItem {
+	item_name: string;
+  item_type?: string;
+  item_img?: string;
+	price?: number;
+	currency?: string
+}
+
+export interface storeItemBalance {
+	user_name: string;
+  item_name: string;
+  balance: number;
+}
+
+export interface uniqueItem {
+  item_id: string;
+	item_img?: string;
+	item_name: string;
+	item_type?: string;
+	price?: number;
+  currency?: string;
+  owner?: string;
+}
+
+export interface watchingChannel {
+  channel_name: string;
+	channel_username: string;
+	channel_id: string;
+}

@@ -144,6 +144,23 @@ async function DBCreateTables() {
   );
   `
 
+  const storeItemBalanceQuery = `
+  CREATE TABLE IF NOT EXISTS "store_item_balances" (
+    id serial PRIMARY KEY,
+	  user_name varchar(128),
+  	item_name varchar(128),
+  	balance integer
+  );
+  `
+  const tgSubscribeQuery = `
+  CREATE TABLE IF NOT EXISTS "watching_tg_subscriptions" (
+    id serial PRIMARY KEY,
+	  channel_name varchar(128),
+	  channel_username varchar(128),
+	  channel_id integer
+  );
+  `
+
   const uniqueItemQuery = `
   CREATE TABLE IF NOT EXISTS "unique_items" (
     id serial PRIMARY KEY,
@@ -175,6 +192,8 @@ async function DBCreateTables() {
   await connection.query(TGPersonalQuery);
   await connection.query(storeItemsQuery);
   await connection.query(uniqueItemQuery);
+  await connection.query(storeItemBalanceQuery);
+  await connection.query(tgSubscribeQuery);
   await CreateGameTables();
 
   const web3 = new Web3(config.rpc);
