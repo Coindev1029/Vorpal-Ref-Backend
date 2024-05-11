@@ -62,8 +62,19 @@ export function TelegramBotLaunch() {
         }
 
         const createdDuel = inviterLogin? await GetDuelDataByUser(inviterLogin) : null;
+
+        
         // console.log('Last duel: ', createdDuel);
         const dateSec = Math.round(new Date().getTime() / 1000);
+        if (duel 
+          && linkAuthDataPrev.username === inviterLogin.toLowerCase() ) {
+          bot.sendMessage(
+            chatId,
+            `Enter starmap and wait your friend: `,
+            Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
+          );
+          return;
+        }
         if (!createdDuel) {
           bot.sendMessage(
             chatId,
@@ -73,17 +84,6 @@ export function TelegramBotLaunch() {
             ]),
           );
         } else {
-          if (duel 
-            && linkAuthDataPrev.username === inviterLogin.toLowerCase() 
-            && !createdDuel.isfinished 
-            && dateSec - createdDuel.creation < duel_lifetime) {
-            bot.sendMessage(
-              chatId,
-              `Enter starmap and wait your friend: `,
-              Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
-            );
-            return;
-          }
           if (duel && !createdDuel.isfinished && 
             dateSec - createdDuel.creation < duel_lifetime && 
             (createdDuel.login1 && !createdDuel.login2)) {
