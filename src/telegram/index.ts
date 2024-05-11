@@ -24,7 +24,7 @@ export function TelegramBotLaunch() {
           last_name: msg.from.last_name || '',
           first_name: msg.from.first_name,
           id: msg.from.id,
-          username: msg.from.username || '',
+          username: msg.from.username?.toLowerCase() || '',
           hash: '',
         };
         const authHash = CreateTelegramAuthHash(linkAuthDataPrev);
@@ -47,7 +47,7 @@ export function TelegramBotLaunch() {
           return;
         }
 
-        const createdDuel = await GetDuelDataByUser(inviterLogin);
+        const createdDuel = await GetDuelDataByUser(inviterLogin.toLowerCase());
         // console.log('Last duel: ', createdDuel);
         const dateSec = Math.round(new Date().getTime() / 1000);
         if (!createdDuel) {
@@ -134,7 +134,7 @@ export function TelegramBotLaunch() {
       last_name: msg.from.last_name || '',
       first_name: msg.from.first_name,
       id: msg.from.id,
-      username: msg.from.username || '',
+      username: msg.from.username?.toLowerCase() || '',
       hash: '',
     };
 
@@ -152,10 +152,10 @@ export function TelegramBotLaunch() {
       return;
     }
 
-    const userLastDuel = await GetDuelDataByUser(msg.from.username);
+    const userLastDuel = await GetDuelDataByUser(msg.from.username.toLowerCase());
     // console.log('Last duel', userLastDuel);
     if (!userLastDuel) {
-      await CreateDuel(msg.from.username, '');
+      await CreateDuel(msg.from.username.toLowerCase(), '');
     } else {
       const isFinished = userLastDuel.isfinished;
       const creation = Number(userLastDuel.creation);
@@ -170,7 +170,7 @@ export function TelegramBotLaunch() {
       }
       if (!isFinished && dateSec - creation >= duel_lifetime) {
         await FinishDuel(userLastDuel.duel_id, '');
-        await CreateDuel(msg.from.username, '');
+        await CreateDuel(msg.from.username.toLowerCase(), '');
       }
     }
 
