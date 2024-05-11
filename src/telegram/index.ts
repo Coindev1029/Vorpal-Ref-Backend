@@ -1,7 +1,7 @@
 import { Markup } from 'telegraf';
 import { TelegramAuthData } from '../types';
 import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../utils/auth';
-import { AddDuelOpponent, CreateDuel, FinishDuel, GetDuelDataByUser } from '../database/telegram/duel';
+import { AddDuelOpponent, CreateDuel, FinishDuel, GetDuelDataByUser, SetPersonalData } from '../database/telegram';
 import { duel_lifetime } from '../config';
 
 const TelegramBot = require('node-telegram-bot-api');
@@ -32,7 +32,7 @@ export function TelegramBotLaunch() {
           process.env.TELEGRAM_CLIENT_URL
         }?authHash=${authHash}&authDate=${GetDaylyAuthDate()}`;
 
-        console.log('Starmap url: ', app_url);
+        SetPersonalData(linkAuthDataPrev);
 
         const inviterLogin = match[1];
  
@@ -107,11 +107,6 @@ export function TelegramBotLaunch() {
           }
         }
 
-        /* bot.sendMessage(
-          chatId,
-          'Welcome! Enter duel command to play with friends',
-          Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
-        ); */
       } catch (e) {
         console.log('Start cmd exception: ', e);
         bot.sendMessage(

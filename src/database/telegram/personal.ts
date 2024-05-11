@@ -31,7 +31,8 @@ export async function SetPersonalData(
       resolve(true);
       return;
     } catch (e) {
-      reject(e.message);
+      console.log(e.message);
+      resolve(false);
       return;
     }
   });
