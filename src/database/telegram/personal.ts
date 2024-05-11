@@ -18,7 +18,7 @@ export async function SetPersonalData(
         INSERT INTO  "telegram_personal" 
         ("user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date")
         VALUES ('${fd.id}', '${fd.first_name}', '${fd.last_name}', '${fd.username}', '${fd.hash}', ${fd.auth_date})
-        ON CONFLICT DO UPDATE SET 
+        ON CONFLICT DO UPDATE "telegram_personal" SET 
         "first_name" = '${fd.first_name}', 
         "last_name" = '${fd.last_name}', 
         "username" = '${fd.username}', 
