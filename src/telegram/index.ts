@@ -62,7 +62,7 @@ export function TelegramBotLaunch() {
           if (duel && !createdDuel.isfinished && 
             dateSec - createdDuel.creation < duel_lifetime && 
             (createdDuel.login1 && !createdDuel.login2)) {
-             await AddDuelOpponent (createdDuel.duel_id, msg.from.username);
+             await AddDuelOpponent (createdDuel.duel_id, msg.from.username?.toLowerCase());
              bot.sendMessage(
               chatId,
               `You joined to a duel with a @${inviterLogin}, go to starmap:`,
@@ -113,7 +113,7 @@ export function TelegramBotLaunch() {
           Markup.keyboard([Markup.button.webApp('Start vorpal game', app_url)]),
         ); */
       } catch (e) {
-        console.log('Start cmd exception: ', e.message);
+        console.log('Start cmd exception: ', e.message, e.fileName, e.lineNumber);
         bot.sendMessage(
           chatId,
           'Bot-side error'
@@ -152,10 +152,10 @@ export function TelegramBotLaunch() {
       return;
     }
 
-    const userLastDuel = await GetDuelDataByUser(msg.from.username.toLowerCase());
+    const userLastDuel = await GetDuelDataByUser(msg.from.username?.toLowerCase());
     // console.log('Last duel', userLastDuel);
     if (!userLastDuel) {
-      await CreateDuel(msg.from.username.toLowerCase(), '');
+      await CreateDuel(msg.from.username?.toLowerCase(), '');
     } else {
       const isFinished = userLastDuel.isfinished;
       const creation = Number(userLastDuel.creation);
@@ -170,7 +170,7 @@ export function TelegramBotLaunch() {
       }
       if (!isFinished && dateSec - creation >= duel_lifetime) {
         await FinishDuel(userLastDuel.duel_id, '');
-        await CreateDuel(msg.from.username.toLowerCase(), '');
+        await CreateDuel(msg.from.username?.toLowerCase(), '');
       }
     }
 
