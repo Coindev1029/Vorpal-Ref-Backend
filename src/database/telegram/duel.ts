@@ -1,7 +1,7 @@
-import { DuelInfo } from "../types";
-import { GetValueByKey, SetValueByKey } from "./balances";
+import { DuelInfo } from "../../types";
+import { GetValueByKey, SetValueByKey } from "../balances";
 
-const { connection } = require('./connection');
+const { connection } = require('../connection');
 const md5 = require('md5');
 const onlineCountKey = "DUEL_ONLINE_COUNT";
 

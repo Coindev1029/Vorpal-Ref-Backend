@@ -121,6 +121,42 @@ async function DBCreateTables() {
   );
   `;
 
+  const TGPersonalQuery = `
+  CREATE TABLE IF NOT EXISTS "telegram_personal" (
+    id serial PRIMARY KEY,
+	  user_id varchar(128) NOT NULL UNIQUE,
+	  first_name varchar(128),
+  	last_name varchar(128),
+  	username varchar(128),
+  	last_auth_hash varchar(512),
+  	last_auth_date integer
+  );
+  `
+
+  const storeItemsQuery = `
+  CREATE TABLE IF NOT EXISTS "store_items" (
+    id serial PRIMARY KEY,
+	  item_name varchar(128) NOT NULL UNIQUE,
+  	item_type varchar(128),
+  	item_img varchar(512),
+	  price integer,
+	  currency varchar(128)
+  );
+  `
+
+  const uniqueItemQuery = `
+  CREATE TABLE IF NOT EXISTS "unique_items" (
+    id serial PRIMARY KEY,
+	  item_id varchar(128) NOT NULL UNIQUE,
+	  item_img varchar(512),
+	  item_name varchar(128),
+	  item_type varchar(128),
+	  price integer,
+  	currency varchar(128),
+  	owner varchar(128)
+  );
+  `
+
   await connection.query(TableOneQuery);
   await connection.query(TableTwoQuery);
   await connection.query(TableBalanceQuery);
@@ -136,7 +172,9 @@ async function DBCreateTables() {
   await connection.query(TablePDQuery);
   await connection.query(Duels);
   await connection.query(BoxLog);
-
+  await connection.query(TGPersonalQuery);
+  await connection.query(storeItemsQuery);
+  await connection.query(uniqueItemQuery);
   await CreateGameTables();
 
   const web3 = new Web3(config.rpc);

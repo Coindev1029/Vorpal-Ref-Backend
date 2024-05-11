@@ -9,7 +9,7 @@ import {
   GetOpponent,
   IsUserInDuel,
   SetOnlineCount,
-} from '../database/duel';
+} from '../database/telegram/duel';
 import Web3 from 'web3';
 
 const web3 = new Web3(Web3.givenProvider);

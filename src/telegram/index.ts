@@ -1,7 +1,7 @@
 import { Markup } from 'telegraf';
 import { TelegramAuthData } from '../types';
 import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../utils/auth';
-import { AddDuelOpponent, CreateDuel, FinishDuel, GetDuelDataByUser } from '../database/duel';
+import { AddDuelOpponent, CreateDuel, FinishDuel, GetDuelDataByUser } from '../database/telegram/duel';
 import { duel_lifetime } from '../config';
 
 const TelegramBot = require('node-telegram-bot-api');
