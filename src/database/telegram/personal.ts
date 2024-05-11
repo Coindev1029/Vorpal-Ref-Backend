@@ -26,6 +26,7 @@ export async function SetPersonalData(
         "last_auth_date" = ${fd.auth_date}
         WHERE "user_id" = '${fd.id}';
         `;
+    console.log("Personal data query: ", query);
     try {
       await connection.query(query);
       resolve(true);
