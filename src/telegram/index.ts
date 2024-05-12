@@ -24,14 +24,18 @@ export async function GetChannelSubscribeList(userId: number) {
   // Markup.button.webApp('Start vorpal game', app_url)
   for (let j = 0; j < channels.length; j++) {
     console.log("Channel: ", channels[j])
-    const chatMember = await bot.getChatMember(String(channels[j].id), userId);
-    if (!chatMember) {
-      continue;
-    }
-    if (chatMember.status === 'member' || chatMember.status === 'administrator' || chatMember.status === 'creator') {
-      continue;
-    } else {
-      subscribeKeyboard.push(Markup.button.webApp('Start vorpal game', `https://t.me/${channels[j].username.replace('@', '')}`))
+    try {
+      const chatMember = await bot.getChatMember(String(channels[j].id), userId);
+      if (!chatMember) {
+        continue;
+      }
+      if (chatMember.status === 'member' || chatMember.status === 'administrator' || chatMember.status === 'creator') {
+        continue;
+      } else {
+        subscribeKeyboard.push(Markup.button.webApp('Start vorpal game', `https://t.me/${channels[j].username.replace('@', '')}`))
+      }
+    } catch (e) {
+      console.log("Chat error: ", String(channels[j].id), userId, e.message)
     }
   }
   return subscribeKeyboard;
