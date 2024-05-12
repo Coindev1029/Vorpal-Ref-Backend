@@ -18,7 +18,7 @@ const tg_token = process.env.TELEGRAM_API_TOKEN;
 
 const bot = new TelegramBot(tg_token, { polling: true });
 
-const front_v = '405'
+const front_v = '406'
 
 export async function GetChannelSubscribeList(
   userId: number,
