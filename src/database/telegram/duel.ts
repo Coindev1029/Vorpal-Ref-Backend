@@ -100,6 +100,7 @@ export async function GetDuelDataByUser (login: string): Promise<DuelInfo | null
 }
 
 export async function FinishDuel(duelId: string, winner: string) {
+  console.log("Finish request received for: ", duelId);
   const filteredLogin = winner.toLowerCase()
   const query = `UPDATE "duels" SET isfinished = true, isexpired = true, winner = '${filteredLogin}' WHERE "duel_id" = '${duelId}';`;
   try {

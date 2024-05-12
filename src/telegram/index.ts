@@ -167,6 +167,7 @@ export function TelegramBotLaunch() {
             !createdDuel.isfinished &&
             dateSec - createdDuel.creation > duel_lifetime
           ) {
+            console.log("Finish duel case 1")
             await FinishDuel(createdDuel.duel_id, '');
             bot.sendMessage(
               chatId,
@@ -214,6 +215,7 @@ export function TelegramBotLaunch() {
             !createdDuel.isfinished &&
             dateSec - createdDuel.creation >= duel_lifetime
           ) {
+            console.log("Finish duel case 2")
             FinishDuel(createdDuel.duel_id, '');
           }
           if (subscribeMsg) bot.sendMessage(...subscribeMsg);
@@ -285,6 +287,7 @@ export function TelegramBotLaunch() {
         return;
       }
       if (!isFinished || dateSec - creation >= duel_lifetime) {
+        console.log("Finish duel case 3")
         await FinishDuel(userLastDuel.duel_id, '');
         const duelId = await CreateDuel(msg.from.username?.toLowerCase(), '');
         console.log('Created, id: ', duelId);
