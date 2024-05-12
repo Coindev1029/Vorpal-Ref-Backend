@@ -1,4 +1,4 @@
-import { GetChannelSubscribeList } from "telegram";
+import { GetChannelSubscribeList } from "../telegram";
 import { TelegramAuthData } from "../types"
 import { CheckTelegramAuth } from "../utils/auth";
 
