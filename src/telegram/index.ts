@@ -77,19 +77,19 @@ export function TelegramBotLaunch() {
 
         const subscribes = await GetChannelSubscribeList(linkAuthDataPrev.id);
 
+        const inlineButtons = subscribes.map((item) => ({
+          text: item.name,
+          url: `https://t.me/${item.username.replace('@', '')}`
+        }));
+
         const keyboardS = {
-          inline_keyboard: [
-            [subscribes.map((item) => {
-              return { text: item.name, url: `https://t.me/${item.username.replace('@', '')}` }
-            })],
-          ],
+          inline_keyboard: [inlineButtons]
         };
 
         const subscribeMsg: any[] | null = subscribes.length === 0 ? null : 
         [chatId, "Subscribe on channels to get more prizes", {
           reply_markup: keyboardS,
         }]
-
 
         if (duel && !msg.from.username) {
           bot.sendMessage(
