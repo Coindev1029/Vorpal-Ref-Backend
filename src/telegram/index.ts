@@ -43,12 +43,6 @@ export async function GetChannelSubscribeList(userId: number): Promise<tgChannel
   return subscribes;
 }
 
-function GenereateSubscribeInlineKeyboard (channels: tgChannelData[]) {
-  return [[channels.map((item) => {
-    return { text: item.name, url: `https://t.me/${item.username.replace('@', '')}` }
-  })]]
-}
-
 export function TelegramBotLaunch() {
 
   const startHandler = (duel = false) => {
@@ -83,10 +77,18 @@ export function TelegramBotLaunch() {
 
         const subscribes = await GetChannelSubscribeList(linkAuthDataPrev.id);
 
+        const keyboardS = {
+          inline_keyboard: [
+            [subscribes.map((item) => {
+              return { text: item.name, url: `https://t.me/${item.username.replace('@', '')}` }
+            })],
+          ],
+        };
+
         const subscribeMsg: any[] | null = subscribes.length === 0 ? null : 
-        [chatId, "Subscribe on channels to get more prizes",, {
-          reply_markup: JSON.stringify({inline_keyboard: GenereateSubscribeInlineKeyboard(subscribes)}),
-        } ]
+        [chatId, "Subscribe on channels to get more prizes", {
+          reply_markup: JSON.stringify(keyboardS),
+        }]
 
 
         if (duel && !msg.from.username) {
