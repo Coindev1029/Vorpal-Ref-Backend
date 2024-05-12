@@ -1,5 +1,5 @@
 import { Markup } from 'telegraf';
-import { TelegramAuthData } from '../types';
+import { TelegramAuthData, tgChannelData } from '../types';
 import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../utils/auth';
 import {
   AddDuelOpponent,
@@ -18,12 +18,13 @@ const tg_token = process.env.TELEGRAM_API_TOKEN;
 
 const bot = new TelegramBot(tg_token, { polling: true });
 
-export async function GetChannelSubscribeList(userId: number) {
+export async function GetChannelSubscribeList(userId: number): Promise<tgChannelData[]> {
   const channels = await GetWatchingChannels();
-  const subscribeKeyboard: any[] = []
+  const subscribes: tgChannelData[] = []
   // Markup.button.webApp('Start vorpal game', app_url)
+  // inline_keyboard: [[{ text: 'Send invitation', switch_inline_query: '' }]]
   for (let j = 0; j < channels.length; j++) {
-    console.log("Channel: ", channels[j])
+    // console.log("Channel: ", channels[j])
     try {
       const chatMember = await bot.getChatMember(channels[j].id, userId);
       if (!chatMember) {
@@ -32,13 +33,20 @@ export async function GetChannelSubscribeList(userId: number) {
       if (chatMember.status === 'member' || chatMember.status === 'administrator' || chatMember.status === 'creator') {
         continue;
       } else {
-        subscribeKeyboard.push(Markup.button.webApp('Start vorpal game', `https://t.me/${channels[j].username.replace('@', '')}`))
+        subscribes.push(channels[j])
       }
     } catch (e) {
       console.log("Chat error: ", String(channels[j].id), userId, e.message)
     }
   }
-  return subscribeKeyboard;
+  console.log("Keyboard: ")
+  return subscribes;
+}
+
+function GenereateSubscribeInlineKeyboard (channels: tgChannelData[]) {
+  return [[channels.map((item) => {
+    return { text: item.name, url: `https://t.me/${item.username.replace('@', '')}` }
+  })]]
 }
 
 export function TelegramBotLaunch() {
@@ -76,7 +84,7 @@ export function TelegramBotLaunch() {
         const subscribes = await GetChannelSubscribeList(linkAuthDataPrev.id);
 
         const subscribeMsg: any[] | null = subscribes.length === 0 ? null : 
-        [chatId, "Subscribe on channels to get more prizes", ...subscribes]
+        [chatId, "Subscribe on channels to get more prizes", GenereateSubscribeInlineKeyboard(subscribes)]
 
 
         if (duel && !msg.from.username) {
