@@ -94,7 +94,8 @@ async function DBCreateTables() {
     metal integer,
     token integer,
     biomass integer,
-    carbon integer
+    carbon integer,
+    trends integer
  );
   `;
 

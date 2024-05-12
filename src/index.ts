@@ -18,6 +18,7 @@ import {
   GetUserAvailableBoxes,
   GetUserResources,
   GiveResourcesResponce,
+  IsNeedSubscribes,
   IsUserInDuelResponce,
   OnlineCountResponce,
   OpenBoxRequest,
@@ -94,7 +95,9 @@ app.get('/api/dueldatabylogin/:login', DuelDataByLoginResponce);
 
 app.get('/api/getduelid/:login', DuelDataResponce);
 
-app.get('/api/onlinecount', OnlineCountResponce)
+app.get('/api/onlinecount', OnlineCountResponce);
+
+app.get('/api/usersubscribecondition', IsNeedSubscribes);
 
 app.post('/api/finishduel', FinishDuelResponce);
 
