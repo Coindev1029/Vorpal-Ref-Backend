@@ -137,10 +137,13 @@ async function DBCreateTables() {
   const storeItemsQuery = `
   CREATE TABLE IF NOT EXISTS "store_items" (
     id serial PRIMARY KEY,
-	  item_name varchar(128) NOT NULL UNIQUE,
-  	item_type varchar(128),
-  	item_img varchar(512),
-	  price integer,
+	  item varchar(128) NOT NULL UNIQUE,
+  	type varchar(128),
+    description varchar(256),
+  	img varchar(512),
+    per_user integer,
+    total_count integer,
+	  cost integer,
 	  currency varchar(128)
   );
   `

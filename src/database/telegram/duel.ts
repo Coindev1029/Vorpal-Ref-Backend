@@ -27,11 +27,11 @@ export async function AddDuelOpponent (duelId: string, login: string) {
 export async function GetDuelPairCount (part1: string, part2: string) {
    const login1 = part1.toLowerCase();
    const login2 = part2.toLowerCase();
-   const query = `SELECT count(*) FROM "duels" WHERE (login1 = '${login1}' AND login2 = '${login2}') OR (login1 = '${login2}' AND login2 = '${login1}');`;
+   const query = `SELECT * FROM "duels" WHERE (login1 = '${login1}' AND login2 = '${login2}') OR (login1 = '${login2}' AND login2 = '${login1}');`;
    try {
     const result = await connection.query(query);
     if (result.rows.length > 0) {
-      return result.rows[0].count;
+      return result.rows.length;
     } else {
       return 0;
     }

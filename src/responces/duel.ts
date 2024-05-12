@@ -106,11 +106,17 @@ export const RewardConditionResponce = async (req, res) => {
     });
     return;
   }
-
-  const duelCount = await GetDuelPairCount(body.login1.toLowerCase(), body.login2.toLowerCase());
-  res.status(200).send({
-    reward: duelCount <= 1 ? true: false,
-  });
+  try {
+    const duelCount = await GetDuelPairCount(body.login1.toLowerCase(), body.login2.toLowerCase());
+    res.status(200).send({
+      reward: duelCount <= 1 ? true: false,
+    });
+  } catch (e) {
+    console.log(e.message)
+    res.status(501).send({
+      error: "Failed to get count"
+    });
+  }
   return;
 }
 
