@@ -115,7 +115,7 @@ export function TelegramBotLaunch() {
         const createdDuel = inviterLogin
           ? await GetDuelDataByUser(inviterLogin)
           : null;
-
+        console.log("Find duel: ", createdDuel, "For user: ", linkAuthDataPrev.username)
         // console.log('Last duel: ', createdDuel);
         const dateSec = Math.round(new Date().getTime() / 1000);
         if (duel && linkAuthDataPrev.username === inviterLogin.toLowerCase()) {
