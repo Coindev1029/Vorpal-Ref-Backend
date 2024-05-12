@@ -115,6 +115,7 @@ export async function FinishDuel(duelId: string, winner: string) {
 }
 
 export async function CreateDuel(login1: string, login2: string = "") {
+  console.log("Duel creating")
   const fLogin1 = login1.toLowerCase()
   const fLogin2 = login2.toLowerCase()
   const dt = Math.round(new Date().getTime() / 1000);
@@ -125,8 +126,10 @@ export async function CreateDuel(login1: string, login2: string = "") {
     VALUES ('${duel_id}', '${fLogin1}', '${fLogin2}', ${dt}, false, false, '');`;
   try {
     const result = await connection.query(query);
+    console.log("Duel created: ", duel_id)
     return duel_id;
   } catch (e) {
+    console.log("Duel creation error", e.message)
     return null;
   }
   return;
