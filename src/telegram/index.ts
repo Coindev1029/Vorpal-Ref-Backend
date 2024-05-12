@@ -143,9 +143,9 @@ export function TelegramBotLaunch() {
           if (
             duel &&
             !createdDuel.isfinished &&
-            dateSec - createdDuel.creation < duel_lifetime &&
+            // dateSec - createdDuel.creation < duel_lifetime &&
             createdDuel.login1 &&
-            !createdDuel.login2
+            (!createdDuel.login2 || createdDuel.login2 === linkAuthDataPrev.username)
           ) {
             await AddDuelOpponent(
               createdDuel.duel_id,
