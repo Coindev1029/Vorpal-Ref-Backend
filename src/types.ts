@@ -82,6 +82,12 @@ export interface DuelInfo {
   winner?: string;
 }
 
+export interface tgChannelData {
+  username: string;
+  name: string;
+  id: number
+}
+
 export interface storeItem {
 	item_name: string;
   item_type?: string;

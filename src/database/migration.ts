@@ -157,7 +157,7 @@ async function DBCreateTables() {
     id serial PRIMARY KEY,
 	  channel_name varchar(128),
 	  channel_username varchar(128),
-	  channel_id integer
+	  channel_id varchar(128)
   );
   `
 

@@ -180,6 +180,7 @@ export const GetUserResources = async (req, res) => {
     res.status(400).send({
       error: 'Nessesary parameters is missing',
     });
+    return;
   }
   try {
     const assets = await GetUserBalanceRow(
