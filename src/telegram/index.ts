@@ -25,7 +25,7 @@ export async function GetChannelSubscribeList(userId: number) {
   for (let j = 0; j < channels.length; j++) {
     console.log("Channel: ", channels[j])
     try {
-      const chatMember = await bot.getChatMember(String(channels[j].id), userId);
+      const chatMember = await bot.getChatMember(channels[j].id, userId);
       if (!chatMember) {
         continue;
       }
