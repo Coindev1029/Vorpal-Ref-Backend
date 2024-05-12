@@ -10,6 +10,7 @@ export async function CreateNewBox(
   ownerAddress: string = '',
   ownerLogin: string = ''
 ) {
+  console.log("Box creation called for: ", ownerLogin)
   if (!ownerAddress && !ownerLogin) return false;
   const holderData = await IsHolderExists(ownerAddress);
   if (!holderData) {
@@ -18,6 +19,7 @@ export async function CreateNewBox(
   const query = `
     INSERT INTO boxes (ownerAddress, ownerLogin, level, isopen) 
     VALUES ('${ownerAddress}', '${ownerLogin}', ${level}, false);`;
+    console.log("Box creation query: ", query)
  // WriteLog('Box creation query: ', query);
   await connection.query(query);
   const idQuery = `SELECT max(id) FROM boxes;`;

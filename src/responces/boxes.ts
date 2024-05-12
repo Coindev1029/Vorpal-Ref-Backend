@@ -48,6 +48,7 @@ export const CreateBox = async (req, res) => {
       error: 'Some of nessesary parameters is missing',
     });
   }
+  console.log("Box creation request: ", req.body)
   try {
     const msg = GetSignableMessage();
     const address = web3.eth.accounts.recover(msg, body.signature)
