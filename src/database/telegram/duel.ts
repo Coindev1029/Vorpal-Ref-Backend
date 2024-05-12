@@ -124,8 +124,10 @@ export async function CreateDuel(login1: string, login2: string = "") {
   const query = `INSERT INTO "duels" 
     ("duel_id", "login1", "login2", "creation", "isfinished", "isexpired", "winner") 
     VALUES ('${duel_id}', '${fLogin1}', '${fLogin2}', ${dt}, false, false, '');`;
+  console.log("Creation query: ", query);
   try {
     const result = await connection.query(query);
+    console.log("Creation result: ", result)
     console.log("Duel created: ", duel_id)
     return duel_id;
   } catch (e) {
