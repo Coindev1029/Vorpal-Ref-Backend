@@ -115,21 +115,16 @@ export async function FinishDuel(duelId: string, winner: string) {
 }
 
 export async function CreateDuel(login1: string, login2: string = "") {
-  console.log("Duel creating for login: ", login1);
   const fLogin1 = login1.toLowerCase()
   const fLogin2 = login2.toLowerCase()
   const dt = Math.round(new Date().getTime() / 1000);
   const duel_id = md5(`${dt}_${fLogin1}_${fLogin2}`);
-  console.log("Generated id: ", duel_id);
-  if ((await IsUserInDuel(fLogin1)) || (await IsUserInDuel(fLogin2))) return null;
   const query = `INSERT INTO "duels" 
     ("duel_id", "login1", "login2", "creation", "isfinished", "isexpired", "winner") 
     VALUES ('${duel_id}', '${fLogin1}', '${fLogin2}', ${dt}, false, false, '');`;
   console.log("Creation query: ", query);
   try {
     const result = await connection.query(query);
-    console.log("Creation result: ", result)
-    console.log("Duel created: ", duel_id)
     return duel_id;
   } catch (e) {
     console.log("Duel creation error", e.message)

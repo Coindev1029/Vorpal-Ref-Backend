@@ -74,8 +74,6 @@ export function TelegramBotLaunch() {
           linkAuthDataPrev.last_name || ''
         }&userName=${linkAuthDataPrev.username || ''}`;
 
-        console.log('Start user data: ', linkAuthDataPrev);
-
         SetPersonalData(linkAuthDataPrev);
 
         const inviterLogin = match[1];
@@ -264,10 +262,7 @@ export function TelegramBotLaunch() {
     const userLastDuel = await GetDuelDataByUser(
       msg.from.username?.toLowerCase(),
     );
-    // console.log('Last duel', userLastDuel);
-    console.log('Duel creation, last: ', userLastDuel);
     if (!userLastDuel) {
-      console.log('Duel creation, last condition passed');
       await CreateDuel(msg.from.username?.toLowerCase(), '');
     } else {
       const isFinished = userLastDuel.isfinished;
@@ -287,7 +282,6 @@ export function TelegramBotLaunch() {
       }
       if (!isFinished || dateSec - creation >= duel_lifetime) {
         await FinishDuel(userLastDuel.duel_id, '');
-        console.log('Duel creation, last condition passed 2');
         const duelId = await CreateDuel(msg.from.username?.toLowerCase(), '');
         console.log('Created, id: ', duelId);
       }
