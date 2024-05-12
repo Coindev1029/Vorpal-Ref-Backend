@@ -23,7 +23,8 @@ export async function GetChannelSubscribeList(userId: number) {
   const subscribeKeyboard: any[] = []
   // Markup.button.webApp('Start vorpal game', app_url)
   for (let j = 0; j < channels.length; j++) {
-    const chatMember = await bot.getChatMember(channels[j].id, userId);
+    console.log("Channel: ", channels[j])
+    const chatMember = await bot.getChatMember(String(channels[j].id), userId);
     if (!chatMember) {
       continue;
     }
