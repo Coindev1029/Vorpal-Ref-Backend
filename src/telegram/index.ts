@@ -285,14 +285,14 @@ export function TelegramBotLaunch() {
         );
         return;
       }
-      if (!isFinished && dateSec - creation >= duel_lifetime) {
+      if (!isFinished || dateSec - creation >= duel_lifetime) {
         await FinishDuel(userLastDuel.duel_id, '');
         console.log('Duel creation, last condition passed 2');
-        await CreateDuel(msg.from.username?.toLowerCase(), '');
-        return;
+        const duelId = await CreateDuel(msg.from.username?.toLowerCase(), '');
+        console.log('Created, id: ', duelId);
       }
-      console.log('Duel creation, last condition passed 3');
-      await CreateDuel(msg.from.username?.toLowerCase(), '');
+      // console.log('Duel creation, last condition passed 3');
+      // await CreateDuel(msg.from.username?.toLowerCase(), '');
     }
 
     const keyboard = {
