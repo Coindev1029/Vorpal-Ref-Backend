@@ -18,9 +18,11 @@ const tg_token = process.env.TELEGRAM_API_TOKEN;
 
 const bot = new TelegramBot(tg_token, { polling: true });
 
-export async function GetChannelSubscribeList(userId: number): Promise<tgChannelData[]> {
+export async function GetChannelSubscribeList(
+  userId: number,
+): Promise<tgChannelData[]> {
   const channels = await GetWatchingChannels();
-  const subscribes: tgChannelData[] = []
+  const subscribes: tgChannelData[] = [];
   // Markup.button.webApp('Start vorpal game', app_url)
   // inline_keyboard: [[{ text: 'Send invitation', switch_inline_query: '' }]]
   for (let j = 0; j < channels.length; j++) {
@@ -30,21 +32,24 @@ export async function GetChannelSubscribeList(userId: number): Promise<tgChannel
       if (!chatMember) {
         continue;
       }
-      if (chatMember.status === 'member' || chatMember.status === 'administrator' || chatMember.status === 'creator') {
+      if (
+        chatMember.status === 'member' ||
+        chatMember.status === 'administrator' ||
+        chatMember.status === 'creator'
+      ) {
         continue;
       } else {
-        subscribes.push(channels[j])
+        subscribes.push(channels[j]);
       }
     } catch (e) {
-      console.log("Chat error: ", String(channels[j].id), userId, e.message)
+      console.log('Chat error: ', String(channels[j].id), userId, e.message);
     }
   }
-  console.log("Keyboard: ")
+  console.log('Keyboard: ');
   return subscribes;
 }
 
 export function TelegramBotLaunch() {
-
   const startHandler = (duel = false) => {
     return async (msg, match) => {
       const chatId = msg.chat.id;
@@ -79,17 +84,23 @@ export function TelegramBotLaunch() {
 
         const inlineButtons = subscribes.map((item) => ({
           text: item.name,
-          url: `https://t.me/${item.username.replace('@', '')}`
+          url: `https://t.me/${item.username.replace('@', '')}`,
         }));
 
         const keyboardS = {
-          inline_keyboard: [inlineButtons]
+          inline_keyboard: [inlineButtons],
         };
 
-        const subscribeMsg: any[] | null = subscribes.length === 0 ? null : 
-        [chatId, "Subscribe on channels to get more prizes", {
-          reply_markup: keyboardS,
-        }]
+        const subscribeMsg: any[] | null =
+          subscribes.length === 0
+            ? null
+            : [
+                chatId,
+                'Subscribe on channels to get more prizes',
+                {
+                  reply_markup: keyboardS,
+                },
+              ];
 
         if (duel && !msg.from.username) {
           bot.sendMessage(
@@ -249,19 +260,18 @@ export function TelegramBotLaunch() {
       );
       return;
     }
-
+    const dateSec = Math.round(new Date().getTime() / 1000);
     const userLastDuel = await GetDuelDataByUser(
       msg.from.username?.toLowerCase(),
     );
     // console.log('Last duel', userLastDuel);
-    console.log("Duel creation, last: ", userLastDuel)
+    console.log('Duel creation, last: ', userLastDuel);
     if (!userLastDuel) {
-      console.log("Duel creation, last condition passed")
+      console.log('Duel creation, last condition passed');
       await CreateDuel(msg.from.username?.toLowerCase(), '');
     } else {
       const isFinished = userLastDuel.isfinished;
       const creation = Number(userLastDuel.creation);
-      const dateSec = Math.round(new Date().getTime() / 1000);
       if (
         !isFinished &&
         dateSec - creation < duel_lifetime &&
@@ -277,8 +287,11 @@ export function TelegramBotLaunch() {
       }
       if (!isFinished && dateSec - creation >= duel_lifetime) {
         await FinishDuel(userLastDuel.duel_id, '');
+        console.log('Duel creation, last condition passed 2');
         await CreateDuel(msg.from.username?.toLowerCase(), '');
       }
+      console.log('Duel creation, last condition passed 3');
+      await CreateDuel(msg.from.username?.toLowerCase(), '');
     }
 
     const keyboard = {
