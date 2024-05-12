@@ -1,8 +1,9 @@
 require('dotenv').config();
-import { boxOpenResults } from 'types';
+import { TelegramAuthData, boxOpenResults } from 'types';
 import { connection } from './../connection';
 import { WriteLog } from '../../database/log';
 import { GetHolderData, GetUserBalanceRow, IsHolderExists } from './getters';
+import { GetChannelSubscribeList } from 'telegram';
 
 export async function CreateNewBox(
   level: number,
@@ -51,7 +52,7 @@ export async function CreateNewHolder(address: string, login?: string) {
   return true;
 }
 
-export async function OpenBox(boxId: number) {
+export async function OpenBox(boxId: number, telegramData?: TelegramAuthData) {
   let openAmount = 0;
   const boxCheckQuery = `SELECT isopen FROM boxes WHERE id = ${boxId};`;
   const check = await connection.query(boxCheckQuery);
@@ -68,6 +69,15 @@ export async function OpenBox(boxId: number) {
     });
   }
   const value = Math.round(Math.random() * 10000);
+  if (telegramData) {
+    const subscribes = await GetChannelSubscribeList(telegramData.id);
+    if (subscribes.length === 0) {
+      const trendsValue = Math.round(Math.random() * 10000);
+      const trendsUpQuery = `UPDATE resources SET trends = trends + ${trendsValue} 
+      WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;
+      await connection.query(trendsUpQuery);
+    }
+  }
   const rewardType: boxOpenResults = (() => {
     switch (true) {
       case value < 100:
