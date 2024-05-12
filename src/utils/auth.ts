@@ -45,7 +45,7 @@ export function CheckTelegramAuth(auth_data: TelegramAuthData): {
     };
   }
   if (Date.now() / 1000 - auth_data.auth_date > 86400) {
-    throw {
+    return {
       success: false,
       error: 'Data is outdated',
     };
