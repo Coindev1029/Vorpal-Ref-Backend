@@ -18,13 +18,14 @@ const tg_token = process.env.TELEGRAM_API_TOKEN;
 
 const bot = new TelegramBot(tg_token, { polling: true });
 
+const front_v = '405'
+
 export async function GetChannelSubscribeList(
   userId: number,
 ): Promise<tgChannelData[]> {
   const channels = await GetWatchingChannels();
   const subscribes: tgChannelData[] = [];
-  // Markup.button.webApp('Start vorpal game', app_url)
-  // inline_keyboard: [[{ text: 'Send invitation', switch_inline_query: '' }]]
+
   for (let j = 0; j < channels.length; j++) {
     // console.log("Channel: ", channels[j])
     try {
@@ -72,7 +73,7 @@ export function TelegramBotLaunch() {
           linkAuthDataPrev.id
         }&firstName=${linkAuthDataPrev.first_name}&lastName=${
           linkAuthDataPrev.last_name || ''
-        }&userName=${linkAuthDataPrev.username || ''}&debugMode=1`;
+        }&userName=${linkAuthDataPrev.username || ''}&debugMode=1&version=${front_v}`;
 
         SetPersonalData(linkAuthDataPrev);
 
@@ -249,7 +250,7 @@ export function TelegramBotLaunch() {
       linkAuthDataPrev.id
     }&firstName=${linkAuthDataPrev.first_name}&lastName=${
       linkAuthDataPrev.last_name || ''
-    }&userName=${linkAuthDataPrev.username || ''}`;
+    }&userName=${linkAuthDataPrev.username || ''}&debugMode=1&version=${front_v}`;
 
     console.log("Client url: ", app_url);
 
