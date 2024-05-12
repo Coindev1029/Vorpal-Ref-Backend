@@ -87,7 +87,7 @@ export function TelegramBotLaunch() {
 
         const subscribeMsg: any[] | null = subscribes.length === 0 ? null : 
         [chatId, "Subscribe on channels to get more prizes", {
-          reply_markup: JSON.stringify(keyboardS),
+          reply_markup: keyboardS,
         }]
 
 
