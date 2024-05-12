@@ -109,7 +109,7 @@ export const OpenBoxRequest = async (req, res) => {
     if (address !== adminAddress.toLowerCase() 
       && address !== boxOwner.toLowerCase() &&
     !telegramDataValidation) {
-       res.status(403).send({
+      res.status(403).send({
         error: "Caller have no rights to open",
       });
        return;

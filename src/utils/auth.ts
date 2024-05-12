@@ -38,7 +38,9 @@ export function CheckTelegramAuth(auth_data: TelegramAuthData): {
   );
   data_check_arr.sort();
   const hashResult = CreateTelegramAuthHash(auth_data);
-  if (hashResult !== hash) {
+  console.log("Checking hash: ", hash.toLowerCase());
+  console.log("Checking hash result: ", hashResult.toLowerCase());
+  if (hashResult.toLowerCase() !== hash.toLowerCase()) {
     return {
       success: false,
       error: 'Invalid hash',

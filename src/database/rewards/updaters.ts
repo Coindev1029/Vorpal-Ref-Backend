@@ -46,7 +46,9 @@ export async function CreateNewHolder(address: string, login?: string) {
   if (isUserExists) {
     return false;
   }
-  const creationQuery = `INSERT INTO resources (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon) VALUES ('${address}', '${ownerLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
+  const creationQuery = `INSERT INTO resources 
+  (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon) 
+  VALUES ('${address}', '${ownerLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
   // WriteLog('User creation query: ', creationQuery);
   const result = await connection.query(creationQuery);
   // WriteLog('Insertion result: ', JSON.stringify(result));
