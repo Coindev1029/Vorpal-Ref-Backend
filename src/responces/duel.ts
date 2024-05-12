@@ -84,6 +84,7 @@ export const FinishDuelResponce = async (req, res) => {
   const msg = GetSignableMessage();
   const address = web3.eth.accounts.recover(msg, body.signature).toLowerCase();
   const adminAddress = await GetValueByKey('ADMIN_WALLET');
+  console.log("Finish duel request received for: ", body.duelId);
 
   if (address !== adminAddress.toLowerCase()) {
     res.status(403).send({
