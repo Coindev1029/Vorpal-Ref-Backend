@@ -72,7 +72,7 @@ export function TelegramBotLaunch() {
           linkAuthDataPrev.id
         }&firstName=${linkAuthDataPrev.first_name}&lastName=${
           linkAuthDataPrev.last_name || ''
-        }&userName=${linkAuthDataPrev.username || ''}`;
+        }&userName=${linkAuthDataPrev.username || ''}&debugMode=1`;
 
         SetPersonalData(linkAuthDataPrev);
 
