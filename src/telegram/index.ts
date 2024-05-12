@@ -84,7 +84,9 @@ export function TelegramBotLaunch() {
         const subscribes = await GetChannelSubscribeList(linkAuthDataPrev.id);
 
         const subscribeMsg: any[] | null = subscribes.length === 0 ? null : 
-        [chatId, "Subscribe on channels to get more prizes", GenereateSubscribeInlineKeyboard(subscribes)]
+        [chatId, "Subscribe on channels to get more prizes",, {
+          reply_markup: JSON.stringify({inline_keyboard: GenereateSubscribeInlineKeyboard(subscribes)}),
+        } ]
 
 
         if (duel && !msg.from.username) {
