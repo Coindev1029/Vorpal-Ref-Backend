@@ -250,6 +250,8 @@ export function TelegramBotLaunch() {
       linkAuthDataPrev.last_name || ''
     }&userName=${linkAuthDataPrev.username || ''}`;
 
+    console.log("Client url: ", app_url);
+
     if (!msg.from.username) {
       bot.sendMessage(
         chatId,
