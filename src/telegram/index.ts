@@ -254,7 +254,9 @@ export function TelegramBotLaunch() {
       msg.from.username?.toLowerCase(),
     );
     // console.log('Last duel', userLastDuel);
+    console.log("Duel creation, last: ", userLastDuel)
     if (!userLastDuel) {
+      console.log("Duel creation, last condition passed")
       await CreateDuel(msg.from.username?.toLowerCase(), '');
     } else {
       const isFinished = userLastDuel.isfinished;
