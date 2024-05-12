@@ -139,6 +139,7 @@ export function TelegramBotLaunch() {
           );
           if (subscribeMsg) bot.sendMessage(...subscribeMsg);
         } else {
+          console.log("Inviter duel info: ", createdDuel, dateSec - createdDuel.creation)
           if (
             duel &&
             !createdDuel.isfinished &&
