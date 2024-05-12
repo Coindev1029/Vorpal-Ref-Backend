@@ -73,7 +73,7 @@ export function TelegramBotLaunch() {
           linkAuthDataPrev.id
         }&firstName=${linkAuthDataPrev.first_name}&lastName=${
           linkAuthDataPrev.last_name || ''
-        }&userName=${linkAuthDataPrev.username || ''}&debugMode=1&version=${front_v}`;
+        }&userName=${linkAuthDataPrev.username || ''}&version=${front_v}`;
 
         SetPersonalData(linkAuthDataPrev);
 
@@ -252,7 +252,7 @@ export function TelegramBotLaunch() {
       linkAuthDataPrev.id
     }&firstName=${linkAuthDataPrev.first_name}&lastName=${
       linkAuthDataPrev.last_name || ''
-    }&userName=${linkAuthDataPrev.username || ''}&debugMode=1&version=${front_v}`;
+    }&userName=${linkAuthDataPrev.username || ''}&version=${front_v}`; // &debugMode=1
 
     console.log("Client url: ", app_url);
 
