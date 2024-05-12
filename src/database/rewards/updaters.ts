@@ -58,6 +58,7 @@ export async function OpenBox(boxId: number, telegramData?: TelegramAuthData) {
   let openAmount = 0;
   const boxCheckQuery = `SELECT isopen FROM boxes WHERE id = ${boxId};`;
   const check = await connection.query(boxCheckQuery);
+  console.log("Box opening started", boxId)
   if (check.rows.length === 0) {
     return ({
       success: false,

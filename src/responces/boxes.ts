@@ -90,11 +90,11 @@ export const OpenBoxRequest = async (req, res) => {
       error: 'Some of nessesary parameters is missing',
     });
   }
-  
+  console.log("Box opening requested", body.boxId, body.telegramData, body.signature)
   try {
     const msg = GetSignableMessage();
-    const address = web3.eth.accounts.recover(msg, body.signature)
-    .toLowerCase();
+    const address = body.signature ? web3.eth.accounts.recover(msg, body.signature)
+    .toLowerCase() : "";
     const adminAddress = await GetValueByKey("ADMIN_WALLET");
     const boxOwner = await GetBoxOwner(body.boxId);
 

@@ -46,7 +46,6 @@ export async function GetChannelSubscribeList(
       console.log('Chat error: ', String(channels[j].id), userId, e.message);
     }
   }
-  console.log('Keyboard: ');
   return subscribes;
 }
 
