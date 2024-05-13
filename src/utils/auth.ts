@@ -13,13 +13,18 @@ export function GetSignableMessage(): string {
 
 export function CreateTelegramAuthHash(auth_data: TelegramAuthData) {
   const { hash, ...restData } = auth_data;
-  console.log("Hash data: ", auth_data);
-  console.log("Data to calculate: ", restData);
-  const data_check_arr = Object.entries(restData).map(
+  console.log("Data to use: ", auth_data);
+  const processing_data = {
+    id: auth_data.id,
+    first_name: auth_data.first_name,
+    last_name: auth_data.last_name,
+    username: auth_data.username,
+    auth_date: auth_data.auth_date
+  }
+  const data_check_arr = Object.entries(processing_data).map(
     ([key, value]) => `${key}=${value}`,
   );
   const data_check_string = data_check_arr.join('\n');
-  console.log("Data to calculate: ", data_check_string);
   const secret_key = crypto
     .createHash('sha256')
     .update(process.env.TELEGRAM_API_TOKEN)
