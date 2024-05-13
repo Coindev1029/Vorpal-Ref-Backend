@@ -1,62 +1,170 @@
-import { TelegramAuthData, storeItem } from "../../types";
+import { GetUserBalanceRow } from '../../database/rewards';
+import { TelegramAuthData, StoreItem, storeItemBalance } from '../../types';
 
 const { connection } = require('../connection');
 
-export async function AddStoreItem (item: storeItem) {
-    const query = `INSERT INTO "store_items" ("item_name",
-    "item_type",
-    "item_img",
-    "price",
-    "currency") VALUES ('${item.item_name}', '${item.item_type || ""}', 
-    '${item.item_img  || ""}',
-    ${item.price || 0}, 
-    '${item.currency || "vrp"}');`;
-    try {
-        await connection.query(query);
-        return true;
-    } catch (e) {
-        console.log("Error: ", e.message);
-        return false;
-    }
+export async function AddStoreItem(item: StoreItem) {
+  const query = `INSERT INTO "store_items" 
+    ("item", "type", "rareness", "description", "img_preview", "img_full", "per_user", "total_count", "cost", "currency")
+    VALUES ('${item.item}', '${item.type}', '${item.rareness}', 
+    '${item.description || ''}', 
+    '${item.img_preview || ''}', 
+    '${item.img_full || ''}', 
+    ${item.per_user}, 
+    ${item.total_count}, 
+    ${item.cost}, 
+    '${item.currency}');`;
+  try {
+    await connection.query(query);
+    return true;
+  } catch (e) {
+    console.log('Error: ', e.message);
+    return false;
+  }
 }
 
-export async function GetStoreItems (): Promise<storeItem[]> {
-    const query = `SELECT "item_name", "item_type", "item_img", "price" FROM "store_items";`;
-    try {
-        const result = await connection.query(query);
-        return result.rows;
-    } catch (e) {
-        console.log("Error: ", e.message);
-        return [];
-    }
+export async function GetStoreItems(): Promise<StoreItem[]> {
+  const query = `SELECT * FROM "store_items";`;
+  try {
+    const result = await connection.query(query);
+    return result.rows;
+  } catch (e) {
+    console.log('Error: ', e.message);
+    return [];
+  }
 }
 
-export async function GetStoreItem (param: string, value: string | number): Promise<storeItem | null> {
-    const query = `SELECT "item_name", "item_type", "item_img", "price" FROM "store_items" WHERE "${param}" = ${value};`;
-    try {
-        const result = await connection.query(query);
-        return result.rows.length > 0 ? result.rows : null;
-    } catch (e) {
-        console.log("Error: ", e.message);
-        return null;
-    }
+export async function GetStoreItem(
+  param: string,
+  value: string | number,
+): Promise<StoreItem | null> {
+  const query = `SELECT * FROM "store_items" WHERE "${param}" = ${value};`;
+  try {
+    const result = await connection.query(query);
+    return result.rows.length > 0 ? result.rows[0] : null;
+  } catch (e) {
+    console.log('Error: ', e.message);
+    return null;
+  }
 }
 
-export async function AddUniqueItem () {
-    const query = ``
+export async function AddUniqueItem() {
+  const query = ``;
 }
 
-export async function GetUniqueItemsForSale () {
-    const query = ``
+export async function GetUniqueItemsForSale() {
+  const query = ``;
 }
 
-export async function GetUniqueItemsByOwner () {
-    const query = ``
+export async function GetUniqueItemsByOwner() {
+  const query = ``;
 }
 
-export async function GetUserItemBalance (login: string, item: string) {
-   
+export async function CreateItemBalanceRow(login: string, itemId: number) {
+  const query = `INSERT INTO "store_item_balances" ("user_name", "item_id", "balance")
+    VALUES ('${login}', ${itemId}, 0);`;
+  try {
+    const result = await connection.query(query);
+    return true;
+  } catch (e) {
+    console.log('Error: ', e.message);
+    return false;
+  }
 }
 
-export async function BuyItem (itemName: string, amount: number) {
+export async function GetUserItemBalance(
+  login: string,
+  itemId: number,
+): Promise<number | null> {
+  const query = `SELECT * FROM "store_item_balances" 
+   WHERE "user_name" = '${login}' AND "item_id" = ${itemId};`;
+  try {
+    const result = await connection.query(query);
+    return result.rows.length > 0 ? result.rows[0].balance : null;
+  } catch (e) {
+    console.log('Error: ', e.message);
+    return null;
+  }
+}
+
+export async function IsItemAvailableToBuy(
+  login: string,
+  itemId: number,
+  amount: number,
+) {
+  const storeItem = await GetStoreItem('id', itemId);
+  const itemBalance = await GetUserItemBalance(login, itemId);
+  const currencyBalance = await GetUserBalanceRow(login, login);
+
+  if (!storeItem) {
+    return {
+      ok: false,
+      error: 'Store item not exist',
+    };
+  }
+
+  if (itemBalance === null) {
+    return {
+      ok: false,
+      error: 'Balance query faied',
+    };
+  }
+
+  if (
+    storeItem.per_user !== null &&
+    itemBalance !== null &&
+    itemBalance >= storeItem.per_user
+  ) {
+    return {
+      ok: false,
+      error: 'User balance reached amount available per one user',
+    };
+  }
+
+  if (storeItem.total_count !== null && amount > storeItem.total_count) {
+    return {
+      ok: false,
+      error: 'Amount larger than available for sale',
+    };
+  }
+
+  if (storeItem.cost * amount > currencyBalance[storeItem.currency]) {
+    return {
+      ok: false,
+      error: 'Insufficient funds to buy',
+    };
+  }
+  return {
+    ok: true,
+    error: '',
+  };
+}
+
+export async function BuyItem(buyer: string, itemId: number, amount: number) {
+  const isAvailable = await IsItemAvailableToBuy(buyer, itemId, amount);
+  if (!isAvailable.ok) {
+    return isAvailable;
+  }
+  const itemBalance = await GetUserItemBalance(buyer, itemId);
+  if (itemBalance === null) {
+    await CreateItemBalanceRow(buyer, itemId);
+  }
+  const balanceQuery = `UPDATE "store_item_balances" SET balance = balance + ${amount}
+    WHERE "user_name" = '${buyer}' AND "item_id" = ${itemId};`;
+  const storeQuery = `UPDATE "store_items" SET total_count = total_count - ${amount}
+    "id" = ${itemId};`;
+
+  try {
+    await connection.query(balanceQuery);
+    await connection.query(storeQuery);
+    return {
+      ok: true,
+      error: '',
+    };
+  } catch (e) {
+    return {
+      ok: false,
+      error: e.message,
+    };
+  }
 }

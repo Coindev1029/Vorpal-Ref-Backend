@@ -154,7 +154,7 @@ async function DBCreateTables() {
   CREATE TABLE IF NOT EXISTS "store_item_balances" (
     id serial PRIMARY KEY,
 	  user_name varchar(128),
-  	item_name varchar(128),
+  	item_id integer,
   	balance integer
   );
   `

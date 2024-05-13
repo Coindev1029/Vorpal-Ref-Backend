@@ -5,6 +5,8 @@ import {
   AdminSaveData,
   AdminUpdateUserData,
   AuthByTelegram,
+  BuyResponce,
+  CheckAvailableResponce,
   CreateBox,
   DuelDataByLoginResponce,
   DuelDataResponce,
@@ -106,6 +108,13 @@ app.post('/api/updateonlinecount', UpdateOnlineCount);
 app.post('/api/rewardcondition', RewardConditionResponce);
 
 app.post('/api/duelrewardcondition', RewardConditionResponce)
+
+//Store
+app.get('/api/storeitems', BuyResponce);
+
+app.post('/api/store/isavailable', CheckAvailableResponce);
+
+app.post('/api/store/buy', BuyResponce);
 
 // Stars (server contract parser)
 app.get('/api/getstarlist', GetAllStars);
