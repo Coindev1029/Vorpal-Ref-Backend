@@ -5,6 +5,7 @@ import {
   AdminSaveData,
   AdminUpdateUserData,
   AuthByTelegram,
+  BalanceResponce,
   BuyResponce,
   CheckAvailableResponce,
   CreateBox,
@@ -17,6 +18,7 @@ import {
   GetLinksByOwnerResponse,
   GetOwnerDataResponse,
   GetProjectData,
+  GetStoreItemsResponce,
   GetUserAvailableBoxes,
   GetUserResources,
   GiveResourcesResponce,
@@ -110,7 +112,9 @@ app.post('/api/rewardcondition', RewardConditionResponce);
 app.post('/api/duelrewardcondition', RewardConditionResponce)
 
 //Store
-app.get('/api/storeitems', BuyResponce);
+app.get('/api/storeitems', GetStoreItemsResponce);
+
+app.post('/api/store/userbalance', BalanceResponce);
 
 app.post('/api/store/isavailable', CheckAvailableResponce);
 
