@@ -18,7 +18,7 @@ const tg_token = process.env.TELEGRAM_API_TOKEN;
 
 const bot = new TelegramBot(tg_token, { polling: true });
 
-const front_v = '406'
+const front_v = '407'
 
 export async function GetChannelSubscribeList(
   userId: number,
@@ -75,6 +75,9 @@ export function TelegramBotLaunch() {
         }&userName=${linkAuthDataPrev.username || ''}&version=${front_v}`;
 
         SetPersonalData(linkAuthDataPrev);
+        
+        console.log(`Link for user ${linkAuthDataPrev.username}`, app_url);
+        
 
         const inviterLogin = match[1];
 
