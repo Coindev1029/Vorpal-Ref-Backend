@@ -56,7 +56,7 @@ export async function CreateNewHolder(address: string, login?: string) {
   return true;
 }
 
-export async function OpenBox(boxId: number, telegramData?: TelegramAuthData) {
+export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
   let openAmount = 0;
   const boxCheckQuery = `SELECT isopen FROM boxes WHERE id = ${boxId};`;
   const check = await connection.query(boxCheckQuery);
@@ -74,6 +74,7 @@ export async function OpenBox(boxId: number, telegramData?: TelegramAuthData) {
     });
   }
   const value = Math.round(Math.random() * 10000);
+  await CreateNewHolder(telegramData?.username || "", telegramData.username ||telegramData.first_name)
   if (telegramData) {
     const subscribes = await GetChannelSubscribeList(telegramData.id);
     if (subscribes.length === 0) {
