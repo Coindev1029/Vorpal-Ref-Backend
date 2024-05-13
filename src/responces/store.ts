@@ -1,3 +1,4 @@
+import { CheckTelegramAuth } from "../utils/auth";
 import { BuyItem, GetStoreItems, GetUserItemBalance, IsItemAvailableToBuy } from "../database/telegram"
 
 export const GetStoreItemsResponce = async (req, res) => {
@@ -41,6 +42,10 @@ export const BuyResponce = async (req, res) => {
     }
     if (body.amount <= 0) {
         res.status(400).send("Invalid amount")
+    }
+    const auth = CheckTelegramAuth(body.telegramData);
+    if (!auth.success) {
+        res.status(403).send("Auth failed")
     }
     const buy = await BuyItem (body.telegramData.username, body.itemId, body.amount);
     res.status(200).send(JSON.stringify(buy));
