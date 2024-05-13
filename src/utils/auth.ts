@@ -13,6 +13,7 @@ export function GetSignableMessage(): string {
 
 export function CreateTelegramAuthHash(auth_data: TelegramAuthData) {
   const { hash, ...restData } = auth_data;
+  console.log("Hash data: ", auth_data);
   const data_check_arr = Object.entries(restData).map(
     ([key, value]) => `${key}=${value}`,
   );
@@ -37,6 +38,7 @@ export function CheckTelegramAuth(auth_data: TelegramAuthData): {
     ([key, value]) => `${key}=${value}`,
   );
   data_check_arr.sort();
+  console.log("Auth data to compare: ", auth_data);
   const hashResult = CreateTelegramAuthHash(auth_data);
   console.log("Checking hash: ", hash.toLowerCase());
   console.log("Checking hash result: ", hashResult.toLowerCase());
