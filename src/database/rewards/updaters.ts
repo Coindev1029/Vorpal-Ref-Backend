@@ -78,7 +78,7 @@ export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
   if (telegramData) {
     const subscribes = await GetChannelSubscribeList(telegramData.id);
     if (subscribes.length === 0) {
-      const trendsValue = Math.round(Math.random() * 10000);
+      const trendsValue = 5 + Math.round(Math.random() * 5);
       const trendsUpQuery = `UPDATE resources SET trends = trends + ${trendsValue} 
       WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;
       await connection.query(trendsUpQuery);

@@ -18,7 +18,7 @@ const tg_token = process.env.TELEGRAM_API_TOKEN;
 
 const bot = new TelegramBot(tg_token, { polling: true });
 
-const front_v = '407'
+const front_v = process.env.FRONTEND_VERSION || '407'
 
 export async function GetChannelSubscribeList(
   userId: number,
@@ -76,7 +76,7 @@ export function TelegramBotLaunch() {
 
         SetPersonalData(linkAuthDataPrev);
         
-        console.log(`Link for user ${linkAuthDataPrev.username}`, app_url);
+        // console.log(`Link for user ${linkAuthDataPrev.username}`, app_url);
         
 
         const inviterLogin = match[1];
@@ -314,7 +314,7 @@ export function TelegramBotLaunch() {
   });
 
   bot.on('inline_query', (query) => {
-    const deepLink = `https://t.me/Wgl_starmaptest_bot?start=${query.from.username}`;
+    const deepLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}?start=${query.from.username}`;
 
     const results = [
       {
