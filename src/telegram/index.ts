@@ -340,7 +340,7 @@ export function TelegramBotLaunch() {
 
     const queryText = query.query;
 
-    console.log(queryText);
+    console.log("Query info: ", query);
 
     const results = [
       {
