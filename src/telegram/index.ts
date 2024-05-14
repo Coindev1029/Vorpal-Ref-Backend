@@ -60,8 +60,8 @@ export function TelegramBotLaunch() {
       try {
         const linkAuthDataPrev: TelegramAuthData = {
           auth_date: GetDaylyAuthDate(),
-          last_name: msg.from.last_name || '',
-          first_name: msg.from.first_name,
+          last_name: msg.from.last_name.replace(" ", "") || '',
+          first_name: msg.from.first_name.replace(" ", ""),
           id: msg.from.id,
           username: msg.from.username?.toLowerCase() || '',
           hash: '',
@@ -260,8 +260,8 @@ export function TelegramBotLaunch() {
 
     const linkAuthDataPrev: TelegramAuthData = {
       auth_date: GetDaylyAuthDate(),
-      last_name: msg.from.last_name || '',
-      first_name: msg.from.first_name,
+      last_name: msg.from.last_name.replace(" ", "") || '',
+      first_name: msg.from.first_name.replace(" ", ""),
       id: msg.from.id,
       username: msg.from.username?.toLowerCase() || '',
       hash: '',
