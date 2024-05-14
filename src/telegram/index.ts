@@ -321,7 +321,7 @@ export function TelegramBotLaunch() {
     }
 
     const keyboard = {
-      inline_keyboard: [[{ text: 'Send invitation', switch_inline_query: '' }]],
+      inline_keyboard: [[{ text: 'Send invitation', switch_inline_query: `Enter a duel with: ${linkAuthDataPrev.username}` }]],
     };
 
     bot.sendMessage(chatId, 'Hello! Invite your friend to a duel:', {
@@ -337,6 +337,10 @@ export function TelegramBotLaunch() {
 
   bot.on('inline_query', async (query) => {
     const deepLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}?start=${query.from.username}`;
+
+    const queryText = query.query;
+
+    console.log(queryText);
 
     const results = [
       {
