@@ -1,4 +1,5 @@
 import { TelegramBotLaunch } from './telegram';
+import { StartWatchingTimer } from './blockchain/Stars/watcher';
 import { InitGameIoServer } from './game';
 import {
   AdminDataRequest,
@@ -143,3 +144,4 @@ app.listen(port, () => {
 });
 
 TelegramBotLaunch();
+StartWatchingTimer();
