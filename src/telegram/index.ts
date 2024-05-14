@@ -358,6 +358,7 @@ export function TelegramBotLaunch() {
     ];
 
     bot.answerInlineQuery(query.id, results);
+    return;
   });
 
   bot.on('polling_error', (error) => {
