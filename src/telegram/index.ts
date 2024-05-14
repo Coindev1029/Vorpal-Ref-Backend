@@ -335,7 +335,7 @@ export function TelegramBotLaunch() {
     );
   });
 
-  bot.on('inline_query', (query) => {
+  bot.on('inline_query', async (query) => {
     const deepLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}?start=${query.from.username}`;
 
     const results = [
@@ -358,7 +358,7 @@ export function TelegramBotLaunch() {
       },
     ];
 
-    bot.answerInlineQuery(query.id, results);
+    await bot.answerInlineQuery(query.id, results);
     return;
   });
 
