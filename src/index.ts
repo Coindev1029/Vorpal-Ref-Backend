@@ -12,6 +12,7 @@ import {
   CreateBox,
   DuelDataByLoginResponce,
   DuelDataResponce,
+  DuelDeletionResponce,
   FinishDuelResponce,
   GetAdminUserData,
   GetAllStars,
@@ -105,6 +106,8 @@ app.get('/api/onlinecount', OnlineCountResponce);
 app.get('/api/usersubscribecondition', IsNeedSubscribes);
 
 app.post('/api/finishduel', FinishDuelResponce);
+
+app.post('/api/deleteduel', DuelDeletionResponce);
 
 app.post('/api/updateonlinecount', UpdateOnlineCount);
 

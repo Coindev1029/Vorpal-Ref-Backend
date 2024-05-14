@@ -1,6 +1,7 @@
 import { GetValueByKey } from '../database/balances';
 import { GetSignableMessage } from '../utils/auth';
 import {
+  DeleteDuel,
   FinishDuel,
   GetDuelData,
   GetDuelDataByUser,
@@ -98,6 +99,32 @@ export const FinishDuelResponce = async (req, res) => {
   res.status(200).send(JSON.stringify({ result: result }));
   return;
 };
+
+export const DuelDeletionResponce = async (req, res) => {
+  const body = req.body;
+  if (!body.duelId || !body.signature) {
+    res.status(400).send({
+      error: 'Some of nessesary parameters is missing',
+    });
+  }
+  const msg = GetSignableMessage();
+    const address = web3.eth.accounts.recover(msg, body.signature)
+    .toLowerCase();
+    const adminAddress = await GetValueByKey("ADMIN_WALLET");
+  
+    if (address !== adminAddress.toLowerCase()) {
+       res.status(403).send({
+        error: "Invalid signature",
+      });
+       return;
+    }
+
+    const result = await DeleteDuel(body.duelId);
+    res.status(200).send({
+      deleted: result,
+    });
+
+}
 
 export const RewardConditionResponce = async (req, res) => {
   const body = req.body;

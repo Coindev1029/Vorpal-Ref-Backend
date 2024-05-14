@@ -1,34 +1,34 @@
-import { DuelInfo } from "../../types";
-import { GetValueByKey, SetValueByKey } from "../balances";
+import { DuelInfo } from '../../types';
+import { GetValueByKey, SetValueByKey } from '../balances';
 
 const { connection } = require('../connection');
 const md5 = require('md5');
-const onlineCountKey = "DUEL_ONLINE_COUNT";
+const onlineCountKey = 'DUEL_ONLINE_COUNT';
 
-export async function SetOnlineCount (count: number) {
-   await SetValueByKey(onlineCountKey, count);
-   return true;
+export async function SetOnlineCount(count: number) {
+  await SetValueByKey(onlineCountKey, count);
+  return true;
 }
 
-export async function GetOnlineCount () {
+export async function GetOnlineCount() {
   return await GetValueByKey(onlineCountKey);
 }
 
-export async function AddDuelOpponent (duelId: string, login: string) {
+export async function AddDuelOpponent(duelId: string, login: string) {
   const query = `UPDATE "duels" SET "login2" = '${login.toLowerCase()}' WHERE "duel_id" = '${duelId}';`;
   try {
     const result = await connection.query(query);
-    return true
+    return true;
   } catch (e) {
-    return false
+    return false;
   }
 }
 
-export async function GetDuelPairCount (part1: string, part2: string) {
-   const login1 = part1.toLowerCase();
-   const login2 = part2.toLowerCase();
-   const query = `SELECT * FROM "duels" WHERE (login1 = '${login1}' AND login2 = '${login2}') OR (login1 = '${login2}' AND login2 = '${login1}');`;
-   try {
+export async function GetDuelPairCount(part1: string, part2: string) {
+  const login1 = part1.toLowerCase();
+  const login2 = part2.toLowerCase();
+  const query = `SELECT * FROM "duels" WHERE (login1 = '${login1}' AND login2 = '${login2}') OR (login1 = '${login2}' AND login2 = '${login1}');`;
+  try {
     const result = await connection.query(query);
     if (result.rows.length > 0) {
       return result.rows.length;
@@ -36,7 +36,7 @@ export async function GetDuelPairCount (part1: string, part2: string) {
       return 0;
     }
   } catch (e) {
-    return 0
+    return 0;
   }
 }
 
@@ -69,7 +69,7 @@ export async function GetDuelData(duelId: string): Promise<DuelInfo | null> {
   }
 }
 
-export async function GetOpponent (login: string) {
+export async function GetOpponent(login: string) {
   const query = `SELECT "login2" FROM "duels" WHERE "isfinished" = false AND "login1" = '${login.toLowerCase()}';`;
   try {
     const result = await connection.query(query);
@@ -83,8 +83,10 @@ export async function GetOpponent (login: string) {
   }
 }
 
-export async function GetDuelDataByUser (login: string): Promise<DuelInfo | null> {
-  const filteredLogin = login.toLowerCase()
+export async function GetDuelDataByUser(
+  login: string,
+): Promise<DuelInfo | null> {
+  const filteredLogin = login.toLowerCase();
   const query = `SELECT "duel_id", "login1", "login2", "creation", "isfinished", "winner" FROM "duels" 
   WHERE "login1" = '${filteredLogin}' OR "login2" = '${filteredLogin}' ORDER BY "creation" DESC LIMIT 1;`;
   try {
@@ -100,8 +102,8 @@ export async function GetDuelDataByUser (login: string): Promise<DuelInfo | null
 }
 
 export async function FinishDuel(duelId: string, winner: string) {
-  console.log("Finish request received for: ", duelId);
-  const filteredLogin = winner.toLowerCase()
+  console.log('Finish request received for: ', duelId);
+  const filteredLogin = winner.toLowerCase();
   const query = `UPDATE "duels" SET isfinished = true, isexpired = true, winner = '${filteredLogin}' WHERE "duel_id" = '${duelId}';`;
   try {
     const result = await connection.query(query);
@@ -115,9 +117,20 @@ export async function FinishDuel(duelId: string, winner: string) {
   }
 }
 
-export async function CreateDuel(login1: string, login2: string = "") {
-  const fLogin1 = login1.toLowerCase()
-  const fLogin2 = login2.toLowerCase()
+export async function DeleteDuel(duelId: string) {
+  const query = `DELETE FROM "duels" WHERE "duel_id" = '${duelId}';`;
+  try {
+    const result = await connection.query(query);
+    return true;
+  } catch (e) {
+    console.log('Duel deletion error: ', e.message);
+    return false;
+  }
+}
+
+export async function CreateDuel(login1: string, login2: string = '') {
+  const fLogin1 = login1.toLowerCase();
+  const fLogin2 = login2.toLowerCase();
   const dt = Math.round(new Date().getTime() / 1000);
   const duel_id = md5(`${dt}_${fLogin1}_${fLogin2}`);
   const query = `INSERT INTO "duels" 
@@ -127,7 +140,7 @@ export async function CreateDuel(login1: string, login2: string = "") {
     const result = await connection.query(query);
     return duel_id;
   } catch (e) {
-    console.log("Duel creation error", e.message)
+    console.log('Duel creation error', e.message);
     return null;
   }
   return;
