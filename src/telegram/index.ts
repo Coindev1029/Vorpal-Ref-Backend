@@ -69,7 +69,7 @@ export function TelegramBotLaunch() {
         if (!linkAuthDataPrev.username) {
           bot.sendMessage(
             chatId,
-            'Welcome! You need to have a Telegram username to enter a duel',
+            'Welcome! You need to have a Telegram username to play',
           );
           return;
         }
