@@ -44,7 +44,7 @@ export async function UpdateSingleStar (starId: number) {
 export function StartWatchingTimer () {
     GetAllStarData().then((res) => {
         actualStarList = res
-        console.log(actualStarList)
+        // console.log(actualStarList)
     }).catch(e => {
         console.log(e)
     }) ;

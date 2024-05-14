@@ -81,6 +81,8 @@ export function TelegramBotLaunch() {
 
         const inviterLogin = match[1];
 
+        console.log("User: ", linkAuthDataPrev.username, "Inviter: ", inviterLogin);
+
         const subscribes = await GetChannelSubscribeList(linkAuthDataPrev.id);
 
         const inlineButtons = subscribes.map((item) => ({
