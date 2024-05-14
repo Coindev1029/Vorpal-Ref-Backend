@@ -103,13 +103,6 @@ export async function IsItemAvailableToBuy(
     };
   }
 
-  if (itemBalance === null) {
-    return {
-      ok: false,
-      error: 'Balance query faied',
-    };
-  }
-
   if (
     storeItem.per_user !== null &&
     itemBalance !== null &&

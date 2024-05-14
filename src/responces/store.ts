@@ -25,7 +25,7 @@ export const CheckAvailableResponce = async (req, res) => {
     const body = req.body
 
     if (!body.itemId || !body.login || !body.amount) {
-        res.status(400).send("Nessesary parameters missed")
+        res.status(400).send(JSON.stringify({error: "Nessesary parameters missed"}))
     }
 
     const isAvailable = await IsItemAvailableToBuy (body.login, body.itemId, body.amount);
@@ -35,17 +35,17 @@ export const CheckAvailableResponce = async (req, res) => {
 export const BuyResponce = async (req, res) => {
     const body = req.body
     if (!body.telegramData || !body.telegramData.hash || body.telegramData.username) {
-        res.status(400).send("Auth data wrong or not provided")
+        res.status(400).send(JSON.stringify({error: "Auth data wrong or not provided"}))
     }
     if (!body.itemId || !body.amount) {
-        res.status(400).send("Buying parameters missed")
+        res.status(400).send(JSON.stringify({error: "Buying parameters missed"}))
     }
     if (body.amount <= 0) {
-        res.status(400).send("Invalid amount")
+        res.status(400).send(JSON.stringify({error: "Invalid amount"}))
     }
     const auth = CheckTelegramAuth(body.telegramData);
     if (!auth.success) {
-        res.status(403).send("Auth failed")
+        res.status(403).send(JSON.stringify({error: "Auth failed"}))
     }
     const buy = await BuyItem (body.telegramData.username, body.itemId, body.amount);
     res.status(200).send(JSON.stringify(buy));
