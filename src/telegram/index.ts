@@ -354,6 +354,7 @@ export function TelegramBotLaunch() {
             [{ text: 'Confirm invitation', url: deepLink }], //callback_data: metadataString
           ],
         },
+        cache_time: 0,
       },
     ];
 
