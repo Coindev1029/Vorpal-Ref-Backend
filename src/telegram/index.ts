@@ -5,6 +5,7 @@ import {
   AddDuelOpponent,
   CreateDuel,
   FinishDuel,
+  GetDuelDataByInviter,
   GetDuelDataByUser,
   GetWatchingChannels,
   SetPersonalData,
@@ -84,7 +85,7 @@ export function TelegramBotLaunch() {
 
         SetPersonalData(linkAuthDataPrev);
         
-        // console.log(`Link for user ${linkAuthDataPrev.username}`, app_url);
+        console.log(`Link for user ${linkAuthDataPrev.username}`, app_url);
         
 
         const inviterLogin = match[1];
@@ -126,11 +127,22 @@ export function TelegramBotLaunch() {
         }
 
         const createdDuel = inviterLogin
-          ? await GetDuelDataByUser(inviterLogin)
+          ? await GetDuelDataByInviter(inviterLogin)
           : null;
         console.log("Find duel: ", createdDuel, "For user: ", linkAuthDataPrev.username)
         // console.log('Last duel: ', createdDuel);
         const dateSec = Math.round(new Date().getTime() / 1000);
+        if (!createdDuel) {
+          bot.sendMessage(
+            chatId,
+            'Welcome! Enter duel command to play with friends',
+            Markup.keyboard([
+              Markup.button.webApp('Start vorpal game', app_url),
+            ]),
+          );
+          if (subscribeMsg) bot.sendMessage(...subscribeMsg);
+          return;
+        } 
         if (duel && linkAuthDataPrev.username === inviterLogin.toLowerCase()) {
           bot.sendMessage(
             chatId,

@@ -101,6 +101,24 @@ export async function GetDuelDataByUser(
   }
 }
 
+export async function GetDuelDataByInviter(
+  login: string,
+): Promise<DuelInfo | null> {
+  const filteredLogin = login.toLowerCase();
+  const query = `SELECT "duel_id", "login1", "login2", "creation", "isfinished", "winner" FROM "duels" 
+  WHERE "login1" = '${filteredLogin}' ORDER BY "creation" DESC LIMIT 1;`;
+  try {
+    const result = await connection.query(query);
+    if (result.rows.length > 0) {
+      return result.rows[0];
+    } else {
+      return null;
+    }
+  } catch (e) {
+    return null;
+  }
+}
+
 export async function FinishDuel(duelId: string, winner: string) {
   console.log('Finish request received for: ', duelId);
   const filteredLogin = winner.toLowerCase();
@@ -131,6 +149,10 @@ export async function DeleteDuel(duelId: string) {
 export async function CreateDuel(login1: string, login2: string = '') {
   const fLogin1 = login1.toLowerCase();
   const fLogin2 = login2.toLowerCase();
+  if (!fLogin1) {
+      console.log("Try to create duel without inviter");
+      return null;
+  }
   const dt = Math.round(new Date().getTime() / 1000);
   const duel_id = md5(`${dt}_${fLogin1}_${fLogin2}`);
   const query = `INSERT INTO "duels" 
