@@ -65,6 +65,14 @@ export function TelegramBotLaunch() {
           username: msg.from.username?.toLowerCase() || '',
           hash: '',
         };
+
+        if (!linkAuthDataPrev.username) {
+          bot.sendMessage(
+            chatId,
+            'Welcome! You need to have a Telegram username to enter a duel',
+          );
+          return;
+        }
         const authHash = CreateTelegramAuthHash(linkAuthDataPrev);
         const app_url = `${
           process.env.TELEGRAM_CLIENT_URL
@@ -108,7 +116,7 @@ export function TelegramBotLaunch() {
         if (duel && !msg.from.username) {
           bot.sendMessage(
             chatId,
-            'Welcome! You need to have a visible username to enter a duel',
+            'Welcome! You need to have a Telegram username to enter a duel',
             Markup.keyboard([
               Markup.button.webApp('Start vorpal game', app_url),
             ]),
