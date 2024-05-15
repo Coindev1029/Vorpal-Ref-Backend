@@ -74,6 +74,7 @@ export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
     });
   }
   const value = Math.round(Math.random() * 10000);
+  const valueVRP = Math.round(Math.random() * 10000) % 1000;
   await CreateNewHolder(telegramData?.username || "", telegramData.username ||telegramData.first_name)
   if (telegramData) {
     const subscribes = await GetChannelSubscribeList(telegramData.id);
@@ -84,6 +85,9 @@ export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
       await connection.query(trendsUpQuery);
     }
   }
+  const vrpQuery = `UPDATE resources SET token = token + ${valueVRP} 
+      WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;
+      await connection.query(vrpQuery);
   const rewardType: boxOpenResults = (() => {
     switch (true) {
       /* case value < 100:
@@ -95,19 +99,19 @@ export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
       case value < 1000:
         openAmount = 1;
         return 'laser1'; */
-      case value < 2500:
-        openAmount = value % 1000;
-        return 'token';
-      case value < 4000:
+      /* case value < 2500:
+        openAmount = value % 1000; 
+        return 'token'; */
+      case value < 2000:
         openAmount = value % 1000;
         return 'spice';
-      case value < 5500:
+      case value < 4000:
         openAmount = value % 1000;
         return 'spore';
-      case value < 7000:
+      case value < 6000:
         openAmount = value % 1000;
         return 'metal';
-      case value < 8500:
+      case value < 8000:
         openAmount = value % 1000;
         return 'biomass';
       case value <= 10000:
