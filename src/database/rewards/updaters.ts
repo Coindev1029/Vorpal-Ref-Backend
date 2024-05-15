@@ -86,7 +86,7 @@ export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
   }
   const rewardType: boxOpenResults = (() => {
     switch (true) {
-      case value < 100:
+      /* case value < 100:
         openAmount = 1;
         return 'laser3';
       case value < 300:
@@ -94,7 +94,7 @@ export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
         return 'laser2';
       case value < 1000:
         openAmount = 1;
-        return 'laser1';
+        return 'laser1'; */
       case value < 2500:
         openAmount = value % 1000;
         return 'token';
