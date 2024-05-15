@@ -88,7 +88,7 @@ export function TelegramBotLaunch() {
         console.log(`Link for user ${linkAuthDataPrev.username}`, app_url);
         
 
-        const inviterLogin = match[1];
+        const inviterLogin = match[1]?.toLowerCase();
 
         console.log("User: ", linkAuthDataPrev.username, "Inviter: ", inviterLogin);
 
