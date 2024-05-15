@@ -6,6 +6,7 @@ import {
   AdminSaveData,
   AdminUpdateUserData,
   AuthByTelegram,
+  BalanceAllResponce,
   BalanceResponce,
   BuyResponce,
   CheckAvailableResponce,
@@ -119,6 +120,8 @@ app.post('/api/duelrewardcondition', RewardConditionResponce)
 app.get('/api/storeitems', GetStoreItemsResponce);
 
 app.post('/api/store/userbalance', BalanceResponce);
+
+app.post('/api/store/userbalanceall', BalanceAllResponce);
 
 app.post('/api/store/isavailable', CheckAvailableResponce);
 

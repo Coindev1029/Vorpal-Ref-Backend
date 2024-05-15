@@ -87,6 +87,27 @@ export async function GetUserItemBalance(
   }
 }
 
+export async function GetUserAllItemBalances(
+  login: string,
+): Promise<{itemId: number, balance: number}[] | null> {
+  const query = `SELECT * FROM "store_item_balances" 
+   WHERE "user_name" = '${login}';`;
+  try {
+    const result = await connection.query(query);
+    const balances: {itemId: number, balance: number}[] = [];
+    result.rows.forEach((item) => {
+      balances.push({
+        itemId: item.item_id,
+        balance: item.balance
+      })
+    });
+    return balances;
+  } catch (e) {
+    console.log('Error: ', e.message);
+    return null;
+  }
+}
+
 export async function IsItemAvailableToBuy(
   login: string,
   itemId: number,

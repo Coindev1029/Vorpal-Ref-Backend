@@ -1,5 +1,5 @@
 import { CheckTelegramAuth } from "../utils/auth";
-import { BuyItem, GetStoreItems, GetUserItemBalance, IsItemAvailableToBuy } from "../database/telegram"
+import { BuyItem, GetStoreItems, GetUserAllItemBalances, GetUserItemBalance, IsItemAvailableToBuy } from "../database/telegram"
 
 export const GetStoreItemsResponce = async (req, res) => {
     const items = await GetStoreItems();
@@ -16,6 +16,19 @@ export const BalanceResponce = async (req, res) => {
     }
 
     const balance = await GetUserItemBalance (body.login, body.itemId);
+    res.status(200).send(JSON.stringify({
+        balance: balance || 0
+    }))
+}
+
+export const BalanceAllResponce = async (req, res) => {
+    const body = req.body
+
+    if (!body.login) {
+        res.status(400).send("Nessesary parameters missed")
+    }
+
+    const balance = await GetUserAllItemBalances (body.login);
     res.status(200).send(JSON.stringify({
         balance: balance || 0
     }))
