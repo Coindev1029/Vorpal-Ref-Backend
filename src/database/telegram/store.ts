@@ -166,7 +166,7 @@ export async function BuyItem(buyer: string, itemId: number, amount: number) {
   const balanceQuery = `UPDATE "store_item_balances" SET balance = balance + ${amount}
     WHERE "user_name" = '${buyer}' AND "item_id" = ${itemId};`;
   const storeQuery = `UPDATE "store_items" SET total_count = total_count - ${amount}
-    "id" = ${itemId};`;
+    WHERE "id" = ${itemId};`;
 
   try {
     await connection.query(balanceQuery);
