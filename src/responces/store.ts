@@ -46,8 +46,9 @@ export const CheckAvailableResponce = async (req, res) => {
 }
 
 export const BuyResponce = async (req, res) => {
-    const body = req.body
-    if (!body.telegramData || !body.telegramData.hash || body.telegramData.username) {
+    const body = req.body;
+    console.log("Buy request body: ", req.body);
+    if (!body.telegramData || !body.telegramData.hash || !body.telegramData.username) {
         res.status(400).send(JSON.stringify({error: "Auth data wrong or not provided"}))
     }
     if (!body.itemId || !body.amount) {
@@ -57,6 +58,7 @@ export const BuyResponce = async (req, res) => {
         res.status(400).send(JSON.stringify({error: "Invalid amount"}))
     }
     const auth = CheckTelegramAuth(body.telegramData);
+    console.log("Auth result on buy: ", auth);
     if (!auth.success) {
         res.status(403).send(JSON.stringify({error: "Auth failed"}))
     }
