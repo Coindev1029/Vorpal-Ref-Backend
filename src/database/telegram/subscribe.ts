@@ -5,7 +5,7 @@ const { connection } = require('../connection');
 export async function AddChannelToWatching(channelData: tgChannelData) {
   const query = `
     INSERT INTO "watching_tg_subscriptions" ("channel_name", "channel_username", "channel_id")
-    VALUES ('${channelData.name}', '${channelData.username}', '-1001853369268');`;
+    VALUES ('${channelData.name}', '${channelData.username}', '${channelData.id}');`;
   try {
     await connection.query(query);
     return true;
