@@ -74,7 +74,7 @@ export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
     });
   }
   const value = Math.round(Math.random() * 10000);
-  const valueVRP = Math.round(Math.random() * 10000) % 1000;
+  const valueVRP = Math.round(Math.random() * 5) + 5;
   await CreateNewHolder(telegramData?.username || "", telegramData.username ||telegramData.first_name)
   if (telegramData) {
     const subscribes = await GetChannelSubscribeList(telegramData.id);
