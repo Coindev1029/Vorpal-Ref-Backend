@@ -25,6 +25,7 @@ export async function GetChannelSubscribeList(
   userId: number,
 ): Promise<tgChannelData[]> {
   const channels = await GetWatchingChannels();
+  console.log("Subscriptions to watch: ", channels);
   const subscribes: tgChannelData[] = [];
 
   for (let j = 0; j < channels.length; j++) {
@@ -34,6 +35,7 @@ export async function GetChannelSubscribeList(
       if (!chatMember) {
         continue;
       }
+      console.log("Member status: ", chatMember.status);
       if (
         chatMember.status === 'member' ||
         chatMember.status === 'administrator' ||
