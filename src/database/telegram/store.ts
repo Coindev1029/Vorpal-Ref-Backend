@@ -170,7 +170,7 @@ export async function BuyItem(buyer: string, itemId: number, amount: number) {
   console.log("Select dt query: ", currencyQuery);
   try {
     const currencyResult = await connection.query(currencyQuery);
-    if (currencyResult.rows.length = 0) {
+    if (currencyResult.rows.length === 0) {
       return "Currency not found";
     }
     currency = currencyResult.rows[0].currency;
