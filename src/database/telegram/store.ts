@@ -167,14 +167,17 @@ export async function BuyItem(buyer: string, itemId: number, amount: number) {
   const currencyQuery = `SELECT "currency", "cost" FROM "store_items" WHERE "id" = ${itemId};`;
   let currency = "";
   let cost = 0;
+  console.log("Select dt query: ", currencyQuery);
   try {
     const currencyResult = await connection.query(currencyQuery);
     if (currencyResult.rows.length = 0) {
       return "Currency not found";
     }
     currency = currencyResult.rows[0].currency;
-    cost = currencyResult[0].cost
+    cost = currencyResult[0].cost;
+    console.log(`Price: ${cost}, ${currency}`);
   } catch (e) {
+    console.log("Select dt err: ", e.message);
     return e.message;
   }
   const balanceQuery = `UPDATE "store_item_balances" SET balance = balance + ${amount}
@@ -183,7 +186,7 @@ export async function BuyItem(buyer: string, itemId: number, amount: number) {
     WHERE "id" = ${itemId};`;
   const subBalanceQuery = `UPDATE "resources" SET ${currency} = ${currency} - ${cost} 
   where ownerlogin = ${buyer} OR owneraddress = ${buyer};`;
-
+  console.log('Balance down query: ', subBalanceQuery)
   try {
     await connection.query(balanceQuery);
     await connection.query(storeQuery);
@@ -193,6 +196,7 @@ export async function BuyItem(buyer: string, itemId: number, amount: number) {
       error: '',
     };
   } catch (e) {
+    console.log('Buy err: ', e.message)
     return {
       ok: false,
       error: e.message,
