@@ -162,15 +162,32 @@ export async function BuyItem(buyer: string, itemId: number, amount: number) {
   const itemBalance = await GetUserItemBalance(buyer, itemId);
   if (itemBalance === null) {
     await CreateItemBalanceRow(buyer, itemId);
+
+  }
+  const currencyQuery = `SELECT "currency", "cost" FROM "store_items" WHERE "id" = ${itemId};`;
+  let currency = "";
+  let cost = 0;
+  try {
+    const currencyResult = await connection.query(currencyQuery);
+    if (currencyResult.rows.length = 0) {
+      return "Currency not found";
+    }
+    currency = currencyResult.rows[0].currency;
+    cost = currencyResult[0].cost
+  } catch (e) {
+    return e.message;
   }
   const balanceQuery = `UPDATE "store_item_balances" SET balance = balance + ${amount}
     WHERE "user_name" = '${buyer}' AND "item_id" = ${itemId};`;
   const storeQuery = `UPDATE "store_items" SET total_count = total_count - ${amount}
     WHERE "id" = ${itemId};`;
+  const subBalanceQuery = `UPDATE "resources" SET ${currency} = ${currency} - ${cost} 
+  where ownerlogin = ${buyer} OR owneraddress = ${buyer};`;
 
   try {
     await connection.query(balanceQuery);
     await connection.query(storeQuery);
+    await connection.query(subBalanceQuery);
     return {
       ok: true,
       error: '',
