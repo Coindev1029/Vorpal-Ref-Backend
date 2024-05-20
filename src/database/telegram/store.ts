@@ -185,7 +185,7 @@ export async function BuyItem(buyer: string, itemId: number, amount: number) {
   const storeQuery = `UPDATE "store_items" SET total_count = total_count - ${amount}
     WHERE "id" = ${itemId};`;
   const subBalanceQuery = `UPDATE "resources" SET ${currency} = ${currency} - ${cost} 
-  where ownerlogin = ${buyer} OR owneraddress = ${buyer};`;
+  where ownerlogin = '${buyer}' OR owneraddress = '${buyer}';`;
   console.log('Balance down query: ', subBalanceQuery)
   try {
     await connection.query(balanceQuery);
