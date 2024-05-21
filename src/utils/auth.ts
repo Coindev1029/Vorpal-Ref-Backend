@@ -13,7 +13,15 @@ export function GetSignableMessage(): string {
 
 export function CreateTelegramAuthHash(auth_data: TelegramAuthData) {
   const { hash, ...restData } = auth_data;
-  const data_check_arr = Object.entries(restData).map(
+  console.log("Data to use: ", auth_data);
+  const processing_data = {
+    id: auth_data.id,
+    first_name: auth_data.first_name,
+    last_name: auth_data.last_name,
+    username: auth_data.username,
+    auth_date: auth_data.auth_date
+  }
+  const data_check_arr = Object.entries(processing_data).map(
     ([key, value]) => `${key}=${value}`,
   );
   const data_check_string = data_check_arr.join('\n');
@@ -37,15 +45,18 @@ export function CheckTelegramAuth(auth_data: TelegramAuthData): {
     ([key, value]) => `${key}=${value}`,
   );
   data_check_arr.sort();
+  console.log("Auth data to compare: ", auth_data);
   const hashResult = CreateTelegramAuthHash(auth_data);
-  if (hashResult !== hash) {
+  console.log("Checking hash: ", hash.toLowerCase());
+  console.log("Checking hash result: ", hashResult.toLowerCase());
+  if (hashResult.toLowerCase() !== hash.toLowerCase()) {
     return {
       success: false,
       error: 'Invalid hash',
     };
   }
   if (Date.now() / 1000 - auth_data.auth_date > 86400) {
-    throw {
+    return {
       success: false,
       error: 'Data is outdated',
     };

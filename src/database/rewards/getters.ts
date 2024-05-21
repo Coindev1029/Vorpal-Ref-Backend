@@ -12,7 +12,8 @@ const zeroAssets = {
   spice: 0,
   metal: 0,
   biomass: 0,
-  carbon: 0
+  carbon: 0,
+  trends: 0
 }
 
 export async function GetBoxOpenResult(boxId: number) {
@@ -68,7 +69,7 @@ export async function GetUserBalanceRow(ownerAddress = '', ownerLogin = '') {
     return null;
   }
   const balanceQuery = `
-    SELECT laser1, laser2, laser3, token, spore, spice, metal, biomass, carbon 
+    SELECT laser1, laser2, laser3, token, spore, spice, metal, biomass, carbon, trends 
     FROM resources 
     WHERE ${ownerLogin ? 'ownerLogin' : 'ownerAddress'} = '${
     ownerLogin ? ownerLogin : ownerAddress

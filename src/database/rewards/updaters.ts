@@ -1,14 +1,16 @@
 require('dotenv').config();
-import { boxOpenResults } from 'types';
+import { TelegramAuthData, boxOpenResults } from 'types';
 import { connection } from './../connection';
 import { WriteLog } from '../../database/log';
 import { GetHolderData, GetUserBalanceRow, IsHolderExists } from './getters';
+import { GetChannelSubscribeList } from '../../telegram';
 
 export async function CreateNewBox(
   level: number,
   ownerAddress: string = '',
   ownerLogin: string = ''
 ) {
+  console.log("Box creation called for: ", ownerLogin)
   if (!ownerAddress && !ownerLogin) return false;
   const holderData = await IsHolderExists(ownerAddress);
   if (!holderData) {
@@ -17,6 +19,7 @@ export async function CreateNewBox(
   const query = `
     INSERT INTO boxes (ownerAddress, ownerLogin, level, isopen) 
     VALUES ('${ownerAddress}', '${ownerLogin}', ${level}, false);`;
+    console.log("Box creation query: ", query)
  // WriteLog('Box creation query: ', query);
   await connection.query(query);
   const idQuery = `SELECT max(id) FROM boxes;`;
@@ -43,7 +46,9 @@ export async function CreateNewHolder(address: string, login?: string) {
   if (isUserExists) {
     return false;
   }
-  const creationQuery = `INSERT INTO resources (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon) VALUES ('${address}', '${ownerLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
+  const creationQuery = `INSERT INTO resources 
+  (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon, trends) 
+  VALUES ('${address}', '${ownerLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
   // WriteLog('User creation query: ', creationQuery);
   const result = await connection.query(creationQuery);
   // WriteLog('Insertion result: ', JSON.stringify(result));
@@ -51,10 +56,11 @@ export async function CreateNewHolder(address: string, login?: string) {
   return true;
 }
 
-export async function OpenBox(boxId: number) {
+export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
   let openAmount = 0;
   const boxCheckQuery = `SELECT isopen FROM boxes WHERE id = ${boxId};`;
   const check = await connection.query(boxCheckQuery);
+  console.log("Box opening started", boxId)
   if (check.rows.length === 0) {
     return ({
       success: false,
@@ -68,9 +74,23 @@ export async function OpenBox(boxId: number) {
     });
   }
   const value = Math.round(Math.random() * 10000);
+  const valueVRP = Math.round(Math.random() * 5) + 5;
+  await CreateNewHolder(telegramData?.username || "", telegramData.username ||telegramData.first_name)
+  if (telegramData) {
+    const subscribes = await GetChannelSubscribeList(telegramData.id);
+    if (subscribes.length === 0) {
+      const trendsValue = 5 + Math.round(Math.random() * 5);
+      const trendsUpQuery = `UPDATE resources SET trends = trends + ${trendsValue} 
+      WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;
+      await connection.query(trendsUpQuery);
+    }
+  }
+  const vrpQuery = `UPDATE resources SET token = token + ${valueVRP} 
+      WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;
+      await connection.query(vrpQuery);
   const rewardType: boxOpenResults = (() => {
     switch (true) {
-      case value < 100:
+      /* case value < 100:
         openAmount = 1;
         return 'laser3';
       case value < 300:
@@ -78,20 +98,20 @@ export async function OpenBox(boxId: number) {
         return 'laser2';
       case value < 1000:
         openAmount = 1;
-        return 'laser1';
-      case value < 2500:
-        openAmount = value % 1000;
-        return 'token';
-      case value < 4000:
+        return 'laser1'; */
+      /* case value < 2500:
+        openAmount = value % 1000; 
+        return 'token'; */
+      case value < 2000:
         openAmount = value % 1000;
         return 'spice';
-      case value < 5500:
+      case value < 4000:
         openAmount = value % 1000;
         return 'spore';
-      case value < 7000:
+      case value < 6000:
         openAmount = value % 1000;
         return 'metal';
-      case value < 8500:
+      case value < 8000:
         openAmount = value % 1000;
         return 'biomass';
       case value <= 10000:

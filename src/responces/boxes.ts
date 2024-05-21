@@ -9,7 +9,7 @@ import {
 } from '../database/rewards';
 import { GetValueByKey } from '../database/balances';
 import { error } from 'console';
-import { GetSignableMessage } from '../utils/auth';
+import { CheckTelegramAuth, GetSignableMessage } from '../utils/auth';
 import Web3 from 'web3';
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -48,6 +48,7 @@ export const CreateBox = async (req, res) => {
       error: 'Some of nessesary parameters is missing',
     });
   }
+  console.log("Box creation request: ", req.body)
   try {
     const msg = GetSignableMessage();
     const address = web3.eth.accounts.recover(msg, body.signature)
@@ -84,16 +85,16 @@ export const CreateBox = async (req, res) => {
 
 export const OpenBoxRequest = async (req, res) => {
   const body = req.body;
-  if (!body.boxId || !body.signature) {
+  if (!body.boxId || (!body.signature && !body.telegramData)) {
     res.status(400).send({
       error: 'Some of nessesary parameters is missing',
     });
   }
-  
+  console.log("Box opening requested", body.boxId, body.telegramData, body.signature)
   try {
     const msg = GetSignableMessage();
-    const address = web3.eth.accounts.recover(msg, body.signature)
-    .toLowerCase();
+    const address = body.signature ? web3.eth.accounts.recover(msg, body.signature)
+    .toLowerCase() : "";
     const adminAddress = await GetValueByKey("ADMIN_WALLET");
     const boxOwner = await GetBoxOwner(body.boxId);
 
@@ -102,9 +103,13 @@ export const OpenBoxRequest = async (req, res) => {
         error: "Invalid box id",
       });
     }
+
+    const telegramDataValidation = body.telegramData? CheckTelegramAuth(body.telegramData).success : null;
   
-    if (address !== adminAddress.toLowerCase() && address !== boxOwner.toLowerCase()) {
-       res.status(403).send({
+    if (address !== adminAddress.toLowerCase() 
+      && address !== boxOwner.toLowerCase() &&
+    !telegramDataValidation) {
+      res.status(403).send({
         error: "Caller have no rights to open",
       });
        return;
@@ -115,7 +120,7 @@ export const OpenBoxRequest = async (req, res) => {
   }
 
   try {
-    const openingResult = await OpenBox(body.boxId);
+    const openingResult = await OpenBox(body.boxId, body.telegramData || undefined);
     res.status(200).send({
       ok: openingResult,
     });
@@ -180,6 +185,7 @@ export const GetUserResources = async (req, res) => {
     res.status(400).send({
       error: 'Nessesary parameters is missing',
     });
+    return;
   }
   try {
     const assets = await GetUserBalanceRow(

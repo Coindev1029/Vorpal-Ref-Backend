@@ -1,9 +1,4 @@
-import { Telegraf, Markup } from "telegraf";
-import { TelegramBotServer } from "../telegram";
-require('dotenv').config();
+import { TelegramBotLaunch } from "../telegram";
 
-console.log("Telergram bot testing...");
 
-const tgServer = new TelegramBotServer();
-
-tgServer.start();
+TelegramBotLaunch();

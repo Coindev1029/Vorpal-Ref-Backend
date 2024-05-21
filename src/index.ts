@@ -1,12 +1,19 @@
+import { TelegramBotLaunch } from './telegram';
+import { StartWatchingTimer } from './blockchain/Stars/watcher';
 import { InitGameIoServer } from './game';
 import {
   AdminDataRequest,
   AdminSaveData,
   AdminUpdateUserData,
   AuthByTelegram,
+  BalanceAllResponce,
+  BalanceResponce,
+  BuyResponce,
+  CheckAvailableResponce,
   CreateBox,
   DuelDataByLoginResponce,
   DuelDataResponce,
+  DuelDeletionResponce,
   FinishDuelResponce,
   GetAdminUserData,
   GetAllStars,
@@ -14,15 +21,20 @@ import {
   GetLinksByOwnerResponse,
   GetOwnerDataResponse,
   GetProjectData,
+  GetStoreItemsResponce,
   GetUserAvailableBoxes,
   GetUserResources,
   GiveResourcesResponce,
+  IsNeedSubscribes,
   IsUserInDuelResponce,
+  OnlineCountResponce,
   OpenBoxRequest,
   OpponentResponce,
   ReferralApiDefault,
+  RewardConditionResponce,
   UpdateAllStars,
   UpdateOneStar,
+  UpdateOnlineCount,
   WithdrawRewardAction,
 } from './responces';
 const dEnv = require('dotenv');
@@ -90,7 +102,30 @@ app.get('/api/dueldatabylogin/:login', DuelDataByLoginResponce);
 
 app.get('/api/getduelid/:login', DuelDataResponce);
 
+app.get('/api/onlinecount', OnlineCountResponce);
+
+app.get('/api/usersubscribecondition', IsNeedSubscribes);
+
 app.post('/api/finishduel', FinishDuelResponce);
+
+app.post('/api/deleteduel', DuelDeletionResponce);
+
+app.post('/api/updateonlinecount', UpdateOnlineCount);
+
+app.post('/api/rewardcondition', RewardConditionResponce);
+
+app.post('/api/duelrewardcondition', RewardConditionResponce)
+
+//Store
+app.get('/api/storeitems', GetStoreItemsResponce);
+
+app.post('/api/store/userbalance', BalanceResponce);
+
+app.post('/api/store/userbalanceall', BalanceAllResponce);
+
+app.post('/api/store/isavailable', CheckAvailableResponce);
+
+app.post('/api/store/buy', BuyResponce);
 
 // Stars (server contract parser)
 app.get('/api/getstarlist', GetAllStars);
@@ -113,3 +148,6 @@ app.post('/api/admin/updateusers', AdminUpdateUserData);
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
 });
+
+TelegramBotLaunch();
+StartWatchingTimer();

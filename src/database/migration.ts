@@ -94,7 +94,8 @@ async function DBCreateTables() {
     metal integer,
     token integer,
     biomass integer,
-    carbon integer
+    carbon integer,
+    trends integer
  );
   `;
 
@@ -106,7 +107,8 @@ async function DBCreateTables() {
     login2 varchar(128),
     creation integer,
     isFinished boolean,
-    isExpired boolean
+    isExpired boolean,
+    winner varchar(128)
   );
   `
 
@@ -119,6 +121,64 @@ async function DBCreateTables() {
     openAmount integer
   );
   `;
+
+  const TGPersonalQuery = `
+  CREATE TABLE IF NOT EXISTS "telegram_personal" (
+    id serial PRIMARY KEY,
+	  user_id varchar(128) NOT NULL UNIQUE,
+	  first_name varchar(128),
+  	last_name varchar(128),
+  	username varchar(128),
+  	last_auth_hash varchar(512),
+  	last_auth_date integer
+  );
+  `
+
+  const storeItemsQuery = `
+  CREATE TABLE IF NOT EXISTS "store_items" (
+    id serial PRIMARY KEY,
+	  item varchar(128) NOT NULL UNIQUE,
+  	type varchar(128),
+    rareness varchar(128),
+    description varchar(256),
+  	img_preview varchar(512),
+    img_full varchar(512),
+    per_user integer,
+    total_count integer,
+	  cost integer,
+	  currency varchar(128)
+  );
+  `
+
+  const storeItemBalanceQuery = `
+  CREATE TABLE IF NOT EXISTS "store_item_balances" (
+    id serial PRIMARY KEY,
+	  user_name varchar(128),
+  	item_id integer,
+  	balance integer
+  );
+  `
+  const tgSubscribeQuery = `
+  CREATE TABLE IF NOT EXISTS "watching_tg_subscriptions" (
+    id serial PRIMARY KEY,
+	  channel_name varchar(128),
+	  channel_username varchar(128),
+	  channel_id varchar(128)
+  );
+  `
+
+  const uniqueItemQuery = `
+  CREATE TABLE IF NOT EXISTS "unique_items" (
+    id serial PRIMARY KEY,
+	  item_id varchar(128) NOT NULL UNIQUE,
+	  item_img varchar(512),
+	  item_name varchar(128),
+	  item_type varchar(128),
+	  price integer,
+  	currency varchar(128),
+  	owner varchar(128)
+  );
+  `
 
   await connection.query(TableOneQuery);
   await connection.query(TableTwoQuery);
@@ -133,8 +193,13 @@ async function DBCreateTables() {
   await connection.query(TableResource);
   await connection.query(TableResource);
   await connection.query(TablePDQuery);
+  await connection.query(Duels);
   await connection.query(BoxLog);
-
+  await connection.query(TGPersonalQuery);
+  await connection.query(storeItemsQuery);
+  await connection.query(uniqueItemQuery);
+  await connection.query(storeItemBalanceQuery);
+  await connection.query(tgSubscribeQuery);
   await CreateGameTables();
 
   const web3 = new Web3(config.rpc);
