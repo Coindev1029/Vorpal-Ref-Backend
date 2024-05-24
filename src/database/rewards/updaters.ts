@@ -3,7 +3,7 @@ import { TelegramAuthData, boxOpenResults } from 'types';
 import { connection } from './../connection';
 import { WriteLog } from '../../database/log';
 import { GetHolderData, GetUserBalanceRow, IsHolderExists } from './getters';
-import { GetChannelSubscribeList } from '../../telegram';
+import { GetChannelSubscribeList } from '../../telegram/handlers';
 
 export async function CreateNewBox(
   level: number,
