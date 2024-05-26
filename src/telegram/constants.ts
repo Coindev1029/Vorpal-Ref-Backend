@@ -5,6 +5,8 @@ export const tg_token = process.env.TELEGRAM_API_TOKEN;
 export const inviteLink = "https://t.me/${process.env.TELEGRAM_BOT_NAME}?start=";
 export const startText = "Start";
 export const duelText = "Create duel";
+export const duelConfirmText = "Confirm duel";
+export const duelRefuseText = "Refuse a duel";
 
 export const messages = {
     welocme: `
@@ -15,6 +17,9 @@ export const messages = {
     `,
     noInviter: `
       Hello! You have invited to a duel but user not found. You can create ypur own:
+    `,
+    inviteSelf: `
+      Hello! You cannot play with yourself
     `,
     subscribeRequest: `Subscribe on channels to get more prizes`,
     duelCreatedShareInfo: `
@@ -30,6 +35,9 @@ export const messages = {
       Welcome to a Star defender! <br />
       You now have a duel invitation from ${inviter}.
       Choose to confirm or refuse a duel:
+    `,
+    duelNotFound: `
+      Duel with your inviter not found. You can create a new one: 
     `,
     duelComfirmed: `
       Great! Noe to start a battle open a game app: 

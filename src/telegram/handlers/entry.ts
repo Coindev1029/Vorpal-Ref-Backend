@@ -12,7 +12,7 @@ import {
 } from '../../database/telegram';
 import { duel_lifetime } from '../../config';
 import { bot } from '../initial';
-import { duelText, inviteLink, messages, startText } from '../constants';
+import { duelConfirmText, duelRefuseText, duelText, inviteLink, messages, startText } from '../constants';
 import { SendSubscribeMessage } from './subscribe';
 
 export const MarkupKeyboard = () => {
@@ -26,7 +26,7 @@ export const InlineKeyboard = (...actions: string[]) => {
   const keyboard: any[] = [];
   actions.forEach((a) => {
     switch (a) {
-      case "duel":
+      case 'duel':
         keyboard.push([
           {
             text: duelText,
@@ -34,22 +34,33 @@ export const InlineKeyboard = (...actions: string[]) => {
           },
         ]);
         break;
+      case 'duelConfirm':
+          keyboard.push([
+            {
+              text: duelConfirmText,
+              callback_query: `dueconfirm`,
+            },
+          ]);
+          break;
+      case 'duelRefuse':
+          keyboard.push([
+            {
+              text: duelRefuseText,
+              callback_query: `duelrefuse`,
+            },
+          ]);
+          break;
     }
-  })
+  });
   return keyboard;
-
-}
+};
 
 export const duelAcceptHandler = async (msg: any, match: any) => {
   const chatId = msg.chat.id;
   console.log('Match params', match);
   try {
     if (!msg.from.username) {
-      bot.sendMessage(
-        chatId,
-        messages.noUsername,
-        MarkupKeyboard(),
-      );
+      bot.sendMessage(chatId, messages.noUsername, MarkupKeyboard());
       return;
     }
 
@@ -61,8 +72,8 @@ export const duelAcceptHandler = async (msg: any, match: any) => {
       username: msg.from.username?.toLowerCase() || '',
       hash: '',
     };
-  
-    await SendSubscribeMessage (linkAuthDataPrev.id, chatId);
+
+    await SendSubscribeMessage(linkAuthDataPrev.id, chatId);
 
     if (!msg.from.username) {
       bot.sendMessage(chatId, messages.noUsername);
@@ -72,24 +83,67 @@ export const duelAcceptHandler = async (msg: any, match: any) => {
     const inviterLogin = match[1]?.toLowerCase();
 
     if (!inviterLogin) {
-      bot.sendMessage(chatId, messages.noInviter, InlineKeyboard("duel"));
+      bot.sendMessage(chatId, messages.noInviter, InlineKeyboard('duel'));
       return;
     }
-    
+
+    if (inviterLogin === linkAuthDataPrev.username) {
+      bot.sendMessage(chatId, messages.inviteSelf);
+      return;
+    }
+
     const createdDuel = inviterLogin
-    ? await GetDuelDataByInviter(inviterLogin)
-    : null;
+      ? await GetDuelDataByInviter(inviterLogin)
+      : null;
 
     if (!createdDuel) {
-      bot.sendMessage(chatId, messages.duelExpired, InlineKeyboard("duel"));
+      bot.sendMessage(chatId, messages.duelNotFound, InlineKeyboard('duel'));
       return;
     }
 
+    const timeNow = Math.round(new Date().getTime() / 1000);
+
+    if (
+      createdDuel.isfinished &&
+      timeNow - createdDuel.creation <= duel_lifetime
+    ) {
+      bot.sendMessage(chatId, messages.duelCancelled, InlineKeyboard('duel'));
+      return;
+    }
+
+    if (
+      createdDuel.isexpired ||
+      timeNow - createdDuel.creation > duel_lifetime
+    ) {
+      bot.sendMessage(chatId, messages.duelExpired, InlineKeyboard('duel'));
+      return;
+    }
+
+    if (createdDuel.login2) {
+      bot.sendMessage(chatId, messages.duelBusy, InlineKeyboard('duel'));
+      return;
+    }
+
+    if (
+      createdDuel.login2 ||
+      createdDuel.isexpired ||
+      createdDuel.isfinished ||
+      timeNow - createdDuel.creation > duel_lifetime
+    ) {
+      bot.sendMessage(chatId, messages.duelBusy, InlineKeyboard('duel'));
+      return;
+    }
+
+    bot.sendMessage(
+      chatId,
+      messages.duelInvitation(inviterLogin),
+      InlineKeyboard('duelConfirm', 'duelRefuse'),
+    );
+    return;
   } catch (e) {
     console.log('Error: ', e.message);
     bot.sendMessage(chatId, messages.serverError(e.message));
   }
-
 };
 
 export const startHandler = (duel = false) => {
@@ -124,8 +178,7 @@ export const startHandler = (duel = false) => {
         inviterLogin,
       );
 
-      await SendSubscribeMessage (linkAuthDataPrev.id, chatId)
-
+      await SendSubscribeMessage(linkAuthDataPrev.id, chatId);
 
       if (duel && !msg.from.username) {
         bot.sendMessage(
