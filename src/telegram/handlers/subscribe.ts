@@ -11,7 +11,7 @@ import {
   SetPersonalData,
 } from '../../database/telegram';
 import { duel_lifetime } from '../../config';
-import { bot } from '../initial';
+import { bot } from '../bot';
 import { duelText, inviteLink, messages, startText } from '../constants';
 
 export async function SendSubscribeMessage(userId: number, chatId: number) {

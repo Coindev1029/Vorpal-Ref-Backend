@@ -2,7 +2,7 @@ require('dotenv').config();
 
 export const front_v = process.env.FRONTEND_VERSION || '407';
 export const tg_token = process.env.TELEGRAM_API_TOKEN;
-export const inviteLink = "https://t.me/${process.env.TELEGRAM_BOT_NAME}?start=";
+export const inviteLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}?start=`;
 export const startText = "Start";
 export const duelText = "Create duel";
 export const duelConfirmText = "Confirm duel";

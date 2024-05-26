@@ -11,16 +11,25 @@ import {
   SetPersonalData,
 } from '../database/telegram';
 import { duel_lifetime } from '../config';
-import { duelText, startText, tg_token } from './constants';
-import TelegramBot from 'node-telegram-bot-api';
 import { startHandler, duelHandler, duelAcceptHandler } from './handlers';
+import { TestStartHandler } from './handlers/test';
+import { StartHandler } from './handlers/start';
+import { duelText, startText, tg_token } from './constants';
+import { bot } from './bot';
+import { DuelCreationHandler } from './handlers/duelCreate';
+import { DuelAcceptHandler } from './handlers/duelAccept';
 
-export const bot = new TelegramBot(tg_token, { polling: true });
 
 export function TelegramBotLaunch() {
-  bot.onText(/\/start/, startHandler(false));
+  bot.onText(/\/start/, async (msg) => {
+    console.log("Start called");
+    await  StartHandler(bot, msg);
+  });
 
-  bot.onText(/\/start (.+)/, duelAcceptHandler);
+  bot.onText(/\/start (.+)/, async (msg, match) => {
+    console.log("Duel accept called");
+    await  DuelAcceptHandler(bot, msg, match);
+  });
 
   bot.onText(/\/duel/, duelHandler);
 
@@ -57,18 +66,34 @@ export function TelegramBotLaunch() {
 
   bot.on('callback_query', async (query) => {
     console.log(query);
+    switch (query.data) {
+      case "duel":
+        await DuelCreationHandler (bot, query.message);
+        break;
+    }
   });
 
   bot.on('message', async (query) => {
-    console.log(query);
-    switch (query.text) {
+    console.log("Received: ", query.text);
+    const txt: string = query.text;
+    switch (txt) {
       case startText:
-        startHandler();
+        console.log("Case 1")
+        await startHandler(query);
         break;
       case duelText:
-        duelHandler(query);
+        console.log("Case 3")
+        await duelHandler(query);
         break;
+      /* default:
+        console.log("Case 5")
+        bot.sendMessage(
+          query.chat.id,
+          `Command not resolved, text: ${query.text}`
+        );
+        console.log("Unresolved message: ", query.text); */
     }
+    console.log("Query processed: ", query.text);
   });
 
   bot.on('polling_error', (error) => {
