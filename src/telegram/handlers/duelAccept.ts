@@ -42,7 +42,7 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
     const inviterLogin = match[1]?.toLowerCase();
 
     if (!inviterLogin) {
-      bot.sendMessage(chatId, messages.noInviter, InlineKeyboard('duel'));
+      bot.sendMessage(chatId, messages.noInviter, { reply_markup: InlineKeyboard(["duel"])});
       return;
     }
 
@@ -56,7 +56,7 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       : null;
 
     if (!createdDuel) {
-      bot.sendMessage(chatId, messages.duelNotFound, InlineKeyboard('duel'));
+      bot.sendMessage(chatId, messages.duelNotFound, { reply_markup: InlineKeyboard(["duel"])});
       return;
     }
 
@@ -66,7 +66,7 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       createdDuel.isfinished &&
       timeNow - createdDuel.creation <= duel_lifetime
     ) {
-      bot.sendMessage(chatId, messages.duelCancelled, InlineKeyboard('duel'));
+      bot.sendMessage(chatId, messages.duelCancelled, { reply_markup: InlineKeyboard(["duel"])});
       return;
     }
 
@@ -74,12 +74,12 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       createdDuel.isexpired ||
       timeNow - createdDuel.creation > duel_lifetime
     ) {
-      bot.sendMessage(chatId, messages.duelExpired, InlineKeyboard('duel'));
+      bot.sendMessage(chatId, messages.duelExpired, { reply_markup: InlineKeyboard(["duel"])});
       return;
     }
 
     if (createdDuel.login2) {
-      bot.sendMessage(chatId, messages.duelBusy, InlineKeyboard('duel'));
+      bot.sendMessage(chatId, messages.duelBusy, { reply_markup: InlineKeyboard(["duel"])});
       return;
     }
 
@@ -89,14 +89,14 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       createdDuel.isfinished ||
       timeNow - createdDuel.creation > duel_lifetime
     ) {
-      bot.sendMessage(chatId, messages.duelBusy, InlineKeyboard('duel'));
+      bot.sendMessage(chatId, messages.duelBusy, { reply_markup: InlineKeyboard(["duel"])});
       return;
     }
 
     bot.sendMessage(
       chatId,
-      messages.duelInvitation(inviterLogin),
-      InlineKeyboard('duelConfirm', 'duelRefuse'),
+      messages.duelAccept(inviterLogin),
+      { reply_markup: InlineKeyboard(['duelConfirm', 'duelRefuse'], inviterLogin)},
     );
     return;
   } catch (e) {

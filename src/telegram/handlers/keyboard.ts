@@ -15,29 +15,39 @@ export const MarkupKeyboard = () => {
   ]);
 };
 
-export const InlineKeyboard = (...actions: string[]) => {
+export const InlineKeyboard = (actions: string[], inviter?: string) => {
   const keyboard: any[] = [];
   actions.forEach((a) => {
-    switch (a) {
-      case 'duel':
+    switch (true) {
+      case a === 'duel':
         keyboard.push({
           text: duelText,
           callback_data: `duel`,
         });
         break;
-      case 'duelConfirm':
+      case a.indexOf('duelConfirm') > -1:
         keyboard.push({
           text: duelConfirmText,
-          callback_data: `dueconfirm`,
+          callback_data: `${a.toLowerCase()}%${inviter || ""}`,
         });
         break;
-      case 'duelRefuse':
-        keyboard.push(
-          {
-            text: duelRefuseText,
-            callback_data: `duelrefuse`,
-          },
-        );
+      case a.indexOf('duelRefuse') > -1:
+        keyboard.push({
+          text: duelRefuseText,
+          callback_data: `${a.toLowerCase()}%${inviter || ""}`,
+        });
+        break;
+        case a.indexOf('duelCancel') > -1:
+            keyboard.push({
+              text: "Cancel a duel",
+              callback_data: `${a.toLowerCase()}%${inviter || ""}`,
+            });
+            break;
+      default:
+        keyboard.push({
+          text: "Press action",
+          callback_data: `${a.toLowerCase()}`,
+        });
         break;
     }
   });

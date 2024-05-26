@@ -32,15 +32,15 @@ export const messages = {
       <a href="${inviteLink}${inviter}">Accept invitation and play</a>:
     `,
     duelAccept:  (inviter: string) => `
-      Welcome to a Star defender! <br />
-      You now have a duel invitation from ${inviter}.
+      Welcome to a Star defender! 
+      You now have a duel invitation from @${inviter}.
       Choose to confirm or refuse a duel:
     `,
     duelNotFound: `
       Duel with your inviter not found. You can create a new one: 
     `,
     duelComfirmed: `
-      Great! Noe to start a battle open a game app: 
+      Great! Now to start a battle open a game app: 
     `,
     duelRefused: `
       Your duel invitation cancelled. You can play with bot

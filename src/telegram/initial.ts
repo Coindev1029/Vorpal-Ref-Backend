@@ -11,7 +11,7 @@ import {
   SetPersonalData,
 } from '../database/telegram';
 import { duel_lifetime } from '../config';
-import { startHandler, duelHandler, duelAcceptHandler } from './handlers';
+import { duelAcceptAction, duelCancelAction, duelRefuseAction } from './handlers/duel';
 import { TestStartHandler } from './handlers/test';
 import { StartHandler } from './handlers/start';
 import { duelText, startText, tg_token } from './constants';
@@ -30,8 +30,6 @@ export function TelegramBotLaunch() {
     console.log("Duel accept called");
     await  DuelAcceptHandler(bot, msg, match);
   });
-
-  bot.onText(/\/duel/, duelHandler);
 
   bot.on('inline_query', async (query) => {
     const deepLink = `https://t.me/${
@@ -66,9 +64,19 @@ export function TelegramBotLaunch() {
 
   bot.on('callback_query', async (query) => {
     console.log(query);
-    switch (query.data) {
-      case "duel":
-        await DuelCreationHandler (bot, query.message);
+    const inviter = query.data.split("%")[1] || ""
+    switch (true) {
+      case query.data === "duel":
+        await DuelCreationHandler (bot, query);
+        break;
+      case query.data.indexOf("duelconfirm") > -1:
+        await duelAcceptAction (bot, query, inviter);
+        break;
+      case query.data.indexOf("duelrefuse") > -1:
+        await duelRefuseAction (bot, query, inviter);
+        break;
+      case  query.data.indexOf("duelcancel") > -1:
+        await duelCancelAction (bot, query);
         break;
     }
   });
@@ -79,11 +87,9 @@ export function TelegramBotLaunch() {
     switch (txt) {
       case startText:
         console.log("Case 1")
-        await startHandler(query);
         break;
       case duelText:
         console.log("Case 3")
-        await duelHandler(query);
         break;
       /* default:
         console.log("Case 5")

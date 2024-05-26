@@ -14,20 +14,21 @@ import {
   } from '../../database/telegram';
 import { duelConfirmText, duelRefuseText, duelText, inviteLink, messages, startText } from '../constants';
 
-export const DuelCreationHandler = async (bot, msg) => {
-    const chatId = msg.chat.id;
+export const DuelCreationHandler = async (bot, query) => {
+    const chat = query.message.chat;
+    const chatId = chat.id;
     console.log("Duel handler called")
   
     const linkAuthDataPrev: TelegramAuthData = {
       auth_date: GetDaylyAuthDate(),
-      last_name: msg.from.last_name?.replace(' ', '') || '',
-      first_name: msg.from.first_name?.replace(' ', ''),
-      id: msg.from.id,
-      username: msg.from.username?.toLowerCase() || '',
+      last_name: chat.last_name?.replace(' ', '') || '',
+      first_name: chat.first_name?.replace(' ', ''),
+      id: chat.id,
+      username: chat.username?.toLowerCase() || '',
       hash: '',
     };
   
-    if (!msg.from.username) {
+    if (!linkAuthDataPrev.username) {
       bot.sendMessage(
         chatId,
         'You need to have a visible username to start a duel',
@@ -36,10 +37,10 @@ export const DuelCreationHandler = async (bot, msg) => {
     }
     const dateSec = Math.round(new Date().getTime() / 1000);
     const userLastDuel = await GetDuelDataByUser(
-      msg.from.username?.toLowerCase(),
+        linkAuthDataPrev.username?.toLowerCase(),
     );
     if (!userLastDuel) {
-      await CreateDuel(msg.from.username?.toLowerCase(), '');
+      await CreateDuel(linkAuthDataPrev.username?.toLowerCase(), '');
     } else {
       const isFinished = userLastDuel.isfinished;
       const creation = Number(userLastDuel.creation);
@@ -55,7 +56,7 @@ export const DuelCreationHandler = async (bot, msg) => {
       if (!isFinished || dateSec - creation >= duel_lifetime) {
         console.log('Finish duel case 3');
         await FinishDuel(userLastDuel.duel_id, '');
-        const duelId = await CreateDuel(msg.from.username?.toLowerCase(), '');
+        const duelId = await CreateDuel(linkAuthDataPrev.username?.toLowerCase(), '');
         console.log('Created, id: ', duelId);
       }
       // console.log('Duel creation, last condition passed 3');
@@ -91,5 +92,12 @@ export const DuelCreationHandler = async (bot, msg) => {
         // reply_markup: JSON.stringify(keyboard),
       },
     );
+    bot.sendMessage(
+        chatId,
+        `Press to cancel a duel`,
+        {
+          reply_markup: InlineKeyboard(["duelCancel"]),
+        },
+      );
 
   };

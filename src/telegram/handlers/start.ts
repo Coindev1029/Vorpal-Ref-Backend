@@ -40,7 +40,7 @@ export const StartHandler =  async (bot, msg) => {
       bot.sendMessage(
         chatId,
         'Welcome! Enter duel command to play with friends',
-        { reply_markup: InlineKeyboard("duel")},
+        { reply_markup: InlineKeyboard(["duel"])},
       );
     } catch (e) {
       console.log('Start cmd exception: ', e);
