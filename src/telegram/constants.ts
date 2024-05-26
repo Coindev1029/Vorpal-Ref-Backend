@@ -10,6 +10,13 @@ export const messages = {
     welocme: `
       Welocme to a Star defender game app powered by Vorpal engine! <br /> 
       You now can start a duel with your friend or play demo with bot`,
+    noUsername: `
+      Welcome! You need to have a Telegram username to enter a duel or to start it
+    `,
+    noInviter: `
+      Hello! You have invited to a duel but user not found. You can create ypur own:
+    `,
+    subscribeRequest: `Subscribe on channels to get more prizes`,
     duelCreatedShareInfo: `
        Duel created! 
        Now to invite a friend share him the next message with your link below:
@@ -40,5 +47,8 @@ export const messages = {
     duelExpired: `
       Duel for your invitation is already finished or cancelled by creator.
       You can create a new one:
+    `,
+    serverError: (message: string) =>  `
+      Server side error: ${message}
     `
 }

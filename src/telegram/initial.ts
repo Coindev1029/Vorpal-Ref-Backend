@@ -13,14 +13,14 @@ import {
 import { duel_lifetime } from '../config';
 import { duelText, startText, tg_token } from './constants';
 import TelegramBot from 'node-telegram-bot-api';
-import { startHandler, duelHandler } from './handlers';
+import { startHandler, duelHandler, duelAcceptHandler } from './handlers';
 
 export const bot = new TelegramBot(tg_token, { polling: true });
 
 export function TelegramBotLaunch() {
   bot.onText(/\/start/, startHandler(false));
 
-  bot.onText(/\/start (.+)/, startHandler(true));
+  bot.onText(/\/start (.+)/, duelAcceptHandler);
 
   bot.onText(/\/duel/, duelHandler);
 
