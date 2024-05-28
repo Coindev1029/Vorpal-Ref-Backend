@@ -78,6 +78,7 @@ export async function GetPersonalDataByUsername(
           SELECT "user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date", "chat_id"
           FROM "telegram_personal" WHERE "username" = '${username}';
           `;
+    
     try {
       const result = await connection.query(query);
       if (result.rows.length > 0) {
@@ -90,13 +91,13 @@ export async function GetPersonalDataByUsername(
           auth_date: Number(result.last_auth_date),
           chat_id: result.chat_id || 0
         };
-        return data;
+        resolve(data);
       } else {
-        return null;
+        resolve(null);
       }
     } catch (e) {
       console.log(e.message);
-      return null;
+      resolve(null);
     }
   });
 }
