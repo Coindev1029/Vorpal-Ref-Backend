@@ -9,14 +9,14 @@ import {
   } from '../../database/telegram';
 import { duelConfirmText, duelRefuseText, duelText, inviteLink, messages, startText } from '../constants';
 import { SaveMessage } from '../../database/telegram/history';
-import { TruncateChat } from './utils';
+import { SendMessageWithSave, TruncateChat } from './utils';
 
 export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
   const chatId = msg.chat.id;
   console.log('Match params', match);
   try {
     if (!msg.from.username) {
-      bot.sendMessage(chatId, messages.noUsername);
+      SendMessageWithSave(bot, chatId, messages.noUsername);
       return;
     }
     SaveMessage(chatId, msg.message_id);
@@ -38,19 +38,19 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
     await SendSubscribeMessage(linkAuthDataPrev.id, chatId);
 
     if (!msg.from.username) {
-      bot.sendMessage(chatId, messages.noUsername);
+      SendMessageWithSave(bot, chatId, messages.noUsername);
       return;
     }
 
     const inviterLogin = match[1]?.toLowerCase();
 
     if (!inviterLogin) {
-      bot.sendMessage(chatId, messages.noInviter, { reply_markup: InlineKeyboard(["duel"])});
+      SendMessageWithSave(bot, chatId, messages.noInviter, { reply_markup: InlineKeyboard(["duel"])});
       return;
     }
 
     if (inviterLogin === linkAuthDataPrev.username) {
-      bot.sendMessage(chatId, messages.inviteSelf);
+      SendMessageWithSave(bot, chatId, messages.inviteSelf);
       return;
     }
 
@@ -59,7 +59,7 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       : null;
 
     if (!createdDuel) {
-      bot.sendMessage(chatId, messages.duelNotFound, { reply_markup: InlineKeyboard(["duel"])});
+      SendMessageWithSave(bot, chatId, messages.duelNotFound, { reply_markup: InlineKeyboard(["duel"])});
       return;
     }
 
@@ -69,7 +69,7 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       createdDuel.isfinished &&
       timeNow - createdDuel.creation <= duel_lifetime
     ) {
-      bot.sendMessage(chatId, messages.duelCancelled, { reply_markup: InlineKeyboard(["duel"])});
+      SendMessageWithSave(bot, chatId, messages.duelCancelled, { reply_markup: InlineKeyboard(["duel"])});
       return;
     }
 
@@ -77,12 +77,12 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       createdDuel.isexpired ||
       timeNow - createdDuel.creation > duel_lifetime
     ) {
-      bot.sendMessage(chatId, messages.duelExpired, { reply_markup: InlineKeyboard(["duel"])});
+      SendMessageWithSave(bot, chatId, messages.duelExpired, { reply_markup: InlineKeyboard(["duel"])});
       return;
     }
 
     if (createdDuel.login2) {
-      bot.sendMessage(chatId, messages.duelBusy, { reply_markup: InlineKeyboard(["duel"])});
+      SendMessageWithSave(bot, chatId, messages.duelBusy, { reply_markup: InlineKeyboard(["duel"])});
       return;
     }
 
@@ -92,11 +92,11 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       createdDuel.isfinished ||
       timeNow - createdDuel.creation > duel_lifetime
     ) {
-      bot.sendMessage(chatId, messages.duelBusy, { reply_markup: InlineKeyboard(["duel"])});
+      SendMessageWithSave(bot, chatId, messages.duelBusy, { reply_markup: InlineKeyboard(["duel"])});
       return;
     }
 
-    bot.sendMessage(
+    SendMessageWithSave(bot, 
       chatId,
       messages.duelAccept(inviterLogin),
       { reply_markup: InlineKeyboard(['duelConfirm', 'duelRefuse'], inviterLogin)},
@@ -104,7 +104,7 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
     return;
   } catch (e) {
     console.log('Error: ', e.message);
-    bot.sendMessage(chatId, messages.serverError(e.message));
+    SendMessageWithSave(bot, chatId, messages.serverError(e.message));
   }
   setTimeout(() => {
     TruncateChat(bot, chatId)
