@@ -1,21 +1,15 @@
-import { Markup } from 'telegraf';
-import { TelegramAuthData, tgChannelData } from '../../types';
-import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../../utils/auth';
+import TelegramBot from 'node-telegram-bot-api';
 import {
   AddDuelOpponent,
-  CreateDuel,
   FinishDuel,
-  GetDuelDataByInviter,
   GetDuelDataByUser,
-  GetWatchingChannels,
-  SetPersonalData,
 } from '../../database/telegram';
 import { duel_lifetime } from '../../config';
 import { bot } from '../bot';
 import { duelText, inviteLink, messages, startText } from '../constants';
 import { InlineKeyboard } from './keyboard';
 
-export const duelCancelAction = async (bot, query) => {
+export const duelCancelAction = async (bot: TelegramBot, query) => {
   if (!query.message.chat.id) {
     console.log('Chat not found');
     return;
@@ -36,7 +30,7 @@ export const duelCancelAction = async (bot, query) => {
   }
 };
 
-export const duelAcceptAction = async (bot, query, inviter?: string) => {
+export const duelAcceptAction = async (bot: TelegramBot, query, inviter?: string) => {
   if (!query.message.chat.id) {
     console.log('Chat not found');
     return;
@@ -57,7 +51,7 @@ export const duelAcceptAction = async (bot, query, inviter?: string) => {
   bot.sendMessage(query.message.chat.id, messages.duelComfirmed);
 };
 
-export const duelRefuseAction = async (bot, query, inviter?: string) => {
+export const duelRefuseAction = async (bot: TelegramBot, query, inviter?: string) => {
   if (!query.message.chat.id) {
     console.log('Chat not found');
     return;

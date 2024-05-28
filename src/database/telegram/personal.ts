@@ -1,9 +1,10 @@
-import { TelegramAuthData } from '../../types';
+import { TelegramAuthData, TelegramAuthNote } from '../../types';
 
 const { connection } = require('../connection');
 
 export async function SetPersonalData(
   data: TelegramAuthData,
+  chat?: number
 ): Promise<Boolean> {
   return new Promise(async (resolve, reject) => {
     const fd: TelegramAuthData = {
@@ -16,9 +17,9 @@ export async function SetPersonalData(
     };
     const query = `
     INSERT INTO "telegram_personal" 
-      ("user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date")
+      ("user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date", "chat_id")
     VALUES 
-      ('${fd.id}', '${fd.first_name}', '${fd.last_name}', '${fd.username}', '${fd.hash}', ${fd.auth_date})
+      ('${fd.id}', '${fd.first_name}', '${fd.last_name}', '${fd.username}', '${fd.hash}', ${fd.auth_date}, '${chat ? String(chat) : ""}')
     ON CONFLICT ("user_id") DO UPDATE SET
       "first_name" = excluded."first_name", 
       "last_name" = excluded."last_name", 
@@ -71,22 +72,23 @@ export async function GetPersonalDataById(
 
 export async function GetPersonalDataByUsername(
   username: string,
-): Promise<TelegramAuthData | null> {
+): Promise<TelegramAuthNote | null> {
   return new Promise(async (resolve, reject) => {
     const query = `
-          SELECT "user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date"
+          SELECT "user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date", "chat_id"
           FROM "telegram_personal" WHERE "username" = '${username}';
           `;
     try {
       const result = await connection.query(query);
       if (result.rows.length > 0) {
-        const data: TelegramAuthData = {
+        const data: TelegramAuthNote = {
           id: Number(result.rows.user_id),
           first_name: result.first_name,
           last_name: result.last_name,
           username: result.username,
           hash: result.last_auth_hash,
           auth_date: Number(result.last_auth_date),
+          chat_id: result.chat_id || 0
         };
         return data;
       } else {

@@ -142,7 +142,8 @@ async function DBCreateTables() {
   	last_name varchar(128),
   	username varchar(128),
   	last_auth_hash varchar(512),
-  	last_auth_date integer
+  	last_auth_date integer,
+    chat_id varchar(128)
   );
   `
 
@@ -192,6 +193,14 @@ async function DBCreateTables() {
   );
   `
 
+  const messagesQuery = `
+  CREATE TABLE IF NOT EXISTS "telegram_messages" (
+    id serial PRIMARY KEY,
+    chat_id varchar(128) NOT NULL,
+    message_id varchar(128) NOT NULL
+  );
+  `
+
   await connection.query(TableOneQuery);
   await connection.query(TableTwoQuery);
   await connection.query(TableBalanceQuery);
@@ -212,6 +221,7 @@ async function DBCreateTables() {
   await connection.query(uniqueItemQuery);
   await connection.query(storeItemBalanceQuery);
   await connection.query(tgSubscribeQuery);
+  await connection.query(messagesQuery);
   await CreateGameTables();
 
   const web3 = new Web3(config.rpc);

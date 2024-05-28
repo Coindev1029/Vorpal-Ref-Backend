@@ -1,18 +1,5 @@
-import { Markup } from 'telegraf';
-import { TelegramAuthData, tgChannelData } from '../types';
-import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../utils/auth';
-import {
-  AddDuelOpponent,
-  CreateDuel,
-  FinishDuel,
-  GetDuelDataByInviter,
-  GetDuelDataByUser,
-  GetWatchingChannels,
-  SetPersonalData,
-} from '../database/telegram';
-import { duel_lifetime } from '../config';
+import TelegramBot from 'node-telegram-bot-api';
 import { duelAcceptAction, duelCancelAction, duelRefuseAction } from './handlers/duel';
-import { TestStartHandler } from './handlers/test';
 import { StartHandler } from './handlers/start';
 import { duelText, startText, tg_token } from './constants';
 import { bot } from './bot';
@@ -38,7 +25,7 @@ export function TelegramBotLaunch() {
 
     console.log('Query info: ', query);
 
-    const results = [
+    const results: TelegramBot.InlineQueryResult[] = [
       {
         type: 'article',
         id: '1',
@@ -54,7 +41,6 @@ export function TelegramBotLaunch() {
             [{ text: 'Confirm invitation', url: deepLink }], //callback_data: metadataString
           ],
         },
-        cache_time: 0,
       },
     ];
 
@@ -62,9 +48,11 @@ export function TelegramBotLaunch() {
     return;
   });
 
-  bot.on('callback_query', async (query) => {
+  bot.on('callback_query', async (query: TelegramBot.CallbackQuery) => {
     console.log(query);
+    if (!query.data) return; 
     const inviter = query.data.split("%")[1] || ""
+    console.log("Invited by: ", inviter);
     switch (true) {
       case query.data === "duel":
         await DuelCreationHandler (bot, query);
@@ -81,25 +69,18 @@ export function TelegramBotLaunch() {
     }
   });
 
-  bot.on('message', async (query) => {
-    console.log("Received: ", query.text);
-    const txt: string = query.text;
+  bot.on('message', async (msg) => {
+    console.log("Received: ", msg.text);
+    const txt: string = msg.text || "";
     switch (txt) {
-      case startText:
-        console.log("Case 1")
+      case "/start":
         break;
-      case duelText:
-        console.log("Case 3")
+      case "/duel":
         break;
-      /* default:
-        console.log("Case 5")
-        bot.sendMessage(
-          query.chat.id,
-          `Command not resolved, text: ${query.text}`
-        );
-        console.log("Unresolved message: ", query.text); */
+      default:
+        await StartHandler (bot, msg)
     }
-    console.log("Query processed: ", query.text);
+    console.log("Query processed: ", msg.text);
   });
 
   bot.on('polling_error', (error) => {

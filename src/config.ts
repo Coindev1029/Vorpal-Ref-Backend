@@ -24,7 +24,8 @@ export const nessesary_keys = {
 	lastblock: 'last_passed_block'
 }
 
-export const duel_lifetime = 900;
+export const duel_lifetime = 900; // s
+export const tg_chat_history_lifetime = 600000; // ms
 
 export const Erc20ABI = [
 	{

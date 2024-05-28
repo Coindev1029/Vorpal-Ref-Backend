@@ -4,13 +4,9 @@ import { SendSubscribeMessage } from './subscribe';
 import { duel_lifetime } from '../../config';
 import { InlineKeyboard } from './keyboard';
 import {
-    AddDuelOpponent,
     CreateDuel,
     FinishDuel,
-    GetDuelDataByInviter,
     GetDuelDataByUser,
-    GetWatchingChannels,
-    SetPersonalData,
   } from '../../database/telegram';
 import { duelConfirmText, duelRefuseText, duelText, inviteLink, messages, startText } from '../constants';
 
@@ -86,7 +82,7 @@ export const DuelCreationHandler = async (bot, query) => {
   
     bot.sendMessage(
       chatId,
-      `Hello! Enter a duel with me: <a href="${deepLink}">Link</a>:`,
+      `Hello! Enter a duel with me: <a href="${deepLink}">Accept duel</a>`,
       {
         parse_mode: 'HTML',
         // reply_markup: JSON.stringify(keyboard),

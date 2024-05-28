@@ -4,12 +4,7 @@ import { SendSubscribeMessage } from './subscribe';
 import { duel_lifetime } from '../../config';
 import { InlineKeyboard } from './keyboard';
 import {
-    AddDuelOpponent,
-    CreateDuel,
-    FinishDuel,
     GetDuelDataByInviter,
-    GetDuelDataByUser,
-    GetWatchingChannels,
     SetPersonalData,
   } from '../../database/telegram';
 import { duelConfirmText, duelRefuseText, duelText, inviteLink, messages, startText } from '../constants';
@@ -31,6 +26,11 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       username: msg.from.username?.toLowerCase() || '',
       hash: '',
     };
+    try {
+      SetPersonalData(linkAuthDataPrev, chatId)
+    } catch (e) {
+      console.log(e.message)
+    }
 
     await SendSubscribeMessage(linkAuthDataPrev.id, chatId);
 

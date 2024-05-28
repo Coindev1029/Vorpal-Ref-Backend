@@ -1,13 +1,18 @@
 import { TelegramAuthData, tgChannelData } from '../../types';
 import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../../utils/auth';
 import { SendSubscribeMessage } from './subscribe';
-import { duel_lifetime } from '../../config';
+import { duel_lifetime, tg_chat_history_lifetime } from '../../config';
 import { InlineKeyboard } from './keyboard';
+import { SetPersonalData } from '../../database/telegram';
+import { TruncateChat } from './utils';
 
 export const StartHandler =  async (bot, msg) => {
     console.log("Start handler called")
     const chatId = msg.chat.id;
     console.log('Chat started: ', chatId);
+    setTimeout(() => {
+      TruncateChat(bot, chatId)
+    }, tg_chat_history_lifetime);
     try {
       const linkAuthDataPrev: TelegramAuthData = {
         auth_date: GetDaylyAuthDate(),
@@ -17,6 +22,12 @@ export const StartHandler =  async (bot, msg) => {
         username: msg.from.username?.toLowerCase() || '',
         hash: '',
       };
+
+      try {
+        SetPersonalData(linkAuthDataPrev, chatId)
+      } catch (e) {
+        console.log(e.message)
+      }
 
       if (!linkAuthDataPrev.username) {
         bot.sendMessage(

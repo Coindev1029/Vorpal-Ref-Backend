@@ -26,17 +26,9 @@ export async function SendSubscribeMessage(userId: number, chatId: number) {
     inline_keyboard: [inlineButtons],
   };
 
-  const subscribeMsg: any[] | null =
-    subscribes.length === 0
-      ? null
-      : [
-          chatId,
-          messages.subscribeRequest,
-          {
-            reply_markup: keyboardS,
-          },
-        ];
-  if (subscribeMsg) bot.sendMessage(...subscribeMsg);
+  if (subscribes.length > 0) bot.sendMessage(chatId, messages.subscribeRequest, {
+    reply_markup: keyboardS,
+  });
 }
 
 export async function GetChannelSubscribeList(

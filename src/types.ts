@@ -72,6 +72,10 @@ export interface TelegramAuthData {
   username: string;
 }
 
+export interface TelegramAuthNote extends TelegramAuthData {
+  chat_id: number;
+}
+
 export interface DuelInfo {
   duel_id: string;
   login1: string;

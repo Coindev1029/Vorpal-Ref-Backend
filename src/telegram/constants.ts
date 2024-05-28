@@ -19,7 +19,7 @@ export const messages = {
       Hello! You have invited to a duel but user not found. You can create ypur own:
     `,
     inviteSelf: `
-      Hello! You cannot play with yourself
+      Hello! You have a created duel. Enter game and wait your friend to accept invitation.
     `,
     subscribeRequest: `Subscribe on channels to get more prizes`,
     duelCreatedShareInfo: `
