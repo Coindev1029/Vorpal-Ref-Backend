@@ -28,7 +28,7 @@ export const InlineKeyboard = (actions: string[], inviter?: string) => {
       case a.indexOf('duelConfirm') > -1:
         keyboard.push({
           text: duelConfirmText,
-          callback_data: `${a.toLowerCase()}%${inviter || ""}`,
+          web_app: {"url": `${process.env.TELEGRAM_CLIENT_URL}`}
         });
         break;
       case a.indexOf('duelRefuse') > -1:

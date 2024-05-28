@@ -23,8 +23,14 @@ export async function SendMessageWithSave(
 
 export async function TruncateChat(bot: TelegramBot, chatId: number) {
   const messages = await GetMessagesByChatId(chatId);
+  let isCatch = false;
   for (let j = 0; j < messages.length; j++) {
-    await bot.deleteMessage(chatId, messages[j]);
+    try {
+        await bot.deleteMessage(chatId, messages[j]);
+    } catch (e) {
+        console.log(e.message);
+        isCatch = true;
+    }
   }
-  await DeleteMessagesByChatId(chatId);
+  if (!isCatch) await DeleteMessagesByChatId(chatId);
 }

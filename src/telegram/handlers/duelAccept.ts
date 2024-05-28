@@ -4,7 +4,9 @@ import { SendSubscribeMessage } from './subscribe';
 import { duel_lifetime, tg_chat_history_lifetime } from '../../config';
 import { InlineKeyboard } from './keyboard';
 import {
+  AddDuelOpponent,
     GetDuelDataByInviter,
+    GetDuelDataByUser,
     SetPersonalData,
   } from '../../database/telegram';
 import { duelConfirmText, duelRefuseText, duelText, inviteLink, messages, startText } from '../constants';
@@ -96,6 +98,7 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       return;
     }
 
+    await AddDuelOpponent(createdDuel.duel_id, linkAuthDataPrev.username);
     SendMessageWithSave(bot, 
       chatId,
       messages.duelAccept(inviterLogin),

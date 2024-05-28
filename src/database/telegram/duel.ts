@@ -83,6 +83,31 @@ export async function GetOpponent(login: string) {
   }
 }
 
+
+export async function RemoveDuelOpponent(login: string) {
+  const findDuelQuery = `SELECT "duel_id", "login1" FROM "duels" WHERE "isfinished" = false AND "login2" = '${login.toLowerCase()}';`;
+  let duelId = "";
+  try {
+    const result = await connection.query(findDuelQuery);
+    if (result.rows.length > 0) {
+      duelId= result.rows[0].duel_id;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    console.log(e.message)
+    return false;
+  }
+  const removeSelfQuery = `UPDATE "duels" SET "login2" = '' WHERE "duel_id" = '${duelId}';`;
+  try {
+    await connection.query(removeSelfQuery);
+    return true;
+  } catch (e) {
+    console.log(e.message)
+    return false;
+  }
+}
+
 export async function GetDuelDataByUser(
   login: string,
 ): Promise<DuelInfo | null> {

@@ -3,6 +3,9 @@ import {
   AddDuelOpponent,
   FinishDuel,
   GetDuelDataByUser,
+  GetOpponent,
+  GetPersonalDataByUsername,
+  RemoveDuelOpponent,
 } from '../../database/telegram';
 import { duel_lifetime } from '../../config';
 import { bot } from '../bot';
@@ -32,8 +35,8 @@ export const duelCancelAction = async (bot: TelegramBot, query: TelegramBot.Call
   }
 };
 
-export const duelAcceptAction = async (bot: TelegramBot, query, inviter?: string) => {
-  if (!query.message.chat.id) {
+export const duelAcceptAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery, inviter?: string) => {
+  if (!query.message?.chat.id) {
     console.log('Chat not found');
     return;
   }
@@ -53,10 +56,21 @@ export const duelAcceptAction = async (bot: TelegramBot, query, inviter?: string
   bot.sendMessage(query.message.chat.id, messages.duelComfirmed);
 };
 
-export const duelRefuseAction = async (bot: TelegramBot, query, inviter?: string) => {
+export const duelRefuseAction = async (bot: TelegramBot, query, inviter: string) => {
   if (!query.message.chat.id) {
     console.log('Chat not found');
     return;
   }
-  bot.sendMessage(query.message.chat.id, messages.duelRefused);
+  const caller = query.from.username.toLowerCase();
+  console.log("Duel cancelled between: ", caller, inviter);
+  const duelOpponent = await GetOpponent(caller) || inviter;
+  console.log("Duel opponent: ", duelOpponent)
+  const opponentData = await GetPersonalDataByUsername(duelOpponent);
+  console.log("Opponent personal data: ", opponentData)
+  if (opponentData) {
+    SendMessageWithSave(bot, opponentData.chat_id, `Duel with ${query.from.username} cancelled by him`);
+  }
+  const removeResult = await RemoveDuelOpponent (caller);
+  console.log("Is removed from duel: ", removeResult);
+  SendMessageWithSave (bot, query.message.chat.id, messages.duelRefused);
 };
