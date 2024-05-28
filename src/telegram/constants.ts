@@ -18,6 +18,9 @@ export const messages = {
     noInviter: `
       Hello! You have invited to a duel but user not found. You can create ypur own:
     `,
+    duelStart: `Welcome! Enter duel command to play with friends`,
+    duelAlready: `You already in duel, got to Starmap to enter a battle`,
+    duelToForward: `Hello! Forvard this message to invite your friend to a duel`,
     inviteSelf: `
       Hello! You have a created duel. Enter game and wait your friend to accept invitation.
     `,
@@ -26,11 +29,13 @@ export const messages = {
        Duel created! 
        Now to invite a friend share him the next message with your link below:
     `,
-    duelInvitation: (inviter: string) => `
-      Hello! I am ${inviter} inviting you to play with me 
-      in a Star defender game powered by Vorpal
-      <a href="${inviteLink}${inviter}">Accept invitation and play</a>:
-    `,
+    duelInvitation: (inviter: string) => {
+      const deepLink = `${inviteLink}${inviter?.replace(
+        ' ',
+        '',
+      )}`;
+      return `Hello! Enter a duel with me: <a href="${deepLink}">Accept duel</a>`
+    },
     duelAccept:  (inviter: string) => `
       Welcome to a Star defender! 
       You now have a duel invitation from @${inviter}.

@@ -13,6 +13,7 @@ import {
 import { duel_lifetime } from '../../config';
 import { bot } from '../bot';
 import { duelText, inviteLink, messages, startText } from '../constants';
+import { SendMessageWithSave } from './utils';
 
 export async function SendSubscribeMessage(userId: number, chatId: number) {
   const subscribes = await GetChannelSubscribeList(userId);
@@ -26,9 +27,11 @@ export async function SendSubscribeMessage(userId: number, chatId: number) {
     inline_keyboard: [inlineButtons],
   };
 
-  if (subscribes.length > 0) bot.sendMessage(chatId, messages.subscribeRequest, {
-    reply_markup: keyboardS,
-  });
+  if (subscribes.length > 0) {
+    await SendMessageWithSave(bot, chatId, messages.subscribeRequest, {
+      reply_markup: keyboardS,
+    });
+  }
 }
 
 export async function GetChannelSubscribeList(

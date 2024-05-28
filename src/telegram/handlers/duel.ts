@@ -8,25 +8,27 @@ import { duel_lifetime } from '../../config';
 import { bot } from '../bot';
 import { duelText, inviteLink, messages, startText } from '../constants';
 import { InlineKeyboard } from './keyboard';
+import { SendMessageWithSave } from './utils';
 
-export const duelCancelAction = async (bot: TelegramBot, query) => {
-  if (!query.message.chat.id) {
+export const duelCancelAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {
+  if (!query.message?.chat.id) {
     console.log('Chat not found');
     return;
   }
+  const chatId = query.message.chat.id
   const sender: string = query?.message?.from?.username || '';
   if (sender) {
     const duel = await GetDuelDataByUser(sender.toLowerCase());
     if (duel) {
       await FinishDuel(duel.duel_id, '');
-      bot.sendMessage(query.message.chat.id, messages.duelCancelled, {
+      SendMessageWithSave(bot, chatId, messages.duelCancelled, {
         reply_markup: InlineKeyboard(['duel']),
-      });
+      })
     } else {
-      bot.sendMessage(query.message.chat.id, messages.duelNotFound);
+      SendMessageWithSave(bot, chatId, messages.duelNotFound);
     }
   } else {
-    bot.sendMessage(query.message.chat.id, messages.duelNotFound);
+    SendMessageWithSave(bot, chatId, messages.duelNotFound);
   }
 };
 

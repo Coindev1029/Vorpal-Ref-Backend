@@ -1,13 +1,15 @@
 import { TelegramAuthData, tgChannelData } from '../../types';
 import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../../utils/auth';
 import { SendSubscribeMessage } from './subscribe';
-import { duel_lifetime } from '../../config';
+import { duel_lifetime, tg_chat_history_lifetime } from '../../config';
 import { InlineKeyboard } from './keyboard';
 import {
     GetDuelDataByInviter,
     SetPersonalData,
   } from '../../database/telegram';
 import { duelConfirmText, duelRefuseText, duelText, inviteLink, messages, startText } from '../constants';
+import { SaveMessage } from '../../database/telegram/history';
+import { TruncateChat } from './utils';
 
 export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
   const chatId = msg.chat.id;
@@ -17,6 +19,7 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       bot.sendMessage(chatId, messages.noUsername);
       return;
     }
+    SaveMessage(chatId, msg.message_id);
 
     const linkAuthDataPrev: TelegramAuthData = {
       auth_date: GetDaylyAuthDate(),
@@ -103,4 +106,7 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
     console.log('Error: ', e.message);
     bot.sendMessage(chatId, messages.serverError(e.message));
   }
+  setTimeout(() => {
+    TruncateChat(bot, chatId)
+  }, tg_chat_history_lifetime)
 };
