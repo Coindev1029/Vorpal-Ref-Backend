@@ -27,6 +27,9 @@ export const nessesary_keys = {
 export const duel_lifetime = 900; // s
 export const tg_chat_history_lifetime = 600000; // ms
 
+export const referralPart1 = 0.2;
+export const referralPart2 = 0.1;
+
 export const Erc20ABI = [
 	{
 		"anonymous": false,

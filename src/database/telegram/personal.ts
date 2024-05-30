@@ -4,7 +4,8 @@ const { connection } = require('../connection');
 
 export async function SetPersonalData(
   data: TelegramAuthData,
-  chat?: number
+  chat?: number,
+  inviter?: string
 ): Promise<Boolean> {
   return new Promise(async (resolve, reject) => {
     const fd: TelegramAuthData = {
@@ -17,9 +18,9 @@ export async function SetPersonalData(
     };
     const query = `
     INSERT INTO "telegram_personal" 
-      ("user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date", "chat_id")
+      ("user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date", "chat_id", "inviter")
     VALUES 
-      ('${fd.id}', '${fd.first_name}', '${fd.last_name}', '${fd.username}', '${fd.hash}', ${fd.auth_date}, '${chat ? String(chat) : ""}')
+      ('${fd.id}', '${fd.first_name}', '${fd.last_name}', '${fd.username}', '${fd.hash}', ${fd.auth_date}, '${chat ? String(chat) : ""}', '${inviter || ""}')
     ON CONFLICT ("user_id") DO UPDATE SET
       "first_name" = excluded."first_name", 
       "last_name" = excluded."last_name", 

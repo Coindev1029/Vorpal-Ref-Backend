@@ -134,6 +134,17 @@ async function DBCreateTables() {
   );
   `;
 
+  const ResourceTransactionLog = `
+  CREATE TABLE IF NOT EXISTS "resource_txn_log" (
+    id serial PRIMARY KEY,
+    userlogin varchar(128),
+    time timestamp,
+    resource varchar(128),
+    amount integer,
+    reason varchar(256)
+  );
+  `
+
   const TGPersonalQuery = `
   CREATE TABLE IF NOT EXISTS "telegram_personal" (
     id serial PRIMARY KEY,
@@ -143,6 +154,7 @@ async function DBCreateTables() {
   	username varchar(128),
   	last_auth_hash varchar(512),
   	last_auth_date integer,
+    inviter varchar(128), 
     chat_id varchar(128)
   );
   `
@@ -216,6 +228,7 @@ async function DBCreateTables() {
   await connection.query(TablePDQuery);
   await connection.query(Duels);
   await connection.query(BoxLog);
+  await connection.query(ResourceTransactionLog);
   await connection.query(TGPersonalQuery);
   await connection.query(storeItemsQuery);
   await connection.query(uniqueItemQuery);

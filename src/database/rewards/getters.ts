@@ -58,7 +58,7 @@ export async function GetBoxOwner(boxId: number): Promise<string> {
       `;
   const result = await connection.query(selectionQuery);
   if (result.rows.length > 0) {
-    return result.rows[0].owneraddress;
+    return result.rows[0].ownerlogin || result.rows[0].owneraddress;
   } else {
     return "";
   }
