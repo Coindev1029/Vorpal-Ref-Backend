@@ -128,3 +128,12 @@ export interface watchingChannel {
 	channel_username: string;
 	channel_id: string;
 }
+
+export interface tgUserTxnData {
+  id: number;
+  userlogin: string;
+  time: string;
+  resource: string;
+  amount: number;
+  reason: string;
+}

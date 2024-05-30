@@ -1,3 +1,4 @@
+import { GetUserTransactions } from "../database/telegram";
 import { CreateNewBox, OpenBox } from "../database/rewards/updaters";
 import { TelegramAuthData } from "types";
 
@@ -16,6 +17,8 @@ async function BoxCreateOpenTest () {
     console.log("Created: ", box);
     if (box.max) {
         await OpenBox (box.max, testUser);
+        const txns = await GetUserTransactions(testUser.username);
+        console.log("History: ", txns);
     }
 }
 

@@ -4,6 +4,12 @@ import { connection } from './../connection';
 import { WriteLog } from '../../database/log';
 import { GetBoxOwner, GetHolderData, GetUserBalanceRow, IsHolderExists } from './getters';
 import { GetChannelSubscribeList } from '../../telegram/handlers/subscribe';
+import { GetUserInviter } from '../telegram/referral';
+import { referralPart1, referralPart2 } from '../../config';
+
+const rewardmessage = "Reward from box";
+const rewardrefmessage = "Reward for referral";
+
 
 export async function CreateNewBox(
   level: number,
@@ -82,7 +88,22 @@ export async function UpdateResourceTransaction(
   }
 }
 
-const rewardmessage = "Reward from box";
+export async function SendRewardsToReferrals (user: string, resource: string, amount: number) {
+  const referral1 = await GetUserInviter (user);
+  if (!referral1) return([]);
+  const referral2 = await GetUserInviter (referral1);
+  return Promise.all([
+    UpdateResourceTransaction(referral1, resource, amount * referralPart1, rewardrefmessage),
+    referral2 ? UpdateResourceTransaction(referral2, resource, amount * referralPart2, rewardrefmessage) : true,
+  ])
+}
+
+export async function ResourceTransactionWithReferrals (user: string, resource: string, amount: number, message: string = "") {
+  return Promise.all([
+    UpdateResourceTransaction(user, resource, amount, message),
+    SendRewardsToReferrals(user, resource, amount)
+  ])
+}
 
 export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
   let openAmount = 0;
@@ -115,10 +136,10 @@ export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
       // const trendsUpQuery = `UPDATE resources SET trends = trends + ${trendsValue} 
       // WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;
       // await connection.query(trendsUpQuery);
-      await  UpdateResourceTransaction(owner, 'trends', trendsValue, rewardmessage);
+      await  ResourceTransactionWithReferrals (owner, 'trends', trendsValue, rewardmessage);
     }
   }
-  await  UpdateResourceTransaction(owner, 'token', valueVRP, rewardmessage);
+  await  ResourceTransactionWithReferrals (owner, 'token', valueVRP, rewardmessage);
   // const vrpQuery = `UPDATE resources SET token = token + ${valueVRP} 
   //     WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;
   // await connection.query(vrpQuery);
@@ -160,7 +181,7 @@ export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
     VALUES (${boxId}, CURRENT_TIMESTAMP, '${rewardType}', ${openAmount});`;
   const boxCloseQuery = `UPDATE boxes SET isopen = true WHERE id = ${boxId};`;
   const logs = await connection.query(logQuery);
-  await  UpdateResourceTransaction(owner, rewardType, openAmount, rewardmessage);
+  await  ResourceTransactionWithReferrals (owner, rewardType, openAmount, rewardmessage);
   await connection.query(boxCloseQuery);
   return {
     success: true,

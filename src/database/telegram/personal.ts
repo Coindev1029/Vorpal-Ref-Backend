@@ -1,4 +1,4 @@
-import { TelegramAuthData, TelegramAuthNote } from '../../types';
+import { TelegramAuthData, TelegramAuthNote, tgUserTxnData } from '../../types';
 
 const { connection } = require('../connection');
 
@@ -101,4 +101,18 @@ export async function GetPersonalDataByUsername(
       resolve(null);
     }
   });
+}
+
+export async function GetUserTransactions (login: string) {
+  const query = `SELECT * FROM "resource_txn_log" WHERE "userlogin" = '${login.toLowerCase()}';`;
+  const result: tgUserTxnData[] = [];
+  try {
+    const txns = await connection.query(query);
+    txns.rows.forEach((r: tgUserTxnData) => {
+      result.push(r)
+    })
+  } catch (e) {
+    console.log(e.message);
+  }
+  return result;
 }
