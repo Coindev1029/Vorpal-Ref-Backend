@@ -42,7 +42,13 @@ export const InlineKeyboard = (actions: string[], inviter?: string) => {
               text: "Cancel a duel",
               callback_data: `${a.toLowerCase()}%${inviter || ""}`,
             });
-            break;
+        break;
+      case a === "transactions":
+        keyboard.push({
+          text: "Watch transactions",
+          callback_data: `transactions`,
+        });
+        break;
       default:
         keyboard.push({
           text: "Press action",

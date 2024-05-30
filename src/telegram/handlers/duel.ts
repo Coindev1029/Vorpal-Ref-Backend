@@ -5,6 +5,7 @@ import {
   GetDuelDataByUser,
   GetOpponent,
   GetPersonalDataByUsername,
+  GetUserTransactions,
   RemoveDuelOpponent,
 } from '../../database/telegram';
 import { duel_lifetime } from '../../config';
@@ -73,3 +74,23 @@ export const duelRefuseAction = async (bot: TelegramBot, query, inviter: string)
 
   SendMessageWithSave (bot, query.message.chat.id, messages.duelRefused);
 };
+
+export const TxnHistoryAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {
+     console.log("History requested")
+     if (!query.message) return;
+     if (!query.from.username){
+      SendMessageWithSave (bot, query.message.chat.id, messages.noUsername);
+      return;
+     }
+     const transactions = await GetUserTransactions (query.from.username);
+     const historyText = `<b>Your transactions:</b>\n ${transactions.map((txn) => {
+         console.log("Find txn: ", txn)
+         return `${txn.resource} ${txn.amount} ${txn.reason}\n`
+    })}`
+     console.log("History: ", historyText)
+     SendMessageWithSave (bot, query.message.chat.id, historyText,
+      {
+        parse_mode: "HTML",
+      });
+     return;
+}

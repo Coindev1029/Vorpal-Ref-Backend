@@ -1,5 +1,5 @@
 import TelegramBot from 'node-telegram-bot-api';
-import { duelAcceptAction, duelCancelAction, duelRefuseAction } from './handlers/duel';
+import { TxnHistoryAction, duelAcceptAction, duelCancelAction, duelRefuseAction } from './handlers/duel';
 import { StartHandler } from './handlers/start';
 import { duelText, startText, tg_token } from './constants';
 import { bot } from './bot';
@@ -56,6 +56,9 @@ export function TelegramBotLaunch() {
     switch (true) {
       case query.data === "duel":
         await DuelCreationHandler (bot, query);
+        break;
+      case query.data === "transactions":
+        await TxnHistoryAction (bot, query);
         break;
       case query.data.indexOf("duelconfirm") > -1:
         await duelAcceptAction (bot, query, inviter);

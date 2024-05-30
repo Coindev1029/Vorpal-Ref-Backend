@@ -104,7 +104,7 @@ export async function GetPersonalDataByUsername(
 }
 
 export async function GetUserTransactions (login: string) {
-  const query = `SELECT * FROM "resource_txn_log" WHERE "userlogin" = '${login.toLowerCase()}';`;
+  const query = `SELECT * FROM "resource_txn_log" WHERE "userlogin" = '${login.toLowerCase()}' ORDER BY "time" DESC;`;
   const result: tgUserTxnData[] = [];
   try {
     const txns = await connection.query(query);

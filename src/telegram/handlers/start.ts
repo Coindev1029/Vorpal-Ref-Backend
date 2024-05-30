@@ -51,7 +51,7 @@ export const StartHandler = async (bot: TelegramBot, msg: TelegramBot.Message) =
     const dateSec = Math.round(new Date().getTime() / 1000);
 
     SendMessageWithSave(bot, chatId, messages.duelStart, {
-      reply_markup: InlineKeyboard(['duel']),
+      reply_markup: InlineKeyboard(['duel', 'transactions']),
     });
   } catch (e) {
     console.log('Start cmd exception: ', e);

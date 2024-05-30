@@ -1,3 +1,4 @@
+import { duel_lifetime } from '../../config';
 import { DuelInfo } from '../../types';
 import { GetValueByKey, SetValueByKey } from '../balances';
 
@@ -42,11 +43,18 @@ export async function GetDuelPairCount(part1: string, part2: string) {
 
 export async function IsUserInDuel(user: string) {
   const login = user.toLowerCase();
-  const query = `SELECT "duel_id" FROM "duels" WHERE ("login1" = '${login}' OR "login2" = '${login}') AND isfinished = false;`;
+  const query = `SELECT "duel_id", "creation" FROM "duels" WHERE ("login1" = '${login}' OR "login2" = '${login}') AND isfinished = false;`;
   try {
     const result = await connection.query(query);
     if (result.rows.length > 0) {
-      return result.rows[0].duel_id;
+      const duelRow = result.rows[0];
+      const timeS = Math.round(new Date().getTime() / 1000);
+      const duelTime = Number(duelRow.creation);
+      if (timeS - duelTime > duel_lifetime) {
+        await FinishDuel(duelRow.duel_id, "");
+        return null;
+      }
+      return duelRow.duel_id;
     } else {
       return null;
     }

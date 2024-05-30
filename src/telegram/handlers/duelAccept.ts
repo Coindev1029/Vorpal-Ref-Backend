@@ -12,6 +12,7 @@ import {
 import { duelConfirmText, duelRefuseText, duelText, inviteLink, messages, startText } from '../constants';
 import { SaveMessage } from '../../database/telegram/history';
 import { SendMessageWithSave, TruncateChat } from './utils';
+import { GetUserInviter } from '../../database/telegram/referral';
 
 export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
   const chatId = msg.chat.id;
@@ -31,8 +32,11 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       username: msg.from.username?.toLowerCase() || '',
       hash: '',
     };
+
+    const inviterLogin = match[1]?.toLowerCase();
+
     try {
-      SetPersonalData(linkAuthDataPrev, chatId)
+      SetPersonalData(linkAuthDataPrev, chatId, inviterLogin || "")
     } catch (e) {
       console.log(e.message)
     }
@@ -43,8 +47,6 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       SendMessageWithSave(bot, chatId, messages.noUsername);
       return;
     }
-
-    const inviterLogin = match[1]?.toLowerCase();
 
     if (!inviterLogin) {
       SendMessageWithSave(bot, chatId, messages.noInviter, { reply_markup: InlineKeyboard(["duel"])});
