@@ -8,10 +8,15 @@ import { DuelAcceptHandler } from './handlers/duelAccept';
 
 
 export function TelegramBotLaunch() {
-  bot.on("/start", async (msg, match) => {
+  bot.onText(/\/start/, async (msg, match) => {
     console.log("Start called");
     console.log("Match in start: ", match);
-    await  StartHandler(bot, msg);
+    const startDuelRegex = /\/start (.+)/;
+    if (msg.text && startDuelRegex.test(msg.text)) {
+        return;
+    }
+
+    await StartHandler(bot, msg);
   });
 
   bot.onText(/\/start (.+)/, async (msg, match) => {
