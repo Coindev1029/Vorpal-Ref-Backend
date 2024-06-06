@@ -84,13 +84,13 @@ export async function GetPersonalDataByUsername(
       const result = await connection.query(query);
       if (result.rows.length > 0) {
         const data: TelegramAuthNote = {
-          id: Number(result.rows.user_id),
-          first_name: result.first_name,
-          last_name: result.last_name,
-          username: result.username,
-          hash: result.last_auth_hash,
-          auth_date: Number(result.last_auth_date),
-          chat_id: result.chat_id || 0
+          id: Number(result.rows[0].user_id),
+          first_name: result.rows[0].first_name,
+          last_name: result.rows[0].last_name,
+          username: result.rows[0].username,
+          hash: result.rows[0].last_auth_hash,
+          auth_date: Number(result.rows[0].last_auth_date),
+          chat_id: result.rows[0].chat_id || 0
         };
         resolve(data);
       } else {
