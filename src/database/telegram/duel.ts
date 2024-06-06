@@ -16,9 +16,7 @@ export async function GetOnlineCount() {
 }
 
 export async function AddDuelOpponent(duelId: string, login: string) {
-  console.log("Duel opponent addition called")
   const query = `UPDATE "duels" SET "login2" = '${login.toLowerCase()}' WHERE "duel_id" = '${duelId}';`;
-  console.log(query)
   try {
     const result = await connection.query(query);
     return true;
