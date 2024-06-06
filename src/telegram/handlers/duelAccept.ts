@@ -91,7 +91,7 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
     }
 
     if (
-      createdDuel.login2 ||
+      (createdDuel.login2 && createdDuel.login2 !== linkAuthDataPrev.username) ||
       createdDuel.isexpired ||
       createdDuel.isfinished ||
       timeNow - createdDuel.creation > duel_lifetime
