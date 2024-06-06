@@ -8,7 +8,7 @@ import { DuelAcceptHandler } from './handlers/duelAccept';
 
 
 export function TelegramBotLaunch() {
-  bot.onText(/\/start/, async (msg, match) => {
+  bot.on("/start", async (msg, match) => {
     console.log("Start called");
     console.log("Match in start: ", match);
     await  StartHandler(bot, msg);
