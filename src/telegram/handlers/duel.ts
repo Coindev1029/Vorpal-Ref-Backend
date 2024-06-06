@@ -67,8 +67,9 @@ export const duelRefuseAction = async (bot: TelegramBot, query, inviter: string)
   }
   const caller = query.from.username.toLowerCase();
   console.log("Duel cancelled between: ", caller, inviter);
-  const duelOpponent = await GetOpponent(caller) || inviter;
+  const duelOpponent = (await GetOpponent(caller) || inviter).toLowerCase();
   const opponentData = await GetPersonalDataByUsername(duelOpponent);
+  console.log("Opponent: ", duelOpponent )
   console.log("Data to notify: ", opponentData )
   if (opponentData) {
     SendMessageWithSave(bot, opponentData.chat_id, `Duel with ${query.from.username} cancelled by him`);

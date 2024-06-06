@@ -79,7 +79,7 @@ export async function GetPersonalDataByUsername(
           SELECT "user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date", "chat_id"
           FROM "telegram_personal" WHERE "username" = '${username}';
           `;
-    
+    console.log("User personal query: ", query)
     try {
       const result = await connection.query(query);
       if (result.rows.length > 0) {
