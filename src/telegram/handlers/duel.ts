@@ -37,11 +37,20 @@ export const duelCancelAction = async (bot: TelegramBot, query: TelegramBot.Call
 };
 
 export const duelAcceptAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery, inviter?: string) => {
+
+  console.log("Duel accept action called");
+
   if (!query.message?.chat.id) {
     console.log('Chat not found');
     return;
   }
+
+  console.log("Chat id found");
+
   const duel = await GetDuelDataByUser(inviter?.toLowerCase() || '');
+
+  console.log("CFound duel: ", duel);
+
   if (!duel) {
     bot.sendMessage(query.message.chat.id, messages.duelNotFound);
     return;
@@ -52,6 +61,8 @@ export const duelAcceptAction = async (bot: TelegramBot, query: TelegramBot.Call
     bot.sendMessage(query.message.chat.id, messages.noUsername);
     return;
   }
+
+  console.log("Duel opponent creation started");
 
   await AddDuelOpponent(duel.duel_id, player);
   bot.sendMessage(query.message.chat.id, messages.duelComfirmed);
