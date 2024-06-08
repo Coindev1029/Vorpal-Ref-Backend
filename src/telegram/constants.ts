@@ -16,7 +16,7 @@ export const messages = {
       Welcome! You need to have a Telegram username to enter a duel or to start it
     `,
     noInviter: `
-      Hello! You have invited to a duel but user not found. You can create ypur own:
+      Hello! You have been invited to a duel but user not found. You can create a your own:
     `,
     duelStart: `Welcome! Enter duel command to play with friends`,
     duelAlready: `You already in duel, got to Starmap to enter a battle`,
@@ -27,19 +27,22 @@ export const messages = {
     subscribeRequest: `Subscribe on channels to get more prizes`,
     duelCreatedShareInfo: `
        Duel created! 
-       Now to invite a friend share him the next message with your link below:
+       Now to challenge a friend share him the next message with your link below:
     `,
     duelInvitation: (inviter: string) => {
       const deepLink = `${inviteLink}${inviter?.replace(
         ' ',
         '',
       )}`;
-      return `Hello! Enter a duel with me: <a href="${deepLink}">Accept duel</a>`
+      return `@${inviter} callenging you to a duel: <a href="${deepLink}">Accept duel</a>`
     },
     duelAccept:  (inviter: string) => `
       Welcome to a Star defender! 
-      You now have a duel invitation from @${inviter}.
-      Choose to confirm or refuse a duel:
+      You now have a duel challenge with @${inviter}.
+      Enter a starmap or cancel:
+    `,
+    duelAcceptNotify: (user: string) => `
+      @${user} accepted your challenge. Enter game to start battle^
     `,
     duelNotFound: `
       Duel with your inviter not found. You can create a new one: 
@@ -51,7 +54,7 @@ export const messages = {
       Your duel invitation cancelled. You can play with bot
       or create a your own duel: `,
     duelCancelled: `
-      Your duel is cancelled. You can play with bot or create a new one:
+      Your duel has been cancelled. You can play with bot or create a new one:
     `,
     duelBusy: `
       Your inviter already in duel with someone else. 
@@ -61,6 +64,9 @@ export const messages = {
       Duel for your invitation is already finished or cancelled by creator.
       You can create a new one:
     `,
+    duelCancelOpponentNotify: (author: string) => {
+      return `@${author} cancelled a challenge with you`
+    },
     serverError: (message: string) =>  `
       Server side error: ${message}
     `

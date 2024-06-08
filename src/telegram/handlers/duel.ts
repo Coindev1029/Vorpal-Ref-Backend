@@ -58,6 +58,13 @@ export const duelAcceptAction = async (bot: TelegramBot, query: TelegramBot.Call
 
   await AddDuelOpponent(duel.duel_id, player);
   bot.sendMessage(query.message.chat.id, messages.duelComfirmed);
+  if (inviter && player) {
+    const opponentData = await GetPersonalDataByUsername(inviter);
+
+    if (opponentData) {
+      SendMessageWithSave(bot, opponentData.chat_id, messages.duelAcceptNotify(player));
+    }
+  }
 };
 
 export const duelRefuseAction = async (bot: TelegramBot, query, inviter: string) => {
@@ -69,10 +76,9 @@ export const duelRefuseAction = async (bot: TelegramBot, query, inviter: string)
   console.log("Duel cancelled between: ", caller, inviter);
   const duelOpponent = (await GetOpponent(caller) || inviter).toLowerCase();
   const opponentData = await GetPersonalDataByUsername(duelOpponent);
-  console.log("Opponent: ", duelOpponent )
-  console.log("Data to notify: ", opponentData )
+
   if (opponentData) {
-    SendMessageWithSave(bot, opponentData.chat_id, `Duel with ${query.from.username} cancelled by him`);
+    SendMessageWithSave(bot, opponentData.chat_id, messages.duelCancelOpponentNotify(query.from.username));
   }
   const removeResult = await RemoveDuelOpponent (caller);
 
