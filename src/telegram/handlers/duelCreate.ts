@@ -86,7 +86,7 @@ export const DuelCreationHandler = async (
         parse_mode: 'HTML',
       },
     ).then(() => {
-      SendMessageWithSave(bot, chatId, `Press to cancel a duel`, {
+      SendMessageWithSave(bot, chatId, messages.duelCancelDescript, {
         reply_markup: InlineKeyboard(['duelCancel']),
       });
     })
