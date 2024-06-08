@@ -20,7 +20,7 @@ export const messages = {
     `,
     duelStart: `Welcome! Enter duel command to play with friends`,
     duelAlready: `You already in duel, got to Starmap to enter a battle`,
-    duelToForward: `Hello! Forvard this message to invite your friend to a duel`,
+    duelToForward: `Hello! Forvard this message to challenge your friend:`,
     inviteSelf: `
       Hello! You have a created duel. Enter game and wait your friend to accept invitation.
     `,
