@@ -228,5 +228,5 @@ export const Erc20ABI = [
 	}
 ]
 
-export const testPhotoPath =  './lib/images/testPhoto.jpg';
+export const testPhotoPath =  'lib/images/testPhoto.jpg';
 export const testPhotoUrl =  'https://starmap.vorpal.finance/gui/images/modes/mode-phantom.svg';
