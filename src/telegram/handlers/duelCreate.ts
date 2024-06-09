@@ -21,7 +21,7 @@ import {
 import { SendMessageWithSave, SendPhotoWithSave } from './utils';
 import { SaveMessage } from '../../database/telegram/history';
 
-export const testPhotoPath = path.join(__dirname, '/public/testPhoto.jpg');
+export const testPhotoPath = path.join(__dirname, '../../../public/testPhoto.jpg');
 
 console.log("Path to test photo: ", testPhotoPath);
 
