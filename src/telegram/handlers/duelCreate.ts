@@ -1,4 +1,5 @@
 import TelegramBot from 'node-telegram-bot-api';
+import path from 'path';
 import { TelegramAuthData, tgChannelData } from '../../types';
 import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../../utils/auth';
 import { SendSubscribeMessage } from './subscribe';
@@ -20,7 +21,9 @@ import {
 import { SendMessageWithSave, SendPhotoWithSave } from './utils';
 import { SaveMessage } from '../../database/telegram/history';
 
-export const testPhotoPath =  '../../lib/images/testPhoto.jpg';
+export const testPhotoPath = path.join(__dirname, '../../lib/images/testPhoto.jpg');
+
+console.log("Path to test photo: ", testPhotoPath);
 
 export const DuelCreationHandler = async (
   bot: TelegramBot,
