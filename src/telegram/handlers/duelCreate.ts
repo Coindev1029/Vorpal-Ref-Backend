@@ -2,7 +2,7 @@ import TelegramBot from 'node-telegram-bot-api';
 import { TelegramAuthData, tgChannelData } from '../../types';
 import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../../utils/auth';
 import { SendSubscribeMessage } from './subscribe';
-import { duel_lifetime, testPhotoUrl } from '../../config';
+import { duel_lifetime, testPhotoPath, testPhotoUrl } from '../../config';
 import { InlineKeyboard } from './keyboard';
 import {
   CreateDuel,
@@ -81,9 +81,9 @@ export const DuelCreationHandler = async (
     SendPhotoWithSave(
       bot,
       chatId,
-      testPhotoUrl,
+      testPhotoPath,
       messages.duelInvitation(linkAuthDataPrev.username),
-      false,
+      true,
       {
         parse_mode: 'HTML',
       },
