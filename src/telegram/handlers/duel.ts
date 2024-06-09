@@ -23,6 +23,7 @@ export const duelCancelAction = async (bot: TelegramBot, query: TelegramBot.Call
   const sender: string = query?.message?.from?.username || '';
   if (sender) {
     const duel = await GetDuelDataByUser(sender.toLowerCase());
+    console.log("Cancelled duel: ", duel);
     if (duel) {
       await FinishDuel(duel.duel_id, '');
       SendMessageWithSave(bot, chatId, messages.duelCancelled, {

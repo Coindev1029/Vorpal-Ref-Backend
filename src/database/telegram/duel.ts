@@ -122,6 +122,7 @@ export async function GetDuelDataByUser(
   const filteredLogin = login.toLowerCase();
   const query = `SELECT "duel_id", "login1", "login2", "creation", "isfinished", "winner" FROM "duels" 
   WHERE "login1" = '${filteredLogin}' OR "login2" = '${filteredLogin}' ORDER BY "creation" DESC LIMIT 1;`;
+  console.log("Query for cancel: ", query)
   try {
     const result = await connection.query(query);
     if (result.rows.length > 0) {
