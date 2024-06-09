@@ -14,13 +14,13 @@ import { duelText, inviteLink, messages, startText } from '../constants';
 import { InlineKeyboard } from './keyboard';
 import { SendMessageWithSave } from './utils';
 
-export const duelCancelAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {
+export const duelCancelAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery, opponent: string = "") => {
   if (!query.message?.chat.id) {
     console.log('Chat not found');
     return;
   }
   const chatId = query.message.chat.id
-  const sender: string = query?.message?.from?.username || '';
+  const sender: string = query?.from?.username || '';
   if (sender) {
     const duel = await GetDuelDataByUser(sender.toLowerCase());
     console.log("Cancelled duel: ", duel);
@@ -30,10 +30,14 @@ export const duelCancelAction = async (bot: TelegramBot, query: TelegramBot.Call
         reply_markup: InlineKeyboard(['duel']),
       })
     } else {
-      SendMessageWithSave(bot, chatId, messages.duelNotFound);
+      SendMessageWithSave(bot, chatId, messages.duelNotFound, {
+        reply_markup: InlineKeyboard(['duel']),
+      });
     }
   } else {
-    SendMessageWithSave(bot, chatId, messages.duelNotFound);
+    SendMessageWithSave(bot, chatId, messages.duelNotFound, {
+      reply_markup: InlineKeyboard(['duel']),
+    });
   }
 };
 

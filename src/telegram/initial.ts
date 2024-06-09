@@ -73,7 +73,7 @@ export function TelegramBotLaunch() {
         await duelRefuseAction (bot, query, inviter);
         break;
       case  query.data.indexOf("duelcancel") > -1:
-        await duelCancelAction (bot, query);
+        await duelCancelAction (bot, query,  inviter);
         break;
     }
   });
