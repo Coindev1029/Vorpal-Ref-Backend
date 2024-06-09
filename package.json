@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "copyfiles -u 1 src/imgs/* dist && tsc",
+    "build": "copyfiles -u 1 src/public/* dist && tsc",
     "start": "node dist/index.js",
     "startTg": "node dist/tgstart.js",
     "log": "node dist/tests/logreader.js"
