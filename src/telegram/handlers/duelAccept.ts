@@ -100,7 +100,7 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       return;
     }
 
-    await AddDuelOpponent(createdDuel.duel_id, linkAuthDataPrev.username);
+    await AddDuelOpponent(createdDuel.duel_id, linkAuthDataPrev.username || "");
     SendMessageWithSave(bot, 
       chatId,
       messages.duelAccept(inviterLogin),

@@ -17,7 +17,7 @@ async function BoxCreateOpenTest () {
     console.log("Created: ", box);
     if (box.max) {
         await OpenBox (box.max, testUser);
-        const txns = await GetUserTransactions(testUser.username);
+        const txns = await GetUserTransactions(testUser.username || "");
         console.log("History: ", txns);
     }
 }
