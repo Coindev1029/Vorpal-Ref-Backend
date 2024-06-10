@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import { GetValueByKey } from '../database/balances';
 import { GetSignableMessage } from '../utils/auth';
 import {
@@ -15,7 +16,7 @@ import Web3 from 'web3';
 
 const web3 = new Web3(Web3.givenProvider);
 
-export const IsUserInDuelResponce = async (req, res) => {
+export const IsUserInDuelResponce = async (req: Request, res: Response) => {
   if (!req.params.login) {
     res.status(400).send(
       JSON.stringify({
@@ -30,7 +31,7 @@ export const IsUserInDuelResponce = async (req, res) => {
   return;
 };
 
-export const OpponentResponce = async (req, res) => {
+export const OpponentResponce = async (req: Request, res: Response) => {
   if (!req.params.login) {
     res.status(400).send(
       JSON.stringify({
@@ -45,7 +46,7 @@ export const OpponentResponce = async (req, res) => {
   return;
 };
 
-export const DuelDataResponce = async (req, res) => {
+export const DuelDataResponce = async (req: Request, res: Response) => {
   if (!req.params.id) {
     res.status(400).send(
       JSON.stringify({
@@ -60,7 +61,7 @@ export const DuelDataResponce = async (req, res) => {
   return;
 };
 
-export const DuelDataByLoginResponce = async (req, res) => {
+export const DuelDataByLoginResponce = async (req: Request, res: Response) => {
   if (!req.params.login) {
     res.status(400).send(
       JSON.stringify({
@@ -75,7 +76,7 @@ export const DuelDataByLoginResponce = async (req, res) => {
   return;
 };
 
-export const FinishDuelResponce = async (req, res) => {
+export const FinishDuelResponce = async (req: Request, res: Response) => {
   const body = req.body;
   if (!body.winner || !body.duelId || !body.signature) {
     res.status(400).send({
@@ -100,7 +101,7 @@ export const FinishDuelResponce = async (req, res) => {
   return;
 };
 
-export const DuelDeletionResponce = async (req, res) => {
+export const DuelDeletionResponce = async (req: Request, res: Response) => {
   const body = req.body;
   if (!body.duelId || !body.signature) {
     res.status(400).send({
@@ -126,7 +127,7 @@ export const DuelDeletionResponce = async (req, res) => {
 
 }
 
-export const RewardConditionResponce = async (req, res) => {
+export const RewardConditionResponce = async (req: Request, res: Response) => {
   const body = req.body;
   if (!body.login1 || !body.login2) {
     res.status(400).send({
@@ -148,7 +149,7 @@ export const RewardConditionResponce = async (req, res) => {
   return;
 }
 
-export const OnlineCountResponce = async (req, res) => {
+export const OnlineCountResponce = async (req: Request, res: Response) => {
   try {
     const count = await GetOnlineCount();
     res.status(200).send({
@@ -161,7 +162,7 @@ export const OnlineCountResponce = async (req, res) => {
   }
 }
 
-export const UpdateOnlineCount = async (req, res) => {
+export const UpdateOnlineCount = async (req: Request, res: Response) => {
   const body = req.body;
   if (!body.count || !body.signature) {
     res.status(400).send({

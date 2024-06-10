@@ -1,8 +1,9 @@
+import { Request, Response } from 'express';
 import { WithdrawRevenue } from "../database/withdraw";
 import { GetBalances } from "../database/balances";
 import { AddNewLink, RegisterReferral, GetLinksByOwner, GetRefCount } from "../database/links";
 
-export const ReferralApiDefault = async (req, res) => {
+export const ReferralApiDefault = async (req: Request, res: Response) => {
 
   const postData = req.body;
 
@@ -65,7 +66,7 @@ export const ReferralApiDefault = async (req, res) => {
   }
 }
 
-export const GetLinksByOwnerResponse = async (req, res) => {
+export const GetLinksByOwnerResponse = async (req: Request, res: Response) => {
 
   if (!req.params.id) {
     res.status(400).send(JSON.stringify({
@@ -81,7 +82,7 @@ export const GetLinksByOwnerResponse = async (req, res) => {
    }));
 }
 
-export const GetOwnerDataResponse = async (req, res) => {
+export const GetOwnerDataResponse = async (req: Request, res: Response) => {
 
   if (!req.params.id) {
     res.status(400).send(JSON.stringify({
@@ -110,7 +111,7 @@ export const GetOwnerDataResponse = async (req, res) => {
    }));
 }
 
-export const WithdrawRewardAction = async (req, res) => {
+export const WithdrawRewardAction = async (req: Request, res: Response) => {
 
   res.setHeader('Access-Control-Request-Headers', 'Content-Type, Accept');
   res.setHeader('Content-Type', 'application/json');
