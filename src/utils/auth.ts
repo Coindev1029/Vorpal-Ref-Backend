@@ -57,13 +57,15 @@ export function CheckTelegramAuth(params: TelegramAuthData): {
     };
   }
 
+  console.log("Received params: ", params);
+
   const verificationParams: any = { ...params };
   delete verificationParams.hash;
   const sortedKeys = Object.keys(verificationParams).sort();
   const message = sortedKeys
     .map((key) => `${key}=${verificationParams[key]}`)
     .join('\n');
-
+  console.log("Formatted data: ", message);
   const secretKey = sha256(token); // replace with the token of my bot
   const hash = Hex.stringify(hmacSHA256(message, secretKey));
   console.log('Hashes: ', hash, params.hash);
