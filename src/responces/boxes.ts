@@ -10,7 +10,7 @@ import {
 } from '../database/rewards';
 import { GetValueByKey } from '../database/balances';
 import { error } from 'console';
-import { CheckTelegramAuth, GetSignableMessage } from '../utils/auth';
+import { CheckTelegramAuth, GetSignableMessage, ValidateByInitData } from '../utils/auth';
 import Web3 from 'web3';
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -86,6 +86,11 @@ export const CreateBox = async (req: Request, res: Response) => {
 
 export const OpenBoxRequest = async (req: Request, res: Response) => {
   const body = req.body;
+  if (body.telegramInitData) {
+    console.log("User init data: ", body.telegramInitData);
+    const validationResult = ValidateByInitData (body.telegramInitData);
+    console.log("Result: ", validationResult)
+  }
   if (!body.boxId || (!body.signature && !body.telegramData)) {
     res.status(400).send({
       error: 'Some of nessesary parameters is missing',
