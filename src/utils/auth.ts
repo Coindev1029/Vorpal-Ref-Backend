@@ -1,5 +1,7 @@
-import { TelegramAuthData } from '../types';
+import { TelegramAuthData, TelegramAuthDataNoHash } from '../types';
 const crypto = require('crypto');
+
+const token = process.env.TELEGRAM_API_TOKEN || "";
 
 export function GetDaylyAuthDate(): number {
   const dt = new Date().getTime();
@@ -12,11 +14,10 @@ export function GetSignableMessage(): string {
 }
 
 
-export function CreateTelegramAuthHash(auth_data: TelegramAuthData) {
-  const { hash, ...restData } = auth_data;
+export function CreateTelegramAuthHash(auth_data: TelegramAuthDataNoHash) {
 
   // Sorting the restData keys alphabetically
-  const data_check_arr = Object.entries(restData)
+  const data_check_arr = Object.entries(auth_data)
     .sort(([a], [b]) => (a > b ? 1 : -1))
     .map(([key, value]) => `${key}=${value}`);
 
@@ -35,42 +36,50 @@ export function CreateTelegramAuthHash(auth_data: TelegramAuthData) {
   return hashResult;
 }
 
-export function CheckTelegramAuth(auth_data: TelegramAuthData): {
+/* : {
+  success: boolean;
+  error: string;
+}
+  */
+
+export function CheckTelegramAuth (params: TelegramAuthData): {
   success: boolean;
   error: string;
 } {
-  const { hash, ...restData } = auth_data;
+  const { hash, ...restParams } = params;
 
-  // Sorting the restData keys alphabetically
-  const data_check_arr = Object.entries(restData)
-    .sort(([a], [b]) => (a > b ? 1 : -1))
-    .map(([key, value]) => `${key}=${value}`);
+  // Фильтрация пустых значений и сортировка массива по ключам
+  const filteredParams = Object.fromEntries(
+    Object.entries(restParams).filter(([_, value]) => value != null)
+  );
 
-  const data_check_string = data_check_arr.join('\n');
+  const sortedKeys = Object.keys(filteredParams).sort();
+  const sortedParams: { [key: string]: any } = {};
+  sortedKeys.forEach(key => {
+    sortedParams[key] = filteredParams[key];
+  });
 
-  console.log("Auth data to compare: ", data_check_string);
+  // Формирование строки для подписи
+  const stringToSign = Object.entries(sortedParams)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('\n');
 
-  const hashResult = CreateTelegramAuthHash(auth_data);
+  // Получение секретного ключа
+  const secretKey = crypto.createHmac('sha256', "WebAppData")
+    .update(token)
+    .digest();
 
-  console.log("Checking hash: ", hash.toLowerCase());
-  console.log("Checking hash result: ", hashResult.toLowerCase());
+  // Вычисление HMAC
+  const newHash = crypto.createHmac('sha256', secretKey)
+    .update(stringToSign)
+    .digest('hex');
 
-  if (hashResult.toLowerCase() !== hash.toLowerCase()) {
-    return {
-      success: false,
-      error: 'Invalid hash',
-    };
-  }
-
-  if (Date.now() / 1000 - auth_data.auth_date > 86400) {
-    return {
-      success: false,
-      error: 'Data is outdated',
-    };
-  }
-
-  return {
-    success: true,
-    error: '',
-  };
+  // Сравнение полученного хэша с исходным
+  const compareResult =  crypto.timingSafeEqual(Buffer.from(newHash, 'hex'), Buffer.from(hash, 'hex'));
+  
+  console.log("hashes: ", hash, newHash)
+  return ({
+    success: compareResult,
+    error: compareResult ? "" : "Checking hash failed"
+  })
 }

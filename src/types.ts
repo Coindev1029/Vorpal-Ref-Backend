@@ -63,6 +63,14 @@ export type boxOpenResults =
   | 'carbon'
   | 'token';
 
+export interface TelegramAuthDataNoHash {
+  id: number;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  auth_date: number;
+}
+  
 export interface TelegramAuthData {
   id: number;
   first_name: string;
