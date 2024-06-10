@@ -48,7 +48,7 @@ dEnv.config();
 const port = process.argv[2] ? process.argv[2] : process.env.DEFAULT_PORT;
 
 // End boxes
-app.use(SetupHeadersGlobal);
+// app.use(SetupHeadersGlobal);
 app.use(express.json());
 
 
