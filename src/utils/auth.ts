@@ -66,8 +66,8 @@ export function CheckTelegramAuth(params: TelegramAuthData): {
     .map((key) => `${key}=${verificationParams[key]}`)
     .join('\n');
   console.log("Formatted data: ", message);
-  const secretKey = sha256(token); // replace with the token of my bot
-  const hash = Hex.stringify(hmacSHA256(message, secretKey));
+  const secretKey = crypto.createHmac('sha256', 'WebAppData').update(token).digest();
+  const hash = crypto.createHmac('sha256', secretKey).update(message).digest('hex');
   console.log('Hashes: ', hash, params.hash);
   if (hash !== params.hash) {
     console.log('Hash comparision failed!');
