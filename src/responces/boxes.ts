@@ -86,12 +86,12 @@ export const CreateBox = async (req: Request, res: Response) => {
 
 export const OpenBoxRequest = async (req: Request, res: Response) => {
   const body = req.body;
-  if (body.telegramInitData) {
+  /* if (body.telegramInitData) {
     console.log("User init data: ", body.telegramInitData);
     const validationResult = ValidateByInitData (body.telegramInitData);
     console.log("Result: ", validationResult)
-  }
-  if (!body.boxId || (!body.signature && !body.telegramData)) {
+  } */
+  if (!body.boxId || (!body.signature && !body.telegramData && !body.telegramInitData)) {
     res.status(400).send({
       error: 'Some of nessesary parameters is missing',
     });
@@ -110,7 +110,9 @@ export const OpenBoxRequest = async (req: Request, res: Response) => {
       });
     }
 
-    const telegramDataValidation = body.telegramData? CheckTelegramAuth(body.telegramData).success : null;
+    const telegramDataValidation = 
+    body.telegramInitData ? ValidateByInitData (body.telegramInitData) :
+    body.telegramData? CheckTelegramAuth(body.telegramData).success : null;
   
     if (address !== adminAddress.toLowerCase() 
       && address !== boxOwner.toLowerCase() &&

@@ -42,7 +42,7 @@ export function CreateTelegramAuthHash(auth_data: TelegramAuthDataNoHash) {
   error: string;
 }
   */
-
+// Data from url params
 export function CheckTelegramAuth(params: TelegramAuthData): {
   success: boolean;
   error: string;
@@ -81,24 +81,24 @@ export function CheckTelegramAuth(params: TelegramAuthData): {
     error: '',
   };
 }
-
+// Telegram webApp init data
 export function ValidateByInitData (initData: any, botToken = token) {
   const urlSearchParams = new URLSearchParams(initData);
   const data = Object.fromEntries(urlSearchParams.entries());
-  console.log("Data to verify: ", data);
+
   const checkString = Object.keys(data)
     .filter(key => key !== 'hash')
     .map(key => `${key}=${data[key]}`)
     .sort()
     .join('\n');
-  console.log("Str: ", checkString);  
+
   const secretKey = crypto.createHmac('sha256', 'WebAppData')
     .update(botToken)
     .digest();
-  console.log("Key: ", secretKey);    
+ 
   const signature = crypto.createHmac('sha256', secretKey)
     .update(checkString)
     .digest('hex');
-  console.log("Signature: ", signature);   
+ 
   return data.hash === signature;
 }
