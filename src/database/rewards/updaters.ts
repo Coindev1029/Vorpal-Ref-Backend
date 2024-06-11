@@ -16,15 +16,16 @@ export async function CreateNewBox(
   ownerAddress: string = '',
   ownerLogin: string = '',
 ) {
+  const Holer = ownerAddress.toLowerCase();
   console.log('Box creation called for: ', ownerLogin);
-  if (!ownerAddress && !ownerLogin) return false;
-  const holderData = await IsHolderExists(ownerAddress);
+  if (!Holer && !ownerLogin) return false;
+  const holderData = await IsHolderExists(Holer);
   if (!holderData) {
-    await CreateNewHolder(ownerAddress, ownerLogin);
+    await CreateNewHolder(Holer, ownerLogin);
   }
   const query = `
     INSERT INTO boxes (ownerAddress, ownerLogin, level, isopen) 
-    VALUES ('${ownerAddress}', '${ownerLogin}', ${level}, false);`;
+    VALUES ('${Holer}', '${ownerLogin}', ${level}, false);`;
   console.log('Box creation query: ', query);
   // WriteLog('Box creation query: ', query);
   await connection.query(query);
@@ -39,19 +40,20 @@ export async function GiveResources(
   resource: string,
   amount: number,
 ) {
-  const holderData = await IsHolderExists(ownerAddress);
+  const Holer = ownerAddress.toLowerCase();
+  const holderData = await IsHolderExists(Holer);
 
   if (!holderData) {
-    const creation = await CreateNewHolder(ownerAddress, ownerLogin);
+    const creation = await CreateNewHolder(Holer, ownerLogin.toLowerCase());
   }
   const balanceQuery = `UPDATE resources SET ${resource} = ${resource} + ${amount} 
-  WHERE ownerAddress = '${ownerAddress}';`;
+  WHERE ownerAddress = '${Holer}';`;
   await connection.query(balanceQuery);
-  return await GetUserBalanceRow(ownerAddress, ownerLogin);
+  return await GetUserBalanceRow(Holer, ownerLogin.toLowerCase());
 }
 
 export async function CreateNewHolder(address: string, login?: string) {
-  const ownerLogin = login || address;
+  const ownerLogin = (login || address).toLowerCase();
   const isUserExists = await IsHolderExists(address);
   if (isUserExists) {
     return false;
@@ -72,12 +74,13 @@ export async function UpdateResourceTransaction(
   amount: number,
   message: string = '',
 ) {
+  const User = user.toLowerCase();
   const time = Math.round(new Date().getTime() / 1000);
   const updateQuery = `UPDATE resources SET ${resource} = ${resource} + ${amount} 
-  WHERE ownerAddress = '${user}';`;
+  WHERE ownerAddress = '${User}';`;
   const logQuery = `INSERT INTO "resource_txn_log" 
   ("userlogin", "time", "resource", "amount", "reason")
-  VALUES ('${user}', TO_TIMESTAMP(${time}), '${resource}', ${amount}, '${message}');`;
+  VALUES ('${User}', TO_TIMESTAMP(${time}), '${resource}', ${amount}, '${message}');`;
   try {
     await connection.query(updateQuery);
     await connection.query(logQuery);
