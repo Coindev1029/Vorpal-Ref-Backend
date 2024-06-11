@@ -16,6 +16,7 @@ export async function SetPersonalData(
       auth_date: data.auth_date || 0,
       hash: data.hash || '',
     };
+    console.log("Telegram referral data setup")
     const query = `
     INSERT INTO "telegram_personal" 
       ("user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date", "chat_id", "inviter")
@@ -28,7 +29,7 @@ export async function SetPersonalData(
       "last_auth_hash" = excluded."last_auth_hash", 
       "last_auth_date" = excluded."last_auth_date";
         `;
-
+    console.log(query)
     try {
       await connection.query(query);
       resolve(true);
