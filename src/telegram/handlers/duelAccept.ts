@@ -5,11 +5,20 @@ import { duel_lifetime, tg_chat_history_lifetime } from '../../config';
 import { InlineKeyboard } from './keyboard';
 import {
   AddDuelOpponent,
-    GetDuelDataByInviter,
-    GetDuelDataByUser,
-    SetPersonalData,
-  } from '../../database/telegram';
-import { duelConfirmText, duelRefuseText, duelText, inviteLink, messages, startText } from '../constants';
+  GetDuelDataByInviter,
+  GetDuelDataByUser,
+  GetOpponent,
+  GetPersonalDataByUsername,
+  SetPersonalData,
+} from '../../database/telegram';
+import {
+  duelConfirmText,
+  duelRefuseText,
+  duelText,
+  inviteLink,
+  messages,
+  startText,
+} from '../constants';
 import { SaveMessage } from '../../database/telegram/history';
 import { SendMessageWithSave, TruncateChat } from './utils';
 import { GetUserInviter } from '../../database/telegram/referral';
@@ -36,9 +45,9 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
     const inviterLogin = match[1]?.toLowerCase();
 
     try {
-      SetPersonalData(linkAuthDataPrev, chatId, inviterLogin || "")
+      SetPersonalData(linkAuthDataPrev, chatId, inviterLogin || '');
     } catch (e) {
-      console.log(e.message)
+      console.log(e.message);
     }
 
     await SendSubscribeMessage(linkAuthDataPrev.id, chatId);
@@ -49,7 +58,9 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
     }
 
     if (!inviterLogin) {
-      SendMessageWithSave(bot, chatId, messages.noInviter, { reply_markup: InlineKeyboard(["duel"])});
+      SendMessageWithSave(bot, chatId, messages.noInviter, {
+        reply_markup: InlineKeyboard(['duel']),
+      });
       return;
     }
 
@@ -63,7 +74,9 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       : null;
 
     if (!createdDuel) {
-      SendMessageWithSave(bot, chatId, messages.duelNotFound, { reply_markup: InlineKeyboard(["duel"])});
+      SendMessageWithSave(bot, chatId, messages.duelNotFound, {
+        reply_markup: InlineKeyboard(['duel']),
+      });
       return;
     }
 
@@ -73,7 +86,9 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       createdDuel.isfinished &&
       timeNow - createdDuel.creation <= duel_lifetime
     ) {
-      SendMessageWithSave(bot, chatId, messages.duelCancelled, { reply_markup: InlineKeyboard(["duel"])});
+      SendMessageWithSave(bot, chatId, messages.duelCancelled, {
+        reply_markup: InlineKeyboard(['duel']),
+      });
       return;
     }
 
@@ -81,37 +96,56 @@ export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
       createdDuel.isexpired ||
       timeNow - createdDuel.creation > duel_lifetime
     ) {
-      SendMessageWithSave(bot, chatId, messages.duelExpired, { reply_markup: InlineKeyboard(["duel"])});
+      SendMessageWithSave(bot, chatId, messages.duelExpired, {
+        reply_markup: InlineKeyboard(['duel']),
+      });
       return;
     }
 
     if (createdDuel.login2) {
-      SendMessageWithSave(bot, chatId, messages.duelBusy, { reply_markup: InlineKeyboard(["duel"])});
+      SendMessageWithSave(bot, chatId, messages.duelBusy, {
+        reply_markup: InlineKeyboard(['duel']),
+      });
       return;
     }
 
     if (
-      (createdDuel.login2 && createdDuel.login2 !== linkAuthDataPrev.username) ||
+      (createdDuel.login2 &&
+        createdDuel.login2 !== linkAuthDataPrev.username) ||
       createdDuel.isexpired ||
       createdDuel.isfinished ||
       timeNow - createdDuel.creation > duel_lifetime
     ) {
-      SendMessageWithSave(bot, chatId, messages.duelBusy, { reply_markup: InlineKeyboard(["duel"])});
+      SendMessageWithSave(bot, chatId, messages.duelBusy, {
+        reply_markup: InlineKeyboard(['duel']),
+      });
       return;
     }
 
-    await AddDuelOpponent(createdDuel.duel_id, linkAuthDataPrev.username || "");
-    SendMessageWithSave(bot, 
-      chatId,
-      messages.duelAccept(inviterLogin),
-      { reply_markup: InlineKeyboard(['duelConfirm', 'duelRefuse'], inviterLogin)},
-    );
+    await AddDuelOpponent(createdDuel.duel_id, linkAuthDataPrev.username || '');
+    SendMessageWithSave(bot, chatId, messages.duelAccept(inviterLogin), {
+      reply_markup: InlineKeyboard(['duelConfirm', 'duelRefuse'], inviterLogin),
+    });
+
+    const opponentData = await GetPersonalDataByUsername(inviterLogin);
+    if (opponentData) {
+      try {
+        SendMessageWithSave(
+          bot,
+          opponentData.chat_id,
+          messages.duelAcceptNotify(linkAuthDataPrev.username || ''),
+          { reply_markup: InlineKeyboard(['duelConfirm']) },
+        );
+      } catch (e) {
+        console.log(e.message);
+      }
+    }
     return;
   } catch (e) {
     console.log('Error: ', e.message);
     SendMessageWithSave(bot, chatId, messages.serverError(e.message));
   }
   setTimeout(() => {
-    TruncateChat(bot, chatId)
-  }, tg_chat_history_lifetime)
+    TruncateChat(bot, chatId);
+  }, tg_chat_history_lifetime);
 };

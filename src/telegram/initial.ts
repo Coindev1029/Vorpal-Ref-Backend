@@ -74,17 +74,13 @@ export function TelegramBotLaunch() {
     }
   });
 
-  /* bot.on('message', async (msg, match) => {
+  bot.on('message', async (msg, match) => {
     const txt: string = msg.text || "";
-    switch (txt) {
-      case "/start":
-        break;
-      case "/duel":
-        break;
-      default:
+    switch (true) {
+      case txt.length === 1:
         await StartHandler (bot, msg, match)
     }
-  }); */
+  });
 
   bot.on('polling_error', (error) => {
     console.error('Polling error:', error);
