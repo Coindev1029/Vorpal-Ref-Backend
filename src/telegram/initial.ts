@@ -9,8 +9,7 @@ import { DuelAcceptHandler } from './handlers/duelAccept';
 
 export function TelegramBotLaunch() {
   bot.onText(/\/start/, async (msg, match) => {
-    console.log("Start called");
-    console.log("Match in start: ", match);
+
     const startDuelRegex = /\/start (.+)/;
     if (msg.text && startDuelRegex.test(msg.text)) {
         return;
@@ -20,7 +19,7 @@ export function TelegramBotLaunch() {
   });
 
   bot.onText(/\/start (.+)/, async (msg, match) => {
-    console.log("Duel accept called");
+
     await  DuelAcceptHandler(bot, msg, match);
   });
 
@@ -28,8 +27,6 @@ export function TelegramBotLaunch() {
     const deepLink = `https://t.me/${
       process.env.TELEGRAM_BOT_NAME
     }?start=${query.from.username?.replace(' ', '')}`;
-
-    console.log('Query info: ', query);
 
     const results: TelegramBot.InlineQueryResult[] = [
       {
@@ -55,10 +52,8 @@ export function TelegramBotLaunch() {
   });
 
   bot.on('callback_query', async (query: TelegramBot.CallbackQuery) => {
-    console.log(query);
     if (!query.data) return; 
     const inviter = query.data.split("%")[1] || ""
-    console.log("Invited by: ", inviter);
     switch (true) {
       case query.data === "duel":
         await DuelCreationHandler (bot, query);
@@ -79,7 +74,6 @@ export function TelegramBotLaunch() {
   });
 
   bot.on('message', async (msg) => {
-    console.log("Received: ", msg.text);
     const txt: string = msg.text || "";
     switch (txt) {
       case "/start":
@@ -89,7 +83,6 @@ export function TelegramBotLaunch() {
       default:
         await StartHandler (bot, msg)
     }
-    console.log("Query processed: ", msg.text);
   });
 
   bot.on('polling_error', (error) => {
