@@ -21,11 +21,11 @@ export async function CreateNewBox(
   if (!Holer && !ownerLogin) return false;
   const holderData = await IsHolderExists(Holer);
   if (!holderData) {
-    await CreateNewHolder(Holer, ownerLogin);
+    await CreateNewHolder(Holer, ownerLogin.toLowerCase());
   }
   const query = `
     INSERT INTO boxes (ownerAddress, ownerLogin, level, isopen) 
-    VALUES ('${Holer}', '${ownerLogin}', ${level}, false);`;
+    VALUES ('${Holer}', '${ownerLogin.toLowerCase()}', ${level}, false);`;
   console.log('Box creation query: ', query);
   // WriteLog('Box creation query: ', query);
   await connection.query(query);
@@ -54,13 +54,13 @@ export async function GiveResources(
 
 export async function CreateNewHolder(address: string, login?: string) {
   const ownerLogin = (login || address).toLowerCase();
-  const isUserExists = await IsHolderExists(address);
+  const isUserExists = await IsHolderExists(address.toLowerCase());
   if (isUserExists) {
     return false;
   }
   const creationQuery = `INSERT INTO resources 
   (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon, trends) 
-  VALUES ('${address}', '${ownerLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
+  VALUES ('${address.toLowerCase()}', '${ownerLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
   // WriteLog('User creation query: ', creationQuery);
   const result = await connection.query(creationQuery);
   // WriteLog('Insertion result: ', JSON.stringify(result));

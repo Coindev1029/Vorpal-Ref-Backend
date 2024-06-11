@@ -18,16 +18,18 @@ export async function SetPersonalData(
     };
     console.log("Telegram referral data setup")
     const query = `
-    INSERT INTO "telegram_personal" 
-      ("user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date", "chat_id", "inviter")
-    VALUES 
-      ('${fd.id}', '${fd.first_name}', '${fd.last_name}', '${fd.username}', '${fd.hash}', ${fd.auth_date}, '${chat ? String(chat) : ""}', '${inviter || ""}')
+    INSERT INTO "telegram_personal"
+     ("user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date", "chat_id", "inviter")
+    VALUES
+     ('${fd.id}', '${fd.first_name}', '${fd.last_name}', '${fd.username}', '${fd.hash}', ${fd.auth_date}, '${chat ? String(chat) : ""}', '${inviter || ""}')
     ON CONFLICT ("user_id") DO UPDATE SET
-      "first_name" = excluded."first_name", 
-      "last_name" = excluded."last_name", 
-      "username" = excluded."username", 
-      "last_auth_hash" = excluded."last_auth_hash", 
-      "last_auth_date" = excluded."last_auth_date";
+  "first_name" = excluded."first_name",
+  "last_name" = excluded."last_name",
+  "username" = excluded."username",
+  "last_auth_hash" = excluded."last_auth_hash",
+  "last_auth_date" = excluded."last_auth_date",
+  "chat_id" = excluded."chat_id",
+  "inviter" = "telegram_personal"."inviter";
         `;
     console.log(query)
     try {
