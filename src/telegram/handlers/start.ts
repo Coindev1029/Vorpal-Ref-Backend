@@ -9,7 +9,7 @@ import { SendMessageWithSave, TruncateChat } from './utils';
 import { messages } from '../constants';
 import { DeleteMessagesByChatId, SaveMessage } from '../../database/telegram/history';
 
-export const StartHandler = async (bot: TelegramBot, msg: TelegramBot.Message) => {
+export const StartHandler = async (bot: TelegramBot, msg: TelegramBot.Message, match: any) => {
   console.log('Start handler called');
   const chatId = msg.chat.id;
   console.log('Chat started: ', chatId);

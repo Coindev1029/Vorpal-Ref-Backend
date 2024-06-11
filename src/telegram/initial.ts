@@ -12,10 +12,11 @@ export function TelegramBotLaunch() {
 
     const startDuelRegex = /\/start (.+)/;
     if (msg.text && startDuelRegex.test(msg.text)) {
+        console.log("Condition to no call start")
         return;
     }
 
-    await StartHandler(bot, msg);
+    await StartHandler(bot, msg, match);
   });
 
   bot.onText(/\/start (.+)/, async (msg, match) => {
@@ -73,7 +74,7 @@ export function TelegramBotLaunch() {
     }
   });
 
-  bot.on('message', async (msg) => {
+  /* bot.on('message', async (msg, match) => {
     const txt: string = msg.text || "";
     switch (txt) {
       case "/start":
@@ -81,9 +82,9 @@ export function TelegramBotLaunch() {
       case "/duel":
         break;
       default:
-        await StartHandler (bot, msg)
+        await StartHandler (bot, msg, match)
     }
-  });
+  }); */
 
   bot.on('polling_error', (error) => {
     console.error('Polling error:', error);
