@@ -78,7 +78,7 @@ export async function GetReferralStatsByUser(
 ): Promise<ReferralStatsData[]> {
   const result: ReferralStatsData[] = [];
   const query = `SELECT id, recipient, referrer, resource, amount, reward_date, level
-	FROM "telegram_referral_stats" WHERE recipient = '${login.toLowerCase()}' ORDER BY reward_date DESC GROUP BY level;`;
+	FROM "telegram_referral_stats" WHERE recipient = '${login.toLowerCase()}' ORDER BY reward_date DESC;`;
   try {
     const data = await connection.query(query);
     data.rows.forEach((row) => {
