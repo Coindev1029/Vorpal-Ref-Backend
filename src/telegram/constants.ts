@@ -15,7 +15,7 @@ export const usingRegExps: RegExp[] = [
 
 export const messages = {
     welocme: `
-      Welocme to a Star defender game app powered by Vorpal engine! <br /> 
+      Welocme to a Star defender game app powered by Vorpal engine!
       You now can start a duel with your friend or play demo with bot`,
     noUsername: `
       Welcome! You need to have a Telegram username to enter a duel or to start it
