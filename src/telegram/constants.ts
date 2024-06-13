@@ -53,7 +53,7 @@ export const messages = {
     `,
     duelRefused: `
       Your duel invitation cancelled. You can play with bot
-      or create a your own duel: `,
+      or create a new duel: `,
     duelCancelled: `
       Your duel has been cancelled. You can play with bot or create a new one:
     `,

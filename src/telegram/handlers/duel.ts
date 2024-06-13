@@ -87,7 +87,9 @@ export const duelRefuseAction = async (bot: TelegramBot, query, inviter: string)
   }
   const removeResult = await RemoveDuelOpponent (caller);
 
-  SendMessageWithSave (bot, query.message.chat.id, messages.duelRefused);
+  SendMessageWithSave (bot, query.message.chat.id, messages.duelRefused, {
+    reply_markup: InlineKeyboard(['duel']),
+  });
 };
 
 export const TxnHistoryAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {

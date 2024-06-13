@@ -77,8 +77,15 @@ export function TelegramBotLaunch() {
   bot.on('message', async (msg, match) => {
     const txt: string = msg.text || "";
     switch (true) {
+      case txt === "Start": 
+        await StartHandler (bot, msg, match)
+        break;
+      case txt === "start": 
+        await StartHandler (bot, msg, match)
+        break;
       case txt.length === 1:
         await StartHandler (bot, msg, match)
+        break;
     }
   });
 
