@@ -3,7 +3,7 @@ import { TelegramAuthData, tgChannelData } from '../../types';
 import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../../utils/auth';
 import { SendSubscribeMessage } from './subscribe';
 import { duel_lifetime, tg_chat_history_lifetime } from '../../config';
-import { InlineKeyboard } from './keyboard';
+import { InlineKeyboard, MarkupKeyboard } from './keyboard';
 import { IsUserInDuel, SetPersonalData } from '../../database/telegram';
 import { SendMessageWithSave, TruncateChat } from './utils';
 import { messages } from '../constants';
@@ -15,6 +15,7 @@ export const StartHandler = async (bot: TelegramBot, msg: TelegramBot.Message, m
   console.log('Chat started: ', chatId);
   SaveMessage(chatId, msg.message_id);
   if (!msg.from) return;
+  await SendMessageWithSave (bot, msg.chat.id, messages.welocme, MarkupKeyboard());
   try {
     const linkAuthDataPrev: TelegramAuthData = {
       auth_date: GetDaylyAuthDate(),

@@ -1,3 +1,4 @@
+import TelegramBot from 'node-telegram-bot-api';
 import { TelegramAuthData, tgChannelData } from '../../types';
 import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../../utils/auth';
 import { SendSubscribeMessage } from './subscribe';
@@ -23,7 +24,7 @@ import { SaveMessage } from '../../database/telegram/history';
 import { SendMessageWithSave, TruncateChat } from './utils';
 import { GetUserInviter } from '../../database/telegram/referral';
 
-export const DuelAcceptHandler = async (bot: any, msg: any, match: any) => {
+export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) => {
   const chatId = msg.chat.id;
   console.log('Match params', match);
   try {
