@@ -4,7 +4,7 @@ import { connection } from './../connection';
 import { WriteLog } from '../../database/log';
 import { GetBoxOwner, GetHolderData, GetUserBalanceRow, IsHolderExists } from './getters';
 import { GetChannelSubscribeList } from '../../telegram/handlers/subscribe';
-import { GetUserInviter } from '../telegram/referral';
+import { GetUserInviter, WriteReferralStats } from '../telegram/referral';
 import { referralPart1, referralPart2 } from '../../config';
 
 const rewardmessage = "Reward from box";
@@ -95,6 +95,8 @@ export async function SendRewardsToReferrals (user: string, resource: string, am
   const referral1 = await GetUserInviter (user);
   if (!referral1) return([]);
   const referral2 = await GetUserInviter (referral1);
+  await WriteReferralStats ({ to: referral1, for: user, resource, amount: amount * referralPart1, level: 1 })
+  await WriteReferralStats ({ to: referral2, for: user, resource, amount: amount * referralPart1, level: 2 })
   return Promise.all([
     UpdateResourceTransaction(referral1, resource, amount * referralPart1, rewardrefmessage),
     referral2 ? UpdateResourceTransaction(referral2, resource, amount * referralPart2, rewardrefmessage) : true,

@@ -9,10 +9,15 @@ import {
 } from '../constants';
 
 export const MarkupKeyboard = () => {
-  return Markup.keyboard([
-    //  Markup.button.callback(startText, "start"),
-    Markup.button.callback(duelText, 'duel'),
-  ]);
+  return {
+    reply_markup: {
+      keyboard: [
+        [{ text: 'Start' }],
+        [{ text: 'Duel' }],
+      ],
+      resize_keyboard: true
+    }
+  };
 };
 
 export const InlineKeyboard = (actions: string[], inviter?: string) => {
@@ -47,6 +52,12 @@ export const InlineKeyboard = (actions: string[], inviter?: string) => {
         keyboard.push({
           text: "Watch transactions",
           callback_data: `transactions`,
+        });
+        break;
+      case a === "referrals":
+        keyboard.push({
+            text: "Watch referrals",
+            callback_data: `referrals`,
         });
         break;
       default:

@@ -213,6 +213,18 @@ async function DBCreateTables() {
   );
   `
 
+  const referralStatsQuery = `
+  CREATE TABLE IF NOT EXISTS "telegram_referral_stats" (
+    id serial PRIMARY KEY,
+    recipient varchar(64),
+    referrer varchar(64),
+    resource varchar(128),
+    amount integer,
+    reward_date integer,
+    level integer
+  );
+  `
+
   await connection.query(TableOneQuery);
   await connection.query(TableTwoQuery);
   await connection.query(TableBalanceQuery);
@@ -235,6 +247,7 @@ async function DBCreateTables() {
   await connection.query(storeItemBalanceQuery);
   await connection.query(tgSubscribeQuery);
   await connection.query(messagesQuery);
+  await connection.query(referralStatsQuery);
   await CreateGameTables();
 
   const web3 = new Web3(config.rpc);

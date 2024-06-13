@@ -1,15 +1,17 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { TxnHistoryAction, duelAcceptAction, duelCancelAction, duelRefuseAction } from './handlers/duel';
 import { StartHandler } from './handlers/start';
-import { duelText, startText, tg_token } from './constants';
+import { duelText, messages, startText, tg_token, usingRegExps } from './constants';
 import { bot } from './bot';
 import { DuelCreationHandler } from './handlers/duelCreate';
 import { DuelAcceptHandler } from './handlers/duelAccept';
+import { SendMessageWithSave } from './handlers/utils';
+import { MarkupKeyboard } from './handlers/keyboard';
 
 
 export function TelegramBotLaunch() {
   bot.onText(/\/start/, async (msg, match) => {
-
+    await SendMessageWithSave (bot, msg.chat.id, messages.welocme, MarkupKeyboard());
     const startDuelRegex = /\/start (.+)/;
     if (msg.text && startDuelRegex.test(msg.text)) {
         console.log("Condition to no call start")
@@ -80,10 +82,16 @@ export function TelegramBotLaunch() {
       case txt === "Start": 
         await StartHandler (bot, msg, match)
         break;
+      /* case txt === "Duel": 
+        await DuelCreationHandler (bot, msg)
+        break; */
       case txt === "start": 
         await StartHandler (bot, msg, match)
         break;
-      case txt.length === 1:
+      case txt.length < 3:
+        await StartHandler (bot, msg, match)
+        break;
+      case NotABusyRegex (txt, usingRegExps):
         await StartHandler (bot, msg, match)
         break;
     }

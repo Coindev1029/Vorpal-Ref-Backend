@@ -80,6 +80,16 @@ export interface TelegramAuthData {
   hash: string;
 }
 
+export interface ReferralStatsData {
+  id: number;
+  to: string;
+  for: string;
+  resource: string;
+  amount: number;
+  level: number;
+  date: number;
+}
+
 export interface TelegramAuthNote extends TelegramAuthData {
   chat_id: number;
 }

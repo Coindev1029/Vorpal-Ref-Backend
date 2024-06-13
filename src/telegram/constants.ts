@@ -8,6 +8,11 @@ export const duelText = "Create duel";
 export const duelConfirmText = "Enter a duel";
 export const duelRefuseText = "Refuse a duel";
 
+export const usingRegExps: RegExp[] = [
+  /\/start/,
+  /\/start (.+)/
+];
+
 export const messages = {
     welocme: `
       Welocme to a Star defender game app powered by Vorpal engine! <br /> 
