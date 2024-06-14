@@ -77,6 +77,7 @@ export const DuelDataByLoginResponce = async (req: Request, res: Response) => {
 };
 
 export const FinishDuelResponce = async (req: Request, res: Response) => {
+  console.log("Duel finish requested")
   const body = req.body;
   if (!body.winner || !body.duelId || !body.signature) {
     res.status(400).send({
@@ -102,6 +103,7 @@ export const FinishDuelResponce = async (req: Request, res: Response) => {
 };
 
 export const DuelDeletionResponce = async (req: Request, res: Response) => {
+  console.log("Duel delete requested")
   const body = req.body;
   if (!body.duelId || !body.signature) {
     res.status(400).send({
@@ -118,6 +120,12 @@ export const DuelDeletionResponce = async (req: Request, res: Response) => {
         error: "Invalid signature",
       });
        return;
+    }
+
+    try {
+
+    } catch (e: any) {
+      console.log(e.message)
     }
 
     const result = await DeleteDuel(body.duelId);

@@ -72,13 +72,16 @@ export const duelAcceptAction = async (bot: TelegramBot, query: TelegramBot.Call
   }
 };
 
-export const duelRefuseAction = async (bot: TelegramBot, query, inviter: string) => {
-  if (!query.message.chat.id) {
+export const duelRefuseAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery, inviter: string) => {
+  if (!query.message?.chat.id) {
     console.log('Chat not found');
     return;
   }
-  const caller = query.from.username.toLowerCase();
-  console.log("Duel cancelled between: ", caller, inviter);
+  const caller = query?.from?.username?.toLowerCase();
+  if (!caller || !query.from || !query.from.username) {
+    return;
+  }
+  
   const duelOpponent = (await GetOpponent(caller) || inviter).toLowerCase();
   const opponentData = await GetPersonalDataByUsername(duelOpponent);
 

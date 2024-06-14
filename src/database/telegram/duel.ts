@@ -154,7 +154,7 @@ export async function GetDuelDataByInviter(
 }
 
 export async function FinishDuel(duelId: string, winner: string) {
-
+  console.log("Finish duel called")
   const filteredLogin = winner.toLowerCase();
   const query = `UPDATE "duels" SET isfinished = true, isexpired = true, winner = '${filteredLogin}' WHERE "duel_id" = '${duelId}';`;
   try {
@@ -171,7 +171,7 @@ export async function FinishDuel(duelId: string, winner: string) {
 
 export async function DeleteDuel(duelId: string) {
   const query = `DELETE FROM "duels" WHERE "duel_id" = '${duelId}';`;
-
+  console.log("Delete duel called")
   try {
     const result = await connection.query(query);
     return true;
