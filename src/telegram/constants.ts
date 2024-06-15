@@ -76,6 +76,9 @@ export const messages = {
     duelCancelOpponentNotify: (author: string) => {
       return `@${author} cancelled a challenge with you`
     },
+    duelCancelYouNotify: (author: string) => {
+      return `Challenge with @${author} cancelled`
+    },
     serverError: (message: string) =>  `
       Server side error: ${message}
     `

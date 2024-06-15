@@ -122,6 +122,11 @@ export const duelRefuseAction = async (
       opponentData.chat_id,
       messages.duelCancelOpponentNotify(query.from.username),
     );
+    SendMessageWithSave(
+      bot,
+      query.message.chat.id,
+      messages.duelCancelYouNotify(opponentData.username || opponentData.first_name),
+    );
   }
   const removeResult = await RemoveDuelOpponent(caller);
 
