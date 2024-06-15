@@ -61,7 +61,7 @@ export const DuelCreationHandlerByMessage = async (
       !isFinished &&
       dateSec - creation < duel_lifetime &&
       userLastDuel.login1 &&
-      userLastDuel.login2
+      userLastDuel.login2  !== ""
     ) {
       SendMessageWithSave(bot, chatId, messages.duelAlready);
       return;

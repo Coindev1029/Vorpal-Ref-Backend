@@ -23,6 +23,9 @@ export const messages = {
     noInviter: `
       Hello! You have been invited to a duel but user not found. You can create a your own:
     `,
+    duelRefiseInvitation: (login2: string) => {
+      return `@${login2} cancelled an invitation. You can challenge a new player`
+    },
     duelStart: `Welcome! Enter duel command to play with friends`,
     duelAlready: `You already in duel, got to Starmap to enter a battle`,
     duelToForward: `Forvard this message to challenge your friend:`,

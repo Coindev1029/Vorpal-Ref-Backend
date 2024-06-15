@@ -43,7 +43,7 @@ export async function GetDuelPairCount(part1: string, part2: string) {
 
 export async function IsUserInDuel(user: string) {
   const login = user.toLowerCase();
-  const query = `SELECT "duel_id", "creation" FROM "duels" WHERE ("login1" = '${login}' OR "login2" = '${login}') AND isfinished = false;`;
+  const query = `SELECT "duel_id", "creation", "login1", "login2" FROM "duels" WHERE ("login1" = '${login}' OR "login2" = '${login}') AND isfinished = false;`;
   try {
     const result = await connection.query(query);
     if (result.rows.length > 0) {
@@ -52,6 +52,9 @@ export async function IsUserInDuel(user: string) {
       const duelTime = Number(duelRow.creation);
       if (timeS - duelTime > duel_lifetime) {
         await FinishDuel(duelRow.duel_id, "");
+        return null;
+      }
+      if (!duelRow.login1 || !duelRow.login2) {
         return null;
       }
       return duelRow.duel_id;
