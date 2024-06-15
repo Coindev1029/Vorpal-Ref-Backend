@@ -1,3 +1,4 @@
+import { duel_lifetime } from '../../config';
 import { DuelInfo } from '../../types';
 import { GetValueByKey, SetValueByKey } from '../balances';
 
@@ -42,11 +43,21 @@ export async function GetDuelPairCount(part1: string, part2: string) {
 
 export async function IsUserInDuel(user: string) {
   const login = user.toLowerCase();
-  const query = `SELECT "duel_id" FROM "duels" WHERE ("login1" = '${login}' OR "login2" = '${login}') AND isfinished = false;`;
+  const query = `SELECT "duel_id", "creation", "login1", "login2" FROM "duels" WHERE ("login1" = '${login}' OR "login2" = '${login}') AND isfinished = false;`;
   try {
     const result = await connection.query(query);
     if (result.rows.length > 0) {
-      return result.rows[0].duel_id;
+      const duelRow = result.rows[0];
+      const timeS = Math.round(new Date().getTime() / 1000);
+      const duelTime = Number(duelRow.creation);
+      if (timeS - duelTime > duel_lifetime) {
+        await FinishDuel(duelRow.duel_id, "");
+        return null;
+      }
+      if (!duelRow.login1 || !duelRow.login2) {
+        return null;
+      }
+      return duelRow.duel_id;
     } else {
       return null;
     }
@@ -83,12 +94,38 @@ export async function GetOpponent(login: string) {
   }
 }
 
+
+export async function RemoveDuelOpponent(login: string) {
+  const findDuelQuery = `SELECT "duel_id", "login1" FROM "duels" WHERE "isfinished" = false AND "login2" = '${login.toLowerCase()}';`;
+  let duelId = "";
+  try {
+    const result = await connection.query(findDuelQuery);
+    if (result.rows.length > 0) {
+      duelId= result.rows[0].duel_id;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    console.log(e.message)
+    return false;
+  }
+  const removeSelfQuery = `UPDATE "duels" SET "login2" = '' WHERE "duel_id" = '${duelId}';`;
+  try {
+    await connection.query(removeSelfQuery);
+    return true;
+  } catch (e) {
+    console.log(e.message)
+    return false;
+  }
+}
+
 export async function GetDuelDataByUser(
   login: string,
 ): Promise<DuelInfo | null> {
   const filteredLogin = login.toLowerCase();
   const query = `SELECT "duel_id", "login1", "login2", "creation", "isfinished", "winner" FROM "duels" 
   WHERE "login1" = '${filteredLogin}' OR "login2" = '${filteredLogin}' ORDER BY "creation" DESC LIMIT 1;`;
+
   try {
     const result = await connection.query(query);
     if (result.rows.length > 0) {
@@ -120,7 +157,7 @@ export async function GetDuelDataByInviter(
 }
 
 export async function FinishDuel(duelId: string, winner: string) {
-  console.log('Finish request received for: ', duelId);
+  console.log("Finish duel called")
   const filteredLogin = winner.toLowerCase();
   const query = `UPDATE "duels" SET isfinished = true, isexpired = true, winner = '${filteredLogin}' WHERE "duel_id" = '${duelId}';`;
   try {
@@ -137,7 +174,7 @@ export async function FinishDuel(duelId: string, winner: string) {
 
 export async function DeleteDuel(duelId: string) {
   const query = `DELETE FROM "duels" WHERE "duel_id" = '${duelId}';`;
-  console.log("Duel deletion called, id: ", duelId);
+  console.log("Delete duel called")
   try {
     const result = await connection.query(query);
     return true;

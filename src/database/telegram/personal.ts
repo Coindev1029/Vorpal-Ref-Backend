@@ -1,9 +1,11 @@
-import { TelegramAuthData } from '../../types';
+import { TelegramAuthData, TelegramAuthNote, tgUserTxnData } from '../../types';
 
 const { connection } = require('../connection');
 
 export async function SetPersonalData(
   data: TelegramAuthData,
+  chat?: number,
+  inviter?: string
 ): Promise<Boolean> {
   return new Promise(async (resolve, reject) => {
     const fd: TelegramAuthData = {
@@ -14,17 +16,20 @@ export async function SetPersonalData(
       auth_date: data.auth_date || 0,
       hash: data.hash || '',
     };
+
     const query = `
-    INSERT INTO "telegram_personal" 
-      ("user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date")
-    VALUES 
-      ('${fd.id}', '${fd.first_name}', '${fd.last_name}', '${fd.username}', '${fd.hash}', ${fd.auth_date})
+    INSERT INTO "telegram_personal"
+     ("user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date", "chat_id", "inviter")
+    VALUES
+     ('${fd.id}', '${fd.first_name}', '${fd.last_name}', '${fd.username}', '${fd.hash}', ${fd.auth_date}, '${chat ? String(chat) : ""}', '${inviter || ""}')
     ON CONFLICT ("user_id") DO UPDATE SET
-      "first_name" = excluded."first_name", 
-      "last_name" = excluded."last_name", 
-      "username" = excluded."username", 
-      "last_auth_hash" = excluded."last_auth_hash", 
-      "last_auth_date" = excluded."last_auth_date";
+  "first_name" = excluded."first_name",
+  "last_name" = excluded."last_name",
+  "username" = excluded."username",
+  "last_auth_hash" = excluded."last_auth_hash",
+  "last_auth_date" = excluded."last_auth_date",
+  "chat_id" = excluded."chat_id",
+  "inviter" = "telegram_personal"."inviter";
         `;
 
     try {
@@ -71,30 +76,46 @@ export async function GetPersonalDataById(
 
 export async function GetPersonalDataByUsername(
   username: string,
-): Promise<TelegramAuthData | null> {
+): Promise<TelegramAuthNote | null> {
   return new Promise(async (resolve, reject) => {
     const query = `
-          SELECT "user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date"
+          SELECT "user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date", "chat_id"
           FROM "telegram_personal" WHERE "username" = '${username}';
           `;
+
     try {
       const result = await connection.query(query);
       if (result.rows.length > 0) {
-        const data: TelegramAuthData = {
-          id: Number(result.rows.user_id),
-          first_name: result.first_name,
-          last_name: result.last_name,
-          username: result.username,
-          hash: result.last_auth_hash,
-          auth_date: Number(result.last_auth_date),
+        const data: TelegramAuthNote = {
+          id: Number(result.rows[0].user_id),
+          first_name: result.rows[0].first_name,
+          last_name: result.rows[0].last_name,
+          username: result.rows[0].username,
+          hash: result.rows[0].last_auth_hash,
+          auth_date: Number(result.rows[0].last_auth_date),
+          chat_id: result.rows[0].chat_id || 0
         };
-        return data;
+        resolve(data);
       } else {
-        return null;
+        resolve(null);
       }
     } catch (e) {
       console.log(e.message);
-      return null;
+      resolve(null);
     }
   });
+}
+
+export async function GetUserTransactions (login: string) {
+  const query = `SELECT * FROM "resource_txn_log" WHERE "userlogin" = '${login.toLowerCase()}' ORDER BY "time" DESC;`;
+  const result: tgUserTxnData[] = [];
+  try {
+    const txns = await connection.query(query);
+    txns.rows.forEach((r: tgUserTxnData) => {
+      result.push(r)
+    })
+  } catch (e) {
+    console.log(e.message);
+  }
+  return result;
 }

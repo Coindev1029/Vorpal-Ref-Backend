@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import {
   CreateNewBox,
   GetAvailableBoxesByOwner,
@@ -9,7 +10,7 @@ import {
 } from '../database/rewards';
 import { GetValueByKey } from '../database/balances';
 import { error } from 'console';
-import { CheckTelegramAuth, GetSignableMessage } from '../utils/auth';
+import { CheckTelegramAuth, GetSignableMessage, ValidateByInitData } from '../utils/auth';
 import Web3 from 'web3';
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -36,7 +37,7 @@ GetValueByKey('ADMIN_WALLET').then((value) => {
   }
 */
 
-export const CreateBox = async (req, res) => {
+export const CreateBox = async (req: Request, res: Response) => {
   const body = req.body;
   if (
     !body.level ||
@@ -83,9 +84,14 @@ export const CreateBox = async (req, res) => {
   }
 };
 
-export const OpenBoxRequest = async (req, res) => {
+export const OpenBoxRequest = async (req: Request, res: Response) => {
   const body = req.body;
-  if (!body.boxId || (!body.signature && !body.telegramData)) {
+  /* if (body.telegramInitData) {
+    console.log("User init data: ", body.telegramInitData);
+    const validationResult = ValidateByInitData (body.telegramInitData);
+    console.log("Result: ", validationResult)
+  } */
+  if (!body.boxId || (!body.signature && !body.telegramData && !body.telegramInitData)) {
     res.status(400).send({
       error: 'Some of nessesary parameters is missing',
     });
@@ -104,7 +110,9 @@ export const OpenBoxRequest = async (req, res) => {
       });
     }
 
-    const telegramDataValidation = body.telegramData? CheckTelegramAuth(body.telegramData).success : null;
+    const telegramDataValidation = 
+    body.telegramInitData ? ValidateByInitData (body.telegramInitData) :
+    body.telegramData? CheckTelegramAuth(body.telegramData).success : null;
   
     if (address !== adminAddress.toLowerCase() 
       && address !== boxOwner.toLowerCase() &&
@@ -131,7 +139,7 @@ export const OpenBoxRequest = async (req, res) => {
   }
 };
 
-export const GiveResourcesResponce = async (req, res) => {
+export const GiveResourcesResponce = async (req: Request, res: Response) => {
   const body = req.body;
   if (!body.signature) {
     res.status(400).send({
@@ -175,11 +183,11 @@ export const GiveResourcesResponce = async (req, res) => {
   res.status(200).send(result);
 };
 
-export const GetUserBoxes = async (req, res) => {
+export const GetUserBoxes = async (req: Request, res: Response) => {
   res.send({ ok: 'ok' });
 };
 
-export const GetUserResources = async (req, res) => {
+export const GetUserResources = async (req: Request, res: Response) => {
   const body = req.body;
   if (!body.ownerAddress && !body.ownerLogin) {
     res.status(400).send({
@@ -203,7 +211,7 @@ export const GetUserResources = async (req, res) => {
   // res.send({ ok: 'ok' });
 };
 
-export const GetUserAvailableBoxes = async (req, res) => {
+export const GetUserAvailableBoxes = async (req: Request, res: Response) => {
   const body = req.body;
   if (!body.ownerAddress && !body.ownerLogin) {
     res.status(400).send({
@@ -216,7 +224,7 @@ export const GetUserAvailableBoxes = async (req, res) => {
 
 }
 
-export const GetBoxOpenResultResponce = async (req, res) => {
+export const GetBoxOpenResultResponce = async (req: Request, res: Response) => {
   const body = req.body;
 
   if (!body.boxId) {

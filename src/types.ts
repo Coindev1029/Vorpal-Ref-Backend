@@ -63,13 +63,35 @@ export type boxOpenResults =
   | 'carbon'
   | 'token';
 
-export interface TelegramAuthData {
-  auth_date: number;
-  first_name: string;
-  hash: string;
+export interface TelegramAuthDataNoHash {
   id: number;
-  last_name: string;
-  username: string;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  auth_date: number;
+}
+  
+export interface TelegramAuthData {
+  id: number;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  auth_date: number;
+  hash: string;
+}
+
+export interface ReferralStatsData {
+  id: number;
+  to: string;
+  for: string;
+  resource: string;
+  amount: number;
+  level: number;
+  date: number;
+}
+
+export interface TelegramAuthNote extends TelegramAuthData {
+  chat_id: number;
 }
 
 export interface DuelInfo {
@@ -123,4 +145,13 @@ export interface watchingChannel {
   channel_name: string;
 	channel_username: string;
 	channel_id: string;
+}
+
+export interface tgUserTxnData {
+  id: number;
+  userlogin: string;
+  time: string;
+  resource: string;
+  amount: number;
+  reason: string;
 }

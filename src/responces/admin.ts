@@ -1,8 +1,9 @@
+import { Request, Response, NextFunction } from "express";
 import { RequestUserData, UpdateUserDataAction } from "../admin/user"
 import { RequestAdminData, SaveNewData } from "../admin"
 import { RequestPublicData } from "../database/open"
 
-export const GetProjectData = async (req, res) => {
+export const GetProjectData = async (req: Request, res: Response) => {
 
     const resp = JSON.stringify({
       content: await RequestPublicData(req.params.project)
@@ -12,7 +13,7 @@ export const GetProjectData = async (req, res) => {
   
   }
 
-export const AdminDataRequest = async (req, res) => {
+export const AdminDataRequest = async (req: Request, res: Response) => {
 
   const authResult = await RequestAdminData(req.body)
   console.log (authResult)
@@ -21,7 +22,7 @@ export const AdminDataRequest = async (req, res) => {
   }))
 }
 
-export const AdminSaveData = async (req, res) => {
+export const AdminSaveData = async (req: Request, res: Response) => {
 
   const saveResult = await SaveNewData (req.body)
   res.status(200).send(JSON.stringify({
@@ -29,7 +30,7 @@ export const AdminSaveData = async (req, res) => {
  }))
 }
 
-export const GetAdminUserData = async (req, res) => {
+export const GetAdminUserData = async (req: Request, res: Response) => {
 
   const Users = await RequestUserData ( req.body )
 
@@ -38,7 +39,7 @@ export const GetAdminUserData = async (req, res) => {
  }))
 }
 
-export const AdminUpdateUserData = async (req, res) => {
+export const AdminUpdateUserData = async (req: Request, res: Response) => {
 
 
   const updateReport = await UpdateUserDataAction (req.body)

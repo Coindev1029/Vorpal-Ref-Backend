@@ -24,7 +24,11 @@ export const nessesary_keys = {
 	lastblock: 'last_passed_block'
 }
 
-export const duel_lifetime = 900;
+export const duel_lifetime = 900; // s
+export const tg_chat_history_lifetime = 600000; // ms
+
+export const referralPart1 = 0.2;
+export const referralPart2 = 0.1;
 
 export const Erc20ABI = [
 	{
@@ -223,3 +227,6 @@ export const Erc20ABI = [
 		"type": "function"
 	}
 ]
+
+
+export const testPhotoUrl =  'https://starmap.vorpal.finance/gui/images/modes/mode-phantom.svg';

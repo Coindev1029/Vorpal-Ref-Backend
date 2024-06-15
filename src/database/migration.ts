@@ -8,77 +8,89 @@ const { nessesary_keys } = require('../config');
 const { GetValueByKey, SetValueByKey } = require('./balances');
 
 async function DBCreateTables() {
-  const TableOneQuery =
-    'CREATE TABLE IF NOT EXISTS address_to_referral (' +
-    'id SERIAL PRIMARY KEY, address varchar(512) NOT NULL,' +
-    'link_key varchar(512) NOT NULL );';
+  const TableOneQuery =`
+    CREATE TABLE IF NOT EXISTS address_to_referral (
+      id SERIAL PRIMARY KEY, address varchar(512) NOT NULL,
+      link_key varchar(512) NOT NULL 
+    );
+    `;
 
-  const TableTwoQuery =
-    'CREATE TABLE IF NOT EXISTS referral_owner (' +
-    'id SERIAL PRIMARY KEY,' +
-    'address varchar(512) NOT NULL,' +
-    'link_key varchar(512) NOT NULL,' +
-    'value_primary int NOT NULL,' +
-    'value_secondary int NOT NULL );';
+  const TableTwoQuery =`
+      CREATE TABLE IF NOT EXISTS referral_owner (
+        id SERIAL PRIMARY KEY,
+        address varchar(512) NOT NULL,
+        link_key varchar(512) NOT NULL,
+        value_primary int NOT NULL,
+        value_secondary int NOT NULL 
+      );
+      `;
 
-  const TableBalanceQuery =
-    'CREATE TABLE IF NOT EXISTS balances (' +
-    'id SERIAL PRIMARY KEY,' +
-    'address varchar(512) NOT NULL UNIQUE,' +
-    'balance_scheduled float NOT NULL,' +
-    'balance_available float NOT NULL,' +
-    'balance_withdrawn float NOT NULL);';
+  const TableBalanceQuery =`
+    CREATE TABLE IF NOT EXISTS balances (
+      id SERIAL PRIMARY KEY,
+      address varchar(512) NOT NULL UNIQUE,
+      balance_scheduled float NOT NULL,
+      balance_available float NOT NULL,
+      balance_withdrawn float NOT NULL
+    );
+    `;
 
-  const TableUsersQuery =
-    'CREATE TABLE IF NOT EXISTS users (' +
-    'id SERIAL PRIMARY KEY,' +
-    'login varchar(256) NOT NULL UNIQUE,' +
-    'rights varchar(256) NOT NULL,' +
-    'address varchar(512) NOT NULL UNIQUE );';
+  const TableUsersQuery =`
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      login varchar(256) NOT NULL UNIQUE,
+      rights varchar(256) NOT NULL,
+      address varchar(512) NOT NULL UNIQUE 
+    );`;
 
-  const TableVestingsQuery =
-    'CREATE TABLE IF NOT EXISTS vestings (' +
-    'id SERIAL PRIMARY KEY,' +
-    'address varchar(512) NOT NULL,' +
-    'value_total float NOT NULL,' +
-    'value_paid float NOT NULL,' +
-    'date_start timestamp NOT NULL,' +
-    'date_watched timestamp NOT NULL,' +
-    'date_end timestamp NOT NULL,' +
-    'date_paid timestamp NOT NULL );';
+  const TableVestingsQuery =`
+    CREATE TABLE IF NOT EXISTS vestings (
+      id SERIAL PRIMARY KEY,
+      address varchar(512) NOT NULL,
+      value_total float NOT NULL,
+      value_paid float NOT NULL,
+      date_start timestamp NOT NULL,
+      date_watched timestamp NOT NULL,
+      date_end timestamp NOT NULL,
+      date_paid timestamp NOT NULL 
+    );`;
 
-  const TableCDQuery =
-    'CREATE TABLE IF NOT EXISTS common_data (' +
-    'id SERIAL PRIMARY KEY,' +
-    'key varchar(512) NOT NULL UNIQUE,' +
-    'value TEXT );';
+  const TableCDQuery =`
+    CREATE TABLE IF NOT EXISTS common_data (
+      id SERIAL PRIMARY KEY,
+      key varchar(512) NOT NULL UNIQUE,
+      value TEXT 
+    );`;
 
-  const TableNEKeysQuery =
-    'CREATE TABLE IF NOT EXISTS keys_not_editable (' +
-    'id SERIAL PRIMARY KEY,' +
-    'key varchar(512) NOT NULL UNIQUE);';
+  const TableNEKeysQuery =`
+    CREATE TABLE IF NOT EXISTS keys_not_editable (
+      id SERIAL PRIMARY KEY,
+      key varchar(512) NOT NULL UNIQUE
+    );`;
 
-  const TablePDQuery =
-    'CREATE TABLE IF NOT EXISTS public_keys (' +
-    'id SERIAL PRIMARY KEY,' +
-    'key varchar(512) NOT NULL UNIQUE,' +
-    'project varchar(512) NOT NULL );';
+  const TablePDQuery =`
+    CREATE TABLE IF NOT EXISTS public_keys (
+      id SERIAL PRIMARY KEY,
+      key varchar(512) NOT NULL UNIQUE,
+      project varchar(512) NOT NULL 
+    );`;
 
-  const TableLogsQuery =
-    'CREATE TABLE IF NOT EXISTS logs (' +
-    'id SERIAL PRIMARY KEY,' +
-    'date timestamp NOT NULL,' +
-    'address varchar(512) NOT NULL,' +
-    'message varchar(512) );';
+  const TableLogsQuery =`
+    CREATE TABLE IF NOT EXISTS logs (
+      id SERIAL PRIMARY KEY,
+      date timestamp NOT NULL,
+      address varchar(512) NOT NULL,
+      message varchar(512) 
+    );`;
 
   const TableBoxes = `
 	CREATE TABLE IF NOT EXISTS "boxes" (
-   id serial PRIMARY KEY,
-   ownerAddress varchar(512),
-   ownerLogin varchar(128),
-   level integer,
-   isOpen boolean   
-);
+    id serial PRIMARY KEY,
+    ownerAddress varchar(512),
+    ownerLogin varchar(128),
+    level integer,
+    isOpen boolean   
+  );
 	`;
 
   const TableResource = `
@@ -96,7 +108,7 @@ async function DBCreateTables() {
     biomass integer,
     carbon integer,
     trends integer
- );
+  );
   `;
 
   const Duels = `
@@ -122,6 +134,17 @@ async function DBCreateTables() {
   );
   `;
 
+  const ResourceTransactionLog = `
+  CREATE TABLE IF NOT EXISTS "resource_txn_log" (
+    id serial PRIMARY KEY,
+    userlogin varchar(128),
+    time timestamp,
+    resource varchar(128),
+    amount integer,
+    reason varchar(256)
+  );
+  `
+
   const TGPersonalQuery = `
   CREATE TABLE IF NOT EXISTS "telegram_personal" (
     id serial PRIMARY KEY,
@@ -130,7 +153,9 @@ async function DBCreateTables() {
   	last_name varchar(128),
   	username varchar(128),
   	last_auth_hash varchar(512),
-  	last_auth_date integer
+  	last_auth_date integer,
+    inviter varchar(128), 
+    chat_id varchar(128)
   );
   `
 
@@ -180,6 +205,26 @@ async function DBCreateTables() {
   );
   `
 
+  const messagesQuery = `
+  CREATE TABLE IF NOT EXISTS "telegram_messages" (
+    id serial PRIMARY KEY,
+    chat_id varchar(128) NOT NULL,
+    message_id varchar(128) NOT NULL
+  );
+  `
+
+  const referralStatsQuery = `
+  CREATE TABLE IF NOT EXISTS "telegram_referral_stats" (
+    id serial PRIMARY KEY,
+    recipient varchar(64),
+    referrer varchar(64),
+    resource varchar(128),
+    amount integer,
+    reward_date integer,
+    level integer
+  );
+  `
+
   await connection.query(TableOneQuery);
   await connection.query(TableTwoQuery);
   await connection.query(TableBalanceQuery);
@@ -195,11 +240,14 @@ async function DBCreateTables() {
   await connection.query(TablePDQuery);
   await connection.query(Duels);
   await connection.query(BoxLog);
+  await connection.query(ResourceTransactionLog);
   await connection.query(TGPersonalQuery);
   await connection.query(storeItemsQuery);
   await connection.query(uniqueItemQuery);
   await connection.query(storeItemBalanceQuery);
   await connection.query(tgSubscribeQuery);
+  await connection.query(messagesQuery);
+  await connection.query(referralStatsQuery);
   await CreateGameTables();
 
   const web3 = new Web3(config.rpc);

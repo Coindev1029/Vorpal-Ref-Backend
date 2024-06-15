@@ -1,11 +1,12 @@
+import { Request, Response } from "express";
 import { timeUpdateRequestLimit } from "../blockchain/config";
 import { actualStarList, lastUpdateRequqstTime, UpdateLastTime, UpdateSingleStar, UpdateStars } from "../blockchain/Stars/watcher";
 
-export const GetAllStars = (req, res) => {
+export const GetAllStars = (req: Request, res: Response) => {
     res.status(200).send(actualStarList); // actualStarList
  }
 
-export const UpdateAllStars = async (req, res) => {
+export const UpdateAllStars = async (req: Request, res: Response) => {
     const date = new Date().getTime();
     const timePast = date - lastUpdateRequqstTime;
     if (timePast > timeUpdateRequestLimit) {
@@ -17,7 +18,7 @@ export const UpdateAllStars = async (req, res) => {
     }
   }
 
-export const UpdateOneStar = async (req, res) => {
+export const UpdateOneStar = async (req: Request, res: Response) => {
   const date = new Date().getTime();
   const timePast = date - lastUpdateRequqstTime;
   try {

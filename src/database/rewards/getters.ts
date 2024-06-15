@@ -34,7 +34,7 @@ export async function GetBoxOpenResult(boxId: number) {
 export async function GetLoginByAddress(address: string) {}
 
 export async function IsHolderExists (address: string): Promise<Boolean> {
-  const selectionQuery = `SELECT * FROM resources WHERE ownerAddress = '${address}' LIMIT 1;`;
+  const selectionQuery = `SELECT * FROM resources WHERE ownerAddress = '${address.toLowerCase()}' LIMIT 1;`;
   const result = await connection.query(selectionQuery);
   if (result.rows.length === 0) {
     return false;
@@ -44,7 +44,7 @@ export async function IsHolderExists (address: string): Promise<Boolean> {
 }
 
 export async function GetHolderData(address: string) {
-  const selectionQuery = `SELECT * FROM resources WHERE ownerAddress = '${address}' LIMIT 1;`;
+  const selectionQuery = `SELECT * FROM resources WHERE ownerAddress = '${address.toLowerCase()}' LIMIT 1;`;
   const result = await connection.query(selectionQuery);
   if (result.rows.length === 0) {
     return (zeroAssets);
@@ -58,7 +58,7 @@ export async function GetBoxOwner(boxId: number): Promise<string> {
       `;
   const result = await connection.query(selectionQuery);
   if (result.rows.length > 0) {
-    return result.rows[0].owneraddress;
+    return result.rows[0].ownerlogin || result.rows[0].owneraddress;
   } else {
     return "";
   }
@@ -72,7 +72,7 @@ export async function GetUserBalanceRow(ownerAddress = '', ownerLogin = '') {
     SELECT laser1, laser2, laser3, token, spore, spice, metal, biomass, carbon, trends 
     FROM resources 
     WHERE ${ownerLogin ? 'ownerLogin' : 'ownerAddress'} = '${
-    ownerLogin ? ownerLogin : ownerAddress
+    (ownerLogin ? ownerLogin : ownerAddress).toLowerCase()
   }' LIMIT 1;`;
   const assets = await connection.query(balanceQuery);
   if (assets.rows.length === 0) {
@@ -90,7 +90,7 @@ export async function GetAvailableBoxesByOwner(
   }
   const listQuery = `SELECT * FROM boxes WHERE ${
     ownerLogin ? 'ownerLogin' : 'ownerAddress'
-  } = '${ownerLogin ? ownerLogin : ownerAddress}' AND isOpen = false;`;
+  } = '${(ownerLogin ? ownerLogin : ownerAddress).toLowerCase()}' AND isOpen = false;`;
   const response = await connection.query(listQuery);
   return response.rows;
 }
