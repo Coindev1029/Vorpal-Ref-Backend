@@ -103,16 +103,9 @@ export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) 
       return;
     }
 
-    if (createdDuel.login2) {
-      SendMessageWithSave(bot, chatId, messages.duelBusy, {
-        reply_markup: InlineKeyboard(['duel']),
-      });
-      return;
-    }
-
     if (
       (createdDuel.login2 &&
-        createdDuel.login2 !== linkAuthDataPrev.username) ||
+        createdDuel.login2 !== linkAuthDataPrev.username?.toLowerCase()) ||
       createdDuel.isexpired ||
       createdDuel.isfinished ||
       timeNow - createdDuel.creation > duel_lifetime
