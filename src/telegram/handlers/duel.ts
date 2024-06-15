@@ -114,7 +114,7 @@ export const duelRefuseAction = async (
       try {
         NotifyDuelFinishFor(opponentData.username);
       } catch (e) {
-        console.log(e.message);
+        console.log("Notify err");
       } 
     }
     SendMessageWithSave(
@@ -127,12 +127,14 @@ export const duelRefuseAction = async (
       query.message.chat.id,
       messages.duelCancelYouNotify(opponentData.username || opponentData.first_name),
     );
-  }
-  const removeResult = await RemoveDuelOpponent(caller);
 
-  SendMessageWithSave(bot, query.message.chat.id, messages.duelRefused, {
-    reply_markup: InlineKeyboard(['duel']),
-  });
+    const removeResult = await RemoveDuelOpponent(caller);
+
+    SendMessageWithSave(bot, query.message.chat.id, messages.duelRefused, {
+      reply_markup: InlineKeyboard(['duel']),
+    });
+  }
+
 };
 
 export const TxnHistoryAction = async (
