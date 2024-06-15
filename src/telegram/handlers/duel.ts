@@ -29,14 +29,18 @@ export const duelCancelAction = async (
   if (sender) {
     const duel = await GetDuelDataByUser(sender.toLowerCase());
     console.log('Cancelled duel: ', duel);
+    if (duel && duel.isfinished) {
+      SendMessageWithSave(bot, chatId, "Duel is already finished");
+      return;
+    }
     if (duel) {
-      if (duel.login2) {
+      /* if (duel.login2) {
         try {
           NotifyDuelFinishFor(duel.login2);
         } catch (e) {
           console.log(e.message);
         }
-      }
+      } */
 
       await FinishDuel(duel.duel_id, '');
       SendMessageWithSave(bot, chatId, messages.duelCancelled, {
@@ -110,13 +114,13 @@ export const duelRefuseAction = async (
   const opponentData = await GetPersonalDataByUsername(duelOpponent);
 
   if (opponentData) {
-    if (opponentData.username) {
+    /* if (opponentData.username) {
       try {
         NotifyDuelFinishFor(opponentData.username);
       } catch (e) {
         console.log("Notify err");
       } 
-    }
+    } */
     SendMessageWithSave(
       bot,
       opponentData.chat_id,
