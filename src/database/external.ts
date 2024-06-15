@@ -25,7 +25,7 @@ export async function NotifyDuelFinishFor(login: string) {
         },
       )
       .then((res) => {
-        console.log(res);
+        console.log("Result: ", url, res.status)
         resolve(res.status === 200 ? true : false);
       });
   });
