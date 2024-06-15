@@ -13,7 +13,7 @@ import { bot } from '../bot';
 import { duelText, inviteLink, messages, startText } from '../constants';
 import { InlineKeyboard } from './keyboard';
 import { SendMessageWithSave } from './utils';
-import { NotifyDuelFinishFor } from 'database/external';
+import { NotifyDuelFinishFor } from '../../database/external';
 
 export const duelCancelAction = async (
   bot: TelegramBot,
