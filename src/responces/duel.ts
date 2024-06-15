@@ -14,7 +14,7 @@ import {
 } from '../database/telegram/duel';
 import Web3 from 'web3';
 
-const web3 = new Web3(Web3.givenProvider);
+export const web3 = new Web3(Web3.givenProvider);
 
 export const IsUserInDuelResponce = async (req: Request, res: Response) => {
   if (!req.params.login) {
@@ -79,7 +79,7 @@ export const DuelDataByLoginResponce = async (req: Request, res: Response) => {
 export const FinishDuelResponce = async (req: Request, res: Response) => {
   console.log("Duel finish requested")
   const body = req.body;
-  if (!body.winner || !body.duelId || !body.signature) {
+  if (!body.duelId || !body.signature) {
     res.status(400).send({
       error: 'Some of nessesary parameters is missing',
     });
@@ -96,7 +96,16 @@ export const FinishDuelResponce = async (req: Request, res: Response) => {
     return;
   }
 
-  const result = await FinishDuel(body.duelId, body.winner.toLowerCase());
+  const isFinished = (await GetDuelData (body.duelId))?.isfinished;
+
+  if (isFinished) {
+    res.status(400).send({
+      error: 'Duel already finished',
+    });
+    return;
+  }
+
+  const result = await FinishDuel(body.duelId, body.winner?.toLowerCase() || "");
 
   res.status(200).send(JSON.stringify({ result: result }));
   return;
