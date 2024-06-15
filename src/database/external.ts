@@ -9,10 +9,10 @@ export async function NotifyDuelFinishFor(login: string) {
   const url = `${process.env.BATTLE_SERVER_HOST}/api/duelcancel`;
   const responce = await axios.post(
     url,
-    {
+    JSON.stringify({
       signature,
       login,
-    },
+    }),
     {
       headers: {
         'Content-Type': 'application/json',
