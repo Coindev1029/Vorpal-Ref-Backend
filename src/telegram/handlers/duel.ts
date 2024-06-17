@@ -1,6 +1,7 @@
 import TelegramBot from 'node-telegram-bot-api';
 import {
   AddDuelOpponent,
+  DeleteDuel,
   FinishDuel,
   GetDuelDataByUser,
   GetOpponent,
@@ -41,8 +42,8 @@ export const duelCancelAction = async (
           console.log(e.message);
         }
       } */
-
-      await FinishDuel(duel.duel_id, '');
+      await DeleteDuel(duel.duel_id);
+      // await FinishDuel(duel.duel_id, '');
       SendMessageWithSave(bot, chatId, messages.duelCancelled, {
         reply_markup: InlineKeyboard(['duel']),
       });
