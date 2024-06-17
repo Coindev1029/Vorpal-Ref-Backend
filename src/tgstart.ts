@@ -1,4 +1,4 @@
 import { TelegramBotLaunch } from "./telegram";
 
 
-TelegramBotLaunch();
+TelegramBotLaunch(); 
