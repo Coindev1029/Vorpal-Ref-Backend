@@ -43,7 +43,7 @@ export const messages = {
         ' ',
         '',
       )}`;
-      return `@${inviter} callenging you to Star Defender duel: <a href="${deepLink}">Accept</a>`
+      return `@${inviter} challenging you to Star Defender duel: <a href="${deepLink}">Accept</a>`
     },
     duelAccept:  (inviter: string) => `
       Welcome to a Star defender! 
