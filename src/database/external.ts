@@ -13,6 +13,7 @@ export async function NotifyDuelFinishFor(login: string) {
       signature,
       login,
     }).set('Accept', 'application/json')
+    .set('Content-Type', 'application/json') 
     .then(response => {
       console.log(response.body); // обработка успешного ответа
       return responce.status === 200 ? true : false;
