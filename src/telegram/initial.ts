@@ -32,6 +32,8 @@ export function TelegramBotLaunch() {
       process.env.TELEGRAM_BOT_NAME
     }?start=${query.from.username?.replace(' ', '')}`;
 
+    const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}?startapp=inviterId_${query.from.username?.replace(' ', '')}`;
+
     const results: TelegramBot.InlineQueryResult[] = [
       {
         type: 'article',
@@ -45,7 +47,7 @@ export function TelegramBotLaunch() {
         },
         reply_markup: {
           inline_keyboard: [
-            [{ text: 'Confirm invitation', url: deepLink }], //callback_data: metadataString
+            [{ text: 'Confirm invitation', url: startappLink }], //callback_data: metadataString
           ],
         },
       },

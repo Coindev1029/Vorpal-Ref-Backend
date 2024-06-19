@@ -43,7 +43,8 @@ export const messages = {
         ' ',
         '',
       )}`;
-      return `@${inviter} challenging you to Star Defender duel: <a href="${deepLink}">Accept</a>`
+      const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}?startapp=inviterId_${inviter?.replace(' ', '')}`;
+      return `@${inviter} challenging you to Star Defender duel: <a href="${startappLink}">Accept</a>`
     },
     duelAccept:  (inviter: string) => `
       Welcome to a Star defender! 
