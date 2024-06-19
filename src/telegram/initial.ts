@@ -12,6 +12,14 @@ import { ReferralStatsAction } from './handlers/referral';
 
 
 export function TelegramBotLaunch() {
+
+  bot.setMyCommands([
+    {
+      command: 'startapp',
+      description: 'Enter game',
+    },
+  ]);
+
   bot.onText(/\/start/, async (msg, match) => {
     const startDuelRegex = /\/start (.+)/;
     if (msg.text && startDuelRegex.test(msg.text)) {
