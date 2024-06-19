@@ -3,7 +3,7 @@ import { TxnHistoryAction, duelAcceptAction, duelCancelAction, duelRefuseAction 
 import { StartHandler } from './handlers/start';
 import { duelText, messages, startText, tg_token, usingRegExps } from './constants';
 import { bot } from './bot';
-import { DuelCreationHandler, DuelCreationHandlerByMessage } from './handlers/duelCreate';
+import { DuelCreationHandler } from './handlers/duelCreate';
 import { DuelAcceptHandler } from './handlers/duelAccept';
 import { SendMessageWithSave } from './handlers/utils';
 import { MarkupKeyboard } from './handlers/keyboard';
@@ -87,7 +87,7 @@ export function TelegramBotLaunch() {
         await StartHandler (bot, msg, match)
         break;
       case txt === "Duel": 
-        await DuelCreationHandlerByMessage (bot, msg)
+        await DuelCreationHandler (bot, msg)
         break;
       case txt === "start": 
         await StartHandler (bot, msg, match)
