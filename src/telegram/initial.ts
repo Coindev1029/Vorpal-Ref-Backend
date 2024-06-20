@@ -50,7 +50,7 @@ export function TelegramBotLaunch() {
       process.env.TELEGRAM_BOT_NAME
     }?start=${query.from.username?.replace(' ', '')}`;
 
-    const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}/start?startapp=inviterId_${query.from.username?.replace(' ', '')}`;
+    const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}/vtester?startapp=inviterId_${query.from.username?.replace(' ', '')}`;
 
     const results: TelegramBot.InlineQueryResult[] = [
       {
