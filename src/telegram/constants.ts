@@ -44,7 +44,7 @@ export const messages = {
         ' ',
         '',
       )}`;
-      const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}/start?startapp=inviterId_${inviter?.replace(' ', '')}`;
+      const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}/vtester?startapp=inviterId_${inviter?.replace(' ', '')}`;
       return `@${inviter} challenging you to Star Defender duel: <a href="${startappLink}">Accept</a>`
     },
     duelAccept:  (inviter: string) => `
