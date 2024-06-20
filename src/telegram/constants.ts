@@ -10,7 +10,8 @@ export const duelRefuseText = "Refuse a duel";
 
 export const usingRegExps: RegExp[] = [
   /\/start/,
-  /\/start (.+)/
+  /\/start (.+)/,
+  /\/start(?:\?startapp=([^]+))?/
 ];
 
 export const messages = {

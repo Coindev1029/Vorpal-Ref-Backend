@@ -35,6 +35,16 @@ export function TelegramBotLaunch() {
     await  DuelAcceptHandler(bot, msg, match);
   });
 
+  bot.onText(/\/start(?:\?startapp=([^]+))?/, (msg, match) => {
+    console.log("Start app called")
+    const inviterId = match ? match[1] : "" // Если inviterId присутствует в ссылке, он будет доступен здесь
+    if (inviterId) {
+        bot.sendMessage(msg.chat.id, `You have invited by: ${inviterId}`);
+    } else {
+        bot.sendMessage(msg.chat.id, 'Hello!');
+    }
+  });
+
   bot.on('inline_query', async (query) => {
     const deepLink = `https://t.me/${
       process.env.TELEGRAM_BOT_NAME
