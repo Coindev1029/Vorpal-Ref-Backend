@@ -224,18 +224,21 @@ export const UpdateOnlineCount = async (req: Request, res: Response) => {
 }
 
 export const AcceptDuelResponce = async (req: Request, res: Response) => { 
+    console.log("Duel accept called")
     const user = await UniversalAuth (req, res);
     if (!user) {
+      console.log("401")
       res.status(401).send({ errpr: "Unauthorized"});
       return;
     }
     if (!req.body.inviter) {
+      console.log("400")
       res.status(400).send({ errpr: "Duel creator not in the query"});
       return;
     }
 
     const inviter = req.body.inviter
-
+    console.log("200")
     try {
       const dateSec = Math.round(new Date().getTime() / 1000);
       const duel = await GetDuelDataByUser(
