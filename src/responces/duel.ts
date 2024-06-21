@@ -245,14 +245,14 @@ export const AcceptDuelResponce = async (req: Request, res: Response) => {
         inviter.toLowerCase(),
       );
       if (!duel ||  duel.isfinished ||  dateSec - duel.creation > duel_lifetime) {
-        res.status(200).send({
+        res.status(400).send({
           success: false,
           error: "Duel not found or expired"
         });
         return;
       }
-      if (duel.login2) {
-        res.status(200).send({
+      if (duel.login2 || duel.login2?.toLowerCase() === user.toLowerCase()) {
+        res.status(400).send({
           success: false,
           error: "Duel is already busy"
         });
