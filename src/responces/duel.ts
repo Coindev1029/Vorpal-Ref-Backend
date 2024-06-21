@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { GetValueByKey } from '../database/balances';
 import { GetSignableMessage } from '../utils/auth';
 import {
+  AddDuelOpponent,
   DeleteDuel,
   FinishDuel,
   GetDuelData,
@@ -13,6 +14,13 @@ import {
   SetOnlineCount,
 } from '../database/telegram/duel';
 import Web3 from 'web3';
+import { UniversalAuth } from './common';
+import { GetPersonalDataByUsername } from '../database/telegram';
+import { SendMessageWithSave } from '../telegram/handlers/utils';
+import { bot } from '../telegram/bot';
+import { messages } from '../telegram/constants';
+import { InlineKeyboard } from '../telegram/handlers/keyboard';
+import { duel_lifetime } from '../config';
 
 export const web3 = new Web3(Web3.givenProvider);
 
@@ -213,4 +221,54 @@ export const UpdateOnlineCount = async (req: Request, res: Response) => {
     saved: result,
   });
   return;
+}
+
+export const AcceptDuelResponce = async (req: Request, res: Response) => { 
+    const user = await UniversalAuth (req, res);
+    if (!user) {
+      res.status(401).send({ errpr: "Unauthorized"});
+      return;
+    }
+    if (!req.body.inviter) {
+      res.status(400).send({ errpr: "Duel creator not in the query"});
+      return;
+    }
+
+    const inviter = req.body.inviter
+
+    try {
+      const dateSec = Math.round(new Date().getTime() / 1000);
+      const duel = await GetDuelDataByUser(
+        inviter.toLowerCase(),
+      );
+      if (!duel ||  duel.isfinished ||  dateSec - duel.creation > duel_lifetime) {
+        res.status(200).send({
+          success: false,
+          error: "Duel not found or expired"
+        });
+        return;
+      }
+      if (duel.login2) {
+        res.status(200).send({
+          success: false,
+          error: "Duel is already busy"
+        });
+        return;
+      }
+      await AddDuelOpponent(duel.duel_id, user || '');
+      const opponentData = await GetPersonalDataByUsername(inviter);
+      if (opponentData) {
+        await SendMessageWithSave (bot, opponentData.chat_id, messages.duelAcceptNotify(user || ''),
+        { reply_markup: InlineKeyboard(['duelConfirm']) },)
+      }
+      res.status(200).send({
+        success: true,
+        error: ''
+      })
+    } catch (e) {
+      console.log(e.message);
+      res.status(500).send({ errpr: "Duel creator not in the query"});
+      return;
+    }
+
 }
