@@ -88,14 +88,12 @@ export const DuelCreationHandler = async (
     if (!isFinished || dateSec - creation >= duel_lifetime) {
       console.log('Finish duel case 3');
       await FinishDuel(userLastDuel.duel_id, '');
-      const duelId = await CreateDuel(
-        linkAuthDataPrev.username?.toLowerCase(),
-        '',
-      );
-      console.log('Created, id: ', duelId);
     }
-    // console.log('Duel creation, last condition passed 3');
-    // await CreateDuel(linkAuthDataPrev.username?.toLowerCase(), '');
+    const duelId = await CreateDuel(
+      linkAuthDataPrev.username?.toLowerCase(),
+      '',
+    );
+    console.log('Created, id: ', duelId);
   }
 
   await SendMessageWithSave(bot, chatId, messages.duelToForward).then(()=> {
