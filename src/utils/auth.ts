@@ -16,6 +16,11 @@ export function GetSignableMessage(): string {
   return 'auth_' + String(dt - (dt % 600000));
 }
 
+export function getQueryParam(param, url) {
+  const urlParams = new URLSearchParams(url);
+  return urlParams.get(param);
+}
+
 export function CreateTelegramAuthHash(auth_data: TelegramAuthDataNoHash) {
   // Sorting the restData keys alphabetically
   const data_check_arr = Object.entries(auth_data)
