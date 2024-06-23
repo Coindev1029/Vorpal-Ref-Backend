@@ -38,7 +38,8 @@ export const UniversalAuth = async (req: Request, res: Response) => {
 
     if (body.telegramInitData) {
         console.log("Validation result: ", ValidateByInitData (body.telegramInitData))
-        const result = ValidateByInitData (body.telegramInitData) ?( body.telegramInitData.username || body.telegramInitData.id ): null;
+        console.log("Entered data: ", body.telegramInitData)
+        const result = ValidateByInitData (body.telegramInitData) ?( body.telegramInitData.user?.username || body.telegramInitData.user?.id ): null;
         console.log("Login: ", result)
         return result
     }
