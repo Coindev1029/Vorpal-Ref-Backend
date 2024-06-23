@@ -226,6 +226,7 @@ export const UpdateOnlineCount = async (req: Request, res: Response) => {
 export const AcceptDuelResponce = async (req: Request, res: Response) => { 
     console.log("Duel accept called")
     const user = await UniversalAuth (req, res);
+    console.log(user)
     if (!user) {
       console.log("401")
       res.status(401).send({ error: "Unauthorized"});
