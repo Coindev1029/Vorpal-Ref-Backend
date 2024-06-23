@@ -81,6 +81,7 @@ export const DuelCreationHandler = async (
       userLastDuel.login1 &&
       userLastDuel.login2
     ) {
+      console.log("Duel not created, already exists")
       SendMessageWithSave(bot, chatId, messages.duelAlready);
       return;
     }
@@ -94,7 +95,7 @@ export const DuelCreationHandler = async (
       console.log('Created, id: ', duelId);
     }
     // console.log('Duel creation, last condition passed 3');
-    // await CreateDuel(msg.from.username?.toLowerCase(), '');
+    // await CreateDuel(linkAuthDataPrev.username?.toLowerCase(), '');
   }
 
   await SendMessageWithSave(bot, chatId, messages.duelToForward).then(()=> {
