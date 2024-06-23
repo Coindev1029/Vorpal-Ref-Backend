@@ -252,7 +252,7 @@ export const AcceptDuelResponce = async (req: Request, res: Response) => {
         });
         return;
       }
-      if (duel.login2 || duel.login2?.toLowerCase() === user.toLowerCase()) {
+      if (duel.login2 || duel.login1?.toLowerCase() === user.toLowerCase()) {
         res.status(400).send({
           success: false,
           error: "Duel is already busy"
