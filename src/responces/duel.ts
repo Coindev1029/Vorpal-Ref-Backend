@@ -228,12 +228,12 @@ export const AcceptDuelResponce = async (req: Request, res: Response) => {
     const user = await UniversalAuth (req, res);
     if (!user) {
       console.log("401")
-      res.status(401).send({ errpr: "Unauthorized"});
+      res.status(401).send({ error: "Unauthorized"});
       return;
     }
     if (!req.body.inviter) {
       console.log("400")
-      res.status(400).send({ errpr: "Duel creator not in the query"});
+      res.status(400).send({ error: "Duel creator not in the query"});
       return;
     }
 

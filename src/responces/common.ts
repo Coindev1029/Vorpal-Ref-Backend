@@ -26,10 +26,11 @@ export const IsNeedSubscribes = async (req: Request, res: Response) => {
 
 export const UniversalAuth = async (req: Request, res: Response) => { 
     const body = req.body;
+    console.log("Entry: ", body.telegramInitData)
     if (!body.signature && !body.telegramData && !body.telegramInitData) {
         res.status(400).send(JSON.stringify({error: "Auth data wrong or not provided"}))
     }
-
+    console.log("Data entered")
     if (body.signature) {
         const msg = GetSignableMessage();
         const address = body.signature ? web3.eth.accounts.recover(msg, body.signature)
@@ -38,6 +39,7 @@ export const UniversalAuth = async (req: Request, res: Response) => {
     }
 
     if (body.telegramInitData) {
+        console.log("Validation result: ", ValidateByInitData (body.telegramInitData))
         return ValidateByInitData (body.telegramInitData) ? body.telegramInitData.username || body.telegramInitData.id : null
     }
 
