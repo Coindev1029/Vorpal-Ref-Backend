@@ -5,9 +5,11 @@ import { SendSubscribeMessage } from './subscribe';
 import { duel_lifetime, tg_chat_history_lifetime } from '../../config';
 import { InlineKeyboard, MarkupKeyboard } from './keyboard';
 import { IsUserInDuel, SetPersonalData } from '../../database/telegram';
-import { SendMessageWithSave, TruncateChat } from './utils';
+import { SendMessageWithSave, SendPhotoWithSave, TruncateChat } from './utils';
 import { messages } from '../constants';
 import { DeleteMessagesByChatId, SaveMessage } from '../../database/telegram/history';
+
+export const introPhotoPath = '/app/public/entry.png';
 
 export const StartHandler = async (bot: TelegramBot, msg: TelegramBot.Message, match: any) => {
   console.log('Start handler called');
@@ -46,7 +48,7 @@ export const StartHandler = async (bot: TelegramBot, msg: TelegramBot.Message, m
     // console.log('Last duel: ', createdDuel);
     const dateSec = Math.round(new Date().getTime() / 1000);
 
-    SendMessageWithSave(bot, chatId, messages.duelStart, {
+    await SendPhotoWithSave (bot, chatId, introPhotoPath, messages.duelStart, true, {
       reply_markup: InlineKeyboard(['enterGame', 'duel', 'referrals', 'joinCommunity']),
     });
     await SendSubscribeMessage(linkAuthDataPrev.id, chatId);
