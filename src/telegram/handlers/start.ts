@@ -49,7 +49,7 @@ export const StartHandler = async (bot: TelegramBot, msg: TelegramBot.Message, m
     const dateSec = Math.round(new Date().getTime() / 1000);
 
     await SendPhotoWithSave (bot, chatId, introPhotoPath, messages.duelStart, true, {
-      reply_markup: InlineKeyboard(['enterGame', 'duel', 'referrals', 'joinCommunity']),
+      reply_markup: InlineKeyboard(['enterGame', 'duel', 'joinCommunity', 'referrals']),
     });
     await SendSubscribeMessage(linkAuthDataPrev.id, chatId);
 

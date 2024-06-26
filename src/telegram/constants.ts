@@ -5,7 +5,7 @@ export const tg_token = process.env.TELEGRAM_API_TOKEN;
 export const inviteLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}?start=`;
 export const startText = "Start";
 export const duelText = "Create duel";
-export const enterGameText = "Launch starmap";
+export const enterGameText = "Play demo";
 export const joinText = "Join community";
 export const duelConfirmText = "Enter a duel";
 export const duelRefuseText = "Refuse a duel";
