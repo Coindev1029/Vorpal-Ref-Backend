@@ -9,16 +9,12 @@ import { SendMessageWithSave } from './handlers/utils';
 import { MarkupKeyboard } from './handlers/keyboard';
 import { NotABusyRegex } from '../utils/text';
 import { ReferralStatsAction } from './handlers/referral';
+import { SetupBotMenuCommands } from './cmdSetup';
 
 
 export function TelegramBotLaunch() {
 
-  bot.setMyCommands([
-    {
-      command: 'startapp',
-      description: 'Enter game',
-    },
-  ]);
+  SetupBotMenuCommands ();
 
   bot.onText(/\/start/, async (msg, match) => {
     const startDuelRegex = /\/start (.+)/;
