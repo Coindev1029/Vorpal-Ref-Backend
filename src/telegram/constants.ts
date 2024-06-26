@@ -5,8 +5,12 @@ export const tg_token = process.env.TELEGRAM_API_TOKEN;
 export const inviteLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}?start=`;
 export const startText = "Start";
 export const duelText = "Create duel";
+export const enterGameText = "Launch starmap";
+export const joinText = "Join community";
 export const duelConfirmText = "Enter a duel";
 export const duelRefuseText = "Refuse a duel";
+
+export const communityTgUrl = "https://t.me/VorpalAnnouncements";
 
 export const usingRegExps: RegExp[] = [
   /\/start/,
@@ -27,7 +31,9 @@ export const messages = {
     duelRefiseInvitation: (login2: string) => {
       return `@${login2} cancelled an invitation. You can challenge a new player`
     },
-    duelStart: `Welcome! Enter duel command to play with friends`,
+    duelStart: `Hello! Welocme to a Star defender game app powered by Vorpal engine!
+      You now can start a duel with your friend or play demo with bot. Enter command from list below:`,
+    duelStartWithWelcome: `Welcome! Enter duel command to play with friends`,
     duelAlready: `You already in duel, got to Starmap to enter a battle`,
     duelToForward: `Forvard this message to challenge your friend:`,
     duelCancelDescript: `If you want to cancel a duel, press here:`,

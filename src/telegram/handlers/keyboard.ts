@@ -1,9 +1,12 @@
 import { Markup } from 'telegraf';
 import {
+  communityTgUrl,
   duelConfirmText,
   duelRefuseText,
   duelText,
+  enterGameText,
   inviteLink,
+  joinText,
   messages,
   startText,
 } from '../constants';
@@ -29,6 +32,18 @@ export const InlineKeyboard = (actions: string[], inviter?: string) => {
           text: duelText,
           callback_data: `duel`,
         });
+        break;
+      case a.indexOf('enterGame') > -1:
+          keyboard.push({
+            text: enterGameText,
+            web_app: {"url": `${process.env.TELEGRAM_CLIENT_URL}`}
+          });
+        break;
+      case a.indexOf('joinCommunity') > -1:
+          keyboard.push({
+            text: joinText,
+            url:  communityTgUrl
+          });
         break;
       case a.indexOf('duelConfirm') > -1:
         keyboard.push({
