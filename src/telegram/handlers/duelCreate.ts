@@ -104,7 +104,7 @@ export const DuelCreationHandler = async (
       messages.duelInvitation(linkAuthDataPrev.username || ""),
       true,
       {
-        parse_mode: 'HTML',
+       // parse_mode: 'HTML',
       },
     ).then(() => {
       SendMessageWithSave(bot, chatId, messages.duelCancelDescript, {

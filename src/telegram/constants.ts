@@ -31,8 +31,7 @@ export const messages = {
     duelRefiseInvitation: (login2: string) => {
       return `@${login2} cancelled an invitation. You can challenge a new player`
     },
-    duelStart: `Hello! Welocme to a Star defender game app powered by Vorpal engine!
-      You now can start a duel with your friend or play demo with bot. Enter command from list below:`,
+    duelStart: `Hello! Welocme to a Star defender game app powered by Vorpal engine! You now can start a duel with your friend or play demo with bot. Enter command from list below:`,
     duelStartWithWelcome: `Welcome! Enter duel command to play with friends`,
     duelAlready: `You already in duel, got to Starmap to enter a battle`,
     duelToForward: `Forvard this message to challenge your friend:`,
@@ -51,7 +50,7 @@ export const messages = {
         '',
       )}`;
       const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}/vtester?startapp=inviterId_${inviter?.replace(' ', '')}`;
-      return `@${inviter} challenging you to Star Defender duel: <a href="${startappLink}">Accept</a>`
+      return `@${inviter} challenging you to Star Defender duel: ${startappLink}` // <a href="${startappLink}">Accept</a>
     },
     duelAccept:  (inviter: string) => `
       Welcome to a Star defender! 
