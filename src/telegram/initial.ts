@@ -40,9 +40,7 @@ export function TelegramBotLaunch() {
     const inviterId = match ? match[1] : "" // Если inviterId присутствует в ссылке, он будет доступен здесь
     if (inviterId) {
         bot.sendMessage(msg.chat.id, `You have invited by: ${inviterId}`);
-    } else {
-        bot.sendMessage(msg.chat.id, 'Hello!');
-    }
+    } 
   });
 
   bot.on('inline_query', async (query) => {

@@ -46,7 +46,7 @@ export const StartHandler = async (bot: TelegramBot, msg: TelegramBot.Message, m
     // console.log('Last duel: ', createdDuel);
     const dateSec = Math.round(new Date().getTime() / 1000);
 
-    SendMessageWithSave(bot, chatId, messages.duelStartWithWelcome, {
+    SendMessageWithSave(bot, chatId, messages.duelStart, {
       reply_markup: InlineKeyboard(['enterGame', 'duel', 'referrals', 'joinCommunity']),
     });
     await SendSubscribeMessage(linkAuthDataPrev.id, chatId);
