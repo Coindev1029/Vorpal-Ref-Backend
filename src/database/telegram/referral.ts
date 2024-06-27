@@ -75,7 +75,9 @@ export async function GetReferralList(inviter: string): Promise<string[]> {
 
 export async function GetReferralCount(inviter: string): Promise<{level1: number; level2: number;}> {
   const query1 = `SELECT COUNT(*) FROM "telegram_personal" WHERE "inviter" = '${inviter}';`;
+  console.log("Qu: ", query1);
   const level1 = await Q(query1, true);
+  console.log("Re: ", level1);
   if (!level1) {
     return({
       level1: 0,
@@ -84,6 +86,8 @@ export async function GetReferralCount(inviter: string): Promise<{level1: number
   }
   const query2=`SELECT COUNT(*) FROM "telegram_personal" WHERE "inviter" IN (SELECT "inviter" FROM "telegram_personal" WHERE "inviter" = '${inviter}');`;
   const level2 = await Q(query2, true);
+  console.log("Qu2: ", query2);
+  console.log("Re2: ", level2);
   return({
     level1: level1[0].count,
     level2: level2? level2[0].count : 0
