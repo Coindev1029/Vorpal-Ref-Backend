@@ -4,11 +4,12 @@ export const front_v = process.env.FRONTEND_VERSION || '407';
 export const tg_token = process.env.TELEGRAM_API_TOKEN;
 export const inviteLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}?start=`;
 export const startText = "Start";
-export const duelText = "Create duel";
-export const enterGameText = "Play demo";
-export const joinText = "Join community";
+export const duelText = "⚔️Create duel";
+export const enterGameText = "🌟Play demo";
+export const joinText = "🎩Join community";
 export const duelConfirmText = "Enter a duel";
 export const duelRefuseText = "Refuse a duel";
+export const referralText = "🤝Watch referrals";
 
 export const communityTgUrl = "https://t.me/VorpalAnnouncements";
 

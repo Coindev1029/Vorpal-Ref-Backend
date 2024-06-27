@@ -8,6 +8,7 @@ import {
   inviteLink,
   joinText,
   messages,
+  referralText,
   startText,
 } from '../constants';
 
@@ -73,7 +74,7 @@ export const InlineKeyboard = (actions: string[], inviter?: string) => {
         break;
       case a === "referrals":
         row.push({
-            text: "Watch referrals",
+            text: referralText,
             callback_data: `referrals`,
         });
         break;
