@@ -13,7 +13,7 @@ import { bot } from '../bot';
 import { duelText, inviteLink, messages, startText } from '../constants';
 import { InlineKeyboard } from './keyboard';
 import { SendMessageWithSave } from './utils';
-import { GetReferralStatsByUser } from '../../database/telegram/referral';
+import { GetReferralCount, GetReferralStatsByUser } from '../../database/telegram/referral';
 
 export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {
     console.log("History requested")
@@ -22,15 +22,24 @@ export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.C
      SendMessageWithSave (bot, query.message.chat.id, messages.noUsername);
      return;
     }
-    const transactions = await GetReferralStatsByUser (query.from.username);
+
+    /* const transactions = await GetReferralStatsByUser (query.from.username);
     if (transactions.length === 0) {
         SendMessageWithSave (bot, query.message.chat.id, "No referral rewards yet");
         return;
-    }
+    } */
+
+    /*
     const historyText = `<b>Your rewards from referrals:</b>\n ${transactions.map((txn) => {
         return `LeveL: ${txn.level}, for: ${txn.for}, resource: ${txn.resource}, amount: ${txn.amount}\n`
-   })}`
-    console.log("History: ", historyText)
+   })}` */
+
+    const refCounts = await GetReferralCount(query.from.username);
+    const historyText = `
+       <b>Level1: ${refCounts.level1}</b>
+       <b>Level2: ${refCounts.level2}</b>
+    `
+
     SendMessageWithSave (bot, query.message.chat.id, historyText,
      {
        parse_mode: "HTML",
