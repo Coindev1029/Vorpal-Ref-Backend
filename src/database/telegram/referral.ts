@@ -85,8 +85,8 @@ export async function GetReferralCount(inviter: string): Promise<{level1: number
   const query2=`SELECT COUNT(*) FROM "telegram_personal" WHERE "inviter" IN (SELECT "inviter" FROM "telegram_personal" WHERE "inviter" = '${inviter}');`;
   const level2 = await Q(query2, true);
   return({
-    level1: level1.count,
-    level2: level2?.count || 0
+    level1: level1[0].count,
+    level2: level2? level2[0].count : 0
   })
 }
 
