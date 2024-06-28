@@ -8,7 +8,7 @@ import { DuelAcceptHandler } from './handlers/duelAccept';
 import { SendMessageWithSave } from './handlers/utils';
 import { MarkupKeyboard } from './handlers/keyboard';
 import { NotABusyRegex } from '../utils/text';
-import { ReferralStatsAction } from './handlers/referral';
+import { ReferralStatsAction, ReferralStatsHandler } from './handlers/referral';
 import { SetupBotMenuCommands } from './cmdSetup';
 
 
@@ -24,6 +24,16 @@ export function TelegramBotLaunch() {
     }
 
     await StartHandler(bot, msg, match);
+  });
+
+  bot.onText(/\/duel/, async (msg, match) => {
+
+    await DuelCreationHandler (bot, msg);
+  });
+
+  bot.onText(/\/referral/, async (msg, match) => {
+
+    await ReferralStatsHandler (bot, msg);
   });
 
   bot.onText(/\/start (.+)/, async (msg, match) => {

@@ -46,3 +46,24 @@ export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.C
      });
     return;
 }
+
+export const ReferralStatsHandler = async (bot: TelegramBot, query: TelegramBot.Message) => {
+
+  if (!query?.from) return;
+  if (!query?.from.username){
+   SendMessageWithSave (bot, query.chat.id, messages.noUsername);
+   return;
+  }
+
+  const refCounts = await GetReferralCount(query.from.username);
+  const historyText = `
+     <b>Level1: ${refCounts.level1}</b>
+     <b>Level2: ${refCounts.level2}</b>
+  `
+
+  SendMessageWithSave (bot, query.chat.id, historyText,
+   {
+     parse_mode: "HTML",
+   });
+  return;
+}

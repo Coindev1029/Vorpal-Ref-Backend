@@ -16,6 +16,8 @@ export const communityTgUrl = "https://t.me/VorpalAnnouncements";
 export const usingRegExps: RegExp[] = [
   /\/start/,
   /\/start (.+)/,
+  /\/duel/,
+  /\/referral/,
   /\/start(?:\?startapp=([^]+))?/
 ];
 

@@ -21,7 +21,7 @@ import {
 import { SendMessageWithSave, SendPhotoWithSave } from './utils';
 import { SaveMessage } from '../../database/telegram/history';
 
-export const invitePhotoPath = '/app/public/invitation.jpg';
+export const invitePhotoPath = '/app/public/duel.png';
 
 export const DuelCreationHandler = async (
   bot: TelegramBot,
