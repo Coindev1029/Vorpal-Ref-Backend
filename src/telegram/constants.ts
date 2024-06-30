@@ -10,6 +10,7 @@ export const joinText = "🎩Join community";
 export const duelConfirmText = "Enter a duel";
 export const duelRefuseText = "Refuse a duel";
 export const referralText = "🤝Watch referrals";
+export const webAppName = process.env.WEB_APP_NAME || "vorpalgalaxy";
 
 export const communityTgUrl = "https://t.me/VorpalAnnouncements";
 
@@ -52,8 +53,8 @@ export const messages = {
         ' ',
         '',
       )}`;
-      const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}/vtester?startapp=inviterId_${inviter?.replace(' ', '')}`;
-      return `@${inviter} challenging you to Star Defender duel: <a href="${startappLink}">Accept</a>` // <a href="${startappLink}">Accept</a>
+      const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}/${webAppName}?startapp=inviterId_${inviter?.replace(' ', '')}`;
+      return `@${inviter} challenging you to Star Defender duel: ${startappLink}` // <a href="${startappLink}">Accept</a>
     },
     duelAccept:  (inviter: string) => `
       Welcome to a Star defender! 
