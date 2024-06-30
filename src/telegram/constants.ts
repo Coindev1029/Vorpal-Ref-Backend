@@ -4,13 +4,22 @@ export const front_v = process.env.FRONTEND_VERSION || '407';
 export const tg_token = process.env.TELEGRAM_API_TOKEN;
 export const inviteLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}?start=`;
 export const startText = "Start";
-export const duelText = "Create duel";
+export const duelText = "⚔️Create duel";
+export const enterGameText = "🌟Play demo";
+export const joinText = "🎩Join community";
 export const duelConfirmText = "Enter a duel";
 export const duelRefuseText = "Refuse a duel";
+export const referralText = "🤝Watch referrals";
+export const webAppName = process.env.WEB_APP_NAME || "vorpalgalaxy";
+
+export const communityTgUrl = "https://t.me/VorpalAnnouncements";
 
 export const usingRegExps: RegExp[] = [
   /\/start/,
-  /\/start (.+)/
+  /\/start (.+)/,
+  /\/duel/,
+  /\/referral/,
+  /\/start(?:\?startapp=([^]+))?/
 ];
 
 export const messages = {
@@ -26,7 +35,8 @@ export const messages = {
     duelRefiseInvitation: (login2: string) => {
       return `@${login2} cancelled an invitation. You can challenge a new player`
     },
-    duelStart: `Welcome! Enter duel command to play with friends`,
+    duelStart: `Hello! Welocme to a Star defender game app powered by Vorpal engine! You now can start a duel with your friend or play demo with bot. Enter command from list below:`,
+    duelStartWithWelcome: `Welcome! Enter duel command to play with friends`,
     duelAlready: `You already in duel, got to Starmap to enter a battle`,
     duelToForward: `Forvard this message to challenge your friend:`,
     duelCancelDescript: `If you want to cancel a duel, press here:`,
@@ -43,7 +53,8 @@ export const messages = {
         ' ',
         '',
       )}`;
-      return `@${inviter} challenging you to Star Defender duel: <a href="${deepLink}">Accept</a>`
+      const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}/${webAppName}?startapp=inviterId_${inviter?.replace(' ', '')}`;
+      return `@${inviter} challenging you to Star Defender duel: <a href="${startappLink}">Accept</a>` // <a href="${startappLink}">Accept</a>
     },
     duelAccept:  (inviter: string) => `
       Welcome to a Star defender! 

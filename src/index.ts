@@ -2,6 +2,7 @@ import { TelegramBotLaunch } from './telegram';
 import { StartWatchingTimer } from './blockchain/Stars/watcher';
 import { InitGameIoServer } from './game';
 import {
+  AcceptDuelResponce,
   AdminDataRequest,
   AdminSaveData,
   AdminUpdateUserData,
@@ -118,6 +119,8 @@ app.post('/api/updateonlinecount', UpdateOnlineCount);
 app.post('/api/rewardcondition', RewardConditionResponce);
 
 app.post('/api/duelrewardcondition', RewardConditionResponce)
+
+app.post('/api/duelaccept', AcceptDuelResponce)
 
 //Store
 app.get('/api/storeitems', GetStoreItemsResponce);

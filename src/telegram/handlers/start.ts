@@ -5,9 +5,11 @@ import { SendSubscribeMessage } from './subscribe';
 import { duel_lifetime, tg_chat_history_lifetime } from '../../config';
 import { InlineKeyboard, MarkupKeyboard } from './keyboard';
 import { IsUserInDuel, SetPersonalData } from '../../database/telegram';
-import { SendMessageWithSave, TruncateChat } from './utils';
+import { SendMessageWithSave, SendPhotoWithSave, TruncateChat } from './utils';
 import { messages } from '../constants';
 import { DeleteMessagesByChatId, SaveMessage } from '../../database/telegram/history';
+
+export const introPhotoPath = '/app/public/entry.png';
 
 export const StartHandler = async (bot: TelegramBot, msg: TelegramBot.Message, match: any) => {
   console.log('Start handler called');
@@ -15,7 +17,7 @@ export const StartHandler = async (bot: TelegramBot, msg: TelegramBot.Message, m
   console.log('Chat started: ', chatId);
   SaveMessage(chatId, msg.message_id);
   if (!msg.from) return;
-  await SendMessageWithSave (bot, msg.chat.id, messages.welocme, MarkupKeyboard());
+  // await SendMessageWithSave (bot, msg.chat.id, messages.welocme, MarkupKeyboard());
   try {
     const linkAuthDataPrev: TelegramAuthData = {
       auth_date: GetDaylyAuthDate(),
@@ -43,22 +45,19 @@ export const StartHandler = async (bot: TelegramBot, msg: TelegramBot.Message, m
         return;
       }
 
-
-    console.log('User: ', linkAuthDataPrev.username);
-
-    await SendSubscribeMessage(linkAuthDataPrev.id, chatId);
-
     // console.log('Last duel: ', createdDuel);
     const dateSec = Math.round(new Date().getTime() / 1000);
 
-    SendMessageWithSave(bot, chatId, messages.duelStart, {
-      reply_markup: InlineKeyboard(['duel', 'referrals']),
+    await SendPhotoWithSave (bot, chatId, introPhotoPath, messages.duelStart, true, {
+      reply_markup: InlineKeyboard(['enterGame', 'duel', 'joinCommunity', 'referrals']),
     });
+    await SendSubscribeMessage(linkAuthDataPrev.id, chatId);
+
   } catch (e) {
     console.log('Start cmd exception: ', e);
     SendMessageWithSave(bot, chatId, 'Bot-side error');
   }
-  setTimeout(() => {
+  /* setTimeout(() => {
     TruncateChat(bot, chatId)
-  }, tg_chat_history_lifetime)
+  }, tg_chat_history_lifetime) */
 };

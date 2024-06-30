@@ -21,99 +21,42 @@ import {
 import { SendMessageWithSave, SendPhotoWithSave } from './utils';
 import { SaveMessage } from '../../database/telegram/history';
 
-export const testPhotoPath = '/app/public/testPhoto.jpg';
-
-console.log("Path to test photo: ", testPhotoPath);
-
-export const DuelCreationHandlerByMessage = async (
-  bot: TelegramBot,
-  query: TelegramBot.Message,
-) => {
-  if (!query.from) return;
-  const chatId = query.chat.id;
-  console.log('Duel handler called');
-
-  const linkAuthDataPrev: TelegramAuthData = {
-    auth_date: GetDaylyAuthDate(),
-    last_name: query.from.last_name?.replace(' ', '') || '',
-    first_name: query.from.first_name?.replace(' ', '') || '',
-    id: query.from.id,
-    username: query.from.username?.toLowerCase() || '',
-    hash: '',
-  };
-
-  console.log('Duel from user: ', linkAuthDataPrev);
-
-  if (!linkAuthDataPrev.username) {
-    SendMessageWithSave(bot, chatId, messages.noUsername);
-    return;
-  }
-  const dateSec = Math.round(new Date().getTime() / 1000);
-  const userLastDuel = await GetDuelDataByUser(
-    linkAuthDataPrev.username?.toLowerCase(),
-  );
-  if (!userLastDuel) {
-    await CreateDuel(linkAuthDataPrev.username?.toLowerCase(), '');
-  } else {
-    const isFinished = userLastDuel.isfinished;
-    const creation = Number(userLastDuel.creation);
-    if (
-      !isFinished &&
-      dateSec - creation < duel_lifetime &&
-      userLastDuel.login1 &&
-      userLastDuel.login2  !== ""
-    ) {
-      SendMessageWithSave(bot, chatId, messages.duelAlready);
-      return;
-    }
-    if (!isFinished || dateSec - creation >= duel_lifetime) {
-      console.log('Finish duel case 3');
-      await FinishDuel(userLastDuel.duel_id, '');
-      const duelId = await CreateDuel(
-        linkAuthDataPrev.username?.toLowerCase(),
-        '',
-      );
-      console.log('Created, id: ', duelId);
-    }
-    // console.log('Duel creation, last condition passed 3');
-    // await CreateDuel(msg.from.username?.toLowerCase(), '');
-  }
-
-  await SendMessageWithSave(bot, chatId, messages.duelToForward).then(()=> {
-    SendPhotoWithSave(
-      bot,
-      chatId,
-      testPhotoPath,
-      messages.duelInvitation(linkAuthDataPrev.username || ""),
-      true,
-      {
-        parse_mode: 'HTML',
-      },
-    ).then(() => {
-      SendMessageWithSave(bot, chatId, messages.duelCancelDescript, {
-        reply_markup: InlineKeyboard(['duelCancel']),
-      });
-    })
-  })
-};
+export const invitePhotoPath = '/app/public/duel.png';
 
 export const DuelCreationHandler = async (
   bot: TelegramBot,
-  query: TelegramBot.CallbackQuery,
+  query: TelegramBot.CallbackQuery | TelegramBot.Message,
 ) => {
-  if (!query.message) {
-    return;
+  let chatId: number;
+  let userId: number;
+  let firstName: string;
+  let lastName: string;
+  let username: string | undefined;
+
+  if ('message_id' in query) {
+    if (!query.from) return;
+    chatId = query.chat.id;
+    userId = query.from.id;
+    firstName = query.from.first_name?.replace(' ', '') || '';
+    lastName = query.from.last_name?.replace(' ', '') || '';
+    username = query.from.username?.toLowerCase();
+  } else {
+    if (!query.message) return;
+    chatId = query.message.chat.id;
+    userId = query.from.id;
+    firstName = query.from.first_name?.replace(' ', '') || '';
+    lastName = query.from.last_name?.replace(' ', '') || '';
+    username = query.from.username?.toLowerCase();
   }
-  const chat = query.message.chat;
-  const chatId = chat.id;
+
   console.log('Duel handler called');
 
   const linkAuthDataPrev: TelegramAuthData = {
     auth_date: GetDaylyAuthDate(),
-    last_name: query.from.last_name?.replace(' ', '') || '',
-    first_name: query.from.first_name?.replace(' ', '') || '',
-    id: query.from.id,
-    username: query.from.username?.toLowerCase() || '',
+    last_name: lastName?.replace(' ', '') || '',
+    first_name: firstName?.replace(' ', '') || '',
+    id: userId,
+    username: username?.toLowerCase() || '',
     hash: '',
   };
 
@@ -138,27 +81,26 @@ export const DuelCreationHandler = async (
       userLastDuel.login1 &&
       userLastDuel.login2
     ) {
+      console.log("Duel not created, already exists")
       SendMessageWithSave(bot, chatId, messages.duelAlready);
       return;
     }
     if (!isFinished || dateSec - creation >= duel_lifetime) {
       console.log('Finish duel case 3');
       await FinishDuel(userLastDuel.duel_id, '');
-      const duelId = await CreateDuel(
-        linkAuthDataPrev.username?.toLowerCase(),
-        '',
-      );
-      console.log('Created, id: ', duelId);
     }
-    // console.log('Duel creation, last condition passed 3');
-    // await CreateDuel(msg.from.username?.toLowerCase(), '');
+    const duelId = await CreateDuel(
+      linkAuthDataPrev.username?.toLowerCase(),
+      '',
+    );
+    console.log('Created, id: ', duelId);
   }
 
   await SendMessageWithSave(bot, chatId, messages.duelToForward).then(()=> {
     SendPhotoWithSave(
       bot,
       chatId,
-      testPhotoPath,
+      invitePhotoPath,
       messages.duelInvitation(linkAuthDataPrev.username || ""),
       true,
       {

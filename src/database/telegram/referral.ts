@@ -1,10 +1,10 @@
+import { Q, connection } from '../connection';
 import {
   ReferralStatsData,
   TelegramAuthData,
   TelegramAuthNote,
 } from '../../types';
 
-const { connection } = require('../connection');
 
 export async function GetUserInviter(username: string): Promise<string> {
   const query = `SELECT "inviter" FROM "telegram_personal" WHERE "username" = '${username}';`;
@@ -71,6 +71,24 @@ export async function GetReferralList(inviter: string): Promise<string[]> {
     console.log(e.message);
     return list;
   }
+}
+
+export async function GetReferralCount(inviter: string): Promise<{level1: number; level2: number;}> {
+  const query1 = `SELECT COUNT(*) FROM "telegram_personal" WHERE "inviter" = '${inviter.toLowerCase()}';`;
+  const level1 = await Q(query1, true);
+  if (!level1) {
+    return({
+      level1: 0,
+      level2: 0
+    })
+  }
+  const query2=`SELECT COUNT(*) FROM "telegram_personal" WHERE "inviter" IN 
+  (SELECT "inviter" FROM "telegram_personal" WHERE "inviter" = '${inviter.toLowerCase()}');`;
+  const level2 = await Q(query2, true);
+  return({
+    level1: level1[0].count,
+    level2: level2? level2[0].count : 0
+  })
 }
 
 export async function GetReferralStatsByUser(

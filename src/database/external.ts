@@ -1,25 +1,32 @@
-import axios from 'axios';
+import superagent from 'superagent';
 import { GetSignableMessage } from '../utils/auth';
 import { web3 } from '../responces';
 import { GetValueByKey } from './balances';
 
-export async function NotifyDuelFinishFor(login: string) {
+export async function NotifyDuelFinishFor(login: string, duelId: string) {
   const key = (await GetValueByKey('ADMIN_KEY')) || '';
-  const signature = web3.eth.accounts.sign(GetSignableMessage(), key);
+  const signature = web3.eth.accounts.sign(GetSignableMessage(), key).signature;
   const url = `${process.env.BATTLE_SERVER_HOST}/api/duelcancel`;
-  const responce = await axios.post(
-    url,
-    JSON.stringify({
+  try {
+    const responce =  await superagent.post(url)
+    .send({
       signature,
       login,
-    }),
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-  );
-
-  console.log('Result: ', url, responce.status);
-  return responce.status === 200 ? true : false;
+      duelId
+    }).set('Accept', 'application/json')
+    .set('Content-Type', 'application/json') 
+    .then(response => {
+      console.log(response.body); // обработка успешного ответа
+      return responce.status === 200 ? true : false;
+    })
+    .catch(error => {
+      console.error('Error:', error); // обработка ошибки
+      return false;
+    });
+    console.log('Result: ', url, responce.status);
+    return responce.status === 200 ? true : false;
+  } catch (e) {
+    console.log(e.message);
+    return false;
+  }
 }

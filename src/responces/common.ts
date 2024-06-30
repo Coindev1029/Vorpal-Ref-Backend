@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { GetChannelSubscribeList } from "../telegram/handlers/subscribe";
 import { TelegramAuthData } from "../types"
-import { CheckTelegramAuth } from "../utils/auth";
+import { CheckTelegramAuth, GetSignableMessage, ValidateByInitData, getQueryParam } from "../utils/auth";
+import { web3 } from "./duel";
 
 export const AuthByTelegram = (req: Request, res: Response) => {
 
@@ -21,4 +22,43 @@ export const IsNeedSubscribes = async (req: Request, res: Response) => {
     res.status(200).send({
         subscribed: isSubscribed
     })
+}
+
+export const UniversalAuth = async (req: Request, res: Response) => { 
+    const body = req.body;
+    if (!body.signature && !body.telegramData && !body.telegramInitData) {
+        res.status(400).send(JSON.stringify({error: "Auth data wrong or not provided"}))
+    }
+    if (body.signature) {
+        const msg = GetSignableMessage();
+        const address = body.signature ? web3.eth.accounts.recover(msg, body.signature)
+        .toLowerCase() : "";
+        return address;
+    }
+
+    if (body.telegramInitData) {
+        console.log("Validation result: ", ValidateByInitData (body.telegramInitData))
+        console.log("Entered data: ", body.telegramInitData)
+        const validationResult = ValidateByInitData (body.telegramInitData);
+        if (!validationResult) {
+            return null
+        }
+        try {
+            const userEncoded = getQueryParam('user', body.telegramInitData);
+            if (!userEncoded) {
+                return null;
+            }
+            const userDecoded = decodeURIComponent(userEncoded);
+            const parsedData = JSON.parse(userDecoded);
+            console.log("Parsed: ", parsedData);
+            return parsedData.username || parsedData.id
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
+    }
+
+    if (body.telegramData) {
+       return CheckTelegramAuth(body.telegramData).success ? body.telegramData.username || body.telegramData.id : null
+    }
 }

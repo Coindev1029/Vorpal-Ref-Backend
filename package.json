@@ -1,6 +1,6 @@
 {
   "name": "vorpal_rest_api",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -38,6 +38,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "sha256": "^0.2.0",
+    "superagent": "^9.0.2",
     "telegraf": "^4.16.3",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.3",

@@ -3,15 +3,19 @@ import { TxnHistoryAction, duelAcceptAction, duelCancelAction, duelRefuseAction 
 import { StartHandler } from './handlers/start';
 import { duelText, messages, startText, tg_token, usingRegExps } from './constants';
 import { bot } from './bot';
-import { DuelCreationHandler, DuelCreationHandlerByMessage } from './handlers/duelCreate';
+import { DuelCreationHandler } from './handlers/duelCreate';
 import { DuelAcceptHandler } from './handlers/duelAccept';
 import { SendMessageWithSave } from './handlers/utils';
 import { MarkupKeyboard } from './handlers/keyboard';
 import { NotABusyRegex } from '../utils/text';
-import { ReferralStatsAction } from './handlers/referral';
+import { ReferralStatsAction, ReferralStatsHandler } from './handlers/referral';
+import { SetupBotMenuCommands } from './cmdSetup';
 
 
 export function TelegramBotLaunch() {
+
+  SetupBotMenuCommands ();
+
   bot.onText(/\/start/, async (msg, match) => {
     const startDuelRegex = /\/start (.+)/;
     if (msg.text && startDuelRegex.test(msg.text)) {
@@ -22,15 +26,35 @@ export function TelegramBotLaunch() {
     await StartHandler(bot, msg, match);
   });
 
+  bot.onText(/\/duel/, async (msg, match) => {
+
+    await DuelCreationHandler (bot, msg);
+  });
+
+  bot.onText(/\/referral/, async (msg, match) => {
+
+    await ReferralStatsHandler (bot, msg);
+  });
+
   bot.onText(/\/start (.+)/, async (msg, match) => {
 
     await  DuelAcceptHandler(bot, msg, match);
+  });
+
+  bot.onText(/\/start(?:\?startapp=([^]+))?/, (msg, match) => {
+    console.log("Start app called")
+    const inviterId = match ? match[1] : "" // Если inviterId присутствует в ссылке, он будет доступен здесь
+    if (inviterId) {
+        bot.sendMessage(msg.chat.id, `You have invited by: ${inviterId}`);
+    } 
   });
 
   bot.on('inline_query', async (query) => {
     const deepLink = `https://t.me/${
       process.env.TELEGRAM_BOT_NAME
     }?start=${query.from.username?.replace(' ', '')}`;
+
+    const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}/vtester?startapp=inviterId_${query.from.username?.replace(' ', '')}`;
 
     const results: TelegramBot.InlineQueryResult[] = [
       {
@@ -45,7 +69,7 @@ export function TelegramBotLaunch() {
         },
         reply_markup: {
           inline_keyboard: [
-            [{ text: 'Confirm invitation', url: deepLink }], //callback_data: metadataString
+            [{ text: 'Confirm invitation', url: startappLink }], //callback_data: metadataString
           ],
         },
       },
@@ -87,7 +111,7 @@ export function TelegramBotLaunch() {
         await StartHandler (bot, msg, match)
         break;
       case txt === "Duel": 
-        await DuelCreationHandlerByMessage (bot, msg)
+        await DuelCreationHandler (bot, msg)
         break;
       case txt === "start": 
         await StartHandler (bot, msg, match)

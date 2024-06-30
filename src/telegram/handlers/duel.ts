@@ -113,15 +113,16 @@ export const duelRefuseAction = async (
 
   const duelOpponent = ((await GetOpponent(caller)) || inviter).toLowerCase();
   const opponentData = await GetPersonalDataByUsername(duelOpponent);
+  const duelData = await GetDuelDataByUser (caller);
 
   if (opponentData) {
-    /* if (opponentData.username) {
+    if (opponentData.username) {
       try {
-        NotifyDuelFinishFor(opponentData.username);
+        NotifyDuelFinishFor(opponentData.username, duelData?.duel_id || "");
       } catch (e) {
         console.log("Notify err");
       } 
-    } */
+    }
     SendMessageWithSave(
       bot,
       opponentData.chat_id,

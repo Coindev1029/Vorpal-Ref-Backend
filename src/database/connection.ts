@@ -22,3 +22,15 @@ export const connectionResult = connection.connect((err : Error) => {
 
   console.log("Database connected")
 })
+
+
+export async function Q(query: string, withReturn?: boolean): Promise<any> {
+  try {
+    const result = await connection.query(query);
+    return withReturn ? result.rows : true;
+  } catch (e) {
+    console.log(e.message);
+    console.log(query);
+    return null;
+  }
+}

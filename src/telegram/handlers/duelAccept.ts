@@ -82,7 +82,7 @@ export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) 
     }
 
     const timeNow = Math.round(new Date().getTime() / 1000);
-
+    // ToDo: check duel condition
     if (
       createdDuel.isfinished &&
       timeNow - createdDuel.creation <= duel_lifetime
