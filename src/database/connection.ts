@@ -7,6 +7,8 @@ const connectionData : ClientConfig = {
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD, //process.env.db_password,
     port: Number(process.env.DB_PORT),
+    idleTimeoutMillis: 5000,
+    max: 50
   }
 
 export const connection = new Client(connectionData);
@@ -32,5 +34,7 @@ export async function Q(query: string, withReturn?: boolean): Promise<any> {
     console.log(e.message);
     console.log(query);
     return null;
+  } finally {
+    connection.release();
   }
 }
