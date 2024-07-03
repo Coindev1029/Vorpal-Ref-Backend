@@ -7,13 +7,13 @@ import {
   GetPersonalDataByUsername,
   GetUserTransactions,
   RemoveDuelOpponent,
-} from '../../database/telegram';
+} from '../../models/telegram';
 import { duel_lifetime } from '../../config';
 import { bot } from '../bot';
 import { duelText, inviteLink, messages, startText } from '../constants';
 import { InlineKeyboard } from './keyboard';
 import { SendMessageWithSave } from './utils';
-import { GetReferralCount, GetReferralStatsByUser } from '../../database/telegram/referral';
+import { GetReferralCount, GetReferralStatsByUser } from '../../models/telegram/referral';
 
 export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {
     console.log("History requested")

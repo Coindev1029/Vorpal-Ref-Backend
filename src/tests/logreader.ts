@@ -1,4 +1,4 @@
-import { ReadLogs } from "../database/log/reader"
+import { ReadLogs } from "../models/log/reader"
 
 const logsNum = Number(process.argv[2]) ? Number(process.argv[2]): 20
 

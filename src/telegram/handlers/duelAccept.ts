@@ -11,7 +11,7 @@ import {
   GetOpponent,
   GetPersonalDataByUsername,
   SetPersonalData,
-} from '../../database/telegram';
+} from '../../models/telegram';
 import {
   duelConfirmText,
   duelRefuseText,
@@ -20,9 +20,9 @@ import {
   messages,
   startText,
 } from '../constants';
-import { SaveMessage } from '../../database/telegram/history';
+import { SaveMessage } from '../../models/telegram/history';
 import { SendMessageWithSave, TruncateChat } from './utils';
-import { GetUserInviter } from '../../database/telegram/referral';
+import { GetUserInviter } from '../../models/telegram/referral';
 
 export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) => {
   const chatId = msg.chat.id;

@@ -1,6 +1,5 @@
 import { TelegramBotLaunch } from './telegram';
 import { StartWatchingTimer } from './blockchain/Stars/watcher';
-import { InitGameIoServer } from './game';
 import {
   AcceptDuelResponce,
   AdminDataRequest,
@@ -38,7 +37,7 @@ import {
   UpdateOneStar,
   UpdateOnlineCount,
   WithdrawRewardAction,
-} from './responces';
+} from './controllers';
 const dEnv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');

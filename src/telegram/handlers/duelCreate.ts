@@ -9,7 +9,7 @@ import {
   CreateDuel,
   FinishDuel,
   GetDuelDataByUser,
-} from '../../database/telegram';
+} from '../../models/telegram';
 import {
   duelConfirmText,
   duelRefuseText,
@@ -19,7 +19,7 @@ import {
   startText,
 } from '../constants';
 import { SendMessageWithSave, SendPhotoWithSave } from './utils';
-import { SaveMessage } from '../../database/telegram/history';
+import { SaveMessage } from '../../models/telegram/history';
 
 export const invitePhotoPath = '/app/public/duel.png';
 

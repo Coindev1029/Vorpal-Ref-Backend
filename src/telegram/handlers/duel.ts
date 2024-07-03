@@ -8,13 +8,13 @@ import {
   GetPersonalDataByUsername,
   GetUserTransactions,
   RemoveDuelOpponent,
-} from '../../database/telegram';
+} from '../../models/telegram';
 import { duel_lifetime } from '../../config';
 import { bot } from '../bot';
 import { duelText, inviteLink, messages, startText } from '../constants';
 import { InlineKeyboard } from './keyboard';
 import { SendMessageWithSave } from './utils';
-import { NotifyDuelFinishFor } from '../../database/external';
+import { NotifyDuelFinishFor } from '../../models/external';
 
 export const duelCancelAction = async (
   bot: TelegramBot,

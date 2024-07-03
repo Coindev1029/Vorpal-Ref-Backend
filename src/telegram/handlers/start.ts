@@ -4,10 +4,10 @@ import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../../utils/auth';
 import { SendSubscribeMessage } from './subscribe';
 import { duel_lifetime, tg_chat_history_lifetime } from '../../config';
 import { InlineKeyboard, MarkupKeyboard } from './keyboard';
-import { IsUserInDuel, SetPersonalData } from '../../database/telegram';
+import { IsUserInDuel, SetPersonalData } from '../../models/telegram';
 import { SendMessageWithSave, SendPhotoWithSave, TruncateChat } from './utils';
 import { messages } from '../constants';
-import { DeleteMessagesByChatId, SaveMessage } from '../../database/telegram/history';
+import { DeleteMessagesByChatId, SaveMessage } from '../../models/telegram/history';
 
 export const introPhotoPath = '/app/public/entry.png';
 
