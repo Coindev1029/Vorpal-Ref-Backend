@@ -1,5 +1,5 @@
 require('dotenv').config();
-import { Client, ClientConfig } from 'pg';
+import { Pool, ClientConfig } from 'pg';
 
 const connectionData : ClientConfig = {
     user: process.env.DB_USER,
@@ -11,30 +11,27 @@ const connectionData : ClientConfig = {
     max: 50
   }
 
-export const connection = new Client(connectionData);
+export const pool = new Pool(connectionData);
 
+pool.on('connect', () => {
+  console.log('Database connected');
+});
 
-export const connectionResult = connection.connect((err : Error) => {
-
-  if (err) {
-      console.log("Err : ")
-      console.log(err.message)
-      return;
-  }
-
-  console.log("Database connected")
-})
-
+pool.on('error', (err) => {
+  console.error('Unexpected error on idle client', err);
+  process.exit(-1);
+});
 
 export async function Q(query: string, withReturn?: boolean): Promise<any> {
+  const client = await pool.connect();
   try {
-    const result = await connection.query(query);
+    const result = await client.query(query);
     return withReturn ? result.rows : true;
   } catch (e) {
-    console.log(e.message);
-    console.log(query);
+    console.error(e.message);
+    console.error(query);
     return null;
   } finally {
-    connection.release();
+    client.release();
   }
 }
