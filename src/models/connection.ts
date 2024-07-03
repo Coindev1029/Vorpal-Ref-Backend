@@ -11,9 +11,9 @@ export const pool = new Pool({
   max: 50 // Maximum number of clients in the pool
 });
 
-pool.on('connect', () => {
+/* pool.on('connect', () => {
   console.log('Database connected');
-});
+}); */
 
 pool.on('error', (err) => {
   console.error('Unexpected error on idle client', err);
@@ -24,7 +24,6 @@ export async function runQuery (query: string, withReturn: boolean = true): Prom
   const client = await pool.connect();
   try {
     const result = await client.query(query);
-    console.log("Query result: ", result);
     return withReturn ? result.rows : [true];
   } catch (e) {
     console.error(e.message);
