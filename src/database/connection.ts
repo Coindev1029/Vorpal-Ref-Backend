@@ -1,17 +1,15 @@
 require('dotenv').config();
 import { Pool, ClientConfig } from 'pg';
 
-const connectionData : ClientConfig = {
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD, //process.env.db_password,
-    port: Number(process.env.DB_PORT),
-    idleTimeoutMillis: 10000,
-    max: 50
-  }
-
-export const pool = new Pool(connectionData);
+export const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: Number(process.env.DB_PORT),
+  idleTimeoutMillis: 5000, // Wait up to 5 seconds before removing idle clients
+  max: 50 // Maximum number of clients in the pool
+});
 
 pool.on('connect', () => {
   console.log('Database connected');
