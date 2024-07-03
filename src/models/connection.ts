@@ -24,6 +24,7 @@ export async function runQuery (query: string, withReturn: boolean = true): Prom
   const client = await pool.connect();
   try {
     const result = await client.query(query);
+    console.log("Query result: ", result);
     return withReturn ? result.rows : [true];
   } catch (e) {
     console.error(e.message);
