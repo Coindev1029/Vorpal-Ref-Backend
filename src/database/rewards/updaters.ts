@@ -1,6 +1,6 @@
 require('dotenv').config();
 import { TelegramAuthData, boxOpenResults } from 'types';
-import { connection } from './../connection';
+import { pool } from './../connection';
 import { WriteLog } from '../../database/log';
 import { GetBoxOwner, GetHolderData, GetUserBalanceRow, IsHolderExists } from './getters';
 import { GetChannelSubscribeList } from '../../telegram/handlers/subscribe';
@@ -28,9 +28,9 @@ export async function CreateNewBox(
     VALUES ('${Holer}', '${ownerLogin.toLowerCase()}', ${level}, false);`;
   console.log('Box creation query: ', query);
   // WriteLog('Box creation query: ', query);
-  await connection.query(query);
+  await pool.query(query);
   const idQuery = `SELECT max(id) FROM boxes;`;
-  const info = await connection.query(idQuery);
+  const info = await pool.query(idQuery);
   return info.rows[0];
 }
 
@@ -48,7 +48,7 @@ export async function GiveResources(
   }
   const balanceQuery = `UPDATE resources SET ${resource} = ${resource} + ${amount} 
   WHERE ownerAddress = '${Holer}';`;
-  await connection.query(balanceQuery);
+  await pool.query(balanceQuery);
   return await GetUserBalanceRow(Holer, ownerLogin.toLowerCase());
 }
 
@@ -62,7 +62,7 @@ export async function CreateNewHolder(address: string, login?: string) {
   (ownerAddress, ownerLogin, laser1, laser2, laser3, spore, spice, metal, token, biomass, carbon, trends) 
   VALUES ('${address.toLowerCase()}', '${ownerLogin}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);`;
   // WriteLog('User creation query: ', creationQuery);
-  const result = await connection.query(creationQuery);
+  const result = await pool.query(creationQuery);
   // WriteLog('Insertion result: ', JSON.stringify(result));
   // console.log('Insertion result: ', result)
   return true;
@@ -82,8 +82,8 @@ export async function UpdateResourceTransaction(
   ("userlogin", "time", "resource", "amount", "reason")
   VALUES ('${User}', TO_TIMESTAMP(${time}), '${resource}', ${amount}, '${message}');`;
   try {
-    await connection.query(updateQuery);
-    await connection.query(logQuery);
+    await pool.query(updateQuery);
+    await pool.query(logQuery);
     return true;
   } catch (e) {
     console.log(e.message);
@@ -113,7 +113,7 @@ export async function ResourceTransactionWithReferrals (user: string, resource: 
 export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
   let openAmount = 0;
   const boxCheckQuery = `SELECT isopen FROM boxes WHERE id = ${boxId};`;
-  const check = await connection.query(boxCheckQuery);
+  const check = await pool.query(boxCheckQuery);
   console.log('Box opening started', boxId);
   if (check.rows.length === 0) {
     return {
@@ -185,9 +185,9 @@ export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
   const logQuery = `INSERT INTO box_log (boxId, opening, openResult, openAmount)
     VALUES (${boxId}, CURRENT_TIMESTAMP, '${rewardType}', ${openAmount});`;
   const boxCloseQuery = `UPDATE boxes SET isopen = true WHERE id = ${boxId};`;
-  const logs = await connection.query(logQuery);
+  const logs = await pool.query(logQuery);
   await  ResourceTransactionWithReferrals (owner, rewardType, openAmount, rewardmessage);
-  await connection.query(boxCloseQuery);
+  await pool.query(boxCloseQuery);
   return {
     success: true,
   };

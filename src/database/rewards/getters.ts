@@ -1,6 +1,6 @@
 require('dotenv').config();
 import { boxOpenResults } from 'types';
-import { connection } from './../connection';
+import { Q, pool } from './../connection';
 import { WriteLog } from '../../database/log';
 
 const zeroAssets = {
@@ -18,8 +18,8 @@ const zeroAssets = {
 
 export async function GetBoxOpenResult(boxId: number) {
   const logQuery = `SELECT * FROM box_log WHERE id = ${boxId};`;
-  const result = await connection.query(logQuery);
-  if (result.rows.length === 0) {
+  const result = await Q(logQuery);
+  if (!result|| result.length === 0) {
     return {
       success: false,
       error: 'Box not open or not exist',
@@ -27,7 +27,7 @@ export async function GetBoxOpenResult(boxId: number) {
   }
   return {
     success: true,
-    data: result.rows[0],
+    data: result,
   };
 }
 
@@ -35,8 +35,8 @@ export async function GetLoginByAddress(address: string) {}
 
 export async function IsHolderExists (address: string): Promise<Boolean> {
   const selectionQuery = `SELECT * FROM resources WHERE ownerAddress = '${address.toLowerCase()}' LIMIT 1;`;
-  const result = await connection.query(selectionQuery);
-  if (result.rows.length === 0) {
+  const result = await Q(selectionQuery);
+  if (!result || result.length === 0) {
     return false;
   } else {
     return true;
@@ -45,20 +45,20 @@ export async function IsHolderExists (address: string): Promise<Boolean> {
 
 export async function GetHolderData(address: string) {
   const selectionQuery = `SELECT * FROM resources WHERE ownerAddress = '${address.toLowerCase()}' LIMIT 1;`;
-  const result = await connection.query(selectionQuery);
-  if (result.rows.length === 0) {
+  const result = await Q(selectionQuery);
+  if (!result || result.length === 0) {
     return (zeroAssets);
   }
-  return result.rows[0];
+  return result[0];
 }
 
 export async function GetBoxOwner(boxId: number): Promise<string> {
   const selectionQuery = `
         SELECT ownerAddress, ownerLogin FROM boxes WHERE id= '${boxId}' LIMIT 1;
       `;
-  const result = await connection.query(selectionQuery);
-  if (result.rows.length > 0) {
-    return result.rows[0].ownerlogin || result.rows[0].owneraddress;
+  const result = await Q(selectionQuery);
+  if (result && result.length > 0) {
+    return result[0].ownerlogin || result[0].owneraddress;
   } else {
     return "";
   }
@@ -74,11 +74,11 @@ export async function GetUserBalanceRow(ownerAddress = '', ownerLogin = '') {
     WHERE ${ownerLogin ? 'ownerLogin' : 'ownerAddress'} = '${
     (ownerLogin ? ownerLogin : ownerAddress).toLowerCase()
   }' LIMIT 1;`;
-  const assets = await connection.query(balanceQuery);
-  if (assets.rows.length === 0) {
+  const assets = await Q(balanceQuery);
+  if (!assets || assets.length === 0) {
     return (zeroAssets);
   }
-  return assets.rows[0];
+  return assets[0];
 }
 
 export async function GetAvailableBoxesByOwner(
@@ -91,6 +91,6 @@ export async function GetAvailableBoxesByOwner(
   const listQuery = `SELECT * FROM boxes WHERE ${
     ownerLogin ? 'ownerLogin' : 'ownerAddress'
   } = '${(ownerLogin ? ownerLogin : ownerAddress).toLowerCase()}' AND isOpen = false;`;
-  const response = await connection.query(listQuery);
-  return response.rows;
+  const response = await Q(listQuery);
+  return response || [];
 }

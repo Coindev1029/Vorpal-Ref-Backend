@@ -1,6 +1,5 @@
+import { Q } from '../connection';
 import { TelegramAuthData, TelegramAuthNote, tgUserTxnData } from '../../types';
-
-const { connection } = require('../connection');
 
 export async function SetPersonalData(
   data: TelegramAuthData,
@@ -31,46 +30,31 @@ export async function SetPersonalData(
   "chat_id" = excluded."chat_id",
   "inviter" = "telegram_personal"."inviter";
         `;
-
-    try {
-      await connection.query(query);
-      resolve(true);
-      return;
-    } catch (e) {
-      console.log(e.message);
-      resolve(false);
-      return;
-    }
+   const result = await Q(query, false);
+   resolve(result ? true : false);
+   return;
   });
 }
 
 export async function GetPersonalDataById(
   id: number,
-): Promise<TelegramAuthData | null> {
+): Promise<TelegramAuthNote | null> {
   return new Promise(async (resolve, reject) => {
     const query = `
         SELECT "user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date"
         FROM "telegram_personal" WHERE "user_id" = '${id}';
         `;
-    try {
-      const result = await connection.query(query);
-      if (result.rows.length > 0) {
-        const data: TelegramAuthData = {
-          id: Number(result.rows.user_id),
-          first_name: result.first_name,
-          last_name: result.last_name,
-          username: result.username,
-          hash: result.last_auth_hash,
-          auth_date: Number(result.last_auth_date),
-        };
-        return data;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      console.log(e.message);
-      return null;
-    }
+    const result = await Q(query);
+    resolve(result && result.length > 0 ? {
+      id: Number(result[0].user_id),
+      first_name: result[0].first_name,
+      last_name: result[0].last_name,
+      username: result[0].username,
+      hash: result[0].last_auth_hash,
+      auth_date: Number(result[0].last_auth_date),
+      chat_id: result[0].chat_id || 0
+    } : null);
+    return;
   });
 }
 
@@ -82,40 +66,22 @@ export async function GetPersonalDataByUsername(
           SELECT "user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date", "chat_id"
           FROM "telegram_personal" WHERE "username" = '${username}';
           `;
-
-    try {
-      const result = await connection.query(query);
-      if (result.rows.length > 0) {
-        const data: TelegramAuthNote = {
-          id: Number(result.rows[0].user_id),
-          first_name: result.rows[0].first_name,
-          last_name: result.rows[0].last_name,
-          username: result.rows[0].username,
-          hash: result.rows[0].last_auth_hash,
-          auth_date: Number(result.rows[0].last_auth_date),
-          chat_id: result.rows[0].chat_id || 0
-        };
-        resolve(data);
-      } else {
-        resolve(null);
-      }
-    } catch (e) {
-      console.log(e.message);
-      resolve(null);
-    }
+          const result = await Q(query);
+          resolve(result && result.length > 0 ? {
+            id: Number(result[0].user_id),
+            first_name: result[0].first_name,
+            last_name: result[0].last_name,
+            username: result[0].username,
+            hash: result[0].last_auth_hash,
+            auth_date: Number(result[0].last_auth_date),
+            chat_id: result[0].chat_id || 0
+          } : null);
+          return;
   });
 }
 
 export async function GetUserTransactions (login: string) {
   const query = `SELECT * FROM "resource_txn_log" WHERE "userlogin" = '${login.toLowerCase()}' ORDER BY "time" DESC;`;
-  const result: tgUserTxnData[] = [];
-  try {
-    const txns = await connection.query(query);
-    txns.rows.forEach((r: tgUserTxnData) => {
-      result.push(r)
-    })
-  } catch (e) {
-    console.log(e.message);
-  }
-  return result;
+  const txns = await Q(query);
+  return txns && txns.length > 0 ? txns : []
 }

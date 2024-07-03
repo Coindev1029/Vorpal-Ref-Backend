@@ -20,11 +20,11 @@ pool.on('error', (err) => {
   process.exit(-1);
 });
 
-export async function Q(query: string, withReturn?: boolean): Promise<any> {
+export async function Q(query: string, withReturn: boolean = true): Promise<any[] | null> {
   const client = await pool.connect();
   try {
     const result = await client.query(query);
-    return withReturn ? result.rows : true;
+    return withReturn ? result.rows : [true];
   } catch (e) {
     console.error(e.message);
     console.error(query);
