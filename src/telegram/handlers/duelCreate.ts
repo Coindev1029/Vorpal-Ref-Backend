@@ -67,9 +67,7 @@ export const DuelCreationHandler = async (
     return;
   } */
   const dateSec = Math.round(new Date().getTime() / 1000);
-  const userLastDuel = await GetDuelDataByUser(
-    String(linkAuthDataPrev.id),
-  );
+  const userLastDuel = await GetDuelDataByUser(String(linkAuthDataPrev.id));
   if (!userLastDuel) {
     await CreateDuel(String(linkAuthDataPrev.id), '');
   } else {
@@ -81,7 +79,7 @@ export const DuelCreationHandler = async (
       userLastDuel.login1 &&
       userLastDuel.login2
     ) {
-      console.log("Duel not created, already exists")
+      console.log('Duel not created, already exists');
       SendMessageWithSave(bot, chatId, messages.duelAlready);
       return;
     }
@@ -89,19 +87,20 @@ export const DuelCreationHandler = async (
       console.log('Finish duel case 3');
       await FinishDuel(userLastDuel.duel_id, '');
     }
-    const duelId = await CreateDuel(
-      String(linkAuthDataPrev.id),
-      '',
-    );
+    const duelId = await CreateDuel(String(linkAuthDataPrev.id), '');
     console.log('Created, id: ', duelId);
   }
 
-  await SendMessageWithSave(bot, chatId, messages.duelToForward).then(()=> {
+  await SendMessageWithSave(bot, chatId, messages.duelToForward).then(() => {
     SendPhotoWithSave(
       bot,
       chatId,
       invitePhotoPath,
-      messages.duelInvitation(String(linkAuthDataPrev.username || linkAuthDataPrev.first_name || ""), linkAuthDataPrev.username ? true : false),
+      messages.duelInvitation(
+        String(linkAuthDataPrev.username || linkAuthDataPrev.first_name || ''),
+        linkAuthDataPrev.id,
+        linkAuthDataPrev.username ? true : false,
+      ),
       true,
       {
         parse_mode: 'HTML',
@@ -110,6 +109,6 @@ export const DuelCreationHandler = async (
       SendMessageWithSave(bot, chatId, messages.duelCancelDescript, {
         reply_markup: InlineKeyboard(['duelCancel']),
       });
-    })
-  })
+    });
+  });
 };
