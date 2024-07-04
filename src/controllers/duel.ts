@@ -252,13 +252,14 @@ export const AcceptDuelResponce = async (req: Request, res: Response) => {
         });
         return;
       }
-      if (duel.login2 || duel.login1?.toLowerCase() === user.toLowerCase()) {
+      if (duel.login2 || String(duel.login1) === String(user)) {
         res.status(400).send({
           success: false,
           error: "Duel is already busy"
         });
         return;
       }
+      console.log("Invited user: ", user)
       await AddDuelOpponent(duel.duel_id, user || '');
       const opponentData = await GetPersonalDataByUsername(inviter);
       if (opponentData) {
