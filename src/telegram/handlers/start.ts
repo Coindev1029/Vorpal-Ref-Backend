@@ -34,12 +34,12 @@ export const StartHandler = async (bot: TelegramBot, msg: TelegramBot.Message, m
       console.log(e.message);
     }
 
-    if (!linkAuthDataPrev.username) {
+    /* if (!linkAuthDataPrev.username) {
       SendMessageWithSave(bot, chatId, messages.noUsername);
       return;
-    }
+    } */
 
-    const isInDuel = await IsUserInDuel(linkAuthDataPrev.username) 
+    const isInDuel = await IsUserInDuel(String(linkAuthDataPrev.id)) 
       if (isInDuel) {
         SendMessageWithSave(bot, chatId, messages.duelAlready);
         return;

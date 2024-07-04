@@ -62,16 +62,16 @@ export const DuelCreationHandler = async (
 
   console.log('Duel from user: ', linkAuthDataPrev);
 
-  if (!linkAuthDataPrev.username) {
+  /* if (!linkAuthDataPrev.username) {
     SendMessageWithSave(bot, chatId, messages.noUsername);
     return;
-  }
+  } */
   const dateSec = Math.round(new Date().getTime() / 1000);
   const userLastDuel = await GetDuelDataByUser(
-    linkAuthDataPrev.username?.toLowerCase(),
+    String(linkAuthDataPrev.id),
   );
   if (!userLastDuel) {
-    await CreateDuel(linkAuthDataPrev.username?.toLowerCase(), '');
+    await CreateDuel(String(linkAuthDataPrev.id), '');
   } else {
     const isFinished = userLastDuel.isfinished;
     const creation = Number(userLastDuel.creation);
@@ -90,7 +90,7 @@ export const DuelCreationHandler = async (
       await FinishDuel(userLastDuel.duel_id, '');
     }
     const duelId = await CreateDuel(
-      linkAuthDataPrev.username?.toLowerCase(),
+      String(linkAuthDataPrev.id),
       '',
     );
     console.log('Created, id: ', duelId);

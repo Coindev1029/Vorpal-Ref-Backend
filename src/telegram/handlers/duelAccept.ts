@@ -45,33 +45,35 @@ export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) 
 
     const inviterLogin = match[1]?.toLowerCase();
 
+    const inviterId = (await GetPersonalDataByUsername (inviterLogin))?.id;
+
     try {
-      SetPersonalData(linkAuthDataPrev, chatId, inviterLogin || '');
+      SetPersonalData(linkAuthDataPrev, chatId, String(inviterId || ""));
     } catch (e) {
       console.log(e.message);
     }
 
     await SendSubscribeMessage(linkAuthDataPrev.id, chatId);
 
-    if (!msg.from.username) {
+    /* if (!msg.from.username) {
       SendMessageWithSave(bot, chatId, messages.noUsername);
       return;
-    }
+    } */
 
-    if (!inviterLogin) {
+    if (!inviterId) {
       SendMessageWithSave(bot, chatId, messages.noInviter, {
         reply_markup: InlineKeyboard(['duel']),
       });
       return;
     }
 
-    if (inviterLogin === linkAuthDataPrev.username) {
+    if (inviterId === linkAuthDataPrev.id) {
       SendMessageWithSave(bot, chatId, messages.inviteSelf);
       return;
     }
 
-    const createdDuel = inviterLogin
-      ? await GetDuelDataByInviter(inviterLogin)
+    const createdDuel = inviterId
+      ? await GetDuelDataByInviter(String(inviterId))
       : null;
 
     if (!createdDuel) {
@@ -105,7 +107,7 @@ export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) 
 
     if (
       (createdDuel.login2 &&
-        createdDuel.login2 !== linkAuthDataPrev.username?.toLowerCase()) ||
+        createdDuel.login2 !== String(linkAuthDataPrev.id)) ||
       createdDuel.isexpired ||
       createdDuel.isfinished ||
       timeNow - createdDuel.creation > duel_lifetime
@@ -116,12 +118,12 @@ export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) 
       return;
     }
 
-    await AddDuelOpponent(createdDuel.duel_id, linkAuthDataPrev.username || '');
+    await AddDuelOpponent(createdDuel.duel_id, String(linkAuthDataPrev.id));
     SendMessageWithSave(bot, chatId, messages.duelAccept(inviterLogin), {
       reply_markup: InlineKeyboard(['duelConfirm', 'duelRefuse'], inviterLogin),
     });
 
-    const opponentData = await GetPersonalDataByUsername(inviterLogin);
+    const opponentData = await GetPersonalDataByUsername(String(inviterId));
     if (opponentData) {
       try {
         SendMessageWithSave(

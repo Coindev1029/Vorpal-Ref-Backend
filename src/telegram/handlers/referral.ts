@@ -50,12 +50,12 @@ export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.C
 export const ReferralStatsHandler = async (bot: TelegramBot, query: TelegramBot.Message) => {
 
   if (!query?.from) return;
-  if (!query?.from.username){
+  /* if (!query?.from.username){
    SendMessageWithSave (bot, query.chat.id, messages.noUsername);
    return;
-  }
+  } */
 
-  const refCounts = await GetReferralCount(query.from.username);
+  const refCounts = await GetReferralCount(String(query.from.id));
   const historyText = `
      <b>Level1: ${refCounts.level1}</b>
      <b>Level2: ${refCounts.level2}</b>
