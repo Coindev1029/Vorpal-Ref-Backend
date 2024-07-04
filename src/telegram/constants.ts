@@ -48,13 +48,13 @@ export const messages = {
        Duel created! 
        Now to challenge a friend share him the next message with your link below:
     `,
-    duelInvitation: (inviter: string) => {
+    duelInvitation: (inviter: string, isUsername = false) => {
       const deepLink = `${inviteLink}${inviter?.replace(
         ' ',
         '',
       )}`;
       const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}/${webAppName}?startapp=inviterId_${inviter?.replace(' ', '')}`;
-      return `@${inviter} challenging you to Star Defender duel: <a href="${startappLink}">Accept</a>` // <a href="${startappLink}">Accept</a>
+      return `${isUsername ? `@${inviter}` : inviter} challenging you to Star Defender duel: <a href="${startappLink}">Accept</a>` // <a href="${startappLink}">Accept</a>
     },
     duelAccept:  (inviter: string) => `
       Welcome to a Star defender! 

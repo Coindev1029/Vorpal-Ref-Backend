@@ -101,7 +101,7 @@ export const DuelCreationHandler = async (
       bot,
       chatId,
       invitePhotoPath,
-      messages.duelInvitation(String(linkAuthDataPrev.id|| "")),
+      messages.duelInvitation(String(linkAuthDataPrev.username || linkAuthDataPrev.first_name || ""), linkAuthDataPrev.username ? true : false),
       true,
       {
         parse_mode: 'HTML',
