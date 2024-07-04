@@ -36,10 +36,10 @@ export async function WriteReferralStats(data: {
 }
 
 export async function GetReferralList(inviter: string): Promise<string[]> {
-  const query = `SELECT "username" FROM "telegram_personal" WHERE "inviter" = '${inviter}';`;
+  const query = `SELECT "user_id", "username", "first_name", "last_name" FROM "telegram_personal" WHERE "inviter" = '${inviter}';`;
   const result = await Q(query);
   return result ? result.map((row) => {
-    return row.username
+    return String(row.id || ``)
   }) : []
 }
 

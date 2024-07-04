@@ -28,10 +28,10 @@ export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) 
   const chatId = msg.chat.id;
   console.log('Match params', match);
   try {
-    if (!msg.from.username) {
+    /* if (!msg.from.username) {
       SendMessageWithSave(bot, chatId, messages.noUsername);
       return;
-    }
+    } */
     SaveMessage(chatId, msg.message_id);
 
     const linkAuthDataPrev: TelegramAuthData = {
@@ -129,7 +129,7 @@ export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) 
         SendMessageWithSave(
           bot,
           opponentData.chat_id,
-          messages.duelAcceptNotify(linkAuthDataPrev.username || ''),
+          messages.duelAcceptNotify(linkAuthDataPrev.username || linkAuthDataPrev.first_name || ''),
           { reply_markup: InlineKeyboard(['duelConfirm']) },
         );
       } catch (e) {

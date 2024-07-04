@@ -26,7 +26,7 @@ export const duelCancelAction = async (
     return;
   }
   const chatId = query.message.chat.id;
-  const sender: string = query?.from?.username || '';
+  const sender: string = String(query?.from?.id || '');
   if (sender) {
     const duel = await GetDuelDataByUser(sender.toLowerCase());
     console.log('Cancelled duel: ', duel);
@@ -75,12 +75,12 @@ export const duelAcceptAction = async (
     bot.sendMessage(query.message.chat.id, messages.duelNotFound);
     return;
   }
-  const player = query?.message?.from?.username || '';
+  const player = String(query?.message?.from?.id || '');
 
-  if (!player) {
+  /* if (!player) {
     bot.sendMessage(query.message.chat.id, messages.noUsername);
     return;
-  }
+  } */
 
   await AddDuelOpponent(duel.duel_id, player);
   bot.sendMessage(query.message.chat.id, messages.duelComfirmed);
@@ -149,11 +149,11 @@ export const TxnHistoryAction = async (
 ) => {
   console.log('History requested');
   if (!query.message) return;
-  if (!query.from.username) {
+  if (!query.from) {
     SendMessageWithSave(bot, query.message.chat.id, messages.noUsername);
     return;
-  }
-  const transactions = await GetUserTransactions(query.from.username);
+  } 
+  const transactions = await GetUserTransactions(String(query.from?.id || ""));
   const historyText = `<b>Your transactions:</b>\n ${transactions.map((txn) => {
     console.log('Find txn: ', txn);
     return `${txn.resource} ${txn.amount} ${txn.reason}\n`;

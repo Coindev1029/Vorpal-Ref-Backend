@@ -51,7 +51,7 @@ export const UniversalAuth = async (req: Request, res: Response) => {
             const userDecoded = decodeURIComponent(userEncoded);
             const parsedData = JSON.parse(userDecoded);
             console.log("Parsed: ", parsedData);
-            return parsedData.username || parsedData.id
+            return parsedData.id
         } catch (e) {
             console.log(e);
             return null;
@@ -59,6 +59,6 @@ export const UniversalAuth = async (req: Request, res: Response) => {
     }
 
     if (body.telegramData) {
-       return CheckTelegramAuth(body.telegramData).success ? body.telegramData.username || body.telegramData.id : null
+       return CheckTelegramAuth(body.telegramData).success ? body.telegramData.id : null
     }
 }

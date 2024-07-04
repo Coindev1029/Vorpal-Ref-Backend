@@ -49,7 +49,7 @@ export const CheckAvailableResponce = async (req: Request, res: Response) => {
 export const BuyResponce = async (req: Request, res: Response) => {
     const body = req.body;
     console.log("Buy request body: ", req.body);
-    if (!body.telegramData || !body.telegramData.hash || !body.telegramData.username) {
+    if (!body.telegramData || !body.telegramData.hash || !body.telegramData.id) {
         res.status(400).send(JSON.stringify({error: "Auth data wrong or not provided"}))
     }
     if (!body.itemId || !body.amount) {
@@ -63,6 +63,6 @@ export const BuyResponce = async (req: Request, res: Response) => {
     if (!auth.success) {
         res.status(403).send(JSON.stringify({error: "Auth failed"}))
     }
-    const buy = await BuyItem (body.telegramData.username, body.itemId, body.amount);
+    const buy = await BuyItem (String(body.telegramData.id), body.itemId, body.amount);
     res.status(200).send(JSON.stringify(buy));
 }
