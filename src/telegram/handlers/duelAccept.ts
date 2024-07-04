@@ -9,7 +9,7 @@ import {
   GetDuelDataByInviter,
   GetDuelDataByUser,
   GetOpponent,
-  GetPersonalDataByUsername,
+  GetPersonalDataById,
   SetPersonalData,
 } from '../../models/telegram';
 import {
@@ -45,7 +45,7 @@ export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) 
 
     const inviterLogin = match[1]?.toLowerCase();
 
-    const inviterId = (await GetPersonalDataByUsername (inviterLogin))?.id;
+    const inviterId = (await GetPersonalDataById (inviterLogin))?.id;
 
     try {
       SetPersonalData(linkAuthDataPrev, chatId, String(inviterId || ""));
@@ -123,7 +123,7 @@ export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) 
       reply_markup: InlineKeyboard(['duelConfirm', 'duelRefuse'], inviterLogin),
     });
 
-    const opponentData = await GetPersonalDataByUsername(String(inviterId));
+    const opponentData = await GetPersonalDataById(inviterId);
     if (opponentData) {
       try {
         SendMessageWithSave(

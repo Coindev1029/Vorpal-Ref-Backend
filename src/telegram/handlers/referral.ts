@@ -4,7 +4,6 @@ import {
   FinishDuel,
   GetDuelDataByUser,
   GetOpponent,
-  GetPersonalDataByUsername,
   GetUserTransactions,
   RemoveDuelOpponent,
 } from '../../models/telegram';

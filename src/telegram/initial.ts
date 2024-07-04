@@ -10,7 +10,7 @@ import { MarkupKeyboard } from './handlers/keyboard';
 import { NotABusyRegex } from '../utils/text';
 import { ReferralStatsAction, ReferralStatsHandler } from './handlers/referral';
 import { SetupBotMenuCommands } from './cmdSetup';
-import { GetPersonalDataByUsername } from '../models/telegram';
+import { GetPersonalDataById, GetPersonalDataByUsername } from '../models/telegram';
 
 
 export function TelegramBotLaunch() {
@@ -45,7 +45,6 @@ export function TelegramBotLaunch() {
   bot.onText(/\/start(?:\?startapp=([^]+))?/, async (msg, match) => {
     console.log("Start app called")
     const inviterLogin = match ? match[1] : "" // Если inviterId присутствует в ссылке, он будет доступен здесь
-    const inviterId = (await GetPersonalDataByUsername (inviterLogin))?.id;
     if (inviterLogin) {
         bot.sendMessage(msg.chat.id, `You have invited by: ${inviterLogin}`);
     } 

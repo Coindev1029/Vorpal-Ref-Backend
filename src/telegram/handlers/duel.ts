@@ -5,7 +5,7 @@ import {
   FinishDuel,
   GetDuelDataByUser,
   GetOpponent,
-  GetPersonalDataByUsername,
+  GetPersonalDataById,
   GetUserTransactions,
   RemoveDuelOpponent,
 } from '../../models/telegram';
@@ -85,7 +85,7 @@ export const duelAcceptAction = async (
   await AddDuelOpponent(duel.duel_id, player);
   bot.sendMessage(query.message.chat.id, messages.duelComfirmed);
   if (inviter && player) {
-    const opponentData = await GetPersonalDataByUsername(inviter);
+    const opponentData = await GetPersonalDataById(Number(inviter));
 
     if (opponentData) {
       SendMessageWithSave(
@@ -106,14 +106,14 @@ export const duelRefuseAction = async (
     console.log('Chat not found');
     return;
   }
-  const caller = query?.from?.username?.toLowerCase();
+  const caller = query?.from?.id;
   if (!caller || !query.from || !query.from.username) {
     return;
   }
 
-  const duelOpponent = ((await GetOpponent(caller)) || inviter).toLowerCase();
-  const opponentData = await GetPersonalDataByUsername(duelOpponent);
-  const duelData = await GetDuelDataByUser (caller);
+  const duelOpponent = ((await GetOpponent(String(caller))) || inviter);
+  const opponentData = await GetPersonalDataById(Number(duelOpponent));
+  const duelData = await GetDuelDataByUser (String(caller));
 
   if (opponentData) {
 
@@ -134,7 +134,7 @@ export const duelRefuseAction = async (
       messages.duelCancelYouNotify(opponentData.username || opponentData.first_name),
     );
 
-    const removeResult = await RemoveDuelOpponent(caller);
+    const removeResult = await RemoveDuelOpponent(String(caller));
 
     SendMessageWithSave(bot, query.message.chat.id, messages.duelRefused, {
       reply_markup: InlineKeyboard(['duel']),
