@@ -15,7 +15,7 @@ import {
 } from '../models/telegram/duel';
 import Web3 from 'web3';
 import { UniversalAuth } from './common';
-import { GetPersonalDataByUsername } from '../models/telegram';
+import { GetPersonalDataById, GetPersonalDataByUsername } from '../models/telegram';
 import { SendMessageWithSave } from '../telegram/handlers/utils';
 import { bot } from '../telegram/bot';
 import { messages } from '../telegram/constants';
@@ -261,7 +261,7 @@ export const AcceptDuelResponce = async (req: Request, res: Response) => {
       }
       console.log("Invited user: ", user)
       await AddDuelOpponent(duel.duel_id, user || '');
-      const opponentData = await GetPersonalDataByUsername(inviter);
+      const opponentData = await GetPersonalDataById(Number(inviter));
       if (opponentData) {
         await SendMessageWithSave (bot, opponentData.chat_id, messages.duelAcceptNotify(user || ''),
         { reply_markup: InlineKeyboard(['duelConfirm']) },)
