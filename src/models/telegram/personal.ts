@@ -42,7 +42,7 @@ export async function GetPersonalDataById(
   return new Promise(async (resolve, reject) => {
     const query = `
         SELECT "user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date"
-        FROM "telegram_personal" WHERE "user_id" = ${id};
+        FROM "telegram_personal" WHERE "user_id" = '${id}';
         `;
     const result = await Q(query);
     resolve(result && result.length > 0 ? {
@@ -52,7 +52,7 @@ export async function GetPersonalDataById(
       username: result[0].username,
       hash: result[0].last_auth_hash,
       auth_date: Number(result[0].last_auth_date),
-      chat_id: result[0].chat_id || 0
+      chat_id: Number(result[0].chat_id || 0)
     } : null);
     return;
   });
