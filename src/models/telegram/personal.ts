@@ -41,7 +41,7 @@ export async function GetPersonalDataById(
 ): Promise<TelegramAuthNote | null> {
   return new Promise(async (resolve, reject) => {
     const query = `
-        SELECT "user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date"
+        SELECT "user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date", "chat_id"
         FROM "telegram_personal" WHERE "user_id" = '${id}';
         `;
     const result = await Q(query);
