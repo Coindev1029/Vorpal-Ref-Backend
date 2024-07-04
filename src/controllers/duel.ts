@@ -243,7 +243,7 @@ export const AcceptDuelResponce = async (req: Request, res: Response) => {
     try {
       const dateSec = Math.round(new Date().getTime() / 1000);
       const duel = await GetDuelDataByUser(
-        inviter.toLowerCase(),
+        String(inviter),
       );
       if (!duel ||  duel.isfinished ||  dateSec - duel.creation > duel_lifetime) {
         res.status(400).send({
