@@ -262,6 +262,7 @@ export const AcceptDuelResponce = async (req: Request, res: Response) => {
       console.log("Invited user: ", user)
       await AddDuelOpponent(duel.duel_id, user || '');
       const opponentData = await GetPersonalDataById(Number(inviter));
+      console.log("Opponent data: ", opponentData);
       if (opponentData) {
         await SendMessageWithSave (bot, opponentData.chat_id, messages.duelAcceptNotify(user || ''),
         { reply_markup: InlineKeyboard(['duelConfirm']) },)

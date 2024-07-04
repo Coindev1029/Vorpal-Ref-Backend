@@ -42,7 +42,7 @@ export async function GetPersonalDataById(
   return new Promise(async (resolve, reject) => {
     const query = `
         SELECT "user_id", "first_name", "last_name", "username", "last_auth_hash", "last_auth_date"
-        FROM "telegram_personal" WHERE "user_id" = '${id}';
+        FROM "telegram_personal" WHERE "user_id" = ${id};
         `;
     const result = await Q(query);
     resolve(result && result.length > 0 ? {
