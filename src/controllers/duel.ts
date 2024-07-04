@@ -34,7 +34,7 @@ export const IsUserInDuelResponce = async (req: Request, res: Response) => {
     return;
   }
 
-  const data = await IsUserInDuel(req.params.login.toLowerCase());
+  const data = await IsUserInDuel(String(req.params.login).toLowerCase());
   res.status(200).send(JSON.stringify({ inDuel: data }));
   return;
 };

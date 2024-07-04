@@ -77,7 +77,7 @@ export async function RemoveDuelOpponent(login: string) {
 export async function GetDuelDataByUser(
   login: string,
 ): Promise<DuelInfo | null> {
-  const filteredLogin = login.toLowerCase();
+  const filteredLogin = String(login).toLowerCase();
   const query = `SELECT "duel_id", "login1", "login2", "creation", "isfinished", "winner" FROM "duels" 
   WHERE "login1" = '${filteredLogin}' OR "login2" = '${filteredLogin}' ORDER BY "creation" DESC LIMIT 1;`;
   const result = await Q(query);
@@ -87,7 +87,7 @@ export async function GetDuelDataByUser(
 export async function GetDuelDataByInviter(
   login: string,
 ): Promise<DuelInfo | null> {
-  const filteredLogin = login.toLowerCase();
+  const filteredLogin = String(login).toLowerCase();
   const query = `SELECT "duel_id", "login1", "login2", "creation", "isfinished", "winner" FROM "duels" 
   WHERE "login1" = '${filteredLogin}' ORDER BY "creation" DESC LIMIT 1;`;
   const result = await Q(query);
@@ -96,7 +96,7 @@ export async function GetDuelDataByInviter(
 
 export async function FinishDuel(duelId: string, winner: string) {
   console.log('Finish duel called');
-  const filteredLogin = winner.toLowerCase();
+  const filteredLogin = String(winner).toLowerCase();
   const query = `UPDATE "duels" SET isfinished = true, isexpired = true, winner = '${filteredLogin}' WHERE "duel_id" = '${duelId}';`;
   const result = await Q(query, false);
   return result ? true : null;
@@ -110,8 +110,8 @@ export async function DeleteDuel(duelId: string) {
 }
 
 export async function CreateDuel(login1: string, login2: string = '') {
-  const fLogin1 = login1.toLowerCase();
-  const fLogin2 = login2.toLowerCase();
+  const fLogin1 = String(login1).toLowerCase();
+  const fLogin2 = String(login2).toLowerCase();
   if (!fLogin1) {
     console.log('Try to create duel without inviter');
     return null;
