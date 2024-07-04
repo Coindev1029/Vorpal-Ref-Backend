@@ -116,17 +116,17 @@ export const duelRefuseAction = async (
   const duelData = await GetDuelDataByUser (caller);
 
   if (opponentData) {
-    if (opponentData.username) {
+
       try {
-        NotifyDuelFinishFor(opponentData.username, duelData?.duel_id || "");
+        NotifyDuelFinishFor(String(opponentData.id), duelData?.duel_id || "");
       } catch (e) {
         console.log("Notify err");
       } 
-    }
+
     SendMessageWithSave(
       bot,
       opponentData.chat_id,
-      messages.duelCancelOpponentNotify(query.from.username),
+      messages.duelCancelOpponentNotify(String(query.from.id)),
     );
     SendMessageWithSave(
       bot,
