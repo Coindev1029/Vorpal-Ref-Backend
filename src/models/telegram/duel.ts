@@ -16,7 +16,7 @@ export async function GetOnlineCount() {
 }
 
 export async function AddDuelOpponent(duelId: string, login: string) {
-  const query = `UPDATE "duels" SET "login2" = '${login.toLowerCase()}' WHERE "duel_id" = '${duelId}';`;
+  const query = `UPDATE "duels" SET "login2" = '${login}' WHERE "duel_id" = '${duelId}';`;
   const result = await Q(query, false);
   return result ? true : false;
 }
