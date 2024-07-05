@@ -15,7 +15,10 @@ import {
 } from '../models/telegram/duel';
 import Web3 from 'web3';
 import { UniversalAuth } from './common';
-import { GetPersonalDataById, GetPersonalDataByUsername } from '../models/telegram';
+import {
+  GetPersonalDataById,
+  GetPersonalDataByUsername,
+} from '../models/telegram';
 import { SendMessageWithSave } from '../telegram/handlers/utils';
 import { bot } from '../telegram/bot';
 import { messages } from '../telegram/constants';
@@ -85,7 +88,7 @@ export const DuelDataByLoginResponce = async (req: Request, res: Response) => {
 };
 
 export const FinishDuelResponce = async (req: Request, res: Response) => {
-  console.log("Duel finish requested")
+  console.log('Duel finish requested');
   const body = req.body;
   if (!body.duelId || !body.signature) {
     res.status(400).send({
@@ -95,7 +98,7 @@ export const FinishDuelResponce = async (req: Request, res: Response) => {
   const msg = GetSignableMessage();
   const address = web3.eth.accounts.recover(msg, body.signature).toLowerCase();
   const adminAddress = await GetValueByKey('ADMIN_WALLET');
-  console.log("Finish duel request received for: ", body.duelId);
+  console.log('Finish duel request received for: ', body.duelId);
 
   if (address !== adminAddress.toLowerCase()) {
     res.status(403).send({
@@ -104,7 +107,7 @@ export const FinishDuelResponce = async (req: Request, res: Response) => {
     return;
   }
 
-  const isFinished = (await GetDuelData (body.duelId))?.isfinished;
+  const isFinished = (await GetDuelData(body.duelId))?.isfinished;
 
   if (isFinished) {
     res.status(400).send({
@@ -113,14 +116,17 @@ export const FinishDuelResponce = async (req: Request, res: Response) => {
     return;
   }
 
-  const result = await FinishDuel(body.duelId, body.winner?.toLowerCase() || "");
+  const result = await FinishDuel(
+    body.duelId,
+    body.winner?.toLowerCase() || '',
+  );
 
   res.status(200).send(JSON.stringify({ result: result }));
   return;
 };
 
 export const DuelDeletionResponce = async (req: Request, res: Response) => {
-  console.log("Duel delete requested")
+  console.log('Duel delete requested');
   const body = req.body;
   if (!body.duelId || !body.signature) {
     res.status(400).send({
@@ -128,29 +134,26 @@ export const DuelDeletionResponce = async (req: Request, res: Response) => {
     });
   }
   const msg = GetSignableMessage();
-    const address = web3.eth.accounts.recover(msg, body.signature)
-    .toLowerCase();
-    const adminAddress = await GetValueByKey("ADMIN_WALLET");
-  
-    if (address !== adminAddress.toLowerCase()) {
-       res.status(403).send({
-        error: "Invalid signature",
-      });
-       return;
-    }
+  const address = web3.eth.accounts.recover(msg, body.signature).toLowerCase();
+  const adminAddress = await GetValueByKey('ADMIN_WALLET');
 
-    try {
-
-    } catch (e: any) {
-      console.log(e.message)
-    }
-
-    const result = await DeleteDuel(body.duelId);
-    res.status(200).send({
-      deleted: result,
+  if (address !== adminAddress.toLowerCase()) {
+    res.status(403).send({
+      error: 'Invalid signature',
     });
+    return;
+  }
 
-}
+  try {
+  } catch (e: any) {
+    console.log(e.message);
+  }
+
+  const result = await DeleteDuel(body.duelId);
+  res.status(200).send({
+    deleted: result,
+  });
+};
 
 export const RewardConditionResponce = async (req: Request, res: Response) => {
   const body = req.body;
@@ -161,31 +164,34 @@ export const RewardConditionResponce = async (req: Request, res: Response) => {
     return;
   }
   try {
-    const duelCount = await GetDuelPairCount(body.login1.toLowerCase(), body.login2.toLowerCase());
+    const duelCount = await GetDuelPairCount(
+      body.login1.toLowerCase(),
+      body.login2.toLowerCase(),
+    );
     res.status(200).send({
-      reward: duelCount <= 1 ? true: false,
+      reward: duelCount <= 1 ? true : false,
     });
   } catch (e) {
-    console.log(e.message)
+    console.log(e.message);
     res.status(501).send({
-      error: "Failed to get count"
+      error: 'Failed to get count',
     });
   }
   return;
-}
+};
 
 export const OnlineCountResponce = async (req: Request, res: Response) => {
   try {
     const count = await GetOnlineCount();
     res.status(200).send({
-      count
+      count,
     });
   } catch (e) {
     res.status(501).send({
-      error: "Count is not defined"
+      error: 'Count is not defined',
     });
   }
-}
+};
 
 export const UpdateOnlineCount = async (req: Request, res: Response) => {
   const body = req.body;
@@ -215,66 +221,71 @@ export const UpdateOnlineCount = async (req: Request, res: Response) => {
     return;
   }
 
-  const result = await SetOnlineCount (count);
+  const result = await SetOnlineCount(count);
 
   res.status(200).send({
     saved: result,
   });
   return;
-}
+};
 
-export const AcceptDuelResponce = async (req: Request, res: Response) => { 
-    console.log("Duel accept called")
-    const user = await UniversalAuth (req, res);
-    console.log(user)
-    if (!user) {
-      console.log("401")
-      res.status(401).send({ error: "Unauthorized"});
+export const AcceptDuelResponce = async (req: Request, res: Response) => {
+  console.log('Duel accept called');
+  const user = await UniversalAuth(req, res);
+  console.log(user);
+  if (!user) {
+    console.log('401');
+    res.status(401).send({ error: 'Unauthorized' });
+    return;
+  }
+  if (!req.body.inviter) {
+    console.log('400');
+    res.status(400).send({ error: 'Duel creator not in the query' });
+    return;
+  }
+
+  const inviter = req.body.inviter;
+  console.log('200');
+  try {
+    const dateSec = Math.round(new Date().getTime() / 1000);
+    const duel = await GetDuelDataByUser(String(inviter));
+    if (!duel || duel.isfinished || dateSec - duel.creation > duel_lifetime) {
+      res.status(400).send({
+        success: false,
+        error: 'Duel not found or expired',
+      });
       return;
     }
-    if (!req.body.inviter) {
-      console.log("400")
-      res.status(400).send({ error: "Duel creator not in the query"});
+    if (duel.login2 || String(duel.login1) === String(user)) {
+      res.status(400).send({
+        success: false,
+        error: 'Duel is already busy',
+      });
       return;
     }
-
-    const inviter = req.body.inviter
-    console.log("200")
-    try {
-      const dateSec = Math.round(new Date().getTime() / 1000);
-      const duel = await GetDuelDataByUser(
-        String(inviter),
+    console.log('Invited user: ', user);
+    await AddDuelOpponent(duel.duel_id, user || '');
+    const userData = await GetPersonalDataById(Number(user));
+    const opponentData = await GetPersonalDataById(Number(inviter));
+    console.log('Opponent data: ', opponentData);
+    if (opponentData) {
+      await SendMessageWithSave(
+        bot,
+        opponentData.chat_id,
+        messages.duelAcceptNotify(
+          userData?.username || userData?.first_name || 'Anonimous',
+          userData?.username ? true : false,
+        ),
+        { reply_markup: InlineKeyboard(['duelConfirm']) },
       );
-      if (!duel ||  duel.isfinished ||  dateSec - duel.creation > duel_lifetime) {
-        res.status(400).send({
-          success: false,
-          error: "Duel not found or expired"
-        });
-        return;
-      }
-      if (duel.login2 || String(duel.login1) === String(user)) {
-        res.status(400).send({
-          success: false,
-          error: "Duel is already busy"
-        });
-        return;
-      }
-      console.log("Invited user: ", user)
-      await AddDuelOpponent(duel.duel_id, user || '');
-      const opponentData = await GetPersonalDataById(Number(inviter));
-      console.log("Opponent data: ", opponentData);
-      if (opponentData) {
-        await SendMessageWithSave (bot, opponentData.chat_id, messages.duelAcceptNotify(user || ''),
-        { reply_markup: InlineKeyboard(['duelConfirm']) },)
-      }
-      res.status(200).send({
-        success: true,
-        error: ''
-      })
-    } catch (e) {
-      console.log(e.message);
-      res.status(500).send({ errpr: "Duel creator not in the query"});
-      return;
     }
-
-}
+    res.status(200).send({
+      success: true,
+      error: '',
+    });
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).send({ errpr: 'Duel creator not in the query' });
+    return;
+  }
+};

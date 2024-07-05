@@ -26,7 +26,7 @@ export const BalanceAllResponce = async (req: Request, res: Response) => {
     const body = req.body
 
     if (!body.login) {
-        res.status(400).send("Nessesary parameters missed")
+        res.status(400).send({ error: "Nessesary parameters missed"})
     }
 
     const balance = await GetUserAllItemBalances (body.login);
