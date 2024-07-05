@@ -61,8 +61,8 @@ export const messages = {
       You now have a duel challenge with @${inviter}.
       Enter a starmap or cancel:
     `,
-    duelAcceptNotify: (user: string) => `
-      @${user} accepted your challenge. Enter game to start battle
+    duelAcceptNotify: (user: string, isUsername = true) => `
+      ${isUsername ? `@${user}` : user} accepted your challenge. Enter game to start battle
     `,
     duelNotFound: `
       Duel with your inviter not found. You can create a new one: 

@@ -86,12 +86,12 @@ export const duelAcceptAction = async (
   bot.sendMessage(query.message.chat.id, messages.duelComfirmed);
   if (inviter && player) {
     const opponentData = await GetPersonalDataById(Number(inviter));
-
+    const from = query?.message?.from
     if (opponentData) {
       SendMessageWithSave(
         bot,
         opponentData.chat_id,
-        messages.duelAcceptNotify(player),
+        messages.duelAcceptNotify(from?.username || from?.first_name || "Anonimous", from?.username ? true : false),
       );
     }
   }
