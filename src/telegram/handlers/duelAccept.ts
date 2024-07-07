@@ -129,7 +129,7 @@ export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) 
         SendMessageWithSave(
           bot,
           opponentData.chat_id,
-          messages.duelAcceptNotify(linkAuthDataPrev.username || linkAuthDataPrev.first_name || ''),
+          messages.duelAcceptNotify(linkAuthDataPrev.username || linkAuthDataPrev.first_name || '', linkAuthDataPrev.username ? true : false),
           { reply_markup: InlineKeyboard(['duelConfirm']) },
         );
       } catch (e) {
