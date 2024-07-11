@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CheckTelegramAuth } from "../utils/auth";
+import { CheckTelegramAuth, decodeTgInitData, ValidateByInitData } from "../utils/auth";
 import { BuyItem, GetStoreItems, GetUserAllItemBalances, GetUserItemBalance, IsItemAvailableToBuy } from "../models/telegram";
 
 export const GetStoreItemsResponce = async (req: Request, res: Response) => {
@@ -49,7 +49,7 @@ export const CheckAvailableResponce = async (req: Request, res: Response) => {
 export const BuyResponce = async (req: Request, res: Response) => {
     const body = req.body;
     console.log("Buy request body: ", req.body);
-    if (!body.telegramData || !body.telegramData.hash || !body.telegramData.id) {
+    if (!body.telegramInitData && !body.telegramData.id) {
         res.status(400).send(JSON.stringify({error: "Auth data wrong or not provided"}))
     }
     if (!body.itemId || !body.amount) {
@@ -58,11 +58,25 @@ export const BuyResponce = async (req: Request, res: Response) => {
     if (body.amount <= 0) {
         res.status(400).send(JSON.stringify({error: "Invalid amount"}))
     }
-    const auth = CheckTelegramAuth(body.telegramData);
-    console.log("Auth result on buy: ", auth);
-    if (!auth.success) {
-        res.status(403).send(JSON.stringify({error: "Auth failed"}))
+
+    try {
+        const telegramDataValidation = 
+        body.telegramInitData ? ValidateByInitData (body.telegramInitData) :
+        body.telegramData? CheckTelegramAuth(body.telegramData).success : null;
+    
+        const telegramUserId = String(body.telegramInitData ? decodeTgInitData(body.telegramInitData)?.user?.id: body.telegramData.id)
+        
+        // const auth = CheckTelegramAuth(body.telegramData);
+        // console.log("Auth result on buy: ", auth);
+    
+        if (!telegramDataValidation || !telegramUserId) {
+            res.status(403).send(JSON.stringify({error: "Auth failed"}))
+        }
+        const buy = await BuyItem (telegramUserId, body.itemId, body.amount);
+        res.status(200).send(JSON.stringify(buy));
+    } catch (e) {
+        console.log(e);
+        res.status(500).send(JSON.stringify({error: "Server error"}))
     }
-    const buy = await BuyItem (String(body.telegramData.id), body.itemId, body.amount);
-    res.status(200).send(JSON.stringify(buy));
+
 }

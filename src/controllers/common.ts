@@ -3,6 +3,7 @@ import { GetChannelSubscribeList } from "../telegram/handlers/subscribe";
 import { TelegramAuthData } from "../types"
 import { CheckTelegramAuth, GetSignableMessage, ValidateByInitData, getQueryParam } from "../utils/auth";
 import { web3 } from "./duel";
+import { GetValueByKey } from "../models/balances";
 
 export const AuthByTelegram = (req: Request, res: Response) => {
 
@@ -61,4 +62,21 @@ export const UniversalAuth = async (req: Request, res: Response) => {
     if (body.telegramData) {
        return CheckTelegramAuth(body.telegramData).success ? body.telegramData.id : null
     }
+}
+
+export const IsAdminBySignature = async (signature: string) => {
+    try {
+        const msg = GetSignableMessage();
+        const address = web3.eth.accounts.recover(msg, signature)
+        .toLowerCase();
+        const adminAddress = await GetValueByKey("ADMIN_WALLET");
+      
+        if (address !== adminAddress.toLowerCase()) {
+           return false;
+        }
+        return true
+      } catch (e: any) {
+        console.log(e)
+        return false;
+      }
 }

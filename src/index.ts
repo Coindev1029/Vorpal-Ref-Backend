@@ -2,6 +2,7 @@ import { TelegramBotLaunch } from './telegram';
 import { StartWatchingTimer } from './blockchain/Stars/watcher';
 import {
   AcceptDuelResponce,
+  addStats,
   AdminDataRequest,
   AdminSaveData,
   AdminUpdateUserData,
@@ -21,6 +22,9 @@ import {
   GetLinksByOwnerResponse,
   GetOwnerDataResponse,
   GetProjectData,
+  getSAggregateStatsByPalyer,
+  getStatsByDuel,
+  getStatsByPalyer,
   GetStoreItemsResponce,
   GetUserAvailableBoxes,
   GetUserResources,
@@ -149,6 +153,18 @@ app.post('/api/admin/savedata', AdminSaveData);
 app.post('/api/admin/getusers', GetAdminUserData);
 
 app.post('/api/admin/updateusers', AdminUpdateUserData);
+
+// Stats
+
+app.post('/api/duel/stats/add', addStats);
+
+app.get('/api/duel/stats/duel/:duelId', getStatsByDuel);
+
+app.get('/api/duel/stats/player/:player', getStatsByPalyer);
+
+app.get('/api/duel/stats/summary/:player', getSAggregateStatsByPalyer);
+
+
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);

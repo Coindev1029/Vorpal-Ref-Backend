@@ -70,7 +70,7 @@ export interface TelegramAuthDataNoHash {
   username?: string;
   auth_date: number;
 }
-  
+
 export interface TelegramAuthData {
   id: number;
   first_name: string;
@@ -107,7 +107,7 @@ export interface DuelInfo {
 export interface tgChannelData {
   username: string;
   name: string;
-  id: number
+  id: number;
 }
 
 export interface StoreItem {
@@ -125,26 +125,26 @@ export interface StoreItem {
 }
 
 export interface storeItemBalance {
-	id: number;
-	user_name: string;
+  id: number;
+  user_name: string;
   item_id: number;
   balance: number;
 }
 
 export interface uniqueItem {
   item_id: string;
-	item_img?: string;
-	item_name: string;
-	item_type?: string;
-	price?: number;
+  item_img?: string;
+  item_name: string;
+  item_type?: string;
+  price?: number;
   currency?: string;
   owner?: string;
 }
 
 export interface watchingChannel {
   channel_name: string;
-	channel_username: string;
-	channel_id: string;
+  channel_username: string;
+  channel_id: string;
 }
 
 export interface tgUserTxnData {
@@ -154,4 +154,36 @@ export interface tgUserTxnData {
   resource: string;
   amount: number;
   reason: string;
+}
+
+export interface DuelPlayerStats {
+  id?: number;
+  duel_id: string;
+  player: string;
+  damage_total: number;
+  experience: number;
+  gold: number;
+}
+
+export interface PlayerSummaryStats {
+  player: string;
+  total_damage: number;
+  total_experience: number;
+  total_gold: number;
+}
+
+
+export type TGInitData = {
+    query_id: string,
+    auth_date: number,
+    hash: string,
+    user: {
+        id: number,
+        first_name: string,
+        last_name?: string,
+        username?: string,
+        language_code: string,
+        is_premium: boolean,
+        allows_write_to_pm: boolean
+    }
 }

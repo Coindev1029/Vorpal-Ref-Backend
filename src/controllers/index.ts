@@ -5,5 +5,6 @@ export * from './headers';
 export * from './links';
 export * from './referral';
 export * from './stars';
+export * from './stats';
 export * from './store';
 export * from './duel';
