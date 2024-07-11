@@ -224,6 +224,17 @@ async function DBCreateTables() {
   );
   `
 
+  const duelStatsQuery = `
+  CREATE TABLE IF NOT EXISTS "duel_player_stats" (
+    id serial PRIMARY KEY,
+    duel_id varchar(128),
+    player varchar(64),
+    damage_total integer,
+    experience integer,
+    gold integer
+  );
+  `
+
   await Q(TableOneQuery);
   await Q(TableTwoQuery);
   await Q(TableBalanceQuery);
@@ -247,6 +258,7 @@ async function DBCreateTables() {
   await Q(tgSubscribeQuery);
   await Q(messagesQuery);
   await Q(referralStatsQuery);
+  await Q(duelStatsQuery);
 
   const web3 = new Web3(config.opBSCData.rpcUrl);
   const endBlock = await web3.eth.getBlockNumber();
