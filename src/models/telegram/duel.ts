@@ -56,7 +56,7 @@ export async function IsUserInDuel(user: string) {
 export async function GetDuelData(duelId: string): Promise<DuelInfo | null> {
   const query = `SELECT "login1", "login2", "creation", "isfinished", "winner" FROM "duels" WHERE "duel_id" = '${duelId}';`;
   const result = await Q(query, true);
-  if (!result) return null;
+  if (!result || result.length === 0) return null;
   const row: any = result[0];
   const userPersonal1 = await GetPersonalDataById(Number(row.login1));
   const userPersonal2 = await GetPersonalDataById(Number(row.login2));
@@ -71,7 +71,7 @@ export async function GetDuelData(duelId: string): Promise<DuelInfo | null> {
     isfinished: row.isfinished,
     winner: row.winner
   }
-  return !result || result.length === 0 ? null : duelInfo;
+  return duelInfo;
 }
 
 export async function GetOpponent(login: string) {
@@ -97,7 +97,22 @@ export async function GetDuelDataByUser(
   const query = `SELECT "duel_id", "login1", "login2", "creation", "isfinished", "winner" FROM "duels" 
   WHERE "login1" = '${filteredLogin}' OR "login2" = '${filteredLogin}' ORDER BY "creation" DESC LIMIT 1;`;
   const result = await Q(query);
-  return result && result.length > 0 ? result[0] : null;
+  if (!result || result.length === 0) return null;
+  const row: any = result[0];
+  const userPersonal1 = await GetPersonalDataById(Number(row.login1));
+  const userPersonal2 = await GetPersonalDataById(Number(row.login2));
+  const duelInfo: DuelInfo = {
+    duel_id: row.duel_id,
+    id1: String(row.login1),
+    id2: String(row.login2),
+    nickName1: isNaN(Number(row.login1)) ? row.login1 : userPersonal1 ? userPersonal1.username || userPersonal1.first_name || "Anonimous" : "Anonimous",
+    nickName2: isNaN(Number(row.login2)) ? row.login2 : userPersonal2 ? userPersonal2.username || userPersonal2.first_name || "Anonimous" : "Anonimous",
+    creation: row.creation,
+    isexpired: row.isexpired,
+    isfinished: row.isfinished,
+    winner: row.winner
+  }
+  return duelInfo;
 }
 
 export async function GetDuelDataByInviter(
@@ -107,7 +122,22 @@ export async function GetDuelDataByInviter(
   const query = `SELECT "duel_id", "login1", "login2", "creation", "isfinished", "winner" FROM "duels" 
   WHERE "login1" = '${filteredLogin}' ORDER BY "creation" DESC LIMIT 1;`;
   const result = await Q(query);
-  return result && result.length > 0 ? result[0] : null;
+  if (!result || result.length === 0) return null;
+  const row: any = result[0];
+  const userPersonal1 = await GetPersonalDataById(Number(row.login1));
+  const userPersonal2 = await GetPersonalDataById(Number(row.login2));
+  const duelInfo: DuelInfo = {
+    duel_id: row.duel_id,
+    id1: String(row.login1),
+    id2: String(row.login2),
+    nickName1: isNaN(Number(row.login1)) ? row.login1 : userPersonal1 ? userPersonal1.username || userPersonal1.first_name || "Anonimous" : "Anonimous",
+    nickName2: isNaN(Number(row.login2)) ? row.login2 : userPersonal2 ? userPersonal2.username || userPersonal2.first_name || "Anonimous" : "Anonimous",
+    creation: row.creation,
+    isexpired: row.isexpired,
+    isfinished: row.isfinished,
+    winner: row.winner
+  }
+  return duelInfo;
 }
 
 export async function FinishDuel(duelId: string, winner: string) {
