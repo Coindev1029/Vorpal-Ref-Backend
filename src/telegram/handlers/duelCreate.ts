@@ -76,8 +76,8 @@ export const DuelCreationHandler = async (
     if (
       !isFinished &&
       dateSec - creation < duel_lifetime &&
-      userLastDuel.login1 &&
-      userLastDuel.login2
+      userLastDuel.id1 &&
+      userLastDuel.id2
     ) {
       console.log('Duel not created, already exists');
       SendMessageWithSave(bot, chatId, messages.duelAlready);

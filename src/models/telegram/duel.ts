@@ -3,6 +3,7 @@ import { duel_lifetime } from '../../config';
 import { DuelInfo } from '../../types';
 import { GetValueByKey, SetValueByKey } from '../balances';
 import { runQuery as Q } from '../connection';
+import { GetPersonalDataById } from './personal';
 
 const onlineCountKey = 'DUEL_ONLINE_COUNT';
 
@@ -54,8 +55,23 @@ export async function IsUserInDuel(user: string) {
 
 export async function GetDuelData(duelId: string): Promise<DuelInfo | null> {
   const query = `SELECT "login1", "login2", "creation", "isfinished", "winner" FROM "duels" WHERE "duel_id" = '${duelId}';`;
-  const result = await Q(query);
-  return !result || result.length === 0 ? null : result[0];
+  const result = await Q(query, true);
+  if (!result) return null;
+  const row: any = result[0];
+  const userPersonal1 = await GetPersonalDataById(Number(row.login1));
+  const userPersonal2 = await GetPersonalDataById(Number(row.login2));
+  const duelInfo: DuelInfo = {
+    duel_id: duelId,
+    id1: String(row.login1),
+    id2: String(row.login2),
+    nickName1: isNaN(Number(row.login1)) ? row.login1 : userPersonal1 ? userPersonal1.username || userPersonal1.first_name || "Anonimous" : "Anonimous",
+    nickName2: isNaN(Number(row.login2)) ? row.login2 : userPersonal2 ? userPersonal2.username || userPersonal2.first_name || "Anonimous" : "Anonimous",
+    creation: row.creation,
+    isexpired: row.isexpired,
+    isfinished: row.isfinished,
+    winner: row.winner
+  }
+  return !result || result.length === 0 ? null : duelInfo;
 }
 
 export async function GetOpponent(login: string) {

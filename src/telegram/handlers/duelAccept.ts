@@ -106,8 +106,8 @@ export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) 
     }
 
     if (
-      (createdDuel.login2 &&
-        createdDuel.login2 !== String(linkAuthDataPrev.id)) ||
+      (createdDuel.id2 &&
+        createdDuel.id2 !== String(linkAuthDataPrev.id)) ||
       createdDuel.isexpired ||
       createdDuel.isfinished ||
       timeNow - createdDuel.creation > duel_lifetime
