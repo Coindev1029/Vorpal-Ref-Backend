@@ -6,10 +6,10 @@ import { addDuelPlayerStats, getDuelStatsByDuelId, getDuelStatsByPlayerId, getPl
 export const addStats = async (req: Request, res: Response) => {
     try {
       const body = req.body;
-      /* if (!body.signature || !(await IsAdminBySignature(body.signature))) {
+      if (!body.signature || !(await IsAdminBySignature(body.signature))) {
         res.status(403).send({ error: "No rights to add" });
         return;
-      } */
+      }
       const stats: DuelPlayerStats[] = body.stats;
       try {
         const result = await addDuelPlayerStats(stats);
