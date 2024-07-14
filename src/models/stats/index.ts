@@ -4,6 +4,7 @@ import { DuelPlayerStats, PlayerSummaryStats } from '../../types';
 export async function addDuelPlayerStats(
   stats: DuelPlayerStats[],
 ): Promise<any[] | null> {
+  if (stats.length === 0) return null;
   const values = stats
     .map(
       (stat) =>
