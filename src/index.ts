@@ -42,6 +42,7 @@ import {
   UpdateOnlineCount,
   WithdrawRewardAction,
 } from './controllers';
+import { apiVersion } from 'config';
 const dEnv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -73,6 +74,10 @@ app.get('/', (req, res) => {
    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
    res.setHeader('Access-Control-Allow-Credentials', 'true');
    */
+
+app.get('/api/version', (req, res) => {
+    res.status(200).send({ version: apiVersion })
+})
 
 app.post('/api/telegram/auth', AuthByTelegram);
 
