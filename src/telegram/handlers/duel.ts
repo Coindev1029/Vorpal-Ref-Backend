@@ -5,16 +5,16 @@ import {
   FinishDuel,
   GetDuelDataByUser,
   GetOpponent,
-  GetPersonalDataByUsername,
+  GetPersonalDataById,
   GetUserTransactions,
   RemoveDuelOpponent,
-} from '../../database/telegram';
+} from '../../models/telegram';
 import { duel_lifetime } from '../../config';
 import { bot } from '../bot';
 import { duelText, inviteLink, messages, startText } from '../constants';
 import { InlineKeyboard } from './keyboard';
 import { SendMessageWithSave } from './utils';
-import { NotifyDuelFinishFor } from '../../database/external';
+import { NotifyDuelFinishFor } from '../../models/external';
 
 export const duelCancelAction = async (
   bot: TelegramBot,
@@ -26,7 +26,7 @@ export const duelCancelAction = async (
     return;
   }
   const chatId = query.message.chat.id;
-  const sender: string = query?.from?.username || '';
+  const sender: string = String(query?.from?.id || '');
   if (sender) {
     const duel = await GetDuelDataByUser(sender.toLowerCase());
     console.log('Cancelled duel: ', duel);
@@ -75,23 +75,23 @@ export const duelAcceptAction = async (
     bot.sendMessage(query.message.chat.id, messages.duelNotFound);
     return;
   }
-  const player = query?.message?.from?.username || '';
+  const player = String(query?.message?.from?.id || '');
 
-  if (!player) {
+  /* if (!player) {
     bot.sendMessage(query.message.chat.id, messages.noUsername);
     return;
-  }
+  } */
 
   await AddDuelOpponent(duel.duel_id, player);
   bot.sendMessage(query.message.chat.id, messages.duelComfirmed);
   if (inviter && player) {
-    const opponentData = await GetPersonalDataByUsername(inviter);
-
+    const opponentData = await GetPersonalDataById(Number(inviter));
+    const from = query?.message?.from
     if (opponentData) {
       SendMessageWithSave(
         bot,
         opponentData.chat_id,
-        messages.duelAcceptNotify(player),
+        messages.duelAcceptNotify(from?.username || from?.first_name || "Anonimous", from?.username ? true : false),
       );
     }
   }
@@ -106,27 +106,27 @@ export const duelRefuseAction = async (
     console.log('Chat not found');
     return;
   }
-  const caller = query?.from?.username?.toLowerCase();
+  const caller = query?.from?.id;
   if (!caller || !query.from || !query.from.username) {
     return;
   }
 
-  const duelOpponent = ((await GetOpponent(caller)) || inviter).toLowerCase();
-  const opponentData = await GetPersonalDataByUsername(duelOpponent);
-  const duelData = await GetDuelDataByUser (caller);
+  const duelOpponent = ((await GetOpponent(String(caller))) || inviter);
+  const opponentData = await GetPersonalDataById(Number(duelOpponent));
+  const duelData = await GetDuelDataByUser (String(caller));
 
   if (opponentData) {
-    if (opponentData.username) {
+
       try {
-        NotifyDuelFinishFor(opponentData.username, duelData?.duel_id || "");
+        NotifyDuelFinishFor(String(opponentData.id), duelData?.duel_id || "");
       } catch (e) {
         console.log("Notify err");
       } 
-    }
+
     SendMessageWithSave(
       bot,
       opponentData.chat_id,
-      messages.duelCancelOpponentNotify(query.from.username),
+      messages.duelCancelOpponentNotify(String(query.from.id)),
     );
     SendMessageWithSave(
       bot,
@@ -134,7 +134,7 @@ export const duelRefuseAction = async (
       messages.duelCancelYouNotify(opponentData.username || opponentData.first_name),
     );
 
-    const removeResult = await RemoveDuelOpponent(caller);
+    const removeResult = await RemoveDuelOpponent(String(caller));
 
     SendMessageWithSave(bot, query.message.chat.id, messages.duelRefused, {
       reply_markup: InlineKeyboard(['duel']),
@@ -149,11 +149,11 @@ export const TxnHistoryAction = async (
 ) => {
   console.log('History requested');
   if (!query.message) return;
-  if (!query.from.username) {
+  if (!query.from) {
     SendMessageWithSave(bot, query.message.chat.id, messages.noUsername);
     return;
-  }
-  const transactions = await GetUserTransactions(query.from.username);
+  } 
+  const transactions = await GetUserTransactions(String(query.from?.id || ""));
   const historyText = `<b>Your transactions:</b>\n ${transactions.map((txn) => {
     console.log('Find txn: ', txn);
     return `${txn.resource} ${txn.amount} ${txn.reason}\n`;

@@ -4,10 +4,10 @@ import { GetDaylyAuthDate, CreateTelegramAuthHash } from '../../utils/auth';
 import { SendSubscribeMessage } from './subscribe';
 import { duel_lifetime, tg_chat_history_lifetime } from '../../config';
 import { InlineKeyboard, MarkupKeyboard } from './keyboard';
-import { IsUserInDuel, SetPersonalData } from '../../database/telegram';
+import { IsUserInDuel, SetPersonalData } from '../../models/telegram';
 import { SendMessageWithSave, SendPhotoWithSave, TruncateChat } from './utils';
 import { messages } from '../constants';
-import { DeleteMessagesByChatId, SaveMessage } from '../../database/telegram/history';
+import { DeleteMessagesByChatId, SaveMessage } from '../../models/telegram/history';
 
 export const introPhotoPath = '/app/public/entry.png';
 
@@ -34,12 +34,12 @@ export const StartHandler = async (bot: TelegramBot, msg: TelegramBot.Message, m
       console.log(e.message);
     }
 
-    if (!linkAuthDataPrev.username) {
+    /* if (!linkAuthDataPrev.username) {
       SendMessageWithSave(bot, chatId, messages.noUsername);
       return;
-    }
+    } */
 
-    const isInDuel = await IsUserInDuel(linkAuthDataPrev.username) 
+    const isInDuel = await IsUserInDuel(String(linkAuthDataPrev.id)) 
       if (isInDuel) {
         SendMessageWithSave(bot, chatId, messages.duelAlready);
         return;

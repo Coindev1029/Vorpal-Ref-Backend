@@ -1,8 +1,5 @@
-import { TelegramAuthData, TelegramAuthDataNoHash } from '../types';
-const crypto = require('crypto');
-const sha256 = require('crypto-js/sha256');
-const hmacSHA256 = require('crypto-js/hmac-sha256');
-const Hex = require('crypto-js/enc-hex');
+import crypto from 'crypto';
+import { TelegramAuthData, TelegramAuthDataNoHash, TGInitData } from '../types';
 
 const token = process.env.TELEGRAM_API_TOKEN || '';
 
@@ -106,4 +103,17 @@ export function ValidateByInitData (initData: any, botToken = token) {
     .digest('hex');
  
   return data.hash === signature;
+}
+
+export function decodeTgInitData(urlParams: string): TGInitData {
+    let params = new URLSearchParams(urlParams);
+    let result: any = {};
+    for (let [key, value] of params.entries()) {
+        try {
+            result[key] = JSON.parse(decodeURIComponent(value));
+        } catch (e) {
+            result[key] = decodeURIComponent(value);
+        }
+    }
+    return result;
 }

@@ -9,7 +9,7 @@ import {
   GetDuelDataByUser,
   GetWatchingChannels,
   SetPersonalData,
-} from '../../database/telegram';
+} from '../../models/telegram';
 import { duel_lifetime } from '../../config';
 import { bot } from '../bot';
 import { duelText, inviteLink, messages, startText } from '../constants';

@@ -1,5 +1,5 @@
-import { GetUserTransactions } from "../database/telegram";
-import { CreateNewBox, OpenBox } from "../database/rewards/updaters";
+import { GetUserTransactions } from "../models/telegram";
+import { CreateNewBox, OpenBox } from "../models/rewards/updaters";
 import { TelegramAuthData } from "types";
 
 async function BoxCreateOpenTest () {

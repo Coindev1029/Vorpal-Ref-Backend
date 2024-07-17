@@ -10,6 +10,7 @@ import { MarkupKeyboard } from './handlers/keyboard';
 import { NotABusyRegex } from '../utils/text';
 import { ReferralStatsAction, ReferralStatsHandler } from './handlers/referral';
 import { SetupBotMenuCommands } from './cmdSetup';
+import { GetPersonalDataById, GetPersonalDataByUsername } from '../models/telegram';
 
 
 export function TelegramBotLaunch() {
@@ -41,11 +42,11 @@ export function TelegramBotLaunch() {
     await  DuelAcceptHandler(bot, msg, match);
   });
 
-  bot.onText(/\/start(?:\?startapp=([^]+))?/, (msg, match) => {
+  bot.onText(/\/start(?:\?startapp=([^]+))?/, async (msg, match) => {
     console.log("Start app called")
-    const inviterId = match ? match[1] : "" // Если inviterId присутствует в ссылке, он будет доступен здесь
-    if (inviterId) {
-        bot.sendMessage(msg.chat.id, `You have invited by: ${inviterId}`);
+    const inviterLogin = match ? match[1] : "" // Если inviterId присутствует в ссылке, он будет доступен здесь
+    if (inviterLogin) {
+        bot.sendMessage(msg.chat.id, `You have invited by: ${inviterLogin}`);
     } 
   });
 
@@ -54,7 +55,7 @@ export function TelegramBotLaunch() {
       process.env.TELEGRAM_BOT_NAME
     }?start=${query.from.username?.replace(' ', '')}`;
 
-    const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}/vtester?startapp=inviterId_${query.from.username?.replace(' ', '')}`;
+    const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}/vtester?startapp=inviterId_${String(query.from.id)}`;
 
     const results: TelegramBot.InlineQueryResult[] = [
       {

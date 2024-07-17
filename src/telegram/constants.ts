@@ -48,21 +48,21 @@ export const messages = {
        Duel created! 
        Now to challenge a friend share him the next message with your link below:
     `,
-    duelInvitation: (inviter: string) => {
+    duelInvitation: (inviter: string, inviterId: number, isUsername = false) => {
       const deepLink = `${inviteLink}${inviter?.replace(
         ' ',
         '',
       )}`;
-      const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}/${webAppName}?startapp=inviterId_${inviter?.replace(' ', '')}`;
-      return `@${inviter} challenging you to Star Defender duel: <a href="${startappLink}">Accept</a>` // <a href="${startappLink}">Accept</a>
+      const startappLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}/${webAppName}?startapp=inviterId_${inviterId}`;
+      return `${isUsername ? `@${inviter}` : inviter} challenging you to Star Defender duel: <a href="${startappLink}">Accept</a>` // <a href="${startappLink}">Accept</a>
     },
     duelAccept:  (inviter: string) => `
       Welcome to a Star defender! 
       You now have a duel challenge with @${inviter}.
       Enter a starmap or cancel:
     `,
-    duelAcceptNotify: (user: string) => `
-      @${user} accepted your challenge. Enter game to start battle
+    duelAcceptNotify: (user: string, isUsername = true) => `
+      ${isUsername ? `@${user}` : user} accepted your challenge. Enter game to start battle
     `,
     duelNotFound: `
       Duel with your inviter not found. You can create a new one: 

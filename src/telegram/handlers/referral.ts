@@ -4,16 +4,15 @@ import {
   FinishDuel,
   GetDuelDataByUser,
   GetOpponent,
-  GetPersonalDataByUsername,
   GetUserTransactions,
   RemoveDuelOpponent,
-} from '../../database/telegram';
+} from '../../models/telegram';
 import { duel_lifetime } from '../../config';
 import { bot } from '../bot';
 import { duelText, inviteLink, messages, startText } from '../constants';
 import { InlineKeyboard } from './keyboard';
 import { SendMessageWithSave } from './utils';
-import { GetReferralCount, GetReferralStatsByUser } from '../../database/telegram/referral';
+import { GetReferralCount, GetReferralStatsByUser } from '../../models/telegram/referral';
 
 export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {
     console.log("History requested")
@@ -50,12 +49,12 @@ export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.C
 export const ReferralStatsHandler = async (bot: TelegramBot, query: TelegramBot.Message) => {
 
   if (!query?.from) return;
-  if (!query?.from.username){
+  /* if (!query?.from.username){
    SendMessageWithSave (bot, query.chat.id, messages.noUsername);
    return;
-  }
+  } */
 
-  const refCounts = await GetReferralCount(query.from.username);
+  const refCounts = await GetReferralCount(String(query.from.id));
   const historyText = `
      <b>Level1: ${refCounts.level1}</b>
      <b>Level2: ${refCounts.level2}</b>

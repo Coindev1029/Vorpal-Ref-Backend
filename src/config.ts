@@ -1,3 +1,5 @@
+export const apiVersion= 112;
+
 export const config = {
    networkId: 97,
    connectOptions: {

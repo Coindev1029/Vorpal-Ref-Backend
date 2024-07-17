@@ -9,9 +9,9 @@ import {
   GetDuelDataByInviter,
   GetDuelDataByUser,
   GetOpponent,
-  GetPersonalDataByUsername,
+  GetPersonalDataById,
   SetPersonalData,
-} from '../../database/telegram';
+} from '../../models/telegram';
 import {
   duelConfirmText,
   duelRefuseText,
@@ -20,18 +20,18 @@ import {
   messages,
   startText,
 } from '../constants';
-import { SaveMessage } from '../../database/telegram/history';
+import { SaveMessage } from '../../models/telegram/history';
 import { SendMessageWithSave, TruncateChat } from './utils';
-import { GetUserInviter } from '../../database/telegram/referral';
+import { GetUserInviter } from '../../models/telegram/referral';
 
 export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) => {
   const chatId = msg.chat.id;
   console.log('Match params', match);
   try {
-    if (!msg.from.username) {
+    /* if (!msg.from.username) {
       SendMessageWithSave(bot, chatId, messages.noUsername);
       return;
-    }
+    } */
     SaveMessage(chatId, msg.message_id);
 
     const linkAuthDataPrev: TelegramAuthData = {
@@ -45,33 +45,35 @@ export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) 
 
     const inviterLogin = match[1]?.toLowerCase();
 
+    const inviterId = (await GetPersonalDataById (inviterLogin))?.id;
+
     try {
-      SetPersonalData(linkAuthDataPrev, chatId, inviterLogin || '');
+      SetPersonalData(linkAuthDataPrev, chatId, String(inviterId || ""));
     } catch (e) {
       console.log(e.message);
     }
 
     await SendSubscribeMessage(linkAuthDataPrev.id, chatId);
 
-    if (!msg.from.username) {
+    /* if (!msg.from.username) {
       SendMessageWithSave(bot, chatId, messages.noUsername);
       return;
-    }
+    } */
 
-    if (!inviterLogin) {
+    if (!inviterId) {
       SendMessageWithSave(bot, chatId, messages.noInviter, {
         reply_markup: InlineKeyboard(['duel']),
       });
       return;
     }
 
-    if (inviterLogin === linkAuthDataPrev.username) {
+    if (inviterId === linkAuthDataPrev.id) {
       SendMessageWithSave(bot, chatId, messages.inviteSelf);
       return;
     }
 
-    const createdDuel = inviterLogin
-      ? await GetDuelDataByInviter(inviterLogin)
+    const createdDuel = inviterId
+      ? await GetDuelDataByInviter(String(inviterId))
       : null;
 
     if (!createdDuel) {
@@ -104,8 +106,8 @@ export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) 
     }
 
     if (
-      (createdDuel.login2 &&
-        createdDuel.login2 !== linkAuthDataPrev.username?.toLowerCase()) ||
+      (createdDuel.id2 &&
+        createdDuel.id2 !== String(linkAuthDataPrev.id)) ||
       createdDuel.isexpired ||
       createdDuel.isfinished ||
       timeNow - createdDuel.creation > duel_lifetime
@@ -116,18 +118,18 @@ export const DuelAcceptHandler = async (bot: TelegramBot, msg: any, match: any) 
       return;
     }
 
-    await AddDuelOpponent(createdDuel.duel_id, linkAuthDataPrev.username || '');
+    await AddDuelOpponent(createdDuel.duel_id, String(linkAuthDataPrev.id));
     SendMessageWithSave(bot, chatId, messages.duelAccept(inviterLogin), {
       reply_markup: InlineKeyboard(['duelConfirm', 'duelRefuse'], inviterLogin),
     });
 
-    const opponentData = await GetPersonalDataByUsername(inviterLogin);
+    const opponentData = await GetPersonalDataById(inviterId);
     if (opponentData) {
       try {
         SendMessageWithSave(
           bot,
           opponentData.chat_id,
-          messages.duelAcceptNotify(linkAuthDataPrev.username || ''),
+          messages.duelAcceptNotify(linkAuthDataPrev.username || linkAuthDataPrev.first_name || '', linkAuthDataPrev.username ? true : false),
           { reply_markup: InlineKeyboard(['duelConfirm']) },
         );
       } catch (e) {

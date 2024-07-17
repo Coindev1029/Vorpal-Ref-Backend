@@ -1,8 +1,8 @@
 import { TelegramBotLaunch } from './telegram';
 import { StartWatchingTimer } from './blockchain/Stars/watcher';
-import { InitGameIoServer } from './game';
 import {
   AcceptDuelResponce,
+  addStats,
   AdminDataRequest,
   AdminSaveData,
   AdminUpdateUserData,
@@ -22,6 +22,9 @@ import {
   GetLinksByOwnerResponse,
   GetOwnerDataResponse,
   GetProjectData,
+  getSAggregateStatsByPalyer,
+  getStatsByDuel,
+  getStatsByPalyer,
   GetStoreItemsResponce,
   GetUserAvailableBoxes,
   GetUserResources,
@@ -38,7 +41,8 @@ import {
   UpdateOneStar,
   UpdateOnlineCount,
   WithdrawRewardAction,
-} from './responces';
+} from './controllers';
+import { apiVersion } from './config';
 const dEnv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -70,6 +74,10 @@ app.get('/', (req, res) => {
    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
    res.setHeader('Access-Control-Allow-Credentials', 'true');
    */
+
+app.get('/api/version', (req, res) => {
+    res.status(200).send({ version: apiVersion })
+})
 
 app.post('/api/telegram/auth', AuthByTelegram);
 
@@ -150,6 +158,18 @@ app.post('/api/admin/savedata', AdminSaveData);
 app.post('/api/admin/getusers', GetAdminUserData);
 
 app.post('/api/admin/updateusers', AdminUpdateUserData);
+
+// Stats
+
+app.post('/api/duel/stats/add', addStats);
+
+app.get('/api/duel/stats/duel/:duelId', getStatsByDuel);
+
+app.get('/api/duel/stats/player/:player', getStatsByPalyer);
+
+app.get('/api/duel/stats/summary/:player', getSAggregateStatsByPalyer);
+
+
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);

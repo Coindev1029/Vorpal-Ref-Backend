@@ -1,7 +1,7 @@
 import { contractWatchingTimeout } from "../../blockchain/config";
 import { StarData, StarList } from "../../types";
 import { GetAllStarData, GetSingleStarData } from "./getter";
-import { WriteLog } from "../../database/log";
+import { WriteLog } from "../../models/log";
 
 export let actualStarList: StarList = [];
 export let lastUpdateRequqstTime = 0;

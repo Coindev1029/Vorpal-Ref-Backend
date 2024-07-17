@@ -3,7 +3,7 @@ import {
   DeleteMessagesByChatId,
   GetMessagesByChatId,
   SaveMessage,
-} from '../../database/telegram/history';
+} from '../../models/telegram/history';
 import TelegramBot from 'node-telegram-bot-api';
 
 export async function SendPhotoWithSave(
