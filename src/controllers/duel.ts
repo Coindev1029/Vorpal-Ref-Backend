@@ -18,12 +18,14 @@ import { UniversalAuth } from './common';
 import {
   GetPersonalDataById,
   GetPersonalDataByUsername,
+  SetPersonalData,
 } from '../models/telegram';
 import { SendMessageWithSave } from '../telegram/handlers/utils';
 import { bot } from '../telegram/bot';
 import { messages } from '../telegram/constants';
 import { InlineKeyboard } from '../telegram/handlers/keyboard';
 import { duel_lifetime } from '../config';
+import { TelegramAuthData, TelegramAuthNote } from 'types';
 
 export const web3 = new Web3(Web3.givenProvider);
 
@@ -231,17 +233,17 @@ export const UpdateOnlineCount = async (req: Request, res: Response) => {
 
 export const AcceptDuelResponce = async (req: Request, res: Response) => {
   console.log('Duel accept called');
-  const user = await UniversalAuth(req, res);
+  const user: TelegramAuthData = await UniversalAuth(req, res);
   console.log(user);
-  if (!user) {
+  if (!user || !user.id) {
     console.log('401');
     res.status(401).send({ error: 'Unauthorized' });
-    return;
+    return null;
   }
   if (!req.body.inviter) {
     console.log('400');
     res.status(400).send({ error: 'Duel creator not in the query' });
-    return;
+    return null;
   }
 
   const inviter = req.body.inviter;
@@ -254,19 +256,24 @@ export const AcceptDuelResponce = async (req: Request, res: Response) => {
         success: false,
         error: 'Duel not found or expired',
       });
-      return;
+      return null;
     }
     if (duel.id2 || String(duel.id1) === String(user)) {
       res.status(400).send({
         success: false,
         error: 'Duel is already busy',
       });
-      return;
+      return null;
     }
     console.log('Invited user: ', user);
-    await AddDuelOpponent(duel.duel_id, user || '');
-    const userData = await GetPersonalDataById(Number(user));
+    await AddDuelOpponent(duel.duel_id, String(user.id || ''));
+    let userData = await GetPersonalDataById(Number(user.id));
+    if (!userData) {
+      await SetPersonalData(user, user.id, String(inviter));
+      userData = await GetPersonalDataById(Number(user.id));
+    }
     const opponentData = await GetPersonalDataById(Number(inviter));
+    console.log('User data: ', userData);
     console.log('Opponent data: ', opponentData);
     if (opponentData) {
       await SendMessageWithSave(
@@ -286,6 +293,6 @@ export const AcceptDuelResponce = async (req: Request, res: Response) => {
   } catch (e) {
     console.log(e.message);
     res.status(500).send({ errpr: 'Duel creator not in the query' });
-    return;
+    return null;
   }
 };

@@ -52,7 +52,7 @@ export const UniversalAuth = async (req: Request, res: Response) => {
             const userDecoded = decodeURIComponent(userEncoded);
             const parsedData = JSON.parse(userDecoded);
             console.log("Parsed: ", parsedData);
-            return parsedData.id
+            return parsedData
         } catch (e) {
             console.log(e);
             return null;
