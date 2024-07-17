@@ -42,7 +42,7 @@ import {
   UpdateOnlineCount,
   WithdrawRewardAction,
 } from './controllers';
-import { apiVersion } from 'config';
+import { apiVersion } from './config';
 const dEnv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
