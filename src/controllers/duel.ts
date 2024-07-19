@@ -258,7 +258,7 @@ export const AcceptDuelResponce = async (req: Request, res: Response) => {
       });
       return null;
     }
-    if (duel.id2 || String(duel.id1) === String(user)) {
+    if (duel.id2 || String(duel.id1) === String(user.id)) {
       res.status(400).send({
         success: false,
         error: 'Duel is already busy',
