@@ -17,10 +17,6 @@ import { GetReferralCount, GetReferralStatsByUser } from '../../models/telegram/
 export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {
     console.log("History requested")
     if (!query.message) return;
-    if (!query.from.username){
-     SendMessageWithSave (bot, query.message.chat.id, messages.noUsername);
-     return;
-    }
 
     /* const transactions = await GetReferralStatsByUser (query.from.username);
     if (transactions.length === 0) {
@@ -33,7 +29,7 @@ export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.C
         return `LeveL: ${txn.level}, for: ${txn.for}, resource: ${txn.resource}, amount: ${txn.amount}\n`
    })}` */
 
-    const refCounts = await GetReferralCount(query.from.username);
+    const refCounts = await GetReferralCount(String(query.from.id));
     const historyText = `
        <b>Level1: ${refCounts.level1}</b>
        <b>Level2: ${refCounts.level2}</b>
