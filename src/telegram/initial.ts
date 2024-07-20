@@ -11,6 +11,7 @@ import { NotABusyRegex } from '../utils/text';
 import { ReferralStatsAction, ReferralStatsHandler } from './handlers/referral';
 import { SetupBotMenuCommands } from './cmdSetup';
 import { GetPersonalDataById, GetPersonalDataByUsername } from '../models/telegram';
+import { initOldBot } from './old';
 
 
 export function TelegramBotLaunch() {
@@ -138,3 +139,5 @@ export function TelegramBotLaunch() {
     console.error('Bot error:', error);
   });
 }
+
+initOldBot ();

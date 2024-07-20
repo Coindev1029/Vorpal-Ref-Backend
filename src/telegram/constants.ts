@@ -2,6 +2,7 @@ require('dotenv').config();
 
 export const front_v = process.env.FRONTEND_VERSION || '407';
 export const tg_token = process.env.TELEGRAM_API_TOKEN;
+export const old_token = process.env.TELEGRAM_OLD_API_TOKEN;
 export const inviteLink = `https://t.me/${process.env.TELEGRAM_BOT_NAME}?start=`;
 export const startText = "Start";
 export const duelText = "⚔️Create duel";
@@ -23,6 +24,7 @@ export const usingRegExps: RegExp[] = [
 ];
 
 export const messages = {
+    old: `Now we are moved to new bot, go: https://t.me/${process.env.TELEGRAM_BOT_NAME}`,
     welocme: `
       Welocme to a Star defender game app powered by Vorpal engine!
       You now can start a duel with your friend or play demo with bot`,
