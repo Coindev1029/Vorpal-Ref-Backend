@@ -23,7 +23,7 @@ export interface Star {
 export async function createStar (params: Star) {
     const query = `
     INSERT INTO public.stars (
-        owner, name, is_live, creation, updated, level, fuel, levelUpFuel, fuelSpendings, 
+        owner, name, is_live, creation, updated, level, fuel, level_up_fuel, fuel_spendings, 
         habitable_zone_min, habitable_zone_max, planet_slots, mass, race, coords
     ) VALUES (
         '${params.owner || ''}', 
