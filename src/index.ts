@@ -28,6 +28,7 @@ import {
   GetStoreItemsResponce,
   GetUserAvailableBoxes,
   GetUserResources,
+  GetWeb2StarList,
   GiveResourcesResponce,
   IsNeedSubscribes,
   IsUserInDuelResponce,
@@ -143,6 +144,8 @@ app.post('/api/store/buy', BuyResponce);
 
 // Stars (server contract parser)
 app.get('/api/getstarlist', GetAllStars);
+
+app.get('/api/getserverstarlist', GetWeb2StarList);
 
 app.post('/api/updatestars', UpdateAllStars);
 

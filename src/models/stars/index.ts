@@ -51,7 +51,7 @@ export async function setStarOwner (starId: number, newOwner: String) {
     return await runQuery(query);   
 }
 
-export async function getAllStars () {
+export async function getAllStarsWeb2 () {
     const query = `SELECT * FROM public.stars;`;
     return await runQuery(query);
 }
