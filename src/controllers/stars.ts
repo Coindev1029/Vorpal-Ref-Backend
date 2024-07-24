@@ -38,3 +38,9 @@ export const UpdateOneStar = async (req: Request, res: Response) => {
     res.status(400).send({success: false, message: 'Error in processing : ' + e.message});
   }
 }
+
+export const GetWeb2StarList = async (req: Request, res: Response) => {
+  try {
+    
+  }
+}

@@ -7,7 +7,7 @@ export interface Star {
     name: string;
     is_live: boolean;
     creation: number;
-    updated?: number;
+    updated?: number | null;
     level: number;
     fuel?: number;
     level_up_fuel?: number;
@@ -20,7 +20,7 @@ export interface Star {
     coords: number[]; 
 }
 
-export async function CreateStar (params: Star) {
+export async function createStar (params: Star) {
     const query = `
     INSERT INTO public.stars (
         owner, name, is_live, creation, updated, level, fuel, levelUpFuel, fuelSpendings, 
@@ -46,17 +46,17 @@ export async function CreateStar (params: Star) {
 return await runQuery(query);
 }
 
-export async function SetStarOwner (starId: number, newOwner: String) {
+export async function setStarOwner (starId: number, newOwner: String) {
     const query = `UPDATE public.stars SET owner = '${newOwner}' WHERE id = ${starId};`;
     return await runQuery(query);   
 }
 
-export async function GetAllStars () {
+export async function getAllStars () {
     const query = `SELECT * FROM public.stars;`;
     return await runQuery(query);
 }
 
-export async function UpdateAllStarsFuel () {
+export async function updateAllStarsFuel () {
     const query = `
         UPDATE public.stars 
         SET fuel = CASE 
