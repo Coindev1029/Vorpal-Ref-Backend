@@ -299,34 +299,44 @@ export const AcceptDuelResponce = async (req: Request, res: Response) => {
 };
 
 export const CreateDuelByAdmin = async (req: Request, res: Response) => {
-   const body = req.body;
-   if (!body.signature || !body.firstUser) {
-    res.status(400).send({ error: 'Nessesary parameters missed'})
-   }
-   // ToDo: signature check, add after test
-   try {
-      const duel = await CreateDuel(String(body.firstUser));
-      if (duel) {
-        res.status(200).send({ duel });
-        return;
-      } else {
-        res.status(400).send({ error: 'Duel cannot be created now' });
-        return;
-      }
-   } catch (e) {
-     console.log(e);
-     res.status(500).send({ error: 'Duel creation error' });
-     return;
-   }
-}
+  const body = req.body;
+  if (!body.signature || !body.firstUser) {
+    res.status(400).send({ error: 'Nessesary parameters missed' });
+  }
+  // ToDo: signature check, add after test
+  try {
+    const duel = await CreateDuel(String(body.firstUser));
+    if (duel) {
+      res.status(200).send({ duel });
+      return;
+    } else {
+      res.status(400).send({ error: 'Duel cannot be created now' });
+      return;
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({ error: 'Duel creation error' });
+    return;
+  }
+};
 
 export const AcceptDuelByAdmin = async (req: Request, res: Response) => {
   const body = req.body;
-   if (!body.signature || !body.duel || !body.secondUser) {
-    res.status(400).send({ error: 'Nessesary parameters missed'})
-   }
-   try {
-    const result = await AddDuelOpponent(body.duel, body.secondUser)
+  if (!body.signature || !body.duel || !body.secondUser) {
+    res.status(400).send({ error: 'Nessesary parameters missed' });
+  }
+  try {
+    const existDuel = await GetDuelData(body.duel);
+    if (
+      !existDuel ||
+      existDuel.isfinished ||
+      existDuel.id2 ||
+      existDuel.id1 === body.secondUser
+    ) {
+      res.status(400).send({ error: 'Wrong duel id' });
+      return;
+    }
+    const result = await AddDuelOpponent(body.duel, body.secondUser);
     if (result) {
       res.status(200).send({ result });
       return;
@@ -334,9 +344,9 @@ export const AcceptDuelByAdmin = async (req: Request, res: Response) => {
       res.status(400).send({ error: 'Opponent cannnot be added now' });
       return;
     }
- } catch (e) {
-   console.log(e);
-   res.status(500).send({ error: 'Duel creation error' });
-   return;
- }
-}
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({ error: 'Duel creation error' });
+    return;
+  }
+};
