@@ -38,6 +38,7 @@ export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.C
     SendMessageWithSave (bot, query.message.chat.id, historyText,
      {
        parse_mode: "HTML",
+       reply_markup: InlineKeyboard(['referralTotalRewards', 'referralRewardList']),
      });
     return;
 }
@@ -59,6 +60,7 @@ export const ReferralStatsHandler = async (bot: TelegramBot, query: TelegramBot.
   SendMessageWithSave (bot, query.chat.id, historyText,
    {
      parse_mode: "HTML",
+     reply_markup: InlineKeyboard(['referralTotalRewards', 'referralRewardList'])
    });
   return;
 }
