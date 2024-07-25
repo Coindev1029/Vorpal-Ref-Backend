@@ -1,6 +1,7 @@
 import { TelegramBotLaunch } from './telegram';
 import { StartWatchingTimer } from './blockchain/Stars/watcher';
 import {
+  AcceptDuelByAdmin,
   AcceptDuelResponce,
   addStats,
   AdminDataRequest,
@@ -12,6 +13,7 @@ import {
   BuyResponce,
   CheckAvailableResponce,
   CreateBox,
+  CreateDuelByAdmin,
   DuelDataByLoginResponce,
   DuelDataResponce,
   DuelDeletionResponce,
@@ -161,6 +163,10 @@ app.post('/api/admin/savedata', AdminSaveData);
 app.post('/api/admin/getusers', GetAdminUserData);
 
 app.post('/api/admin/updateusers', AdminUpdateUserData);
+
+app.post('/api/admin/createduel', CreateDuelByAdmin);
+
+app.post('/api/admin/acceptduel', AcceptDuelByAdmin);
 
 // Stats
 

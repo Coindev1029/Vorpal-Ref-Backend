@@ -3,6 +3,7 @@ import { GetValueByKey } from '../models/balances';
 import { GetSignableMessage } from '../utils/auth';
 import {
   AddDuelOpponent,
+  CreateDuel,
   DeleteDuel,
   FinishDuel,
   GetDuelData,
@@ -296,3 +297,46 @@ export const AcceptDuelResponce = async (req: Request, res: Response) => {
     return null;
   }
 };
+
+export const CreateDuelByAdmin = async (req: Request, res: Response) => {
+   const body = req.body;
+   if (!body.signature || !body.firstUser) {
+    res.status(400).send({ error: 'Nessesary parameters missed'})
+   }
+   // ToDo: signature check, add after test
+   try {
+      const duel = await CreateDuel(String(body.firstUser));
+      if (duel) {
+        res.status(200).send({ duel });
+        return;
+      } else {
+        res.status(400).send({ error: 'Duel cannot be created now' });
+        return;
+      }
+   } catch (e) {
+     console.log(e);
+     res.status(500).send({ error: 'Duel creation error' });
+     return;
+   }
+}
+
+export const AcceptDuelByAdmin = async (req: Request, res: Response) => {
+  const body = req.body;
+   if (!body.signature || !body.duel || !body.secondUser) {
+    res.status(400).send({ error: 'Nessesary parameters missed'})
+   }
+   try {
+    const result = await AddDuelOpponent(body.duel, body.secondUser)
+    if (result) {
+      res.status(200).send({ result });
+      return;
+    } else {
+      res.status(400).send({ error: 'Opponent cannnot be added now' });
+      return;
+    }
+ } catch (e) {
+   console.log(e);
+   res.status(500).send({ error: 'Duel creation error' });
+   return;
+ }
+}
