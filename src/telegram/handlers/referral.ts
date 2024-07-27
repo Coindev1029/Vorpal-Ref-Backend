@@ -12,7 +12,7 @@ import { bot } from '../bot';
 import { duelText, inviteLink, messages, startText } from '../constants';
 import { InlineKeyboard } from './keyboard';
 import { SendMessageWithSave } from './utils';
-import { GetReferralCount, GetReferralStatsByUser } from '../../models/telegram/referral';
+import { GetReferralCount, GetReferralStatsByUser, GetReferralTotalRewardsByUser } from '../../models/telegram/referral';
 
 export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {
     console.log("History requested")
@@ -41,6 +41,19 @@ export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.C
        reply_markup: InlineKeyboard(['referralTotalRewards', 'referralRewardList']),
      });
     return;
+}
+
+
+export const referralTotalCountAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {
+  if (!query.message) return;
+  const counts = await GetReferralTotalRewardsByUser(String(query.from.id));
+  const historyText = counts.length > 0 ? `<b>Your rewards from referrals:</b>\n ${counts.map((item) => {
+    return `Resource: ${item.item}, amount: +${item.amount}\n`
+  })}` : `Still no rewards`
+  SendMessageWithSave (bot, query.message.chat.id, historyText,
+    {
+      parse_mode: "HTML",
+    });
 }
 
 export const ReferralStatsHandler = async (bot: TelegramBot, query: TelegramBot.Message) => {

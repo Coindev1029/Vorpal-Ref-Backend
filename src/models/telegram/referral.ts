@@ -86,3 +86,20 @@ export async function GetReferralStatsByUser(
     }
   }) : [];
 }
+
+export async function GetReferralTotalRewardsByUser(login: string): Promise<{item: string; amount: number}[]> {
+  const query = `
+     SELECT resource, SUM(amount) as total_amount
+       FROM "telegram_referral_stats"
+       WHERE recipient = '${login.toLowerCase()}'
+       GROUP BY resource
+       ORDER BY total_amount DESC; 
+  `
+  const data = await Q(query);
+  return data ? data.map((row: any) => {
+    return {
+      item: row.resource,
+      amount: row.total_amount
+    }
+  }) : [];
+}
