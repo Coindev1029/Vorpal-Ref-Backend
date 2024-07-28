@@ -5,7 +5,7 @@ import { TelegramAuthData } from "types";
 async function BoxCreateOpenTest () {
 
     const testUser: TelegramAuthData = {
-        id:6261378577,
+        id:99999099999,
         first_name: 'test',
         last_name: 't',
         username: 'tester',
