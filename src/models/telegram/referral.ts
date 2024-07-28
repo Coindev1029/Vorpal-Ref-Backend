@@ -71,9 +71,10 @@ WHERE "inviter" IN (
 
 export async function GetReferralStatsByUser(
   login: string,
+  limit = 5
 ): Promise<ReferralStatsData[]> {
   const query = `SELECT id, recipient, referrer, resource, amount, reward_date, level
-	FROM "telegram_referral_stats" WHERE recipient = '${login.toLowerCase()}' ORDER BY reward_date DESC;`;
+	FROM "telegram_referral_stats" WHERE recipient = '${login.toLowerCase()}' ORDER BY reward_date DESC LIMIT ${limit};`;
   const data = await Q(query);
   return data ? data.map((row: any) => {
     return {

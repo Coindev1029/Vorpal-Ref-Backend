@@ -8,7 +8,7 @@ import { DuelAcceptHandler } from './handlers/duelAccept';
 import { SendMessageWithSave } from './handlers/utils';
 import { MarkupKeyboard } from './handlers/keyboard';
 import { NotABusyRegex } from '../utils/text';
-import { ReferralStatsAction, ReferralStatsHandler, referralTotalCountAction } from './handlers/referral';
+import { referralLastTxnAction, ReferralStatsAction, ReferralStatsHandler, referralTotalCountAction } from './handlers/referral';
 import { SetupBotMenuCommands } from './cmdSetup';
 import { GetPersonalDataById, GetPersonalDataByUsername } from '../models/telegram';
 import { initOldBot } from './old';
@@ -103,6 +103,9 @@ export function TelegramBotLaunch() {
       case query.data.indexOf("totalRef") >-1:
         await referralTotalCountAction(bot, query);
         break;
+      case query.data.indexOf("refTxnList") >-1:
+          await referralLastTxnAction(bot, query);
+          break;
       case  query.data.indexOf("duelcancel") > -1:
         await duelCancelAction (bot, query,  inviter);
         break;

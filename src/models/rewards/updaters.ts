@@ -92,9 +92,7 @@ export async function updateResourceTransaction(
 }
 
 export async function sendRewardsToReferrals (user: string, resource: string, amount: number) {
-  console.log("User: ", user)
   const referral1 = await GetUserInviterById (user);
-  console.log("Ref 1: ", referral1)
   if (!referral1) return([]);
   const referral2 = await GetUserInviterById (referral1);
   await WriteReferralStats ({ to: referral1, for: user, resource, amount: amount * referralPart1, level: 1 })
@@ -108,7 +106,6 @@ export async function sendRewardsToReferrals (user: string, resource: string, am
 }
 
 export async function resourceTransactionWithReferrals (user: string, resource: string, amount: number, message: string = "") {
-  console.log("Sending txn, referral of: ", user)
   return Promise.all([
     updateResourceTransaction(user, resource, amount, message),
     sendRewardsToReferrals(user, resource, amount)
@@ -119,7 +116,6 @@ export async function openBox(boxId: number, telegramData: TelegramAuthData) {
   let openAmount = 0;
   const boxCheckQuery = `SELECT isopen FROM boxes WHERE id = ${boxId};`;
   const check = await pool.query(boxCheckQuery);
-  console.log('Box opening started', boxId);
   if (check.rows.length === 0) {
     return {
       success: false,
@@ -149,7 +145,6 @@ export async function openBox(boxId: number, telegramData: TelegramAuthData) {
       await  resourceTransactionWithReferrals (owner, 'trends', trendsValue, rewardmessage);
     }
   }
-  console.log("Sending token to referrals: ")
   await  resourceTransactionWithReferrals (owner, 'token', valueVRP, rewardmessage);
   // const vrpQuery = `UPDATE resources SET token = token + ${valueVRP} 
   //     WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;

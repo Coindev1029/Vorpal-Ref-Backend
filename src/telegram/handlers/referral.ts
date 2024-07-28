@@ -56,6 +56,22 @@ export const referralTotalCountAction = async (bot: TelegramBot, query: Telegram
     });
 }
 
+export const referralLastTxnAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {
+  if (!query.message) return;
+  const transactions = await GetReferralStatsByUser (String(query.from.id));
+    if (transactions.length === 0) {
+        SendMessageWithSave (bot, query.message.chat.id, "No referral rewards yet");
+        return;
+    }
+    const historyText = `<b>Your rewards from referrals:</b>\n ${transactions.map((txn) => {
+      return `LeveL: ${txn.level}, for: ${txn.for}, resource: ${txn.resource}, amount: ${txn.amount}\n`
+    })}`
+    SendMessageWithSave (bot, query.message.chat.id, historyText,
+    {
+      parse_mode: "HTML",
+    });
+}
+
 export const ReferralStatsHandler = async (bot: TelegramBot, query: TelegramBot.Message) => {
 
   if (!query?.from) return;
