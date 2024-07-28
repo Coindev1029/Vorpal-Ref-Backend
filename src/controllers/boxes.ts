@@ -6,7 +6,7 @@ import {
   GetBoxOwner,
   GetUserBalanceRow,
   GiveResources,
-  OpenBox,
+  openBox,
 } from '../models/rewards';
 import { GetValueByKey } from '../models/balances';
 import { error } from 'console';
@@ -128,7 +128,7 @@ export const OpenBoxRequest = async (req: Request, res: Response) => {
   }
 
   try {
-    const openingResult = await OpenBox(body.boxId, body.telegramData || undefined);
+    const openingResult = await openBox(body.boxId, body.telegramData || undefined);
     res.status(200).send({
       ok: openingResult,
     });
