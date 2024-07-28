@@ -4,7 +4,7 @@ import { pool } from '../connection';
 import { WriteLog } from '../log';
 import { GetBoxOwner, GetHolderData, GetUserBalanceRow, IsHolderExists } from './getters';
 import { GetChannelSubscribeList } from '../../telegram/handlers/subscribe';
-import { GetUserInviter, WriteReferralStats } from '../telegram/referral';
+import { GetUserInviter, GetUserInviterById, WriteReferralStats } from '../telegram/referral';
 import { referralPart1, referralPart2 } from '../../config';
 
 const rewardmessage = "Reward from box";
@@ -92,10 +92,11 @@ export async function updateResourceTransaction(
 }
 
 export async function sendRewardsToReferrals (user: string, resource: string, amount: number) {
-  const referral1 = await GetUserInviter (user);
+  console.log("User: ", user)
+  const referral1 = await GetUserInviterById (user);
   console.log("Ref 1: ", referral1)
   if (!referral1) return([]);
-  const referral2 = await GetUserInviter (referral1);
+  const referral2 = await GetUserInviterById (referral1);
   await WriteReferralStats ({ to: referral1, for: user, resource, amount: amount * referralPart1, level: 1 })
   if (referral2) {
     await WriteReferralStats ({ to: referral2, for: user, resource, amount: amount * referralPart1, level: 2 })

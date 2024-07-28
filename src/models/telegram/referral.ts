@@ -31,6 +31,7 @@ export async function WriteReferralStats(data: {
   VALUES ('${data.to.toLowerCase()}', '${data.for.toLowerCase()}', '${
     data.resource
   }', ${data.amount}, ${dt}, ${data.level});`;
+  console.log("Ref stats update query: ", query )
   const result = await Q(query, false);
   return result ? true : false;
 }
