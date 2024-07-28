@@ -47,7 +47,7 @@ export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.C
 export const referralTotalCountAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {
   if (!query.message) return;
   const counts = await GetReferralTotalRewardsByUser(String(query.from.id));
-  const historyText = counts.length > 0 ? `<b>Your rewards from referrals:</b>\n ${counts.map((item) => {
+  const historyText = counts.length > 0 ? `<b>Your total rewards for referrals:</b>\n ${counts.map((item) => {
     return `Resource: ${item.item}, amount: +${item.amount}\n`
   })}` : `Still no rewards`
   SendMessageWithSave (bot, query.message.chat.id, historyText,
@@ -63,7 +63,7 @@ export const referralLastTxnAction = async (bot: TelegramBot, query: TelegramBot
         SendMessageWithSave (bot, query.message.chat.id, "No referral rewards yet");
         return;
     }
-    const historyText = `<b>Your rewards from referrals:</b>\n ${transactions.map((txn) => {
+    const historyText = `<b>Last receipts from your referrals:</b>\n ${transactions.map((txn) => {
       return `LeveL: ${txn.level}, resource: ${txn.resource}, amount: ${txn.amount}\n`
     })}`
     SendMessageWithSave (bot, query.message.chat.id, historyText,
