@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { timeUpdateRequestLimit } from "../blockchain/config";
 import { actualStarList, lastUpdateRequqstTime, UpdateLastTime, UpdateSingleStar, UpdateStars } from "../blockchain/Stars/watcher";
+import { getAllStarsWeb2, Star } from "../models/stars";
 
 export const GetAllStars = (req: Request, res: Response) => {
     res.status(200).send(actualStarList); // actualStarList
@@ -36,5 +37,15 @@ export const UpdateOneStar = async (req: Request, res: Response) => {
     }
   } catch (e) {
     res.status(400).send({success: false, message: 'Error in processing : ' + e.message});
+  }
+}
+
+export const GetWeb2StarList = async (req: Request, res: Response) => {
+  try {
+    const stars: Star[] = await getAllStarsWeb2() || [];
+    res.status(200).send(stars)
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({ error: 'Server error' });
   }
 }

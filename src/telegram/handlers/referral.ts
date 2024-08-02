@@ -12,7 +12,7 @@ import { bot } from '../bot';
 import { duelText, inviteLink, messages, startText } from '../constants';
 import { InlineKeyboard } from './keyboard';
 import { SendMessageWithSave } from './utils';
-import { GetReferralCount, GetReferralStatsByUser } from '../../models/telegram/referral';
+import { GetReferralCount, GetReferralStatsByUser, GetReferralTotalRewardsByUser } from '../../models/telegram/referral';
 
 export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {
     console.log("History requested")
@@ -38,8 +38,38 @@ export const ReferralStatsAction = async (bot: TelegramBot, query: TelegramBot.C
     SendMessageWithSave (bot, query.message.chat.id, historyText,
      {
        parse_mode: "HTML",
+       reply_markup: InlineKeyboard(['referralTotalRewards', 'referralRewardList']),
      });
     return;
+}
+
+
+export const referralTotalCountAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {
+  if (!query.message) return;
+  const counts = await GetReferralTotalRewardsByUser(String(query.from.id));
+  const historyText = counts.length > 0 ? `<b>Your total rewards for referrals:</b>\n ${counts.map((item) => {
+    return `Resource: ${item.item}, amount: +${item.amount}\n`
+  })}` : `Still no rewards`
+  SendMessageWithSave (bot, query.message.chat.id, historyText,
+    {
+      parse_mode: "HTML",
+    });
+}
+
+export const referralLastTxnAction = async (bot: TelegramBot, query: TelegramBot.CallbackQuery) => {
+  if (!query.message) return;
+  const transactions = await GetReferralStatsByUser (String(query.from.id));
+    if (transactions.length === 0) {
+        SendMessageWithSave (bot, query.message.chat.id, "No referral rewards yet");
+        return;
+    }
+    const historyText = `<b>Last receipts from your referrals:</b>\n ${transactions.map((txn) => {
+      return `LeveL: ${txn.level}, resource: ${txn.resource}, amount: ${txn.amount}\n`
+    })}`
+    SendMessageWithSave (bot, query.message.chat.id, historyText,
+    {
+      parse_mode: "HTML",
+    });
 }
 
 export const ReferralStatsHandler = async (bot: TelegramBot, query: TelegramBot.Message) => {
@@ -59,6 +89,7 @@ export const ReferralStatsHandler = async (bot: TelegramBot, query: TelegramBot.
   SendMessageWithSave (bot, query.chat.id, historyText,
    {
      parse_mode: "HTML",
+     reply_markup: InlineKeyboard(['referralTotalRewards', 'referralRewardList'])
    });
   return;
 }

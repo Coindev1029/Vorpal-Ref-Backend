@@ -4,7 +4,7 @@ import { pool } from '../connection';
 import { WriteLog } from '../log';
 import { GetBoxOwner, GetHolderData, GetUserBalanceRow, IsHolderExists } from './getters';
 import { GetChannelSubscribeList } from '../../telegram/handlers/subscribe';
-import { GetUserInviter, WriteReferralStats } from '../telegram/referral';
+import { GetUserInviter, GetUserInviterById, WriteReferralStats } from '../telegram/referral';
 import { referralPart1, referralPart2 } from '../../config';
 
 const rewardmessage = "Reward from box";
@@ -21,7 +21,7 @@ export async function CreateNewBox(
   if (!Holer && !ownerLogin) return false;
   const holderData = await IsHolderExists(Holer);
   if (!holderData) {
-    await CreateNewHolder(Holer, ownerLogin.toLowerCase());
+    await createNewHolder(Holer, ownerLogin.toLowerCase());
   }
   const query = `
     INSERT INTO boxes (ownerAddress, ownerLogin, level, isopen) 
@@ -44,7 +44,7 @@ export async function GiveResources(
   const holderData = await IsHolderExists(Holer);
 
   if (!holderData) {
-    const creation = await CreateNewHolder(Holer, ownerLogin.toLowerCase());
+    const creation = await createNewHolder(Holer, ownerLogin.toLowerCase());
   }
   const balanceQuery = `UPDATE resources SET ${resource} = ${resource} + ${amount} 
   WHERE ownerAddress = '${Holer}';`;
@@ -52,7 +52,7 @@ export async function GiveResources(
   return await GetUserBalanceRow(Holer, ownerLogin.toLowerCase());
 }
 
-export async function CreateNewHolder(address: string, login?: string) {
+export async function createNewHolder(address: string, login?: string) {
   const ownerLogin = (login || address).toLowerCase();
   const isUserExists = await IsHolderExists(address.toLowerCase());
   if (isUserExists) {
@@ -68,7 +68,7 @@ export async function CreateNewHolder(address: string, login?: string) {
   return true;
 }
 
-export async function UpdateResourceTransaction(
+export async function updateResourceTransaction(
   user: string,
   resource: string,
   amount: number,
@@ -91,30 +91,31 @@ export async function UpdateResourceTransaction(
   }
 }
 
-export async function SendRewardsToReferrals (user: string, resource: string, amount: number) {
-  const referral1 = await GetUserInviter (user);
+export async function sendRewardsToReferrals (user: string, resource: string, amount: number) {
+  const referral1 = await GetUserInviterById (user);
   if (!referral1) return([]);
-  const referral2 = await GetUserInviter (referral1);
+  const referral2 = await GetUserInviterById (referral1);
   await WriteReferralStats ({ to: referral1, for: user, resource, amount: amount * referralPart1, level: 1 })
-  await WriteReferralStats ({ to: referral2, for: user, resource, amount: amount * referralPart1, level: 2 })
+  if (referral2) {
+    await WriteReferralStats ({ to: referral2, for: user, resource, amount: amount * referralPart1, level: 2 })
+  }
   return Promise.all([
-    UpdateResourceTransaction(referral1, resource, amount * referralPart1, rewardrefmessage),
-    referral2 ? UpdateResourceTransaction(referral2, resource, amount * referralPart2, rewardrefmessage) : true,
+    updateResourceTransaction(referral1, resource, amount * referralPart1, rewardrefmessage),
+    referral2 ? updateResourceTransaction(referral2, resource, amount * referralPart2, rewardrefmessage) : true,
   ])
 }
 
-export async function ResourceTransactionWithReferrals (user: string, resource: string, amount: number, message: string = "") {
+export async function resourceTransactionWithReferrals (user: string, resource: string, amount: number, message: string = "") {
   return Promise.all([
-    UpdateResourceTransaction(user, resource, amount, message),
-    SendRewardsToReferrals(user, resource, amount)
+    updateResourceTransaction(user, resource, amount, message),
+    sendRewardsToReferrals(user, resource, amount)
   ])
 }
 
-export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
+export async function openBox(boxId: number, telegramData: TelegramAuthData) {
   let openAmount = 0;
   const boxCheckQuery = `SELECT isopen FROM boxes WHERE id = ${boxId};`;
   const check = await pool.query(boxCheckQuery);
-  console.log('Box opening started', boxId);
   if (check.rows.length === 0) {
     return {
       success: false,
@@ -130,7 +131,7 @@ export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
   const owner = await GetBoxOwner(boxId);
   const value = Math.round(Math.random() * 10000);
   const valueVRP = Math.round(Math.random() * 5) + 5;
-  await CreateNewHolder(
+  await createNewHolder(
     String(telegramData?.id || ''),
     String(telegramData.username || telegramData.first_name),
   );
@@ -141,10 +142,10 @@ export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
       // const trendsUpQuery = `UPDATE resources SET trends = trends + ${trendsValue} 
       // WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;
       // await connection.query(trendsUpQuery);
-      await  ResourceTransactionWithReferrals (owner, 'trends', trendsValue, rewardmessage);
+      await  resourceTransactionWithReferrals (owner, 'trends', trendsValue, rewardmessage);
     }
   }
-  await  ResourceTransactionWithReferrals (owner, 'token', valueVRP, rewardmessage);
+  await  resourceTransactionWithReferrals (owner, 'token', valueVRP, rewardmessage);
   // const vrpQuery = `UPDATE resources SET token = token + ${valueVRP} 
   //     WHERE ownerAddress IN (SELECT ownerAddress FROM boxes WHERE id = ${boxId})`;
   // await connection.query(vrpQuery);
@@ -186,7 +187,7 @@ export async function OpenBox(boxId: number, telegramData: TelegramAuthData) {
     VALUES (${boxId}, CURRENT_TIMESTAMP, '${rewardType}', ${openAmount});`;
   const boxCloseQuery = `UPDATE boxes SET isopen = true WHERE id = ${boxId};`;
   const logs = await pool.query(logQuery);
-  await  ResourceTransactionWithReferrals (owner, rewardType, openAmount, rewardmessage);
+  await  resourceTransactionWithReferrals (owner, rewardType, openAmount, rewardmessage);
   await pool.query(boxCloseQuery);
   return {
     success: true,

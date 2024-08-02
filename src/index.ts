@@ -1,6 +1,7 @@
 import { TelegramBotLaunch } from './telegram';
 import { StartWatchingTimer } from './blockchain/Stars/watcher';
 import {
+  AcceptDuelByAdmin,
   AcceptDuelResponce,
   addStats,
   AdminDataRequest,
@@ -12,6 +13,7 @@ import {
   BuyResponce,
   CheckAvailableResponce,
   CreateBox,
+  CreateDuelByAdmin,
   DuelDataByLoginResponce,
   DuelDataResponce,
   DuelDeletionResponce,
@@ -28,6 +30,7 @@ import {
   GetStoreItemsResponce,
   GetUserAvailableBoxes,
   GetUserResources,
+  GetWeb2StarList,
   GiveResourcesResponce,
   IsNeedSubscribes,
   IsUserInDuelResponce,
@@ -144,6 +147,8 @@ app.post('/api/store/buy', BuyResponce);
 // Stars (server contract parser)
 app.get('/api/getstarlist', GetAllStars);
 
+app.get('/api/getserverstarlist', GetWeb2StarList);
+
 app.post('/api/updatestars', UpdateAllStars);
 
 app.post('/api/updateonestar/:id', UpdateOneStar);
@@ -158,6 +163,10 @@ app.post('/api/admin/savedata', AdminSaveData);
 app.post('/api/admin/getusers', GetAdminUserData);
 
 app.post('/api/admin/updateusers', AdminUpdateUserData);
+
+app.post('/api/admin/createduel', CreateDuelByAdmin);
+
+app.post('/api/admin/acceptduel', AcceptDuelByAdmin);
 
 // Stats
 

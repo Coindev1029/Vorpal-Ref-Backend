@@ -29,6 +29,8 @@ export type Coords = {
 };
 
 export type StarParams = {
+  id?: number; // Auto increment
+  owner?: string;
   name: string;
   isLive: boolean;
   creation: number; // timestamp

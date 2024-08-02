@@ -66,6 +66,18 @@ export const InlineKeyboard = (actions: string[], inviter?: string) => {
               callback_data: `${a.toLowerCase()}%${inviter || ""}`,
             });
         break;
+        case a.indexOf('referralTotalRewards') > -1:
+          row.push({
+              text: "Total rewards",
+              callback_data: `${a.toLowerCase()}%totalRef`,
+            });
+        break;
+        case a.indexOf('referralRewardList') > -1:
+          row.push({
+              text: "Last transactions",
+              callback_data: `${a.toLowerCase()}%refTxnList`,
+            });
+        break;
       case a === "transactions":
         row.push({
           text: "Watch transactions",

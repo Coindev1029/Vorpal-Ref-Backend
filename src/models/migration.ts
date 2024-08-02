@@ -235,6 +235,27 @@ async function DBCreateTables() {
   );
   `
 
+  const starsTableQuery = `
+  CREATE TABLE IF NOT EXISTS "stars" (
+    id SERIAL PRIMARY KEY,
+    owner VARCHAR(255),
+    name VARCHAR(255) NOT NULL,
+    is_live BOOLEAN NOT NULL,
+    creation TIMESTAMP NOT NULL,
+    updated TIMESTAMP,
+    level INT NOT NULL,
+    fuel NUMERIC,
+    levelUpFuel NUMERIC,
+    fuelSpendings NUMERIC,
+    habitable_zone_min NUMERIC,
+    habitable_zone_max NUMERIC,
+    planet_slots INT,
+    mass NUMERIC,
+    race VARCHAR(50) CHECK (race IN ('Waters', 'Humans', 'Insects', 'Lizards')),
+    coords NUMERIC[] NOT NULL
+);
+  `
+
   await Q(TableOneQuery);
   await Q(TableTwoQuery);
   await Q(TableBalanceQuery);
@@ -259,6 +280,7 @@ async function DBCreateTables() {
   await Q(messagesQuery);
   await Q(referralStatsQuery);
   await Q(duelStatsQuery);
+  await Q(starsTableQuery);
 
   const web3 = new Web3(config.opBSCData.rpcUrl);
   const endBlock = await web3.eth.getBlockNumber();

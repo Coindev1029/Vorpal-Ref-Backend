@@ -31,6 +31,7 @@ export async function WriteReferralStats(data: {
   VALUES ('${data.to.toLowerCase()}', '${data.for.toLowerCase()}', '${
     data.resource
   }', ${data.amount}, ${dt}, ${data.level});`;
+  console.log("Ref stats update query: ", query )
   const result = await Q(query, false);
   return result ? true : false;
 }
@@ -70,9 +71,10 @@ WHERE "inviter" IN (
 
 export async function GetReferralStatsByUser(
   login: string,
+  limit = 5
 ): Promise<ReferralStatsData[]> {
   const query = `SELECT id, recipient, referrer, resource, amount, reward_date, level
-	FROM "telegram_referral_stats" WHERE recipient = '${login.toLowerCase()}' ORDER BY reward_date DESC;`;
+	FROM "telegram_referral_stats" WHERE recipient = '${login.toLowerCase()}' ORDER BY reward_date DESC LIMIT ${limit};`;
   const data = await Q(query);
   return data ? data.map((row: any) => {
     return {
@@ -83,6 +85,23 @@ export async function GetReferralStatsByUser(
       amount: row.amount,
       level: row.level,
       date: row.reward_date,
+    }
+  }) : [];
+}
+
+export async function GetReferralTotalRewardsByUser(login: string): Promise<{item: string; amount: number}[]> {
+  const query = `
+     SELECT resource, SUM(amount) as total_amount
+       FROM "telegram_referral_stats"
+       WHERE recipient = '${login.toLowerCase()}'
+       GROUP BY resource
+       ORDER BY total_amount DESC; 
+  `
+  const data = await Q(query);
+  return data ? data.map((row: any) => {
+    return {
+      item: row.resource,
+      amount: row.total_amount
     }
   }) : [];
 }
